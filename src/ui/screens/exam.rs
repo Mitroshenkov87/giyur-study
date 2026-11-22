@@ -340,41 +340,44 @@ fn setup_store() -> &'static Mutex<Setup> {
 }
 
 impl Setup {
-    /// «Доступно вопросов» for the current mode (js/ui/exam.js available()).
-    fn available(&self, ctx: &Ctx) -> usize {
+    /// Questions the current mode draws from (js/ui/exam.js available()).
+    fn pool<'a>(&self, ctx: &'a Ctx) -> Vec<&'a Question> {
         let user = Library::user_level(&ctx.state);
         match self.mode {
             SetupMode::Section => self
                 .section
                 .as_deref()
                 .and_then(|id| ctx.lib.section(id))
-                .map(|s| ctx.lib.questions(s, user).len())
-                .unwrap_or(0),
+                .map(|s| ctx.lib.questions(s, user))
+                .unwrap_or_default(),
             SetupMode::General => {
                 let secs: Vec<&SectionMeta> = if self.only_unlocked {
                     ctx.lib.unlocked_sections(&ctx.state)
                 } else {
                     ctx.lib.sections.iter().filter(|s| s.available).collect()
                 };
-                secs.iter().map(|s| ctx.lib.questions(s, user).len()).sum()
+                secs.iter()
+                    .flat_map(|s| ctx.lib.questions(s, user))
+                    .collect()
             }
             SetupMode::Beitdin => ctx
                 .lib
                 .sections
                 .iter()
                 .filter(|s| s.available)
-                .map(|s| {
-                    ctx.lib
-                        .questions(s, user)
-                        .iter()
-                        .filter(|q| {
-                            matches!(q, Question::Open { .. } | Question::Typed { .. })
-                                || s.id == "beit-din"
-                        })
-                        .count()
+                .flat_map(|s| {
+                    ctx.lib.questions(s, user).into_iter().filter(move |q| {
+                        matches!(q, Question::Open { .. } | Question::Typed { .. })
+                            || s.id == "beit-din"
+                    })
                 })
-                .sum(),
+                .collect(),
         }
+    }
+
+    /// «Доступно вопросов» for the current mode.
+    fn available(&self, ctx: &Ctx) -> usize {
+        self.pool(ctx).len()
     }
 
     fn spec(&self) -> ExamSpec {
@@ -1252,7 +1255,17 @@ impl Screen {
         card_col = card_col.push(form_row("Количество вопросов", None, seg));
         card_col = card_col.push(divider());
 
-        let avail = setup.available(ctx);
+        let pool = setup.pool(ctx);
+        if !pool.is_empty() {
+            let counts = crate::study::level_counts(pool.iter().copied(), &ctx.state);
+            card_col = card_col.push(form_row(
+                "По уровням",
+                Some("Сколько вопросов и сколько уже освоено"),
+                crate::ui::screens::section::level_counts_row(&counts, p),
+            ));
+            card_col = card_col.push(divider());
+        }
+        let avail = pool.len();
         let mut avail_line = format!("Доступно вопросов: {avail}");
         if avail < setup.count && avail > 0 {
             avail_line.push_str(&format!(" — будет задано {avail}"));
