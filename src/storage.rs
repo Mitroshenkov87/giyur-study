@@ -35,8 +35,9 @@ impl Level {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Settings {
-    /// 'reform' | 'conservative' | 'orthodox' (null until onboarding)
-    #[serde(default)]
+    /// 'reform' | 'conservative' | 'orthodox' (null until onboarding);
+    /// unknown strings fall back to None → orthodox (js/content.js userLevel)
+    #[serde(default, deserialize_with = "de_level_opt")]
     pub level: Option<Level>,
     /// 'dark' | 'parchment'
     #[serde(default = "default_theme")]
@@ -63,6 +64,24 @@ pub struct Settings {
     /// daily local notification time
     #[serde(default = "default_reminder_time")]
     pub reminder_time: String,
+    /// Unknown keys kept so a PWA file → native → PWA round-trip loses nothing
+    /// (js/storage.js fill keeps them).
+    #[serde(flatten)]
+    pub extra: serde_json::Map<String, serde_json::Value>,
+}
+
+/// Tolerant level parsing: unknown strings → None (orthodox fallback).
+fn de_level_opt<'de, D>(deserializer: D) -> Result<Option<Level>, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    let s = Option::<String>::deserialize(deserializer)?;
+    Ok(s.and_then(|s| match s.as_str() {
+        "reform" => Some(Level::Reform),
+        "conservative" => Some(Level::Conservative),
+        "orthodox" => Some(Level::Orthodox),
+        _ => None,
+    }))
 }
 
 fn default_theme() -> String {
@@ -97,6 +116,7 @@ impl Default for Settings {
             timed_auto: true,
             daily_goal: default_daily_goal(),
             reminder_time: default_reminder_time(),
+            extra: serde_json::Map::new(),
         }
     }
 }
@@ -202,6 +222,9 @@ pub struct State {
     pub counters: HashMap<String, i64>,
     #[serde(default)]
     pub goal_celebrated: Option<String>,
+    /// Unknown top-level keys kept for round-trip fidelity (js/storage.js fill).
+    #[serde(flatten)]
+    pub extra: serde_json::Map<String, serde_json::Value>,
 }
 
 fn default_app() -> String {
@@ -233,6 +256,7 @@ impl Default for State {
             badges: HashMap::new(),
             counters: HashMap::new(),
             goal_celebrated: None,
+            extra: serde_json::Map::new(),
         }
     }
 }
@@ -271,6 +295,55 @@ const OBJECT_FIELDS: &[&str] = &[
     "counters",
 ];
 
+/// Expected JSON shape of a field for the fill()-style type check.
+#[derive(Clone, Copy)]
+enum Kind {
+    Bool,
+    Int,
+    Str,
+    Arr,
+    NullableStr,
+}
+
+fn kind_ok(v: &serde_json::Value, k: Kind) -> bool {
+    match k {
+        Kind::Bool => v.is_boolean(),
+        Kind::Int => v.as_i64().is_some(),
+        Kind::Str => v.is_string(),
+        Kind::Arr => v.is_array(),
+        Kind::NullableStr => v.is_null() || v.is_string(),
+    }
+}
+
+/// Top-level fields with their expected types (js/storage.js defaults()).
+const TOP_KINDS: &[(&str, Kind)] = &[
+    ("app", Kind::Str),
+    ("schema", Kind::Int),
+    ("createdAt", Kind::Int),
+    ("onboarded", Kind::Bool),
+    ("cardsHelpSeen", Kind::Bool),
+    ("exams", Kind::Arr),
+    ("examHistory", Kind::Arr),
+    ("xpTotal", Kind::Int),
+    ("freezes", Kind::Int),
+    ("freezeAwardDay", Kind::NullableStr),
+    ("goalCelebrated", Kind::NullableStr),
+];
+
+/// settings fields with their expected types (js/storage.js defaults().settings).
+const SETTINGS_KINDS: &[(&str, Kind)] = &[
+    ("level", Kind::NullableStr),
+    ("theme", Kind::Str),
+    ("fontStep", Kind::Int),
+    ("unlockAll", Kind::Bool),
+    ("translit", Kind::Bool),
+    ("timedSeconds", Kind::Int),
+    ("timedSound", Kind::Bool),
+    ("timedAuto", Kind::Bool),
+    ("dailyGoal", Kind::Int),
+    ("reminderTime", Kind::Str),
+];
+
 /// Sanitise an imported JSON value like js/storage.js importJSON, then
 /// deserialise with defaults. Returns the Russian error strings of the PWA.
 pub fn import_value(v: &mut serde_json::Value, today: &str) -> Result<(), String> {
@@ -292,7 +365,8 @@ pub fn import_value(v: &mut serde_json::Value, today: &str) -> Result<(), String
     }
     obj.remove("exportedAt");
     // Saves from before gamification: treat past active days as goal days.
-    let xp_missing = obj.get("xp").map(|x| x.is_null()).unwrap_or(true);
+    // js/storage.js migrates only when xp is absent (null is not absent).
+    let xp_missing = !obj.contains_key("xp");
     if xp_missing {
         if let Some(activity) = obj.get("activity").and_then(|a| a.as_object()) {
             let mut goal_days = serde_json::Map::new();
@@ -304,12 +378,46 @@ pub fn import_value(v: &mut serde_json::Value, today: &str) -> Result<(), String
             obj.insert("goalDays".to_string(), serde_json::Value::Object(goal_days));
         }
     }
+    // js/storage.js fill(): a null or wrongly typed field falls back to its
+    // default instead of failing the whole import. Null-stripping happens
+    // after the migration check above.
+    if let Some(f) = obj.get("settings") {
+        if !f.is_object() {
+            obj.remove("settings");
+        }
+    }
+    for (k, kind) in TOP_KINDS {
+        if let Some(f) = obj.get(*k) {
+            if f.is_null() || !kind_ok(f, *kind) {
+                obj.remove(*k);
+            }
+        }
+    }
+    if let Some(settings) = obj.get_mut("settings").and_then(|s| s.as_object_mut()) {
+        for (k, kind) in SETTINGS_KINDS {
+            if let Some(f) = settings.get(*k) {
+                if f.is_null() || !kind_ok(f, *kind) {
+                    settings.remove(*k);
+                }
+            }
+        }
+    }
+    // examHistory runs must be string arrays (as recentTimedIds assumes).
+    if let Some(serde_json::Value::Array(runs)) = obj.get_mut("examHistory") {
+        runs.retain(|r| {
+            r.as_array()
+                .is_some_and(|a| a.iter().all(|x| x.is_string()))
+        });
+    }
     Ok(())
 }
 
 impl State {
     /// Parse an exported/imported JSON string (js/storage.js importJSON).
     pub fn import_json(text: &str, today: &str) -> Result<State, String> {
+        // A UTF-8 BOM (e.g. a file re-saved in Windows Notepad) breaks
+        // serde_json but not the PWA's FileReader → JSON.parse path.
+        let text = text.strip_prefix('\u{feff}').unwrap_or(text);
         let mut v: serde_json::Value = serde_json::from_str(text)
             .map_err(|_| "Файл не является корректным JSON.".to_string())?;
         import_value(&mut v, today)?;
@@ -363,28 +471,50 @@ pub fn default_path() -> PathBuf {
 /// Load state from a file. A corrupt file is kept as <path>.bak and a fresh
 /// state is returned.
 pub fn load(path: &Path, today: &str) -> State {
+    load_checked(path, today).0
+}
+
+/// Load state from a file, reporting whether it is safe for the caller to
+/// overwrite the file afterwards. The bool is false when an existing file
+/// could not be read at all (permission denied, invalid UTF-8, locked): the
+/// real progress may still be there, so the caller must not save over it.
+/// A missing file or a parseable-but-corrupt file (kept as <path>.bak) is
+/// safe to overwrite.
+pub fn load_checked(path: &Path, today: &str) -> (State, bool) {
     let raw = match std::fs::read_to_string(path) {
         Ok(r) => r,
-        Err(_) => return State::default(),
-    };
-    match State::import_json(&raw, today) {
-        Ok(s) => s,
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => {
+            return (State::default(), true);
+        }
         Err(_) => {
             let bak = path.with_extension("json.bak");
             let _ = std::fs::copy(path, &bak);
-            State::default()
+            return (State::default(), false);
+        }
+    };
+    match State::import_json(&raw, today) {
+        Ok(s) => (s, true),
+        Err(_) => {
+            let bak = path.with_extension("json.bak");
+            let _ = std::fs::copy(path, &bak);
+            (State::default(), true)
         }
     }
 }
 
-/// Atomic save: write to a temp file then rename.
+/// Atomic save: write to a temp file, fsync, then rename.
 pub fn save(path: &Path, state: &State) -> std::io::Result<()> {
+    use std::io::Write;
     if let Some(parent) = path.parent() {
         std::fs::create_dir_all(parent)?;
     }
     let tmp = path.with_extension("json.tmp");
-    let data = serde_json::to_string_pretty(state).unwrap_or_default();
-    std::fs::write(&tmp, data)?;
+    let data = serde_json::to_string_pretty(state).map_err(std::io::Error::other)?;
+    {
+        let mut f = std::fs::File::create(&tmp)?;
+        f.write_all(data.as_bytes())?;
+        f.sync_all()?;
+    }
     std::fs::rename(&tmp, path)?;
     Ok(())
 }
@@ -599,5 +729,83 @@ mod tests {
         assert_eq!(Level::Reform.rank(), 1);
         assert_eq!(Level::Conservative.rank(), 2);
         assert_eq!(Level::Orthodox.rank(), 3);
+    }
+
+    #[test]
+    fn import_repairs_null_and_wrongly_typed_fields() {
+        // js/storage.js fill() repairs field by field instead of failing.
+        let sample = r#"{
+          "app": "giyur-study",
+          "settings": null,
+          "xp": null,
+          "onboarded": null,
+          "exams": {},
+          "examHistory": [[1,2], ["q1","q2"], "oops"]
+        }"#;
+        let s = State::import_json(sample, TODAY).unwrap();
+        assert_eq!(s.settings.theme, "dark");
+        assert!(s.xp.is_empty());
+        assert!(!s.onboarded);
+        assert!(s.exams.is_empty());
+        assert_eq!(
+            s.exam_history,
+            vec![vec!["q1".to_string(), "q2".to_string()]]
+        );
+        // Null xp is not "missing": no legacy migration (js: xp === undefined).
+        assert!(s.goal_days.is_empty());
+
+        let odd = r#"{
+          "app": "giyur-study",
+          "settings": {"level": "", "fontStep": "big", "theme": 5},
+          "xpTotal": 1.5
+        }"#;
+        let s = State::import_json(odd, TODAY).unwrap();
+        assert_eq!(s.settings.level, None); // odd level → orthodox fallback
+        assert_eq!(s.settings.font_step, 1);
+        assert_eq!(s.settings.theme, "dark");
+        assert_eq!(s.xp_total, 0);
+
+        let unknown_level = r#"{"app":"giyur-study","settings":{"level":"reconstructionist"}}"#;
+        let s = State::import_json(unknown_level, TODAY).unwrap();
+        assert_eq!(s.settings.level, None);
+    }
+
+    #[test]
+    fn import_tolerates_bom() {
+        let sample = "\u{feff}{\"app\":\"giyur-study\",\"xpTotal\":7}";
+        let s = State::import_json(sample, TODAY).unwrap();
+        assert_eq!(s.xp_total, 7);
+    }
+
+    #[test]
+    fn unknown_keys_round_trip() {
+        // js/storage.js fill() keeps unknown keys; the export must too.
+        let sample = r#"{
+          "app": "giyur-study",
+          "futureField": {"a": 1},
+          "settings": {"futureSetting": 42, "level": "reform"}
+        }"#;
+        let s = State::import_json(sample, TODAY).unwrap();
+        assert_eq!(s.settings.level, Some(Level::Reform));
+        let text = s.export_json();
+        let v: serde_json::Value = serde_json::from_str(&text).unwrap();
+        assert_eq!(v["futureField"], serde_json::json!({"a": 1}));
+        assert_eq!(v["settings"]["futureSetting"], serde_json::json!(42));
+    }
+
+    #[test]
+    fn load_checked_flags_unreadable_file() {
+        let dir = std::env::temp_dir().join(format!("giyur-test-checked-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        // Missing file: safe to create/overwrite.
+        let missing = dir.join("progress.json");
+        let (s, ok) = load_checked(&missing, TODAY);
+        assert!(ok);
+        assert_eq!(s.xp_total, 0);
+        // A directory is not a readable file: exists but unreadable → false.
+        let (s, ok) = load_checked(&dir, TODAY);
+        assert!(!ok);
+        assert_eq!(s.xp_total, 0);
+        let _ = std::fs::remove_dir_all(&dir);
     }
 }

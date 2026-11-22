@@ -168,6 +168,9 @@ pub struct Lesson {
     pub blocks: Vec<Block>,
     #[serde(default)]
     pub cards: Vec<Card>,
+    /// Lesson-level differences by movement (js/ui/lesson.js renders L.differs).
+    #[serde(default)]
+    pub differs: Vec<Differs>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Deserialize)]
@@ -446,8 +449,10 @@ impl Library {
     pub fn from_json(manifest: &str, sections: &[&str]) -> Result<Library, serde_json::Error> {
         let manifest: Manifest = serde_json::from_str(manifest)?;
         let mut by_id: HashMap<String, Section> = HashMap::new();
+        let mut bundle_order: Vec<String> = Vec::new();
         for raw in sections {
             let s: Section = serde_json::from_str(raw)?;
+            bundle_order.push(s.id.clone());
             by_id.insert(s.id.clone(), s);
         }
 
@@ -456,7 +461,9 @@ impl Library {
         } else {
             manifest.sections.iter().map(|m| m.id.clone()).collect()
         };
-        for id in by_id.keys() {
+        // Sections bundled but missing from the manifest keep bundle order
+        // (js/content.js), so index/unlock chain are deterministic.
+        for id in &bundle_order {
             if !order.contains(id) {
                 order.push(id.clone());
             }
@@ -470,20 +477,22 @@ impl Library {
             let fallback_subtitle = def.map(|d| d.subtitle).unwrap_or("").to_string();
             let fallback_icon = def.map(|d| d.icon).unwrap_or("✡").to_string();
             let available = data.is_some();
+            // JS: (data && data.title) || d.title — an empty string is missing.
+            let non_empty = |s: &Option<String>| s.clone().filter(|s| !s.is_empty());
             metas.push(SectionMeta {
                 id: id.clone(),
                 index: i,
                 title: data
                     .as_ref()
-                    .and_then(|d| d.title.clone())
+                    .and_then(|d| non_empty(&d.title))
                     .unwrap_or(fallback_title),
                 subtitle: data
                     .as_ref()
-                    .and_then(|d| d.subtitle.clone())
+                    .and_then(|d| non_empty(&d.subtitle))
                     .unwrap_or(fallback_subtitle),
                 icon: data
                     .as_ref()
-                    .and_then(|d| d.icon.clone())
+                    .and_then(|d| non_empty(&d.icon))
                     .unwrap_or(fallback_icon),
                 available,
                 data,
@@ -957,5 +966,48 @@ mod tests {
         assert_eq!(lessons.len(), 1);
         assert_eq!(lessons[0].blocks.len(), 2);
         assert_eq!(lib.questions(sec, Level::Orthodox).len(), 2);
+    }
+
+    #[test]
+    fn unlisted_sections_keep_bundle_order() {
+        // Bundled sections missing from the manifest are appended in the order
+        // of the input slice, not in HashMap order (js/content.js).
+        let manifest = r#"{"sections":[{"id":"b"}]}"#;
+        let sec = |id: &str| format!(r#"{{"id":"{id}"}}"#);
+        let owned: Vec<String> = ["z1", "b", "z2", "z3"].iter().map(|id| sec(id)).collect();
+        let refs: Vec<&str> = owned.iter().map(|s| s.as_str()).collect();
+        let lib = Library::from_json(manifest, &refs).unwrap();
+        let ids: Vec<&str> = lib.sections.iter().map(|s| s.id.as_str()).collect();
+        assert_eq!(ids, vec!["b", "z1", "z2", "z3"]);
+        assert_eq!(lib.sections[1].index, 1);
+    }
+
+    #[test]
+    fn empty_title_falls_back_like_js() {
+        // JS: (data && data.title) || d.title — "" counts as missing.
+        let manifest = r#"{"sections":[{"id":"osnovy"},{"id":"x"}]}"#;
+        let section = r#"{"id":"osnovy","title":"","subtitle":"","icon":""}"#;
+        let lib = Library::from_json(manifest, &[section]).unwrap();
+        let sec = lib.section("osnovy").unwrap();
+        assert_eq!(sec.title, "Основы");
+        assert_eq!(sec.subtitle, "Кто такой еврей, Тора и вера");
+        assert_eq!(sec.icon, "📜");
+    }
+
+    #[test]
+    fn lesson_differs_parsed() {
+        let manifest = r#"{"sections":[{"id":"x"}]}"#;
+        let section = r#"{
+            "id": "x",
+            "lessons": [{
+                "id": "x-1",
+                "differs": [{"level": "reform", "text": "Иначе в реформе"}]
+            }]
+        }"#;
+        let lib = Library::from_json(manifest, &[section]).unwrap();
+        let (lesson, _) = lib.lesson("x-1").unwrap();
+        assert_eq!(lesson.differs.len(), 1);
+        assert_eq!(lesson.differs[0].level, Level::Reform);
+        assert_eq!(lesson.differs[0].text, "Иначе в реформе");
     }
 }

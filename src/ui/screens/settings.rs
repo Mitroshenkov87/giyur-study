@@ -1,24 +1,712 @@
-//! Screen stub — replaced by the screen implementation.
-use iced::Element;
+//! Settings screen (PARITY §12): movement, theme, font size, learning
+//! switches, timed-exam options, daily goal, data export/import/reset and
+//! the «О приложении» card. Confirm dialogs follow §0.3.
 
+use iced::alignment::Horizontal;
+use iced::widget::text::{IntoFragment, Shaping};
+use iced::widget::{
+    button, column, container, mouse_area, opaque, row, rule, space, stack, text, Column, Row,
+    Text,
+};
+use iced::{
+    Alignment, Background, Border, Color, Element, Length, Shadow, Theme,
+};
+
+use crate::content;
+use crate::game;
+use crate::storage::{Level, State};
 use crate::ui::app::{Action, Ctx, Route};
+use crate::ui::fonts::{SANS, SANS_BOLD, HEBREW};
+use crate::ui::theme::{self, Palette};
+use crate::ui::{widgets};
 
-pub struct Screen;
+fn palette() -> Palette {
+    theme::current()
+}
+
+fn alpha(color: Color, a: f32) -> Color {
+    Color { a, ..color }
+}
+
+/// Plain text with advanced shaping (Cyrillic + Hebrew).
+fn txt<'a>(content: impl IntoFragment<'a>) -> Text<'a> {
+    text(content).shaping(Shaping::Advanced)
+}
+
+fn plain_container(background: Option<Color>) -> container::Style {
+    container::Style {
+        text_color: None,
+        background: background.map(Background::Color),
+        border: Border::default(),
+        shadow: Shadow::default(),
+        snap: true,
+    }
+}
+
+/// Which confirmation dialog is open (§0.3).
+#[derive(Debug, Clone)]
+enum Confirm {
+    /// Holds the file contents chosen via the open dialog.
+    Import(String),
+    Reset,
+}
+
+pub struct Screen {
+    confirm: Option<Confirm>,
+}
 
 #[derive(Debug, Clone)]
-pub enum Msg {}
+pub enum Msg {
+    ChangeLevel,
+    SetTheme(&'static str),
+    SetFont(i64),
+    ToggleUnlockAll,
+    ToggleTranslit,
+    ToggleTimedSound,
+    ToggleTimedAuto,
+    SetSeconds(i64),
+    SetGoal(i64),
+    Export,
+    ImportPick,
+    AskReset,
+    ConfirmOk,
+    ConfirmCancel,
+    GoProgress,
+    GoSources,
+    Esc,
+}
 
 impl Screen {
     pub fn new(_ctx: &mut Ctx, _route: &Route) -> Self {
-        Screen
+        Screen { confirm: None }
     }
-    pub fn update(&mut self, _ctx: &mut Ctx, msg: Msg) -> Action {
-        match msg {}
+
+    pub fn update(&mut self, ctx: &mut Ctx, msg: Msg) -> Action {
+        match msg {
+            Msg::ChangeLevel => Action::Go(Route::Level { reopened: true }),
+            Msg::SetTheme(v) => {
+                ctx.state.settings.theme = v.to_string();
+                ctx.save();
+                Action::SettingsChanged
+            }
+            Msg::SetFont(step) => {
+                ctx.state.settings.font_step = step.clamp(0, 3);
+                ctx.save();
+                Action::SettingsChanged
+            }
+            Msg::ToggleUnlockAll => {
+                ctx.state.settings.unlock_all = !ctx.state.settings.unlock_all;
+                ctx.save();
+                ctx.toast("Сохранено", "", "");
+                Action::None
+            }
+            Msg::ToggleTranslit => {
+                ctx.state.settings.translit = !ctx.state.settings.translit;
+                ctx.save();
+                ctx.toast("Сохранено", "", "");
+                Action::None
+            }
+            Msg::ToggleTimedSound => {
+                ctx.state.settings.timed_sound = !ctx.state.settings.timed_sound;
+                ctx.save();
+                ctx.toast("Сохранено", "", "");
+                Action::None
+            }
+            Msg::ToggleTimedAuto => {
+                ctx.state.settings.timed_auto = !ctx.state.settings.timed_auto;
+                ctx.save();
+                ctx.toast("Сохранено", "", "");
+                Action::None
+            }
+            Msg::SetSeconds(v) => {
+                ctx.state.settings.timed_seconds = if v == 20 { 20 } else { 30 };
+                ctx.save();
+                Action::None
+            }
+            Msg::SetGoal(xp) => {
+                ctx.state.settings.daily_goal = xp;
+                // The new goal may already be reached today (js/ui/settings.js).
+                ctx.award(0);
+                ctx.toast("Цель дня", &format!("{xp} XP"), "");
+                Action::None
+            }
+            Msg::Export => {
+                let name = format!("giyur-study-progress-{}.json", ctx.today_key());
+                let picked = rfd::FileDialog::new()
+                    .add_filter("JSON", &["json"])
+                    .set_file_name(&name)
+                    .save_file();
+                if let Some(path) = picked {
+                    match std::fs::write(&path, ctx.state.export_json()) {
+                        Ok(()) => ctx.toast("Файл прогресса сохранён", "", ""),
+                        Err(_) => ctx.toast("Не удалось сохранить файл", "", ""),
+                    }
+                }
+                Action::None
+            }
+            Msg::ImportPick => {
+                let picked = rfd::FileDialog::new()
+                    .add_filter("JSON", &["json"])
+                    .pick_file();
+                if let Some(path) = picked {
+                    match std::fs::read_to_string(&path) {
+                        Ok(text) => self.confirm = Some(Confirm::Import(text)),
+                        Err(_) => ctx.toast("Не удалось прочитать файл", "", ""),
+                    }
+                }
+                Action::None
+            }
+            Msg::AskReset => {
+                self.confirm = Some(Confirm::Reset);
+                Action::None
+            }
+            Msg::ConfirmOk => match self.confirm.take() {
+                Some(Confirm::Import(text)) => {
+                    match State::import_json(&text, &ctx.today_key()) {
+                        Ok(state) => {
+                            ctx.state = state;
+                            ctx.save();
+                            ctx.toast("Прогресс импортирован", "", "");
+                            Action::SettingsChanged
+                        }
+                        Err(e) => {
+                            ctx.toast(&e, "", "");
+                            Action::None
+                        }
+                    }
+                }
+                Some(Confirm::Reset) => {
+                    ctx.state.reset();
+                    ctx.save();
+                    ctx.toast("Прогресс сброшен", "", "");
+                    Action::Go(Route::Welcome)
+                }
+                None => Action::None,
+            },
+            Msg::ConfirmCancel | Msg::Esc => {
+                self.confirm = None;
+                Action::None
+            }
+            Msg::GoProgress => Action::Go(Route::Progress),
+            Msg::GoSources => Action::Go(Route::Sources),
+        }
     }
-    pub fn view<'a>(&'a self, _ctx: &'a Ctx) -> Element<'a, Msg> {
-        crate::ui::widgets::heading("settings", 1)
-    }
+
     pub fn subscription(&self) -> iced::Subscription<Msg> {
-        iced::Subscription::none()
+        if self.confirm.is_some() {
+            iced::keyboard::listen().filter_map(|event| match event {
+                iced::keyboard::Event::KeyPressed {
+                    key: iced::keyboard::Key::Named(iced::keyboard::key::Named::Escape),
+                    ..
+                } => Some(Msg::Esc),
+                _ => None,
+            })
+        } else {
+            iced::Subscription::none()
+        }
     }
+
+    pub fn view<'a>(&'a self, ctx: &'a Ctx) -> Element<'a, Msg> {
+        let p = palette();
+        let base: Element<'a, Msg> = column![
+            widgets::page_header("Настройки", None),
+            self.general_card(ctx, &p),
+            self.goal_card(ctx, &p),
+            self.data_card(&p),
+            self.about_card(ctx, &p),
+        ]
+        .spacing(16)
+        .width(Length::Fill)
+        .max_width(theme::spacing::CONTENT_MAX)
+        .into();
+
+        match &self.confirm {
+            None => base,
+            Some(Confirm::Import(_)) => self.with_dialog(
+                base,
+                "Импортировать прогресс?",
+                "Текущий прогресс на этом устройстве будет заменён данными из файла.",
+                "Импортировать",
+                false,
+            ),
+            Some(Confirm::Reset) => self.with_dialog(
+                base,
+                "Сбросить весь прогресс?",
+                "Будут удалены прочитанные уроки, карточки, результаты экзаменов и серия дней. Это действие нельзя отменить (кроме импорта ранее сохранённого файла).",
+                "Сбросить",
+                true,
+            ),
+        }
+    }
+
+    // ---- Cards -------------------------------------------------------------
+
+    fn general_card<'a>(&'a self, ctx: &'a Ctx, p: &Palette) -> Element<'a, Msg> {
+        let s = &ctx.state.settings;
+        let level = s.level.unwrap_or(Level::Orthodox);
+        let level_title = content::level_info(level).title;
+
+        let rows = column![
+            set_row(
+                "Течение",
+                format!("{level_title} · прогресс сохранится при смене"),
+                secondary_button("Сменить течение", Msg::ChangeLevel, p),
+            ),
+            divider(p),
+            set_row(
+                "Тема",
+                "Тёмная — основная".to_string(),
+                seg_row(
+                    &[
+                        ("Тёмная", s.theme != "parchment", Msg::SetTheme("dark")),
+                        ("Пергамент", s.theme == "parchment", Msg::SetTheme("parchment")),
+                    ],
+                    p,
+                ),
+            ),
+            divider(p),
+            set_row(
+                "Размер шрифта",
+                "Иврит масштабируется тоже".to_string(),
+                seg_row(
+                    &[
+                        ("A−", s.font_step == 0, Msg::SetFont(0)),
+                        ("A", s.font_step == 1, Msg::SetFont(1)),
+                        ("A+", s.font_step == 2, Msg::SetFont(2)),
+                        ("A++", s.font_step == 3, Msg::SetFont(3)),
+                    ],
+                    p,
+                ),
+            ),
+            divider(p),
+            set_row(
+                "Открыть все разделы",
+                "Свободное изучение без последовательной разблокировки".to_string(),
+                switch(s.unlock_all, Msg::ToggleUnlockAll, *p),
+            ),
+            divider(p),
+            set_row(
+                "Показывать транслитерацию",
+                "Русская транскрипция под текстом на иврите".to_string(),
+                switch(s.translit, Msg::ToggleTranslit, *p),
+            ),
+            divider(p),
+            set_row(
+                "Экзамен на время",
+                "Секунд на вопрос".to_string(),
+                seg_row(
+                    &[
+                        ("20 с", s.timed_seconds == 20, Msg::SetSeconds(20)),
+                        ("30 с", s.timed_seconds != 20, Msg::SetSeconds(30)),
+                    ],
+                    p,
+                ),
+            ),
+            divider(p),
+            set_row(
+                "Звук в экзамене на время",
+                "Короткие сигналы: таймер, верно/неверно".to_string(),
+                switch(s.timed_sound, Msg::ToggleTimedSound, *p),
+            ),
+            divider(p),
+            set_row(
+                "Автопереход в экзамене на время",
+                "Следующий вопрос через 2 секунды (можно поставить на паузу)".to_string(),
+                switch(s.timed_auto, Msg::ToggleTimedAuto, *p),
+            ),
+            container(
+                txt("שְׁמַע יִשְׂרָאֵל")
+                    .size(theme::text::HEBREW)
+                    .font(HEBREW)
+                    .color(p.hebrew)
+                    // RTL paragraphs are already flush right in cosmic-text;
+                    // keep Left + Fill (see widgets::hebrew_block).
+                    .align_x(Horizontal::Left)
+                    .width(Length::Fill),
+            )
+            .padding([12.0, 16.0])
+            .width(Length::Fill)
+            .style(move |_| theme::hebrew_block(&palette())),
+        ]
+        .spacing(14);
+        widgets::card(rows)
+    }
+
+    fn goal_card<'a>(&'a self, ctx: &'a Ctx, p: &Palette) -> Element<'a, Msg> {
+        let current = game::goal(&ctx.state);
+        let mut segs = Column::new().spacing(6).width(Length::Fill);
+        for g in game::GOALS {
+            segs = segs.push(goal_segment(g.title, g.xp, current == g.xp, p));
+        }
+
+        let note = row![
+            txt("XP даются за уроки, карточки, тесты и экзамены. За каждые 7 дней серии — заморозка (до двух), она сохранит серию, если вы пропустите день.")
+                .size(theme::text::SMALL)
+                .color(p.muted)
+                .width(Length::Fill),
+        ]
+        .width(Length::Fill);
+
+        let link = button(
+            txt("Подробнее в разделе «Прогресс»")
+                .size(theme::text::SMALL)
+                .color(p.gold2),
+        )
+        .padding(0)
+        .style(|_, _| iced::widget::button::Style::default())
+        .on_press(Msg::GoProgress);
+
+        widgets::card(
+            column![
+                widgets::heading("Цель и серия", 3),
+                column![
+                    txt("Цель дня").size(theme::text::BODY).font(SANS_BOLD),
+                    txt("Сколько XP набирать в день. Серия растёт, когда цель выполнена.")
+                        .size(theme::text::SMALL)
+                        .color(p.muted),
+                ]
+                .spacing(2),
+                segs,
+                note,
+                link,
+            ]
+            .spacing(12),
+        )
+    }
+
+    fn data_card<'a>(&'a self, p: &Palette) -> Element<'a, Msg> {
+        let export = button(
+            txt("Экспорт прогресса")
+                .size(theme::text::SMALL + 0.5)
+                .align_x(Horizontal::Center),
+        )
+        .padding([10.0, 18.0])
+        .style(move |_, s| theme::button_secondary(&palette(), s))
+        .on_press(Msg::Export);
+        let import = button(
+            txt("Импорт прогресса")
+                .size(theme::text::SMALL + 0.5)
+                .align_x(Horizontal::Center),
+        )
+        .padding([10.0, 18.0])
+        .style(move |_, s| theme::button_secondary(&palette(), s))
+        .on_press(Msg::ImportPick);
+        let reset = button(
+            txt("Сбросить прогресс")
+                .size(theme::text::SMALL + 0.5)
+                .align_x(Horizontal::Center),
+        )
+        .padding([10.0, 18.0])
+        .style(move |_, s| theme::button_danger(&palette(), s))
+        .on_press(Msg::AskReset);
+
+        widgets::card(
+            column![
+                widgets::heading("Данные", 3),
+                txt("Прогресс хранится только на этом устройстве.")
+                    .size(theme::text::SMALL)
+                    .color(p.muted),
+                row![export, import, reset].spacing(10).wrap(),
+            ]
+            .spacing(12),
+        )
+    }
+
+    fn about_card<'a>(&'a self, ctx: &'a Ctx, p: &Palette) -> Element<'a, Msg> {
+        let m = &ctx.lib.manifest;
+        let available = ctx.lib.sections.iter().filter(|s| s.available).count();
+        let src_count: usize = ctx
+            .lib
+            .sections
+            .iter()
+            .map(|s| ctx.lib.sources(s, None).len())
+            .sum();
+
+        let kv = |key: &'static str, value: String| -> Element<'a, Msg> {
+            row![
+                txt(key)
+                    .size(theme::text::SMALL + 0.5)
+                    .color(p.muted)
+                    .width(Length::Fixed(170.0)),
+                txt(value).size(theme::text::SMALL + 0.5).width(Length::Fill),
+            ]
+            .spacing(10)
+            .into()
+        };
+
+        let content_version = match &m.content_version {
+            Some(cv) => match &m.version {
+                Some(v) => format!("{cv} ({v})"),
+                None => cv.clone(),
+            },
+            None => "—".to_string(),
+        };
+        let review_status = m
+            .review_status
+            .clone()
+            .unwrap_or_else(|| "требует проверки раввином".to_string());
+
+        let notice = container(
+            txt("Материалы требуют проверки раввином вашей общины. Окончательные решения о гиюре принимает бейт-дин.")
+                .size(theme::text::SMALL + 0.5)
+                .color(p.text)
+                .width(Length::Fill),
+        )
+        .padding([12.0, 16.0])
+        .width(Length::Fill)
+        .style(move |_| container::Style {
+            border: Border {
+                radius: theme::radius::SMALL.into(),
+                ..Border::default()
+            },
+            ..plain_container(Some(p.gold_soft))
+        });
+
+        let sources_btn = button(
+            txt(format!("Источники ({src_count})")).size(theme::text::SMALL + 0.5),
+        )
+        .padding([10.0, 18.0])
+        .style(move |_, s| theme::button_secondary(&palette(), s))
+        .on_press(Msg::GoSources);
+
+        widgets::card(
+            column![
+                widgets::heading("О приложении", 3),
+                column![
+                    kv("Версия приложения", "1.2.0".to_string()),
+                    kv("Версия содержания", content_version),
+                    kv("Статус материалов", review_status),
+                    kv(
+                        "Разделов готово",
+                        format!("{} из {}", available, ctx.lib.sections.len()),
+                    ),
+                ]
+                .spacing(8),
+                notice,
+                txt("Документация в папке приложения: docs/ROADMAP.md, docs/CONTENT-SCHEMA.md, docs/SOURCES.md, docs/IMAGE-SLOTS.md.")
+                    .size(theme::text::SMALL)
+                    .color(p.muted),
+                sources_btn,
+            ]
+            .spacing(12),
+        )
+    }
+
+    /// Overlay the base view with a §0.3 confirm dialog.
+    fn with_dialog<'a>(
+        &'a self,
+        base: Element<'a, Msg>,
+        title: &'a str,
+        body: &'a str,
+        ok_label: &'a str,
+        danger: bool,
+    ) -> Element<'a, Msg> {
+        let p = palette();
+        let backdrop = mouse_area(
+            container(space::horizontal())
+                .width(Length::Fill)
+                .height(Length::Fill)
+                .style(move |_| plain_container(Some(Color::from_rgba8(3, 5, 12, 0.66)))),
+        )
+        .on_press(Msg::ConfirmCancel);
+
+        let cancel = button(txt("Отмена").size(theme::text::SMALL + 0.5))
+            .padding([10.0, 18.0])
+            .style(move |_, s| theme::button_ghost(&palette(), s))
+            .on_press(Msg::ConfirmCancel);
+        let ok = button(txt(ok_label).size(theme::text::SMALL + 0.5))
+            .padding([10.0, 18.0])
+            .style(move |_, s| {
+                if danger {
+                    theme::button_danger(&palette(), s)
+                } else {
+                    theme::button_primary(&palette(), s)
+                }
+            })
+            .on_press(Msg::ConfirmOk);
+
+        let modal = container(
+            column![
+                widgets::heading(title, 3),
+                txt(body)
+                    .size(theme::text::SMALL + 1.0)
+                    .color(p.muted)
+                    .width(Length::Fill),
+                row![space::horizontal().width(Length::Fill), cancel, ok]
+                    .spacing(10)
+                    .align_y(Alignment::Center),
+            ]
+            .spacing(14),
+        )
+        .padding(24.0)
+        .max_width(460.0)
+        .style(move |_| container::Style {
+            background: Some(Background::Color(p.surface)),
+            border: Border {
+                color: p.line2,
+                width: 1.0,
+                radius: theme::radius::MODAL.into(),
+            },
+            shadow: Shadow {
+                color: alpha(Color::BLACK, 0.4),
+                offset: iced::Vector::new(0.0, 10.0),
+                blur_radius: 30.0,
+            },
+            text_color: None,
+            snap: true,
+        });
+
+        stack![
+            base,
+            opaque(backdrop),
+            container(modal).center(Length::Fill).padding(20.0),
+        ]
+        .into()
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Controls
+// ---------------------------------------------------------------------------
+
+/// Bold label + small muted sub on the left, control on the right (§12).
+fn set_row<'a>(label: &'static str, sub: String, control: Element<'a, Msg>) -> Element<'a, Msg> {
+    row![
+        column![
+            txt(label).size(theme::text::BODY).font(SANS_BOLD),
+            txt(sub).size(theme::text::SMALL).color(palette().muted),
+        ]
+        .spacing(2)
+        .width(Length::Fill),
+        control,
+    ]
+    .spacing(16)
+    .align_y(Alignment::Center)
+    .into()
+}
+
+fn secondary_button<'a>(label: &'static str, msg: Msg, _p: &Palette) -> Element<'a, Msg> {
+    button(txt(label).size(theme::text::SMALL + 0.5))
+        .padding([10.0, 18.0])
+        .style(move |_, s| theme::button_secondary(&palette(), s))
+        .on_press(msg)
+        .into()
+}
+
+/// A row of segmented buttons (§T.6: selected = gold-soft, gold2, gold border).
+fn seg_row<'a>(items: &[(&'static str, bool, Msg)], p: &Palette) -> Element<'a, Msg> {
+    let mut r = Row::new().spacing(4);
+    for (label, selected, msg) in items {
+        let selected = *selected;
+        r = r.push(
+            button(
+                txt(*label)
+                    .size(theme::text::SMALL + 0.5)
+                    .font(if selected { SANS_BOLD } else { SANS })
+                    .align_x(Horizontal::Center),
+            )
+            .padding([9.0, 14.0])
+            .style(move |_, status| seg_style(&palette(), selected, status))
+            .on_press(msg.clone()),
+        );
+    }
+    let _ = p;
+    r.into()
+}
+
+fn seg_style(p: &Palette, selected: bool, status: button::Status) -> button::Style {
+    let base = button::Style {
+        background: Some(Background::Color(if selected {
+            p.gold_soft
+        } else {
+            p.surface2
+        })),
+        text_color: if selected { p.gold2 } else { p.text },
+        border: Border {
+            color: if selected { p.gold } else { p.line2 },
+            width: 1.0,
+            radius: theme::radius::SEGMENT.into(),
+        },
+        shadow: Shadow::default(),
+        snap: true,
+    };
+    match status {
+        button::Status::Hovered | button::Status::Pressed if !selected => button::Style {
+            background: Some(Background::Color(p.surface3)),
+            ..base
+        },
+        _ => base,
+    }
+}
+
+/// Daily-goal segment: full-width row «{title} … {xp} XP» (§12 card 2).
+fn goal_segment<'a>(
+    title: &'static str,
+    xp: i64,
+    selected: bool,
+    p: &Palette,
+) -> Element<'a, Msg> {
+    button(
+        row![
+            txt(title)
+                .size(theme::text::BODY)
+                .font(if selected { SANS_BOLD } else { SANS })
+                .color(if selected { p.gold2 } else { p.text }),
+            space::horizontal().width(Length::Fill),
+            txt(format!("{xp} XP"))
+                .size(theme::text::SMALL)
+                .color(if selected { p.gold2 } else { p.muted }),
+        ]
+        .align_y(Alignment::Center),
+    )
+    .padding([11.0, 14.0])
+    .width(Length::Fill)
+    .style(move |_, status| seg_style(&palette(), selected, status))
+    .on_press(Msg::SetGoal(xp))
+    .into()
+}
+
+/// The sliding switch (§T.6: 50×28 track, 20 px knob, slides 22 px).
+fn switch<'a>(on: bool, msg: Msg, p: Palette) -> Element<'a, Msg> {
+    let knob_color = if on { p.gold2 } else { p.muted };
+    let knob = container(space::horizontal())
+        .width(Length::Fixed(20.0))
+        .height(Length::Fixed(20.0))
+        .style(move |_| container::Style {
+            border: Border {
+                radius: theme::radius::PILL.into(),
+                ..Border::default()
+            },
+            ..plain_container(Some(knob_color))
+        });
+    let inner: Element<'a, Msg> = if on {
+        row![space::horizontal().width(Length::Fixed(22.0)), knob].into()
+    } else {
+        row![knob, space::horizontal().width(Length::Fixed(22.0))].into()
+    };
+    button(
+        container(inner)
+            .padding(4.0)
+            .width(Length::Fixed(50.0))
+            .height(Length::Fixed(28.0))
+            .style(move |_| container::Style {
+                background: Some(Background::Color(if on {
+                    p.gold_soft
+                } else {
+                    p.surface3
+                })),
+                border: Border {
+                    color: if on { p.gold } else { Color::TRANSPARENT },
+                    width: 1.0,
+                    radius: theme::radius::PILL.into(),
+                },
+                shadow: Shadow::default(),
+                text_color: None,
+                snap: true,
+            }),
+    )
+    .padding(0)
+    .style(|_, _| iced::widget::button::Style::default())
+    .on_press(msg)
+    .into()
 }

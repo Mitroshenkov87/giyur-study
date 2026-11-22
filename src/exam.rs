@@ -482,10 +482,10 @@ pub fn check(item: &Item, response: &Response) -> CheckResult {
                     good += 1;
                 }
             }
-            let score = if good == pairs.len() && !pairs.is_empty() {
+            // js/exam.js: good === q.pairs.length ? 1 : good / q.pairs.length,
+            // so an empty pairs list scores 1 (0 === 0).
+            let score = if good == pairs.len() {
                 1.0
-            } else if pairs.is_empty() {
-                0.0
             } else {
                 good as f64 / pairs.len() as f64
             };
@@ -1242,6 +1242,24 @@ mod tests {
         assert_eq!(check(&item, &Response::Open(1.0)).user, "Ответил верно");
         assert_eq!(check(&item, &Response::Open(0.0)).user, "Не ответил");
         assert_eq!(correct_text(&q), "Модельный ответ");
+    }
+
+    #[test]
+    fn match_empty_pairs_scores_like_js() {
+        // js/exam.js: good === q.pairs.length → 0 === 0 → score 1.
+        let q = Question::Match {
+            common: Default::default(),
+            pairs: vec![],
+        };
+        let item = Item {
+            q: &q,
+            sec: None,
+            order: None,
+            rights: None,
+        };
+        let r = check(&item, &Response::Match(vec![]));
+        assert_eq!(r.score, 1.0);
+        assert!(r.correct);
     }
 
     #[test]
