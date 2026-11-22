@@ -2,10 +2,10 @@
 
 Tripo AI exports (~65–75 MB GLB, 8K PBR textures) are shrunk for embedding with Blender headless:
 
-    blender -b --factory-startup --python tools/3d/optimize.py -- in.glb assets/3d/out.glb 40000 1024
+    blender -b --factory-startup --python tools/3d/optimize.py -- in.glb assets/3d/out.glb 200000 2048 2048
 
-Decimates to ~40k triangles and re-exports with WebP textures (`EXT_texture_webp`):
-base colour and normal at 1024 px, metallic-roughness at 512 px. That gives about 1.4–1.6 MB per model.
+Decimates to ~200k triangles and re-exports with WebP textures (`EXT_texture_webp`):
+base colour, normal and metallic-roughness at 2048 px (the optional 5th argument sets the metallic-roughness size; default is half). That gives about 6.5–7.6 MB per model.
 
 The static fallback picture (tiny-skia renderer, or «Объёмные модели» off) is rendered with Cycles from the same
 camera the app uses:

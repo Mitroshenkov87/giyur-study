@@ -23,10 +23,15 @@ use iced::{Element, Length, Point, Rectangle};
 
 pub use glb::Mesh;
 
+/// An embedded file under assets/3d. Each one sits behind its own `static`,
+/// so the bytes exist once in the binary even when `glb()` / `still()` are
+/// inlined into several codegen units (otherwise the Windows exe carried the
+/// models twice).
 macro_rules! asset {
-    ($f:literal) => {
-        include_bytes!(concat!("../../../assets/3d/", $f))
-    };
+    ($f:literal) => {{
+        static BYTES: &[u8] = include_bytes!(concat!("../../../assets/3d/", $f));
+        BYTES
+    }};
 }
 
 /// Settings `extra` key «Объёмные модели» (absent = on).
@@ -55,6 +60,7 @@ pub enum Model {
     ShabbatCandles,
     Menorah,
     TorahScroll,
+    Shofar,
 }
 
 /// Card texts and view limits of one model.
@@ -74,15 +80,15 @@ pub struct Info {
 }
 
 /// Bit per model for the per-model GPU-ready flags.
-pub(crate) const ALL: [Model; 4] = [
+pub(crate) const ALL: [Model; 5] = [
     Model::KiddushCup,
     Model::ShabbatCandles,
     Model::Menorah,
     Model::TorahScroll,
+    Model::Shofar,
 ];
 
 enum Load {
-    Idle,
     Loading,
     Ready(Arc<Mesh>),
     /// Failed to decode, or the forced software renderer (never drawn).
@@ -96,10 +102,11 @@ fn slots() -> &'static std::sync::Mutex<HashMap<Model, Load>> {
 
 impl Model {
     /// Objects that rotate as «Предмет дня» on «Уроки», one per day.
-    pub const OF_THE_DAY: [Model; 4] = [
+    pub const OF_THE_DAY: [Model; 5] = [
         Model::KiddushCup,
         Model::Menorah,
         Model::ShabbatCandles,
+        Model::Shofar,
         Model::TorahScroll,
     ];
 
@@ -116,7 +123,7 @@ impl Model {
         match id {
             "osnovy" => &[Model::TorahScroll],
             "shabbat" => &[Model::ShabbatCandles, Model::KiddushCup],
-            "prazdniki" => &[Model::Menorah],
+            "prazdniki" => &[Model::Shofar, Model::Menorah],
             _ => &[],
         }
     }
@@ -131,6 +138,7 @@ impl Model {
             Model::ShabbatCandles => asset!("shabbat-candlesticks.glb"),
             Model::Menorah => asset!("menorah.glb"),
             Model::TorahScroll => asset!("torah-scroll.glb"),
+            Model::Shofar => asset!("shofar.glb"),
         }
     }
 
@@ -140,6 +148,7 @@ impl Model {
             Model::ShabbatCandles => asset!("shabbat-candlesticks.webp"),
             Model::Menorah => asset!("menorah.webp"),
             Model::TorahScroll => asset!("torah-scroll.webp"),
+            Model::Shofar => asset!("shofar.webp"),
         }
     }
 
@@ -181,6 +190,15 @@ impl Model {
                 section_title: "Основы",
                 zoom_max: 1.15,
             },
+            Model::Shofar => Info {
+                kicker: "Праздники · Рош а-Шана",
+                title: "Шофар",
+                lead: "Рог, в который трубят в Рош а-Шана и в конце Йом Кипура.",
+                caption: "Шофар делают из рога кошерного животного, лучше всего — барана, в память о баране, принесённом вместо Ицхака. Звуки шофара — ткиа, шварим и труа — будят сердце к тшуве.",
+                section: "prazdniki",
+                section_title: "Праздники",
+                zoom_max: 2.0,
+            },
         }
     }
 
@@ -196,7 +214,7 @@ impl Model {
     fn loading(self) -> bool {
         slots()
             .lock()
-            .map(|s| matches!(s.get(&self), None | Some(Load::Idle) | Some(Load::Loading)))
+            .map(|s| matches!(s.get(&self), None | Some(Load::Loading)))
             .unwrap_or(false)
     }
 
@@ -205,7 +223,7 @@ impl Model {
     /// screen that shows it is open.
     pub fn preload(self) {
         let Ok(mut s) = slots().lock() else { return };
-        if !matches!(s.get(&self), None | Some(Load::Idle)) {
+        if s.contains_key(&self) {
             return;
         }
         // Forced software renderer: custom shaders never draw, so do not
@@ -240,17 +258,6 @@ impl Model {
                 s.insert(self, load);
             }
         });
-    }
-
-    /// Forget the decoded mesh (after its GPU copy was dropped): the next
-    /// view decodes it again.
-    fn unload(self) {
-        if let Ok(mut s) = slots().lock() {
-            if matches!(s.get(&self), Some(Load::Ready(_))) {
-                s.insert(self, Load::Idle);
-            }
-        }
-        GPU_READY.fetch_and(!self.bit(), Ordering::Relaxed);
     }
 
     /// Static render (fallback for the tiny-skia renderer or when 3D is off).
@@ -290,9 +297,6 @@ static WGPU_SEEN: AtomicBool = AtomicBool::new(false);
 // Stats (SHORASHIM_3D_STATS=1): summed 3D-pass time incl. a GPU wait.
 static PREP_NS: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
 static PREP_N: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
-
-/// Free GPU and CPU copies of a model this long after it was last drawn.
-const UNLOAD_AFTER: Duration = Duration::from_secs(8);
 
 fn stats_enabled() -> bool {
     static ON: OnceLock<bool> = OnceLock::new();
@@ -669,7 +673,6 @@ struct GpuModel {
     ubuf: wgpu::Buffer,
     bind: wgpu::BindGroup,
     mesh: Arc<Mesh>,
-    last_used: Instant,
 }
 
 struct Target {
@@ -868,24 +871,8 @@ impl shader::Pipeline for Pipeline {
     fn trim(&mut self) {
         let live = std::mem::take(&mut self.live);
         self.targets.retain(|m, _| live.contains(m));
-        // Models off screen for a while: drop the GPU buffers and textures
-        // and the decoded mesh, so memory stays low on screens without 3D.
-        let now = Instant::now();
-        for m in &live {
-            if let Some(g) = self.models.get_mut(m) {
-                g.last_used = now;
-            }
-        }
-        let stale: Vec<Model> = self
-            .models
-            .iter()
-            .filter(|(_, g)| now - g.last_used > UNLOAD_AFTER)
-            .map(|(m, _)| *m)
-            .collect();
-        for m in stale {
-            self.models.remove(&m);
-            m.unload();
-        }
+        // Uploaded models stay cached for the whole run (the target PCs
+        // have 16 GB+ RAM; five models take a few hundred MB at most).
     }
 }
 
@@ -1029,7 +1016,6 @@ impl Pipeline {
                 ubuf,
                 bind,
                 mesh,
-                last_used: Instant::now(),
             },
         );
         true

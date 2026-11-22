@@ -202,14 +202,6 @@ impl Screen {
         for &m in crate::ui::model3d::Model::for_section(&sec.id) {
             page = page.push(self.object_card(ctx, m));
         }
-        if sec.id == "prazdniki" && crate::ui::model3d::enabled(ctx) {
-            // The first Tripo shofar looks like a drinking horn: not shown
-            // until a better model is made.
-            page = page.push(crate::ui::model3d::card::placeholder(
-                "Шофар",
-                "Объёмная модель шофара скоро появится.",
-            ));
-        }
 
         // ---- Lessons ----
         page = page.push(
