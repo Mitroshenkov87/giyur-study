@@ -227,6 +227,21 @@ pub fn status() -> Status {
     }
 }
 
+/// Copy LICENSE, NOTICE and the `music/` playlist from beside a portable
+/// exe into the install folder. Missing sidecars are skipped.
+pub fn copy_sidecars(from_parent: &Path, to_dir: &Path) {
+    for f in ["LICENSE", "NOTICE"] {
+        let src = from_parent.join(f);
+        if src.is_file() {
+            let _ = std::fs::copy(&src, to_dir.join(f));
+        }
+    }
+    if let Some(src) = crate::music::sidecar_dir(from_parent) {
+        let dest = to_dir.join("music");
+        let _ = crate::music::copy_dir(&src, &dest);
+    }
+}
+
 /// Install (or update) this exe. Returns the installed exe path.
 pub fn install(opts: Options) -> Result<PathBuf, String> {
     #[cfg(windows)]
@@ -401,5 +416,28 @@ mod tests {
         .is_err());
         assert!(handle_cli(&["x".into(), "--uninstall".into()]));
         assert!(!handle_cli(&["x".into()]));
+    }
+    #[test]
+    fn copy_sidecars_copies_license_and_music() {
+        use std::time::{SystemTime, UNIX_EPOCH};
+        let n = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        let root = std::env::temp_dir().join(format!("shorashim-sidecar-{n}"));
+        let from = root.join("portable");
+        let to = root.join("installed");
+        std::fs::create_dir_all(from.join("music")).unwrap();
+        std::fs::create_dir_all(&to).unwrap();
+        std::fs::write(from.join("LICENSE"), b"L").unwrap();
+        std::fs::write(from.join("NOTICE"), b"N").unwrap();
+        std::fs::write(from.join("music").join("manifest.json"), b"{}").unwrap();
+        std::fs::write(from.join("music").join("a.ogg"), b"ogg").unwrap();
+        copy_sidecars(&from, &to);
+        assert_eq!(std::fs::read(to.join("LICENSE")).unwrap(), b"L");
+        assert_eq!(std::fs::read(to.join("NOTICE")).unwrap(), b"N");
+        assert!(to.join("music").join("manifest.json").is_file());
+        assert!(to.join("music").join("a.ogg").is_file());
+        let _ = std::fs::remove_dir_all(&root);
     }
 }

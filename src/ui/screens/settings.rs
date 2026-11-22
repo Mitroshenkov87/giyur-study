@@ -5,7 +5,7 @@
 use iced::alignment::Horizontal;
 use iced::widget::text::{IntoFragment, Shaping};
 use iced::widget::{
-    button, column, container, mouse_area, row, rule, space, stack, text, Column, Text,
+    button, column, container, mouse_area, row, rule, slider, space, stack, text, Column, Text,
 };
 use iced::{Alignment, Background, Border, Color, Element, Length, Shadow, Theme};
 
@@ -80,6 +80,9 @@ pub enum Msg {
     ToggleDesktopShortcut,
     Install,
     AskUninstall,
+    ToggleMusic,
+    SetVolume(i64),
+    NextTrack,
     Esc,
 }
 
@@ -264,6 +267,18 @@ impl Screen {
                 self.confirm = Some(Confirm::Uninstall);
                 Action::None
             }
+            Msg::ToggleMusic => {
+                ctx.state.settings.music_enabled = !ctx.state.settings.music_enabled;
+                ctx.save();
+                ctx.toast("Сохранено", "", "");
+                Action::None
+            }
+            Msg::SetVolume(v) => {
+                ctx.state.settings.music_volume = v.clamp(0, 100);
+                ctx.save();
+                Action::None
+            }
+            Msg::NextTrack => Action::MusicNext,
         }
     }
 
@@ -286,6 +301,7 @@ impl Screen {
         column![
             widgets::page_header("Настройки", None),
             self.general_card(ctx, p),
+            self.music_card(ctx, p),
             self.install_card(p),
             self.goal_card(ctx, p),
             self.data_card(p),
@@ -497,6 +513,64 @@ impl Screen {
                     .size(theme::text::SMALL)
                     .color(p.muted),
                 row![export, import, reset].spacing(10).wrap(),
+            ]
+            .spacing(12),
+        )
+    }
+
+    fn music_card<'a>(&'a self, ctx: &'a Ctx, p: Palette) -> Element<'a, Msg> {
+        let s = &ctx.state.settings;
+        let now = if !ctx.music_available {
+            "Файлы музыки не найдены. Они идут в портативном архиве и копируются при установке (папка music рядом с программой).".to_string()
+        } else if let Some(err) = &ctx.music_error {
+            err.clone()
+        } else if !s.music_enabled {
+            "Сейчас выключена.".to_string()
+        } else if let Some(title) = &ctx.music_title {
+            format!("Сейчас звучит: {title}")
+        } else {
+            "Сейчас включается…".to_string()
+        };
+        let vol = s.music_volume.clamp(0, 100);
+        let next = widgets::btn(
+            "Следующий трек",
+            widgets::Btn::Secondary,
+            widgets::BtnSize::Sm,
+            if s.music_enabled && ctx.music_available {
+                Some(Msg::NextTrack)
+            } else {
+                None
+            },
+        );
+        widgets::card(
+            column![
+                widgets::heading("Музыка", 3),
+                txt("Тихие инструментальные мелодии на фоне занятий. По умолчанию выключена.")
+                    .size(theme::text::SMALL)
+                    .color(p.muted)
+                    .width(Length::Fill),
+                set_row(
+                    "Включить музыку",
+                    if ctx.music_track_count > 1 {
+                        format!(
+                            "Плейлист из {} мелодий, без повторов, пока не прозвучат все",
+                            ctx.music_track_count
+                        )
+                    } else {
+                        "Один трек, он будет плавно начинаться заново".to_string()
+                    },
+                    switch(s.music_enabled, Msg::ToggleMusic, p),
+                ),
+                txt(now)
+                    .size(theme::text::SMALL)
+                    .color(p.muted)
+                    .width(Length::Fill),
+                set_row("Громкость", format!("{vol} %"), volume_slider(vol),),
+                next,
+                txt("Мелодии созданы в Grok Imagine.")
+                    .size(theme::text::SMALL)
+                    .color(p.muted)
+                    .width(Length::Fill),
             ]
             .spacing(12),
         )
@@ -823,6 +897,35 @@ fn goal_segment<'a>(title: &'static str, xp: i64, selected: bool, p: Palette) ->
     .into()
 }
 
+fn volume_slider(value: i64) -> Element<'static, Msg> {
+    let p = palette();
+    slider(0..=100, value as u8, |v| Msg::SetVolume(i64::from(v)))
+        .width(Length::Fixed(180.0))
+        .style(move |_theme, _status| {
+            use iced::widget::slider::{Handle, HandleShape, Rail, Style};
+            Style {
+                rail: Rail {
+                    backgrounds: (
+                        iced::Background::Color(p.gold2),
+                        iced::Background::Color(p.surface3),
+                    ),
+                    width: 4.0,
+                    border: Border {
+                        radius: 2.0.into(),
+                        ..Border::default()
+                    },
+                },
+                handle: Handle {
+                    shape: HandleShape::Circle { radius: 8.0 },
+                    background: iced::Background::Color(p.gold2),
+                    border_width: 0.0,
+                    border_color: Color::TRANSPARENT,
+                },
+            }
+        })
+        .into()
+}
+
 /// The sliding switch (§T.6: 50×28 track, 20 px knob, slides 22 px).
 fn switch<'a>(on: bool, msg: Msg, p: Palette) -> Element<'a, Msg> {
     let knob_color = if on { p.gold2 } else { p.muted };
@@ -841,7 +944,7 @@ fn switch<'a>(on: bool, msg: Msg, p: Palette) -> Element<'a, Msg> {
     } else {
         row![knob, space::horizontal().width(Length::Fixed(22.0))].into()
     };
-    button(
+    let button = button(
         container(inner)
             .padding(4.0)
             .width(Length::Fixed(50.0))
@@ -860,6 +963,8 @@ fn switch<'a>(on: bool, msg: Msg, p: Palette) -> Element<'a, Msg> {
     )
     .padding(0)
     .style(|_, _| iced::widget::button::Style::default())
-    .on_press(msg)
-    .into()
+    .on_press(msg);
+    // The switch has no text of its own: report its state so the automation
+    // probe lists it as a control (id = its message, e.g. Settings(ToggleTranslit)).
+    crate::automation::reported(button, if on { "вкл" } else { "выкл" })
 }

@@ -1,0 +1,2 @@
+# Blender writes temporary PNGs; deliverables are WebP only
+*.png

@@ -14,3 +14,8 @@ Bundled third-party components:
 
 Study content in content/ requires review by a rabbi; conversion programs
 differ by movement and by beit din.
+
+- Background music in assets/music/, generated with Grok Imagine.
+  Drop additional OGG Vorbis files next to the exe (music/) and list them
+  in music/manifest.json.
+

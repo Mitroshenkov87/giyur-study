@@ -1932,6 +1932,10 @@ mod tests {
             today_override: chrono::NaiveDate::from_ymd_opt(2026, 11, 22),
             test_timer: None,
             writable: false,
+            music_title: None,
+            music_available: false,
+            music_error: None,
+            music_track_count: 0,
         }
     }
 

@@ -589,6 +589,21 @@ pub(crate) fn emblem<'a, Message: 'a>(
     dim: bool,
 ) -> Element<'a, Message> {
     let p = theme::current();
+    // Rendered 3D medallion for the theme (brass on walnut / bronze on
+    // oxblood leather); it carries its own rim and soft shadow, so no frame.
+    let art = format!("emblem-{}-{}", id.replace('_', "-"), theme::art_variant());
+    if let Some(handle) = crate::ui::assets::art(&art) {
+        return container(
+            iced::widget::image(handle)
+                .width(size)
+                .height(size)
+                .filter_method(iced::widget::image::FilterMethod::Linear)
+                .opacity(if dim { 0.45_f32 } else { 1.0 }),
+        )
+        .width(Length::Fixed(size))
+        .height(Length::Fixed(size))
+        .into();
+    }
     if let Some(handle) = crate::ui::assets::img(&format!("section-{id}")) {
         return container(iced::widget::image(handle).width(size).height(size))
             .width(Length::Fixed(size))

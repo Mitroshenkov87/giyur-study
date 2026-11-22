@@ -12,6 +12,8 @@ use shorashim::ui::screens::{self, Current};
 use shorashim::ui::theme::{self, ThemeKind};
 use shorashim::ui::{assets, fonts, layout, nav, widgets};
 
+use shorashim::automation::server::{self as control, ControlMsg};
+
 const MAIN_SCROLL: &str = "main-scroll";
 const ASIDE_SCROLL: &str = "aside-scroll";
 
@@ -20,6 +22,9 @@ struct App {
     route: Route,
     history: Vec<Route>,
     screen: Current,
+    /// Sidebar item under the mouse (its 3D icon shows the hover frame).
+    nav_hover: Option<usize>,
+    music: shorashim::music::Controller,
 }
 
 #[derive(Debug, Clone)]
@@ -27,8 +32,12 @@ enum Message {
     Screen(screens::Msg),
     Nav(Route),
     Tick(Instant),
+    /// Automation control channel (`--control`, docs/AUTOMATION.md).
+    Control(ControlMsg),
     /// Screenshot hook `SHORASHIM_SCROLL_Y=<px>`: scroll the main column.
     ScrollTo(f32),
+    /// Mouse entered (`true`) or left (`false`) a sidebar item.
+    NavHover(usize, bool),
 }
 
 fn theme_kind(ctx: &Ctx) -> ThemeKind {
@@ -61,13 +70,20 @@ impl App {
             Route::Welcome
         };
         let screen = Current::open(&mut ctx, &route);
+        let mut app = App {
+            ctx,
+            route,
+            history: Vec::new(),
+            screen,
+            // Screenshot hook `SHORASHIM_NAV_HOVER=<index>`: show one
+            // sidebar icon in its hover frame without a mouse.
+            nav_hover: shorashim::util::env_hook("NAV_HOVER").and_then(|v| v.parse().ok()),
+            music: shorashim::music::Controller::start(),
+        };
+        app.maybe_music_hint();
+        app.sync_music();
         (
-            App {
-                ctx,
-                route,
-                history: Vec::new(),
-                screen,
-            },
+            app,
             // Screenshot hook: scroll once the first frame is laid out.
             match shorashim::util::env_hook("SCROLL_Y").and_then(|v| v.parse::<f32>().ok()) {
                 Some(y) => Task::perform(
@@ -80,6 +96,8 @@ impl App {
     }
 
     fn go(&mut self, route: Route) -> Task<Message> {
+        // The sidebar may be rebuilt under the cursor; don't leave a stuck hover.
+        self.nav_hover = None;
         // First-launch guard (PARITY §0.1).
         let route = if !self.ctx.state.onboarded
             && !matches!(route, Route::Welcome | Route::Level { .. })
@@ -110,8 +128,15 @@ impl App {
 
     fn update(&mut self, message: Message) -> Task<Message> {
         match message {
+            Message::NavHover(i, inside) => {
+                if inside {
+                    self.nav_hover = Some(i);
+                } else if self.nav_hover == Some(i) {
+                    self.nav_hover = None;
+                }
+            }
             Message::Screen(m) => match self.screen.update(&mut self.ctx, m) {
-                Action::None => {}
+                Action::None => self.sync_music(),
                 Action::Go(r) => return self.go(r),
                 Action::Back => {
                     let r = self.history.pop().unwrap_or(Route::Map);
@@ -120,11 +145,33 @@ impl App {
                 }
                 Action::SettingsChanged => {
                     theme::set_current(theme_kind(&self.ctx));
+                    self.sync_music();
                 }
-                Action::Quit => return iced::exit(),
+                Action::Quit => {
+                    self.music.set_enabled(false);
+                    return iced::exit();
+                }
+                Action::MusicNext => {
+                    self.music.next();
+                    self.sync_music();
+                }
             },
             Message::Nav(r) => return self.go(r),
-            Message::Tick(now) => self.ctx.toasts.retain(|t| t.until > now),
+            Message::Tick(now) => {
+                self.ctx.toasts.retain(|t| t.until > now);
+                self.sync_music();
+            }
+            Message::Control(ControlMsg::Request(req)) => {
+                let mut host = GuiHost {
+                    app: self,
+                    tasks: Vec::new(),
+                };
+                let tasks = std::mem::take(&mut host.tasks);
+                let (task, _) =
+                    control::handle(&mut host, req, tasks, MAIN_SCROLL, Message::Control);
+                return Task::batch([task, Task::batch(host.tasks)]);
+            }
+            Message::Control(ControlMsg::Done) => {}
             Message::ScrollTo(y) => {
                 return iced::widget::operation::scroll_to(
                     MAIN_SCROLL,
@@ -136,6 +183,34 @@ impl App {
             }
         }
         Task::none()
+    }
+
+    fn maybe_music_hint(&mut self) {
+        if self.ctx.state.onboarded
+            && !self.ctx.state.settings.music_hint_seen
+            && self.ctx.music_available
+        {
+            self.ctx.toast(
+                "Фоновая музыка",
+                "В «Настройках» можно включить тихие инструментальные мелодии. По умолчанию она выключена.",
+                "",
+            );
+            self.ctx.state.settings.music_hint_seen = true;
+            self.ctx.save();
+        }
+    }
+
+    fn sync_music(&mut self) {
+        self.music
+            .set_enabled(self.ctx.state.settings.music_enabled);
+        self.music.set_volume(self.ctx.state.settings.music_volume);
+        let st = self.music.status();
+        self.ctx.music_title = st.title;
+        self.ctx.music_error = st.error;
+        if st.track_count > 0 {
+            self.ctx.music_available = st.available;
+            self.ctx.music_track_count = st.track_count;
+        }
     }
 
     fn sidebar(&self) -> Element<'_, Message> {
@@ -196,6 +271,35 @@ impl App {
                     },
                     ..Default::default()
                 });
+            // Pre-rendered 3D icon for the theme; the hover frame is the same
+            // object turned 15° with a brighter key light (a cheap "tilt").
+            let hovered = self.nav_hover == Some(i);
+            let art_name = format!(
+                "icon-{}-{}{}",
+                item.art,
+                theme::art_variant(),
+                if hovered { "-hover" } else { "" }
+            );
+            // The hovered icon also grows a little inside a fixed box ("pop"),
+            // so the row never shifts.
+            let box_px = theme::size::NAV_ICON_HOVER;
+            let px = if hovered {
+                theme::size::NAV_ICON_HOVER
+            } else {
+                theme::size::NAV_ICON
+            };
+            let icon: Element<'_, Message> = match assets::art(&art_name) {
+                Some(h) => container(
+                    image(h)
+                        .width(px)
+                        .height(px)
+                        .filter_method(image::FilterMethod::Linear),
+                )
+                .center_x(box_px)
+                .center_y(box_px)
+                .into(),
+                None => iced::widget::space().width(box_px).height(box_px).into(),
+            };
             let label = column![
                 text(item.label).size(15).shaping(text::Shaping::Advanced),
                 text(item.subtitle)
@@ -205,7 +309,7 @@ impl App {
             ]
             .spacing(1);
             let b = button(
-                container(row![bar, label].spacing(10).align_y(Alignment::Center))
+                container(row![bar, icon, label].spacing(8).align_y(Alignment::Center))
                     .center_y(Length::Fill),
             )
             .width(Length::Fill)
@@ -227,6 +331,9 @@ impl App {
             )
             .padding([7, 11])
             .max_width(300);
+            let b = iced::widget::mouse_area(b)
+                .on_enter(Message::NavHover(i, true))
+                .on_exit(Message::NavHover(i, false));
             col = col.push(
                 iced::widget::tooltip(b, tip, iced::widget::tooltip::Position::Right)
                     .gap(6)
@@ -418,14 +525,20 @@ impl App {
     }
 
     fn subscription(&self) -> Subscription<Message> {
-        let screen = self.screen.subscription().map(Message::Screen);
-        if self.ctx.toasts.is_empty() {
-            screen
-        } else {
+        let screen = Subscription::batch([
+            self.screen.subscription().map(Message::Screen),
+            control::subscription(&self.ctx).map(Message::Control),
+        ]);
+        let tick = !self.ctx.toasts.is_empty()
+            || matches!(self.route, Route::Settings)
+            || self.ctx.state.settings.music_enabled;
+        if tick {
             Subscription::batch([
                 screen,
                 iced::time::every(Duration::from_millis(250)).map(Message::Tick),
             ])
+        } else {
+            screen
         }
     }
 
@@ -474,7 +587,52 @@ fn parse_route(r: &str) -> Option<Route> {
     })
 }
 
+/// The windowed app as an automation host: commands go through the same
+/// `update` as clicks and sidebar navigation.
+struct GuiHost<'a> {
+    app: &'a mut App,
+    tasks: Vec<Task<Message>>,
+}
+
+impl shorashim::automation::Host for GuiHost<'_> {
+    fn ctx(&self) -> &Ctx {
+        &self.app.ctx
+    }
+    fn ctx_mut(&mut self) -> &mut Ctx {
+        &mut self.app.ctx
+    }
+    fn screen(&self) -> &Current {
+        &self.app.screen
+    }
+    fn route(&self) -> &Route {
+        &self.app.route
+    }
+    fn dispatch(&mut self, msg: screens::Msg) {
+        let t = self.app.update(Message::Screen(msg));
+        self.tasks.push(t);
+    }
+    fn navigate(&mut self, route: Route) {
+        let t = self.app.update(Message::Nav(route));
+        self.tasks.push(t);
+    }
+    fn back(&mut self) {
+        let r = self.app.history.pop().unwrap_or(Route::Map);
+        self.app.screen = Current::open(&mut self.app.ctx, &r);
+        self.app.route = r;
+    }
+    fn settings_changed(&mut self) {
+        theme::set_current(theme_kind(&self.app.ctx));
+    }
+    fn windowed(&self) -> bool {
+        true
+    }
+}
+
 fn main() -> iced::Result {
+    // `shorashim ctl …`, `shorashim mcp`, `shorashim --headless …`.
+    if let Some(code) = shorashim::automation::cli::main_hook() {
+        std::process::exit(code);
+    }
     // «Приложения и возможности» runs `shorashim.exe --uninstall`.
     let args: Vec<String> = std::env::args().collect();
     if shorashim::install::handle_cli(&args) {
@@ -508,8 +666,13 @@ fn main() -> iced::Result {
         .default_font(Font::with_name("Noto Sans"));
     // Register the embedded fonts up front, so the very first frame already
     // uses them (no font-load race on the first paint).
-    fonts::all()
+    let result = fonts::all()
         .into_iter()
         .fold(app, |app, font| app.font(font))
-        .run()
+        .run();
+    // The control channel's token file is only valid while the app runs.
+    if let Some(file) = control::active_file() {
+        control::cleanup(file);
+    }
+    result
 }
