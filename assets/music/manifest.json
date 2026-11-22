@@ -4,9 +4,73 @@
   "tracks": [
     {
       "id": "quiet-freygish-study",
-      "title": "Quiet Freygish Study",
+      "title": "Фрейгиш",
+      "grokTitle": "Quiet Freygish Study",
       "file": "quiet-freygish-study.ogg",
       "durationSeconds": 174.32
+    },
+    {
+      "id": "quiet-study-nigun",
+      "title": "Тихий нигун",
+      "grokTitle": "Quiet Study Nigun",
+      "file": "quiet-study-nigun.ogg",
+      "durationSeconds": 162.74
+    },
+    {
+      "id": "quiet-oud-study",
+      "title": "Уд",
+      "grokTitle": "Quiet Oud Study",
+      "file": "quiet-oud-study.ogg",
+      "durationSeconds": 177.29
+    },
+    {
+      "id": "quiet-study-doina",
+      "title": "Дойна",
+      "grokTitle": "Quiet Study Doina",
+      "file": "quiet-study-doina.ogg",
+      "durationSeconds": 169.64
+    },
+    {
+      "id": "quiet-study-piano",
+      "title": "Фортепиано",
+      "grokTitle": "Quiet Study Piano",
+      "file": "quiet-study-piano.ogg",
+      "durationSeconds": 180.06
+    },
+    {
+      "id": "quiet-study-pads",
+      "title": "Тишина",
+      "grokTitle": "Quiet Study Pads",
+      "file": "quiet-study-pads.ogg",
+      "durationSeconds": 177.5
+    },
+    {
+      "id": "quiet-study-guitar",
+      "title": "Гитара",
+      "grokTitle": "Quiet Study Strings",
+      "file": "quiet-study-guitar.ogg",
+      "durationSeconds": 166.03
+    },
+    {
+      "id": "quiet-study-cello-harp",
+      "title": "Виолончель и арфа",
+      "grokTitle": "Cello and Harp",
+      "file": "quiet-study-cello-harp.ogg",
+      "durationSeconds": 161.91
+    },
+    {
+      "id": "quiet-study-quartet",
+      "title": "Квартет",
+      "grokTitle": "Quiet Study Lullaby",
+      "file": "quiet-study-quartet.ogg",
+      "durationSeconds": 175.65
+    },
+    {
+      "id": "quiet-jerusalem-evening",
+      "title": "Иерусалимский вечер",
+      "grokTitle": "Jerusalem Evening",
+      "file": "quiet-jerusalem-evening.ogg",
+      "durationSeconds": 130.69
     }
   ]
 }

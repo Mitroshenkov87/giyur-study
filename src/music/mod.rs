@@ -35,7 +35,12 @@ struct ManifestFile {
 #[serde(rename_all = "camelCase")]
 struct ManifestTrack {
     id: String,
+    /// Russian display name shown in Settings.
     title: String,
+    /// Original Grok Imagine title, kept for credit/reference.
+    #[serde(default)]
+    #[allow(dead_code)]
+    grok_title: Option<String>,
     file: String,
     #[serde(default)]
     duration_seconds: Option<f32>,
@@ -194,10 +199,20 @@ mod tests {
             !c.tracks.is_empty(),
             "assets/music must ship at least one track"
         );
+        assert_eq!(c.tracks.len(), 10);
         assert_eq!(c.tracks[0].id, "quiet-freygish-study");
-        assert_eq!(c.tracks[0].title, "Quiet Freygish Study");
+        assert_eq!(c.tracks[0].title, "Фрейгиш");
         assert!(c.tracks[0].path.ends_with("quiet-freygish-study.ogg"));
         assert!(c.tracks[0].path.is_file());
+        let ids: Vec<_> = c.tracks.iter().map(|t| t.id.as_str()).collect();
+        let mut unique = ids.clone();
+        unique.sort();
+        unique.dedup();
+        assert_eq!(unique.len(), ids.len(), "duplicate track id");
+        for tr in &c.tracks {
+            assert!(!tr.title.is_empty(), "{}", tr.id);
+            assert!(tr.path.is_file(), "{}", tr.path.display());
+        }
         assert!(c.credit.as_deref().unwrap_or("").contains("Grok Imagine"));
     }
 
