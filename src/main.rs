@@ -136,7 +136,7 @@ impl App {
     }
 
     fn sidebar(&self) -> Element<'_, Message> {
-        let p = theme::current();
+        let p = theme::side_palette(theme::current());
         let items: [(&str, Route); 8] = [
             ("Карта", Route::Map),
             ("Календарь", Route::Calendar),

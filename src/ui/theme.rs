@@ -149,24 +149,25 @@ pub const DARK: Palette = Palette {
     brass_edge: rgb(0x7a5a26),
 };
 
-/// The light «Пергамент» palette: matte klaf (tan/ochre) with iron-gall ink.
-/// Kept at moderate luminance (cards ≈ 0.45 relative luminance, not paper
-/// white) so it does not glare on bright screens. Body text is ≈ 8:1 on
-/// cards; `muted` is meant for cards, not for the bare window background.
+/// The light «Пергамент» palette, v0.5: smoothed calf hide. A warm
+/// tan/caramel ground (relative luminance ≈ 0.25, darker than paper so it
+/// does not glare), lighter tooled-hide cards (≈ 0.40) with a darker
+/// pressed edge, and a dark leather sidebar with cream ink
+/// ([`side_palette`]). Body text is ≥ 7.5:1 on cards; `muted` ≈ 6.5:1.
 pub const PARCHMENT: Palette = Palette {
-    bg0: rgb(0x9a835c),
-    bg1: rgb(0xa89068),
-    surface: rgb(0xc8b38b),
-    surface2: rgb(0xbea982),
-    surface3: rgb(0xb39d76),
-    line: hexa(0x6b4712, 0.22),
-    line2: hexa(0x6b4712, 0.40),
-    text: rgb(0x2a1a0c),
-    muted: rgb(0x3a2818),
+    bg0: rgb(0x9c7650),
+    bg1: rgb(0xa8825a),
+    surface: rgb(0xcaa67d),
+    surface2: rgb(0xc09c73),
+    surface3: rgb(0xb5916a),
+    line: hexa(0x4a2e14, 0.24),
+    line2: hexa(0x4a2e14, 0.42),
+    text: rgb(0x22140a),
+    muted: rgb(0x35240f),
     gold: rgb(0x6a4810),
     gold2: rgb(0x4a2e06),
     gold_soft: hexa(0x6a4810, 0.14),
-    on_gold: rgb(0x2a1a0c),
+    on_gold: rgb(0x22140a),
     hebrew: rgb(0x4a2e06),
     ok: rgb(0x1d4529),
     ok_soft: hexa(0x1d4529, 0.12),
@@ -178,7 +179,7 @@ pub const PARCHMENT: Palette = Palette {
     violet_soft: hexa(0x452c72, 0.10),
     flame: rgb(0x6a3c08),
     flame_soft: hexa(0x6a3c08, 0.12),
-    input_bg: rgb(0xd0bc96),
+    input_bg: rgb(0xd3b189),
     // Veil, tint, lamp and vignette are baked into the WebP backgrounds.
     texture: "bg-parchment",
     side_texture: "side-parchment",
@@ -190,8 +191,27 @@ pub const PARCHMENT: Palette = Palette {
     brass_hi: rgb(0xd9b56a),
     brass_mid: rgb(0xc8a258),
     brass_lo: rgb(0xb8914a),
-    brass_edge: rgb(0x6b4712),
+    brass_edge: rgb(0x5a3a10),
 };
+
+/// Palette for the sidebar. In the light theme the sidebar is a strip of
+/// dark leather, so it gets cream ink and brighter brass (≥ 8:1 on the
+/// strip); the dark theme uses its palette unchanged.
+pub fn side_palette(p: Palette) -> Palette {
+    if !is_light(&p.text) {
+        return p;
+    }
+    Palette {
+        text: rgb(0xf3e6cc),
+        muted: rgb(0xd8c3a0),
+        gold: rgb(0xd9b56a),
+        gold2: rgb(0xf0d79a),
+        gold_soft: hexa(0xd9b56a, 0.16),
+        line: hexa(0xf0d79a, 0.18),
+        line2: hexa(0xf0d79a, 0.32),
+        ..p
+    }
+}
 
 /// The timed-studio palette scoped to quiz-show screens (§T.3).
 pub const TIMED: Palette = Palette {
@@ -427,8 +447,10 @@ fn brass_background(p: &Palette, toward: Color, lift: f32) -> Background {
     )
 }
 
-fn is_light(color: &Color) -> bool {
-    0.299 * color.r + 0.587 * color.g + 0.114 * color.b > 0.5
+/// A light theme is one with dark ink (the hide theme's background is a
+/// mid-tone tan, so the background alone no longer tells).
+fn is_light(text: &Color) -> bool {
+    0.299 * text.r + 0.587 * text.g + 0.114 * text.b < 0.5
 }
 
 // ---------------------------------------------------------------------------
@@ -448,7 +470,7 @@ fn button_style(background: Option<Background>, text_color: Color) -> button::St
 /// Primary brass button: three-stop brass gradient, 1 px brass edge,
 /// on-gold label, warm drop shadow.
 pub fn button_primary(p: &Palette, status: button::Status) -> button::Style {
-    let light = is_light(&p.bg0);
+    let light = is_light(&p.text);
     let border = Border {
         color: p.brass_edge,
         width: 1.0,
@@ -814,7 +836,7 @@ fn container_style(p: &Palette, background: Option<Background>) -> container::St
 }
 
 fn card_shadow(p: &Palette) -> Shadow {
-    if is_light(&p.bg0) {
+    if is_light(&p.text) {
         Shadow {
             color: rgba(0x3a, 0x25, 0x10, 0.18),
             offset: Vector::new(0.0, 3.0),
@@ -832,10 +854,11 @@ fn card_shadow(p: &Palette) -> Shadow {
 /// Card: translucent surface over the window texture (the grain stays
 /// visible); the top edge is slightly lamp-lit. 1 px brass border.
 pub fn card(p: &Palette) -> container::Style {
-    let light = is_light(&p.bg0);
+    let light = is_light(&p.text);
     let lamp_rgb = Color { a: 1.0, ..p.lamp };
     let border_color = if light {
-        hexa(0x6b4712, 0.30)
+        // Pressed (tooled) edge of a hide panel.
+        hexa(0x4a2e14, 0.50)
     } else {
         alpha(p.gold, 0.35)
     };
