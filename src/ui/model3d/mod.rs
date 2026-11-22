@@ -70,6 +70,8 @@ pub enum Model {
     Sukkah,
     Tallit,
     Mezuzah,
+    Siddur,
+    Tefillin,
 }
 
 /// Card texts and view limits of one model.
@@ -89,7 +91,7 @@ pub struct Info {
 }
 
 /// Bit per model for the per-model GPU-ready flags.
-pub(crate) const ALL: [Model; 14] = [
+pub(crate) const ALL: [Model; 16] = [
     Model::KiddushCup,
     Model::ShabbatCandles,
     Model::Menorah,
@@ -104,6 +106,8 @@ pub(crate) const ALL: [Model; 14] = [
     Model::Sukkah,
     Model::Tallit,
     Model::Mezuzah,
+    Model::Siddur,
+    Model::Tefillin,
 ];
 
 enum Load {
@@ -120,7 +124,7 @@ fn slots() -> &'static std::sync::Mutex<HashMap<Model, Load>> {
 
 impl Model {
     /// Objects that rotate as «Предмет дня» on «Уроки», one per day.
-    pub const OF_THE_DAY: [Model; 14] = [
+    pub const OF_THE_DAY: [Model; 16] = [
         Model::KiddushCup,
         Model::Menorah,
         Model::ShabbatCandles,
@@ -135,6 +139,8 @@ impl Model {
         Model::Sukkah,
         Model::Tallit,
         Model::Mezuzah,
+        Model::Siddur,
+        Model::Tefillin,
     ];
 
     pub fn of_the_day(day: chrono::NaiveDate) -> Model {
@@ -150,7 +156,7 @@ impl Model {
         match id {
             "osnovy" => &[Model::TorahScroll, Model::Temple, Model::MagenDavid],
             "shabbat" => &[Model::ShabbatCandles, Model::KiddushCup],
-            "ivrit" => &[Model::Tallit, Model::Mezuzah],
+            "ivrit" => &[Model::Siddur, Model::Tallit, Model::Tefillin, Model::Mezuzah],
             "prazdniki" => &[
                 Model::Shofar,
                 Model::LulavEtrog,
@@ -185,6 +191,8 @@ impl Model {
             Model::Sukkah => asset!("sukkah.glb"),
             Model::Tallit => asset!("tallit.glb"),
             Model::Mezuzah => asset!("mezuzah.glb"),
+            Model::Siddur => asset!("siddur.glb"),
+            Model::Tefillin => asset!("tefillin.glb"),
         }
     }
 
@@ -204,6 +212,8 @@ impl Model {
             Model::Sukkah => asset!("sukkah.webp"),
             Model::Tallit => asset!("tallit.webp"),
             Model::Mezuzah => asset!("mezuzah.webp"),
+            Model::Siddur => asset!("siddur.webp"),
+            Model::Tefillin => asset!("tefillin.webp"),
         }
     }
 
@@ -335,6 +345,24 @@ impl Model {
                 section_title: "Иврит и молитва",
                 zoom_max: 2.0,
             },
+            Model::Siddur => Info {
+                kicker: "Иврит и молитва",
+                title: "Сидур",
+                lead: "Сидур — молитвенник на будни и Шаббат; само слово значит «порядок».",
+                caption: "Сидур содержит установленный порядок ежедневных и шаббатних молитв. Для Рош а-Шана, Йом Кипура и паломнических праздников берут особый молитвенник — махзор. В разных общинах приняты свои нусахи — редакции текста и порядка. На этой модели — открытый сидур; буквы на страницах условные, это не настоящий текст молитвы.",
+                section: "ivrit",
+                section_title: "Иврит и молитва",
+                zoom_max: 1.15,
+            },
+            Model::Tefillin => Info {
+                kicker: "Иврит и молитва",
+                title: "Тфилин",
+                lead: "Тфилин — две чёрные кожаные коробочки с ремешками; внутри — четыре отрывка Торы.",
+                caption: "Заповедь берётся из Шма: «и повяжи их как знак на руку твою, и будут они повязкой между глазами твоими» (Дварим 6:8). Тфилин шель яд надевают на бицепс слабой руки, напротив сердца; тфилин шель рош — на голову над линией волос. Их надевают в будни на утреннюю молитву; в Шаббат и праздники не надевают — эти дни сами «знак». На этой модели — головной тфилин (шель рош): коробочка (байт) на основании (титура). Буква шин на боковых гранях и ремешки на модели не показаны.",
+                section: "ivrit",
+                section_title: "Иврит и молитва",
+                zoom_max: 2.0,
+            },
         }
     }
 
@@ -364,6 +392,8 @@ impl Model {
             Model::SederPlate => (YAW0, 0.55),
             // The sukkah is a small building: a slightly higher view shows the schach and the table inside.
             Model::Sukkah => (YAW0, 0.48),
+            // Open pages and the star on the cover: a slightly higher view than a standing object.
+            Model::Siddur => (YAW0, 0.40),
             _ => (YAW0, PITCH0),
         }
     }

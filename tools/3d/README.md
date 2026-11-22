@@ -42,10 +42,21 @@ Three more models were added the same way (`200000 2048 2048`): `sukkah`,
 table inside are visible (the app start view matches). The mezuzah raw export
 had a second case on the back of the doorpost and a third on the right side;
 those were removed (silver components not on the front face, then a wood cap
-on the back) so the post is a solid block with one slanted case. Tefillin was
-not placed: v2 is crisp from the front but the sides show stacked extra slabs
-and a very long strap that could not be cleaned reliably, and v1 (a pair on a
-bag) is recognisable but too melted.
+on the back) so the post is a solid block with one slanted case.
+
+`siddur` is the first of three Tripo attempts (v1 `83353323`): the front, the
+start view and the three-quarter view show an open prayer book with a Magen
+David and a blue bookmark; the sides and the underside of the covers are
+flatter, so the start view uses pitch 0.40 to favour the open pages. Attempt A
+was a flatter book with geometric marks on the pages; attempt B had a cover
+standing like a wall, a ragged flap and a floating ribbon. Letters on the
+pages are decorative; zoom is capped at 1.15× like the scrolls.
+
+`tefillin` is v3 `d23da79a` (a single-image shel-rosh bayit). The base slab
+was about a third of the cube height and was scaled in Z to a thin titura;
+the short thick rear ring was removed (a tiny nub remains on the back-right),
+and a shallow handle-like recess on one side of the titura was left. The
+letter shin and the straps are not on the model. v1 and v2 were not placed.
 
 Runtime: `src/ui/model3d` (GLB reader, wgpu shader widget). Debug hooks: `SHORASHIM_3D_STATS=1` (fps and 3D-pass
 time to stderr), `SHORASHIM_3D_YAW=<rad>` (fixed angle, no idle spin), `SHORASHIM_3D_MSAA=1` (no MSAA),
