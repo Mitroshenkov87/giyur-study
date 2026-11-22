@@ -26,10 +26,10 @@ def build():
     common.reset_scene()
     common.setup_render()
     metal = common.theme_metal()
-    accent = common.theme_accent()
+    accent = iconkit.accent()
     fruit_mat = iconkit.mat_pomegranate()
-    calyx_mat = iconkit.simple_mat("Calyx", (0.24, 0.05, 0.03, 1.0),
-                                   roughness=0.45)
+    calyx_mat = iconkit.simple_mat("Calyx", (0.12, 0.045, 0.02, 1.0),
+                                   roughness=0.55)
 
     plinth = common.lathe("plinth", PLINTH_PROFILE, segments=64, mat=metal)
     common.bevel(plinth, 0.012)

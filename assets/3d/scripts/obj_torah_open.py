@@ -1,6 +1,6 @@
-"""Open Sefer Torah: two turned wooden rollers (atzei chaim) with round
-discs, the parchment scroll spread between them in a gentle sag, four
-columns of text rows on the parchment, lying at a slight angle."""
+"""Open Sefer Torah lying on a bimah: two thick parchment rolls on turned
+wooden atzei chaim with round wooden discs, the warm cream sheet spread
+between them showing four columns of fine text rows."""
 
 import math
 import os
@@ -14,86 +14,96 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import common
 import objkit
 
-HALF_W = 1.30   # parchment half width (X)
-HALF_D = 0.42   # parchment half depth (Y)
-ROLLER_X = 1.30
-ROLLER_Z = 0.075
+RR = 0.25            # parchment roll radius
+XR = 1.02            # roll centre |x|
+HD = 0.64            # sheet half-height (along the rollers, Y)
+SHEET_Z = 2 * RR - 0.02
+DISC_R = 0.36
 
-# Turned roller profile (radius, length): tip, handle knobs, disc, rod,
-# disc, knobs, tip. Length 2.36 -> spans y in [-1.18, 1.18] once centred.
-ROLLER_PROFILE = [
-    (0.000, 0.00),
-    (0.055, 0.02),
-    (0.075, 0.07),
-    (0.115, 0.13), (0.115, 0.26),
-    (0.080, 0.30),
-    (0.125, 0.36), (0.125, 0.50),
-    (0.082, 0.54),
-    (0.150, 0.58), (0.158, 0.645), (0.150, 0.71),
-    (0.085, 0.75),
-    (0.085, 1.61),
-    (0.150, 1.65), (0.158, 1.715), (0.150, 1.78),
-    (0.082, 1.82),
-    (0.125, 1.86), (0.125, 2.00),
-    (0.080, 2.04),
-    (0.115, 2.10), (0.115, 2.23),
-    (0.075, 2.28),
-    (0.050, 2.315),
-    (0.000, 2.36),
+# etz chaim profile along its axis (radius, z); z=0 is the bottom handle tip.
+B = 0.46             # bottom handle length
+ROLL_L = 2 * HD + 0.04
+ETZ = [
+    (0.0, 0.0), (0.05, 0.0), (0.075, 0.03), (0.07, 0.08), (0.05, 0.11),
+    (0.065, 0.16), (0.085, 0.22), (0.065, 0.28), (0.045, 0.31),
+    (0.05, 0.36), (0.085, 0.40), (0.085, 0.42),
+    (DISC_R - 0.02, 0.425), (DISC_R, 0.44), (DISC_R, 0.465),
+    (DISC_R - 0.02, 0.48), (0.08, B),
+    (0.08, B + ROLL_L),
+    (DISC_R - 0.02, B + ROLL_L + 0.02 - 0.005), (DISC_R, B + ROLL_L + 0.03),
+    (DISC_R, B + ROLL_L + 0.055), (DISC_R - 0.02, B + ROLL_L + 0.07),
+    (0.075, B + ROLL_L + 0.075), (0.06, B + ROLL_L + 0.11),
+    (0.08, B + ROLL_L + 0.17), (0.055, B + ROLL_L + 0.23),
+    (0.07, B + ROLL_L + 0.27), (0.04, B + ROLL_L + 0.30), (0.0, B + ROLL_L + 0.31),
 ]
 
 
-def surface_z(x, y):
-    """Sagging sheet with a gentle upturn that tucks onto the rollers."""
-    t = min(max((abs(x) - 0.95) / 0.35, 0.0), 1.0)
-    return (-0.045 * (1.0 - (x / HALF_W) ** 2)
-            + 0.13 * t * t
-            - 0.018 * (y / HALF_D) ** 2)
+def mat_klaf():
+    m, nt, bs = common._new_material("Klaf")
+    tc = common._texcoord(nt)
+    n = common._noise(nt, scale=3.0, detail=5.0, roughness=0.6)
+    nt.links.new(tc.outputs["Object"], n.inputs["Vector"])
+    ramp = common._ramp(nt, [(0.0, (0.50, 0.38, 0.22, 1.0)),
+                             (0.5, (0.62, 0.50, 0.32, 1.0)),
+                             (1.0, (0.68, 0.57, 0.38, 1.0))])
+    nt.links.new(n.outputs["Fac"], ramp.inputs["Fac"])
+    nt.links.new(ramp.outputs["Color"], bs.inputs["Base Color"])
+    f = common._noise(nt, scale=70.0, detail=2.0, y=-320)
+    nt.links.new(tc.outputs["Object"], f.inputs["Vector"])
+    common._bump(nt, bs, f.outputs["Fac"], strength=0.08, distance=0.01)
+    common._inp(bs, "Roughness", 0.65)
+    return m
 
 
-def slope_x(x, y):
-    e = 0.005
-    return (surface_z(x + e, y) - surface_z(x - e, y)) / (2.0 * e)
+def mat_roll_edge():
+    """Parchment roll: cream with faint winding lines around the axis."""
+    m, nt, bs = common._new_material("KlafRoll")
+    tc = common._texcoord(nt)
+    w = nt.nodes.new("ShaderNodeTexWave")
+    w.wave_type = "RINGS"
+    w.rings_direction = "Z"
+    w.inputs["Scale"].default_value = 18.0
+    w.inputs["Distortion"].default_value = 2.0
+    nt.links.new(tc.outputs["Object"], w.inputs["Vector"])
+    ramp = common._ramp(nt, [(0.0, (0.46, 0.35, 0.20, 1.0)),
+                             (1.0, (0.64, 0.52, 0.34, 1.0))])
+    nt.links.new(w.outputs["Fac"], ramp.inputs["Fac"])
+    nt.links.new(ramp.outputs["Color"], bs.inputs["Base Color"])
+    common._bump(nt, bs, w.outputs["Fac"], strength=0.1, distance=0.004)
+    common._inp(bs, "Roughness", 0.65)
+    return m
+
+
+def surface_z(x):
+    """Sheet: tangent to the roll tops, a slight sag in the middle."""
+    return SHEET_Z - 0.06 * (1.0 - (x / XR) ** 2)
 
 
 def sheet(mat):
-    nu, nv, thick = 72, 20, 0.012
+    nu, nv, thick = 80, 8, 0.008
     verts, faces = [], []
-    for i in range(nu + 1):
-        x = -HALF_W + 2.0 * HALF_W * i / nu
-        for j in range(nv + 1):
-            y = -HALF_D + 2.0 * HALF_D * j / nv
-            verts.append((x, y, surface_z(x, y)))
-    off = len(verts)
-    for i in range(nu + 1):
-        x = -HALF_W + 2.0 * HALF_W * i / nu
-        for j in range(nv + 1):
-            y = -HALF_D + 2.0 * HALF_D * j / nv
-            verts.append((x, y, surface_z(x, y) - thick))
+    xs = [-XR + 2 * XR * i / nu for i in range(nu + 1)]
+    ys = [-HD + 2 * HD * j / nv for j in range(nv + 1)]
+    for zoff in (0.0, -thick):
+        for x in xs:
+            for y in ys:
+                verts.append((x, y, surface_z(x) + zoff))
+    off = (nu + 1) * (nv + 1)
+    W = nv + 1
     for i in range(nu):
         for j in range(nv):
-            a = i * (nv + 1) + j
-            b = (i + 1) * (nv + 1) + j
+            a, b = i * W + j, (i + 1) * W + j
             faces.append((a, b, b + 1, a + 1))
             faces.append((off + a + 1, off + b + 1, off + b, off + a))
-    for i in range(nu):  # rim along +/- y
-        a = i * (nv + 1)
-        b = (i + 1) * (nv + 1)
+    for i in range(nu):
+        a, b = i * W, (i + 1) * W
         faces.append((a, off + a, off + b, b))
-        a = i * (nv + 1) + nv
-        b = (i + 1) * (nv + 1) + nv
+        a, b = i * W + nv, (i + 1) * W + nv
         faces.append((a, b, off + b, off + a))
-    for j in range(nv):  # rim along +/- x
-        a = j
-        b = j + 1
-        faces.append((a, b, off + b, off + a))
-        a = nu * (nv + 1) + j
-        b = nu * (nv + 1) + j + 1
-        faces.append((a, off + a, off + b, b))
-    mesh = bpy.data.meshes.new("parchment_mesh")
+    mesh = bpy.data.meshes.new("sheet_mesh")
     mesh.from_pydata(verts, [], faces)
     mesh.update()
-    ob = bpy.data.objects.new("parchment", mesh)
+    ob = bpy.data.objects.new("sheet", mesh)
     bpy.context.collection.objects.link(ob)
     common.assign(ob, mat)
     common.smooth(ob)
@@ -101,55 +111,59 @@ def sheet(mat):
 
 
 def text_rows(mat):
-    """Four text columns as procedural rows of small ink dashes."""
-    random.seed(11)
+    """Four columns of fine 'Hebrew' rows, right-aligned with ragged left."""
+    rng = random.Random(11)
     boxes = []
-    for side in (-1, 1):
-        for col in (0.33, 0.83):
-            x0 = side * col - 0.165
-            for row in range(13):
-                y = -0.30 + row * 0.05
-                pos = 0.0
-                while 0.33 - pos > 0.048:
-                    w = random.uniform(0.045, min(0.105, 0.33 - pos))
-                    xc = x0 + pos + w / 2.0
-                    slope = slope_x(xc, y)
-                    z = surface_z(xc, y) + 0.006
-                    boxes.append((xc, y, z, w - 0.022, 0.020, 0.008,
-                                  -math.atan(slope)))
-                    pos += w + random.uniform(0.024, 0.04)
+    col_w, gap = 0.36, 0.13
+    span = 4 * col_w + 3 * gap
+    x_start = -span / 2
+    e = 0.004
+    for c in range(4):
+        x0 = x_start + c * (col_w + gap)
+        x1 = x0 + col_w
+        for row in range(31):
+            y = HD - 0.10 - row * 0.0385
+            pos = x1
+            while pos - x0 > 0.02:
+                w = rng.uniform(0.022, min(0.075, pos - x0))
+                xc = pos - w / 2
+                sl = (surface_z(xc + e) - surface_z(xc - e)) / (2 * e)
+                boxes.append((xc, y, surface_z(xc) + 0.002, w - 0.008, 0.015,
+                              0.003, -math.atan(sl)))
+                pos -= w + rng.uniform(0.004, 0.009)
     return objkit.add_boxes("text_rows", boxes, mat)
 
 
 def build():
     common.reset_scene()
     common.setup_render()
-    walnut = common.mat_walnut()
-    parchment = common.mat_parchment()
-    ink = objkit.mat_ink()
-    brass = common.mat_brass()
-    objs = []
+    wood = objkit.mat_dark_walnut("EtzWood", axis="Z")
+    klaf = mat_klaf()
+    roll_mat = mat_roll_edge()
+    ink = objkit.mat_ink((0.035, 0.02, 0.012, 1.0))
+    objs = [sheet(klaf), text_rows(ink)]
 
-    objs.append(sheet(parchment))
-    objs.append(text_rows(ink))
+    for sgn in (-1, 1):
+        etz = common.lathe("etz_chaim", ETZ, segments=64, mat=wood)
+        # axis +Z -> +Y, bottom handle toward the viewer (-Y)
+        etz.rotation_euler = (math.radians(-90.0), 0.0, 0.0)
+        etz.location = (sgn * XR, -(B + ROLL_L / 2), RR + 0.0)
+        objs.append(etz)
+        roll = common.add_cylinder("klaf_roll", RR, ROLL_L - 0.02,
+                                   location=(sgn * XR, 0.0, RR), vertices=64,
+                                   mat=roll_mat)
+        roll.rotation_euler = (math.radians(90.0), 0.0, 0.0)
+        common.bevel(roll, 0.01, 2)
+        common.smooth(roll)
+        objs.append(roll)
 
-    for sign in (-1, 1):
-        roller = common.lathe("roller", ROLLER_PROFILE, segments=64, mat=walnut)
-        roller.rotation_euler = (math.radians(90.0), 0.0, 0.0)  # +Z -> -Y
-        roller.location = (sign * ROLLER_X, 1.18, ROLLER_Z)
-        objs.append(roller)
-        for tip_sign in (-1, 1):
-            objs.append(common.add_uv_sphere(
-                "handle_tip", 0.032,
-                location=(sign * ROLLER_X, tip_sign * 1.165, ROLLER_Z),
-                mat=brass, segments=24, rings=12))
-
-    # lie at a slight angle, as on a bimah
-    turn = Matrix.Rotation(math.radians(12.0), 4, "Z")
+    turn = Matrix.Rotation(math.radians(8.0), 4, "Z")
+    lift = Matrix.Translation((0, 0, DISC_R - RR))
     for ob in objs:
-        ob.matrix_world = turn @ ob.matrix_world
+        ob.matrix_world = lift @ turn @ ob.matrix_world
 
-    common.frame_object(objs, margin=0.1, elevation=26.0, azimuth=40.0)
+    common.frame_object(objs, margin=0.06, elevation=36.0, azimuth=24.0,
+                        focal=72.0)
     common.setup_lights()
     common.add_shadow_catcher()
     common.render("torah_open", common.OUT_DIR)

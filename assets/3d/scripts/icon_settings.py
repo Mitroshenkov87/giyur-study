@@ -13,7 +13,7 @@ def build():
     common.reset_scene()
     common.setup_render()
     metal = common.theme_metal()
-    accent = common.theme_accent()
+    accent = iconkit.accent()
 
     cog = iconkit.gear("cog", teeth=9, r_root=0.44, r_tip=0.60,
                        thickness=0.20, mat=metal, bevel_w=0.015)

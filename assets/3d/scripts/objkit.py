@@ -72,3 +72,32 @@ def add_boxes(name, boxes, mat):
     bpy.context.collection.objects.link(ob)
     ob.data.materials.append(mat)
     return ob
+
+
+def mat_dark_walnut(name="DarkWalnut", scale=5.0, axis="X"):
+    """Fine-grained dark walnut in Object space (no blotchy Generated stretch).
+    Added for the obj_* art pass; does not replace common.mat_walnut."""
+    m, nt, bsdf = common._new_material(name)
+    tc = common._texcoord(nt)
+    mp = nt.nodes.new("ShaderNodeMapping")
+    sc = {"X": (0.25, 1.0, 1.0), "Y": (1.0, 0.25, 1.0), "Z": (1.0, 1.0, 0.25)}[axis]
+    mp.inputs["Scale"].default_value = sc
+    nt.links.new(tc.outputs["Object"], mp.inputs["Vector"])
+    wave = nt.nodes.new("ShaderNodeTexWave")
+    wave.wave_type = "BANDS"
+    wave.bands_direction = {"X": "Y", "Y": "X", "Z": "X"}[axis]
+    wave.inputs["Scale"].default_value = scale
+    wave.inputs["Distortion"].default_value = 5.0
+    wave.inputs["Detail"].default_value = 4.0
+    nt.links.new(mp.outputs["Vector"], wave.inputs["Vector"])
+    ramp = common._ramp(nt, [(0.0, (0.035, 0.016, 0.008, 1.0)),
+                             (0.45, (0.095, 0.045, 0.020, 1.0)),
+                             (0.75, (0.13, 0.065, 0.030, 1.0)),
+                             (1.0, (0.06, 0.028, 0.013, 1.0))])
+    nt.links.new(wave.outputs["Fac"], ramp.inputs["Fac"])
+    nt.links.new(ramp.outputs["Color"], bsdf.inputs["Base Color"])
+    common._bump(nt, bsdf, wave.outputs["Fac"], strength=0.06, distance=0.01)
+    common._inp(bsdf, "Roughness", 0.38)
+    common._inp(bsdf, "Coat Weight", 0.25)
+    common._inp(bsdf, "Coat Roughness", 0.2)
+    return m
