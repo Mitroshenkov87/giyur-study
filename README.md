@@ -30,6 +30,9 @@ cargo build --release --target x86_64-pc-windows-gnu
 
 Материалы (`content/`) встраиваются в программу при сборке; картинки — только WebP (`assets/img/`); значок `.ico` для Windows делается из WebP во время сборки.
 
+## Почему iced
+Интерфейс написан на [iced](https://iced.rs) 0.14: его движок текста (cosmic-text, шейпинг rustybuzz и Unicode bidi) правильно рисует иврит с огласовками, справа налево, и слова на иврите внутри русских фраз. Это проверено на экране до выбора. egui не подошёл: в нём нет bidi и сложного шейпинга, иврит выходит задом наперёд. Отрисовка — через wgpu, а если видеодрайвера нет, автоматически включается программный режим.
+
 ## Лицензия
 Apache License 2.0 — см. [`LICENSE`](LICENSE) и [`NOTICE`](NOTICE). Шрифты Noto — SIL Open Font License 1.1.
 
@@ -54,7 +57,9 @@ cargo build --release --target x86_64-pc-windows-gnu   # cross-compile from Linu
 ```
 
 ### Why iced
-GUI_CHOICE_PLACEHOLDER
+The app is built with [iced](https://iced.rs) 0.14. Its text stack (cosmic-text with rustybuzz shaping and Unicode bidi) shapes Hebrew with nikkud correctly, lays out right-to-left paragraphs and mixes Hebrew inside Russian sentences in the right order. That was verified on screen before choosing it. egui/eframe was rejected because it has no bidi reordering or complex shaping, so Hebrew would come out reversed and nikkud misplaced. iced also renders through wgpu with an automatic software (tiny-skia) fallback, so it runs on machines without a working GPU driver.
+
+One iced quirk worth knowing for contributors: a Hebrew-only paragraph is already placed flush right by cosmic-text, so give it `width(Fill)` and leave the horizontal alignment at its default. Setting `align_x(Right)` or `Center` shifts it a second time, off-screen.
 
 ### License
 Apache License 2.0 — see [`LICENSE`](LICENSE) and [`NOTICE`](NOTICE). Noto fonts are under the SIL Open Font License 1.1.
