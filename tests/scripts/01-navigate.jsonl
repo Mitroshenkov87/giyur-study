@@ -1,0 +1,30 @@
+# First run: welcome → level choice → map; then every sidebar item, by its
+# current label, its pre-v0.5 alias and its route.
+{"cmd":"state","expect":{"screen":"welcome","control":"Начать"}}
+{"cmd":"press","label":"Начать","expect":{"screen":"level"}}
+{"cmd":"press","contains":"Ортодоксальный","expect":{"screen":"map","text":"Уроки"}}
+{"cmd":"screens","expect":{"reply":{"ok":true}}}
+{"cmd":"navigate","to":"Календарь","expect":{"screen":"calendar"}}
+{"cmd":"navigate","to":"Уроки","expect":{"screen":"map","route":"map"}}
+{"cmd":"navigate","to":"Карточки","expect":{"screen":"cards","route":"cards:review"}}
+{"cmd":"navigate","to":"Викторина","expect":{"screen":"timed","route":"timed"}}
+{"cmd":"navigate","to":"Тесты","expect":{"screen":"exam","route":"exam"}}
+{"cmd":"navigate","to":"Успехи","expect":{"screen":"progress"}}
+{"cmd":"navigate","to":"Настройки","expect":{"screen":"settings"}}
+{"cmd":"navigate","to":"Источники","expect":{"screen":"sources"}}
+{"cmd":"navigate","to":"Карта","expect":{"screen":"map"}}
+{"cmd":"navigate","to":"повторение","expect":{"screen":"cards","route":"cards:review"}}
+{"cmd":"navigate","to":"Экзамен","expect":{"screen":"timed"}}
+{"cmd":"navigate","to":"Прогресс","expect":{"screen":"progress"}}
+{"cmd":"navigate","to":"cards:review","expect":{"screen":"cards"}}
+{"cmd":"navigate","to":"timed","expect":{"screen":"timed","control":"Начать игру"}}
+{"cmd":"navigate","to":"exam","expect":{"screen":"exam","control":"Exam(Start)"}}
+{"cmd":"navigate","to":"progress","expect":{"screen":"progress"}}
+{"cmd":"navigate","to":"settings","expect":{"screen":"settings"}}
+{"cmd":"navigate","to":"sources","expect":{"screen":"sources"}}
+{"cmd":"navigate","to":"map","expect":{"screen":"map"}}
+# A section, its read / prepare switch, and back.
+{"cmd":"press","contains":"Основы","expect":{"screen":"section","route":"section:osnovy"}}
+{"cmd":"press","id":"Section(Mode(Prep))","expect":{"screen":"section"}}
+{"cmd":"press","id":"Section(Mode(Read))","expect":{"screen":"section","control":"Section(Go(Lesson(\"osnovy-1\")))"}}
+{"cmd":"back","expect":{"screen":"map"}}

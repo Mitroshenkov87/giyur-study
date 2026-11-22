@@ -12,6 +12,8 @@ use shorashim::ui::screens::{self, Current};
 use shorashim::ui::theme::{self, ThemeKind};
 use shorashim::ui::{assets, fonts, layout, nav, widgets};
 
+use shorashim::automation::server::{self as control, ControlMsg};
+
 const MAIN_SCROLL: &str = "main-scroll";
 const ASIDE_SCROLL: &str = "aside-scroll";
 
@@ -27,6 +29,8 @@ enum Message {
     Screen(screens::Msg),
     Nav(Route),
     Tick(Instant),
+    /// Automation control channel (`--control`, docs/AUTOMATION.md).
+    Control(ControlMsg),
     /// Screenshot hook `SHORASHIM_SCROLL_Y=<px>`: scroll the main column.
     ScrollTo(f32),
 }
@@ -124,6 +128,17 @@ impl App {
             },
             Message::Nav(r) => return self.go(r),
             Message::Tick(now) => self.ctx.toasts.retain(|t| t.until > now),
+            Message::Control(ControlMsg::Request(req)) => {
+                let mut host = GuiHost {
+                    app: self,
+                    tasks: Vec::new(),
+                };
+                let tasks = std::mem::take(&mut host.tasks);
+                let (task, _) =
+                    control::handle(&mut host, req, tasks, MAIN_SCROLL, Message::Control);
+                return Task::batch([task, Task::batch(host.tasks)]);
+            }
+            Message::Control(ControlMsg::Done) => {}
             Message::ScrollTo(y) => {
                 return iced::widget::operation::scroll_to(
                     MAIN_SCROLL,
@@ -417,7 +432,10 @@ impl App {
     }
 
     fn subscription(&self) -> Subscription<Message> {
-        let screen = self.screen.subscription().map(Message::Screen);
+        let screen = Subscription::batch([
+            self.screen.subscription().map(Message::Screen),
+            control::subscription(&self.ctx).map(Message::Control),
+        ]);
         if self.ctx.toasts.is_empty() {
             screen
         } else {
@@ -473,7 +491,52 @@ fn parse_route(r: &str) -> Option<Route> {
     })
 }
 
+/// The windowed app as an automation host: commands go through the same
+/// `update` as clicks and sidebar navigation.
+struct GuiHost<'a> {
+    app: &'a mut App,
+    tasks: Vec<Task<Message>>,
+}
+
+impl shorashim::automation::Host for GuiHost<'_> {
+    fn ctx(&self) -> &Ctx {
+        &self.app.ctx
+    }
+    fn ctx_mut(&mut self) -> &mut Ctx {
+        &mut self.app.ctx
+    }
+    fn screen(&self) -> &Current {
+        &self.app.screen
+    }
+    fn route(&self) -> &Route {
+        &self.app.route
+    }
+    fn dispatch(&mut self, msg: screens::Msg) {
+        let t = self.app.update(Message::Screen(msg));
+        self.tasks.push(t);
+    }
+    fn navigate(&mut self, route: Route) {
+        let t = self.app.update(Message::Nav(route));
+        self.tasks.push(t);
+    }
+    fn back(&mut self) {
+        let r = self.app.history.pop().unwrap_or(Route::Map);
+        self.app.screen = Current::open(&mut self.app.ctx, &r);
+        self.app.route = r;
+    }
+    fn settings_changed(&mut self) {
+        theme::set_current(theme_kind(&self.app.ctx));
+    }
+    fn windowed(&self) -> bool {
+        true
+    }
+}
+
 fn main() -> iced::Result {
+    // `shorashim ctl …`, `shorashim mcp`, `shorashim --headless …`.
+    if let Some(code) = shorashim::automation::cli::main_hook() {
+        std::process::exit(code);
+    }
     // «Приложения и возможности» runs `shorashim.exe --uninstall`.
     let args: Vec<String> = std::env::args().collect();
     if shorashim::install::handle_cli(&args) {
@@ -507,8 +570,13 @@ fn main() -> iced::Result {
         .default_font(Font::with_name("Noto Sans"));
     // Register the embedded fonts up front, so the very first frame already
     // uses them (no font-load race on the first paint).
-    fonts::all()
+    let result = fonts::all()
         .into_iter()
         .fold(app, |app, font| app.font(font))
-        .run()
+        .run();
+    // The control channel's token file is only valid while the app runs.
+    if let Some(file) = control::active_file() {
+        control::cleanup(file);
+    }
+    result
 }

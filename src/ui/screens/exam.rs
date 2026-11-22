@@ -281,6 +281,7 @@ fn rich_line<'a, Message: 'a>(
     size: f32,
     color: Color,
 ) -> Element<'a, Message> {
+    let plain: String = parts.iter().map(|(t, _)| t.as_str()).collect();
     let spans: Vec<iced::widget::text::Span<'a>> = parts
         .into_iter()
         .map(|(t, bold)| {
@@ -291,11 +292,13 @@ fn rich_line<'a, Message: 'a>(
             s
         })
         .collect();
-    iced::widget::rich_text(spans)
-        .size(size)
-        .line_height(1.6)
-        .width(Length::Fill)
-        .into()
+    crate::automation::reported(
+        iced::widget::rich_text(spans)
+            .size(size)
+            .line_height(1.6)
+            .width(Length::Fill),
+        plain,
+    )
 }
 
 fn format_name(q: &Question) -> &'static str {
@@ -1186,14 +1189,18 @@ impl Screen {
                         .size(theme::text::SMALL)
                         .into()
                 } else {
-                    pick_list(labels, selected, Msg::SectionLabel)
-                        .placeholder("— выберите —")
-                        .text_shaping(Shaping::Advanced)
-                        .padding([8, 12])
-                        .width(Length::Fill)
-                        .style(move |_, st| theme::pick_list(&p, st))
-                        .menu_style(move |_| theme::pick_menu(&p))
-                        .into()
+                    let shown = selected.clone().unwrap_or_else(|| "— выберите —".into());
+                    crate::automation::reported_choice(
+                        pick_list(labels.clone(), selected, Msg::SectionLabel)
+                            .placeholder("— выберите —")
+                            .text_shaping(Shaping::Advanced)
+                            .padding([8, 12])
+                            .width(Length::Fill)
+                            .style(move |_, st| theme::pick_list(&p, st))
+                            .menu_style(move |_| theme::pick_menu(&p)),
+                        shown,
+                        &labels,
+                    )
                 };
                 card_col = card_col.push(form_row(
                     "Раздел",
@@ -1543,12 +1550,17 @@ impl Screen {
                             );
                         }
                     } else {
-                        let pl = pick_list(rights.clone(), chosen, move |v| Msg::MatchPick(i, v))
-                            .placeholder("— выберите —")
-                            .text_shaping(Shaping::Advanced)
-                            .width(Length::FillPortion(1))
-                            .style(move |_, st| theme::pick_list(&p, st))
-                            .menu_style(move |_| theme::pick_menu(&p));
+                        let shown = chosen.clone().unwrap_or_else(|| "— выберите —".into());
+                        let pl = crate::automation::reported_choice(
+                            pick_list(rights.clone(), chosen, move |v| Msg::MatchPick(i, v))
+                                .placeholder("— выберите —")
+                                .text_shaping(Shaping::Advanced)
+                                .width(Length::FillPortion(1))
+                                .style(move |_, st| theme::pick_list(&p, st))
+                                .menu_style(move |_| theme::pick_menu(&p)),
+                            shown,
+                            &rights,
+                        );
                         row_content = row_content.push(pl);
                     }
                     list = list.push(row_content.width(Length::Fill));
