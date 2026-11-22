@@ -17,7 +17,7 @@
 {"cmd":"navigate","to":"Экзамен","expect":{"screen":"timed"}}
 {"cmd":"navigate","to":"Прогресс","expect":{"screen":"progress"}}
 {"cmd":"navigate","to":"cards:review","expect":{"screen":"cards"}}
-{"cmd":"navigate","to":"timed","expect":{"screen":"timed","control":"Начать игру"}}
+{"cmd":"navigate","to":"timed","expect":{"screen":"timed","control":"Начать восхождение"}}
 {"cmd":"navigate","to":"exam","expect":{"screen":"exam","control":"Exam(Start)"}}
 {"cmd":"navigate","to":"progress","expect":{"screen":"progress"}}
 {"cmd":"navigate","to":"settings","expect":{"screen":"settings"}}
