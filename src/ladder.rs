@@ -39,7 +39,7 @@ pub const RUNS_KEY: &str = "ladderRuns";
 pub struct Rung {
     /// 1..=15.
     pub n: usize,
-    /// Hebrew numeral (gematria), «א» … «טו».
+    /// Hebrew numeral with geresh / gershayim, «א׳» … «ט״ו» (15 is ט״ו, not י״ה).
     pub he: &'static str,
     /// Named steps (Пиркей Авот 5:21), empty for the others.
     pub name: &'static str,
@@ -48,7 +48,7 @@ pub struct Rung {
 }
 
 const HE: [&str; STEPS] = [
-    "א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט", "י", "יא", "יב", "יג", "יד", "טו",
+    "א׳", "ב׳", "ג׳", "ד׳", "ה׳", "ו׳", "ז׳", "ח׳", "ט׳", "י׳", "י״א", "י״ב", "י״ג", "י״ד", "ט״ו",
 ];
 
 pub fn rung(n: usize) -> Rung {
@@ -802,7 +802,7 @@ mod tests {
         assert_eq!(r[9].name, "Мишна");
         assert_eq!(r[12].name, "Мицвот");
         assert_eq!(r[14].name, "Гмара");
-        assert_eq!(r[14].he, "טו");
+        assert_eq!(r[14].he, "ט״ו");
         assert_eq!(r.iter().filter(|x| x.safe).count(), 2);
     }
 
