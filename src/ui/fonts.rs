@@ -49,6 +49,10 @@ const NOTO_SERIF_HEBREW_REGULAR: &[u8] =
 const NOTO_SANS_HEBREW_REGULAR: &[u8] =
     include_bytes!("../../assets/fonts/NotoSansHebrew-Regular.ttf");
 
+/// Symbol fallback (arrows →, ≥ ≤ ≈ ⊂, ✓ ❄ ⚠ ★ ✡) missing from the Noto
+/// subsets; cosmic-text falls back to it automatically. DejaVu fonts licence.
+const DEJAVU_SANS: &[u8] = include_bytes!("../../assets/fonts/DejaVuSans.ttf");
+
 /// All embedded font files, for loading at startup via `iced::font::load`.
 pub fn all() -> Vec<&'static [u8]> {
     vec![
@@ -57,5 +61,6 @@ pub fn all() -> Vec<&'static [u8]> {
         NOTO_SERIF_BOLD,
         NOTO_SERIF_HEBREW_REGULAR,
         NOTO_SANS_HEBREW_REGULAR,
+        DEJAVU_SANS,
     ]
 }

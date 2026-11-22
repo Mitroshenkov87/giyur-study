@@ -163,13 +163,21 @@ impl Ctx {
         self.save();
     }
 
+    /// Toasts are shown one at a time: each queued toast gets its own full
+    /// display time after the previous one ends.
+    fn next_slot(&self, ms: u64) -> Instant {
+        let now = Instant::now();
+        let start = self.toasts.last().map_or(now, |t| t.until.max(now));
+        start + Duration::from_millis(ms)
+    }
+
     pub fn toast(&mut self, title: &str, text: &str, icon: &str) {
         self.toasts.push(Toast {
             title: title.into(),
             text: text.into(),
             icon: icon.into(),
             badge_id: None,
-            until: Instant::now() + Duration::from_millis(4200),
+            until: self.next_slot(4200),
         });
     }
 
@@ -179,7 +187,7 @@ impl Ctx {
             text: c.text,
             icon: c.icon,
             badge_id: None,
-            until: Instant::now() + Duration::from_millis(4200),
+            until: self.next_slot(4200),
         });
     }
 
@@ -198,7 +206,7 @@ impl Ctx {
                 text: c.text,
                 icon: c.icon,
                 badge_id: Some(b.id.clone()),
-                until: Instant::now() + Duration::from_millis(5200),
+                until: self.next_slot(5200),
             });
         }
         self.save();

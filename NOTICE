@@ -7,6 +7,9 @@ Bundled third-party components:
 - Noto Sans, Noto Serif, Noto Sans Hebrew, Noto Serif Hebrew fonts
   (assets/fonts/), Copyright The Noto Project Authors, licensed under the
   SIL Open Font License 1.1 (see assets/fonts/OFL.txt).
+- DejaVu Sans font (assets/fonts/DejaVuSans.ttf), used as a symbol
+  fallback; Bitstream Vera / DejaVu free licence (see
+  assets/fonts/DejaVu-LICENSE.txt).
 - Rust crates listed in Cargo.lock, under their own licenses.
 
 Study content in content/ requires review by a rabbi; conversion programs

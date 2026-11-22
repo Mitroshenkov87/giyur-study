@@ -11,6 +11,8 @@ use giyur_study::ui::screens::{self, Current};
 use giyur_study::ui::theme::{self, ThemeKind};
 use giyur_study::ui::{assets, fonts, widgets};
 
+const MAIN_SCROLL: &str = "main-scroll";
+
 struct App {
     ctx: Ctx,
     route: Route,
@@ -63,7 +65,7 @@ impl App {
         )
     }
 
-    fn go(&mut self, route: Route) {
+    fn go(&mut self, route: Route) -> Task<Message> {
         // First-launch guard (PARITY §0.1).
         let route = if !self.ctx.state.onboarded
             && !matches!(route, Route::Welcome | Route::Level { .. })
@@ -79,14 +81,23 @@ impl App {
             }
         }
         self.screen = Current::open(&mut self.ctx, &route);
+        let keep_scroll = matches!(route, Route::ExamRun(_) | Route::TimedRun { .. });
         self.route = route;
+        if keep_scroll {
+            Task::none()
+        } else {
+            iced::widget::operation::snap_to(
+                MAIN_SCROLL,
+                iced::widget::operation::RelativeOffset::START,
+            )
+        }
     }
 
     fn update(&mut self, message: Message) -> Task<Message> {
         match message {
             Message::Screen(m) => match self.screen.update(&mut self.ctx, m) {
                 Action::None => {}
-                Action::Go(r) => self.go(r),
+                Action::Go(r) => return self.go(r),
                 Action::Back => {
                     let r = self.history.pop().unwrap_or(Route::Map);
                     self.screen = Current::open(&mut self.ctx, &r);
@@ -96,7 +107,7 @@ impl App {
                     theme::set_current(theme_kind(&self.ctx));
                 }
             },
-            Message::Nav(r) => self.go(r),
+            Message::Nav(r) => return self.go(r),
             Message::Tick(now) => self.ctx.toasts.retain(|t| t.until > now),
             Message::FontLoaded => {}
         }
@@ -214,11 +225,9 @@ impl App {
             .width(Length::Fill)
             .height(Length::Fill)
             .style(|_| theme::app_background(&theme::current()));
-        if self.ctx.toasts.is_empty() {
-            base.into()
-        } else {
-            stack![base, self.toasts()].into()
-        }
+        // Always the same root widget, so scroll position and focus survive
+        // toasts appearing and expiring.
+        stack![base, self.toasts()].into()
     }
 
     fn subscription(&self) -> Subscription<Message> {
@@ -292,6 +301,11 @@ fn main() -> iced::Result {
         .title(App::title)
         .theme(App::theme)
         .subscription(App::subscription)
+        // «Размер шрифта» A− / A / A+ / A++ (PWA root sizes 15/17/19/21.5 px).
+        .scale_factor(|app: &App| {
+            const STEPS: [f32; 4] = [15.0, 17.0, 19.0, 21.5];
+            STEPS[app.ctx.state.settings.font_step.clamp(0, 3) as usize] / 17.0
+        })
         .window(settings)
         .default_font(Font::with_name("Noto Sans"))
         .run()
