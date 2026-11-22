@@ -197,8 +197,9 @@ fn score_ring<'a, Message: 'a>(pct: i64, size: f32) -> Element<'a, Message> {
     stack![canvas, label].width(Length::Shrink).into()
 }
 
-/// Confirm dialog (§0.3): dimmed backdrop (click = cancel) + modal card.
-fn confirm_overlay<'a>(base: Element<'a, Msg>, title: &'a str, body: &'a str) -> Element<'a, Msg> {
+/// Quit-confirm dialog (§0.3): dimmed backdrop (click = cancel) + modal card.
+/// Rendered as a shell layer above the whole window (see `screens::mod.rs`).
+fn confirm_dialog<'a>(title: &'a str, body: &'a str) -> Element<'a, Msg> {
     let p = tp();
     let dialog = container(
         column![
@@ -206,14 +207,18 @@ fn confirm_overlay<'a>(base: Element<'a, Msg>, title: &'a str, body: &'a str) ->
             txt(body).size(theme::text::BODY).color(p.text),
             row![
                 space::horizontal(),
-                button(txt("Отмена").size(15.0))
-                    .padding([10.0, 18.0])
-                    .style(move |_, s| theme::button_ghost(&p, s))
-                    .on_press(Msg::QuitCancel),
-                button(txt("Выйти").size(15.0).font(SANS_BOLD))
-                    .padding([10.0, 18.0])
-                    .style(move |_, s| theme::button_primary(&p, s))
-                    .on_press(Msg::QuitConfirm),
+                widgets::btn(
+                    "Отмена",
+                    widgets::Btn::Ghost,
+                    widgets::BtnSize::Md,
+                    Some(Msg::QuitCancel),
+                ),
+                widgets::btn(
+                    "Выйти",
+                    widgets::Btn::Primary,
+                    widgets::BtnSize::Md,
+                    Some(Msg::QuitConfirm),
+                ),
             ]
             .spacing(10)
             .width(Length::Fill),
@@ -245,16 +250,10 @@ fn confirm_overlay<'a>(base: Element<'a, Msg>, title: &'a str, body: &'a str) ->
     .width(Length::Fill)
     .height(Length::Fill)
     .on_press(Msg::QuitCancel);
-    stack![
-        base,
-        iced::widget::opaque(
-            stack![backdrop, center(dialog)]
-                .width(Length::Fill)
-                .height(Length::Fill)
-        )
-    ]
-    .width(Length::Fill)
-    .into()
+    stack![backdrop, center(dialog)]
+        .width(Length::Fill)
+        .height(Length::Fill)
+        .into()
 }
 
 /// Badge / goal toasts after a finished run (mirrors `Ctx::award` effects;
@@ -939,19 +938,19 @@ impl Screen {
     pub fn view<'a>(&'a self, ctx: &'a Ctx) -> Element<'a, Msg> {
         match &self.phase {
             Phase::Setup(setup) => self.view_setup(ctx, setup),
-            Phase::Run(run) => {
-                let base = self.view_run(ctx, run);
-                if run.confirm_quit {
-                    confirm_overlay(
-                        base,
-                        "Прервать экзамен?",
-                        "Ответы на текущие вопросы сохранятся в статистике, но результат не будет засчитан.",
-                    )
-                } else {
-                    base
-                }
-            }
+            Phase::Run(run) => self.view_run(ctx, run),
             Phase::Results(r) => self.view_results(ctx, r),
+        }
+    }
+
+    /// The quit-confirm dialog, rendered as a shell layer above the window.
+    pub fn dialog<'a>(&'a self, _ctx: &'a Ctx) -> Option<Element<'a, Msg>> {
+        match &self.phase {
+            Phase::Run(run) if run.confirm_quit => Some(confirm_dialog(
+                "Прервать экзамен?",
+                "Ответы на текущие вопросы сохранятся в статистике, но результат не будет засчитан.",
+            )),
+            _ => None,
         }
     }
 
@@ -1022,7 +1021,10 @@ impl Screen {
                 "Открытые вопросы как на собеседовании; оцениваете себя сами.",
             ),
         ];
-        let mut cards = Row::new().spacing(12).width(Length::Fill);
+        let mut cards = Row::new()
+            .spacing(12)
+            .width(Length::Fill)
+            .height(Length::Shrink);
         for (mode, glyph, title, desc) in modes {
             let selected = setup.mode == mode;
             let content = column![
@@ -1037,6 +1039,7 @@ impl Screen {
             .width(Length::Fill);
             let b = button(content)
                 .width(Length::FillPortion(1))
+                .height(Length::Fill)
                 .padding(16)
                 .style(move |_, status| {
                     let hovered =
@@ -1105,13 +1108,12 @@ impl Screen {
         let mut chips = Row::new().spacing(8);
         for n in [10usize, 20, 30, 50] {
             let selected = setup.count == n;
-            chips = chips.push(
-                button(txt(format!("{n}")).size(theme::text::SMALL).font(SANS_BOLD))
-                    .padding([0.0, 16.0])
-                    .height(theme::spacing::CHIP_MIN)
-                    .style(move |_, status| chip_style(&p, selected, status))
-                    .on_press(Msg::Count(n)),
-            );
+            chips = chips.push(widgets::choice(
+                format!("{n}"),
+                selected,
+                true,
+                Msg::Count(n),
+            ));
         }
         card_col = card_col.push(
             column![
@@ -1130,16 +1132,13 @@ impl Screen {
         }
         card_col = card_col.push(muted(avail_line).size(theme::text::SMALL));
 
-        let start = button(txt("Начать").size(theme::text::BODY).font(SANS_BOLD))
-            .padding([0.0, 26.0])
-            .height(theme::spacing::BTN_LG_MIN)
-            .style(move |_, s| theme::button_primary(&p, s));
-        let start = if avail > 0 {
-            start.on_press(Msg::Start)
-        } else {
-            start
-        };
-        card_col = card_col.push(row![space::horizontal(), start].width(Length::Fill));
+        let start = widgets::btn(
+            "Начать",
+            widgets::Btn::Primary,
+            widgets::BtnSize::Lg,
+            (avail > 0).then_some(Msg::Start),
+        );
+        card_col = card_col.push(widgets::centered(start));
 
         col = col.push(widgets::card(card_col));
         col.into()
@@ -1164,40 +1163,6 @@ fn container_button_style(
     }
 }
 
-/// Chip button (§T.6): selected = gold-soft bg, gold border, gold2 text.
-fn chip_style(p: &Palette, selected: bool, status: button::Status) -> button::Style {
-    if selected {
-        button::Style {
-            background: Some(Background::Color(p.gold_soft)),
-            text_color: p.gold2,
-            border: Border {
-                color: p.gold,
-                width: 1.0,
-                radius: theme::radius::PILL.into(),
-            },
-            shadow: Shadow::default(),
-            snap: true,
-        }
-    } else {
-        let hovered = matches!(status, button::Status::Hovered | button::Status::Pressed);
-        button::Style {
-            background: Some(Background::Color(if hovered {
-                p.surface3
-            } else {
-                p.surface2
-            })),
-            text_color: p.text,
-            border: Border {
-                color: p.line2,
-                width: 1.0,
-                radius: theme::radius::PILL.into(),
-            },
-            shadow: Shadow::default(),
-            snap: true,
-        }
-    }
-}
-
 // ---------------------------------------------------------------------------
 // Runner view (§8)
 // ---------------------------------------------------------------------------
@@ -1212,15 +1177,8 @@ impl Screen {
 
         let mut col = Column::new().spacing(16).width(Length::Fill);
 
-        // Top: quit, kicker, progress.
-        let quit = button(
-            row![txt("×").size(18.0), txt("Выйти").size(15.0)]
-                .spacing(6)
-                .align_y(Alignment::Center),
-        )
-        .padding([6.0, 10.0])
-        .style(move |_, s| theme::button_ghost(&p, s))
-        .on_press(Msg::Quit);
+        // Top: quit, progress, kicker.
+        let quit = widgets::exit_button("Выйти", Msg::Quit);
         let mut kicker = exam::mode_title(run.mode).to_string();
         if let Some(t) = run.section_title(ctx) {
             kicker.push_str(" · ");
@@ -1234,9 +1192,9 @@ impl Screen {
         col = col.push(
             row![
                 quit,
-                gold_meta(kicker.to_uppercase()),
-                space::horizontal(),
                 txt(progress_label).size(theme::text::SMALL).color(p.muted),
+                space::horizontal(),
+                gold_meta(kicker.to_uppercase()),
             ]
             .spacing(14)
             .align_y(Alignment::Center)
@@ -1399,11 +1357,12 @@ impl Screen {
                             .padding(12.0)
                             .size(theme::text::BODY)
                             .width(Length::Fill),
-                        button(txt("Проверить").size(theme::text::BODY).font(SANS_BOLD))
-                            .padding([0.0, 22.0])
-                            .height(theme::spacing::BTN_MIN)
-                            .style(move |_, s| theme::button_primary(&p, s))
-                            .on_press(Msg::TypedSubmit),
+                        widgets::btn(
+                            "Проверить",
+                            widgets::Btn::Primary,
+                            widgets::BtnSize::Md,
+                            Some(Msg::TypedSubmit),
+                        ),
                     ]
                     .spacing(10)
                     .align_y(Alignment::Center)
@@ -1452,11 +1411,12 @@ impl Screen {
                     list = list.push(
                         row![
                             space::horizontal(),
-                            button(txt("Проверить").size(theme::text::BODY).font(SANS_BOLD))
-                                .padding([0.0, 22.0])
-                                .height(theme::spacing::BTN_MIN)
-                                .style(move |_, s| theme::button_primary(&p, s))
-                                .on_press(Msg::MatchSubmit),
+                            widgets::btn(
+                                "Проверить",
+                                widgets::Btn::Primary,
+                                widgets::BtnSize::Md,
+                                Some(Msg::MatchSubmit),
+                            ),
                         ]
                         .width(Length::Fill),
                     );
@@ -1515,23 +1475,24 @@ impl Screen {
                     if answered.is_none() {
                         col = col.push(
                             row![
-                                button(
-                                    txt("Ответил верно").size(theme::text::BODY).font(SANS_BOLD)
-                                )
-                                .padding([0.0, 20.0])
-                                .height(theme::spacing::BTN_MIN)
-                                .style(move |_, s| theme::button_primary(&p, s))
-                                .on_press(Msg::SelfGrade(1.0)),
-                                button(txt("Частично").size(theme::text::BODY))
-                                    .padding([0.0, 20.0])
-                                    .height(theme::spacing::BTN_MIN)
-                                    .style(move |_, s| theme::button_secondary(&p, s))
-                                    .on_press(Msg::SelfGrade(0.5)),
-                                button(txt("Не ответил").size(theme::text::BODY))
-                                    .padding([0.0, 20.0])
-                                    .height(theme::spacing::BTN_MIN)
-                                    .style(move |_, s| theme::button_ghost(&p, s))
-                                    .on_press(Msg::SelfGrade(0.0)),
+                                widgets::btn(
+                                    "Ответил верно",
+                                    widgets::Btn::Primary,
+                                    widgets::BtnSize::Md,
+                                    Some(Msg::SelfGrade(1.0)),
+                                ),
+                                widgets::btn(
+                                    "Частично",
+                                    widgets::Btn::Secondary,
+                                    widgets::BtnSize::Md,
+                                    Some(Msg::SelfGrade(0.5)),
+                                ),
+                                widgets::btn(
+                                    "Не ответил",
+                                    widgets::Btn::Ghost,
+                                    widgets::BtnSize::Md,
+                                    Some(Msg::SelfGrade(0.0)),
+                                ),
                             ]
                             .spacing(10),
                         );
@@ -1550,15 +1511,12 @@ impl Screen {
                     col = col.push(
                         row![
                             space::horizontal(),
-                            button(
-                                txt("Показать эталонный ответ")
-                                    .size(theme::text::BODY)
-                                    .font(SANS_BOLD)
-                            )
-                            .padding([0.0, 22.0])
-                            .height(theme::spacing::BTN_MIN)
-                            .style(move |_, s| theme::button_primary(&p, s))
-                            .on_press(Msg::OpenReveal),
+                            widgets::btn(
+                                "Показать эталонный ответ",
+                                widgets::Btn::Primary,
+                                widgets::BtnSize::Md,
+                                Some(Msg::OpenReveal),
+                            ),
                         ]
                         .width(Length::Fill),
                     );
@@ -1662,18 +1620,13 @@ impl Screen {
         } else {
             "Далее"
         };
-        let next = button(
-            row![
-                txt(next_label).size(theme::text::BODY).font(SANS_BOLD),
-                kbd("Enter"),
-            ]
-            .spacing(10)
-            .align_y(Alignment::Center),
-        )
-        .padding([0.0, 22.0])
-        .height(theme::spacing::BTN_LG_MIN)
-        .style(move |_, s| theme::button_primary(&p, s))
-        .on_press(Msg::Next);
+        let next = widgets::btn_icon(
+            kbd("Enter"),
+            next_label,
+            widgets::Btn::Primary,
+            widgets::BtnSize::Lg,
+            Some(Msg::Next),
+        );
 
         column![
             tinted_box(box_col, bg, border),
@@ -1695,16 +1648,7 @@ impl Screen {
         let sec = res.section_id.as_deref().and_then(|id| ctx.lib.section(id));
 
         let mut col = Column::new().spacing(18).width(Length::Fill);
-        col = col.push(
-            button(
-                row![txt("‹").size(22.0), txt("Экзамен").size(15.0)]
-                    .align_y(Alignment::Center)
-                    .spacing(2),
-            )
-            .padding([6.0, 10.0])
-            .style(move |_, s| theme::button_ghost(&p, s))
-            .on_press(Msg::NewExam),
-        );
+        col = col.push(widgets::back_button("Экзамен", Msg::NewExam));
         let mut kicker = exam::mode_title(res.mode).to_string();
         if let Some(s) = sec {
             kicker.push_str(" · ");
@@ -1770,36 +1714,32 @@ impl Screen {
         }
         let mut buttons = Row::new().spacing(10);
         if !r.mistake_ids.is_empty() {
-            buttons = buttons.push(
-                button(
-                    txt("Повторить ошибки")
-                        .size(theme::text::BODY)
-                        .font(SANS_BOLD),
-                )
-                .padding([0.0, 20.0])
-                .height(theme::spacing::BTN_MIN)
-                .style(move |_, s| theme::button_primary(&p, s))
-                .on_press(Msg::Retry),
-            );
+            buttons = buttons.push(widgets::btn(
+                "Повторить ошибки",
+                widgets::Btn::Primary,
+                widgets::BtnSize::Md,
+                Some(Msg::Retry),
+            ));
         }
-        buttons = buttons.push(
-            button(txt("Новый экзамен").size(theme::text::BODY))
-                .padding([0.0, 20.0])
-                .height(theme::spacing::BTN_MIN)
-                .style(move |_, s| theme::button_secondary(&p, s))
-                .on_press(Msg::NewExam),
-        );
+        buttons = buttons.push(widgets::btn(
+            "Новый экзамен",
+            widgets::Btn::Secondary,
+            widgets::BtnSize::Md,
+            Some(Msg::NewExam),
+        ));
         let ghost = match sec {
-            Some(s) => button(txt("К разделу").size(theme::text::BODY))
-                .padding([0.0, 20.0])
-                .height(theme::spacing::BTN_MIN)
-                .style(move |_, s2| theme::button_ghost(&p, s2))
-                .on_press(Msg::ToSection(s.id.clone())),
-            None => button(txt("На карту").size(theme::text::BODY))
-                .padding([0.0, 20.0])
-                .height(theme::spacing::BTN_MIN)
-                .style(move |_, s2| theme::button_ghost(&p, s2))
-                .on_press(Msg::ToMap),
+            Some(s) => widgets::btn(
+                "К разделу",
+                widgets::Btn::Ghost,
+                widgets::BtnSize::Md,
+                Some(Msg::ToSection(s.id.clone())),
+            ),
+            None => widgets::btn(
+                "На карту",
+                widgets::Btn::Ghost,
+                widgets::BtnSize::Md,
+                Some(Msg::ToMap),
+            ),
         };
         buttons = buttons.push(ghost);
         right_col = right_col.push(buttons);

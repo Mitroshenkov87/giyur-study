@@ -1,7 +1,7 @@
-//! Palette and widget styles per PARITY §T (dark navy-and-gold default,
-//! light «Пергамент», and the timed-studio palette scoped to quiz-show screens).
+//! Palette and widget styles: the dark «Библиотека» default (walnut, oxblood
+//! leather, brass, lamp-light), the matte klaf «Пергамент», and the
+//! timed-studio palette scoped to quiz-show screens (§T.3).
 //!
-//! Colours are exactly the CSS custom properties from `css/app.css` (§T.1–T.3).
 //! Style functions take a [`Palette`]; the active palette is also mirrored in a
 //! process-global so view helpers that lack palette parameters (`widgets.rs`)
 //! can style themselves consistently with the app's current theme.
@@ -10,7 +10,7 @@ use std::sync::RwLock;
 
 use iced::gradient::Linear;
 use iced::theme::Palette as IcedPalette;
-use iced::widget::{button, container, progress_bar as pb, text_input as ti};
+use iced::widget::{button, container, progress_bar as pb, rule, text_input as ti};
 use iced::{Background, Border, Color, Gradient, Radians, Shadow, Theme, Vector};
 
 // ---------------------------------------------------------------------------
@@ -47,6 +47,28 @@ pub struct Palette {
     pub flame_soft: Color,
     /// Background of text inputs.
     pub input_bg: Color,
+    /// Window background texture (asset name).
+    pub texture: &'static str,
+    /// Sidebar background texture (asset name).
+    pub side_texture: &'static str,
+    /// Solid veil composited over the window texture.
+    pub veil: Color,
+    /// Solid veil composited over the sidebar texture.
+    pub side_veil: Color,
+    /// Extra tint over the sidebar veil (transparent when unused).
+    pub side_tint: Color,
+    /// Warm lamp highlight.
+    pub lamp: Color,
+    /// Top/bottom edge vignette (transparent when unused).
+    pub vignette: Color,
+    /// Primary-button brass gradient: highlight stop.
+    pub brass_hi: Color,
+    /// Primary-button brass gradient: middle stop.
+    pub brass_mid: Color,
+    /// Primary-button brass gradient: low stop.
+    pub brass_lo: Color,
+    /// Primary-button 1 px brass edge.
+    pub brass_edge: Color,
 }
 
 const fn rgb(hex: u32) -> Color {
@@ -75,62 +97,94 @@ fn mix(a: Color, b: Color, t: f32) -> Color {
     }
 }
 
-/// The dark navy-and-gold palette (§T.1).
+/// Hex + alpha helper for the translucent palette entries.
+const fn hexa(hex: u32, a: f32) -> Color {
+    Color::from_rgba8(
+        ((hex >> 16) & 0xff) as u8,
+        ((hex >> 8) & 0xff) as u8,
+        (hex & 0xff) as u8,
+        a,
+    )
+}
+
+/// The dark «Библиотека» palette: walnut, oxblood leather, brass, lamp-light.
 pub const DARK: Palette = Palette {
-    bg0: rgb(0x0b1020),
-    bg1: rgb(0x141a2e),
-    surface: rgb(0x151c32),
-    surface2: rgb(0x1b2340),
-    surface3: rgb(0x232c4d),
-    line: rgba(0xff, 0xff, 0xff, 0.06),
-    line2: rgba(0xff, 0xff, 0xff, 0.12),
-    text: rgb(0xece7da),
-    muted: rgb(0xa9a496),
-    gold: rgb(0xd4af37),
-    gold2: rgb(0xe6c36a),
-    gold_soft: rgba(0xd4, 0xaf, 0x37, 0.14),
-    on_gold: rgb(0x1b1404),
-    hebrew: rgb(0xe6c36a),
-    ok: rgb(0x6cc49a),
-    ok_soft: rgba(0x6c, 0xc4, 0x9a, 0.14),
-    bad: rgb(0xe88b7a),
-    bad_soft: rgba(0xe8, 0x8b, 0x7a, 0.14),
-    info: rgb(0x8fb1ea),
-    info_soft: rgba(0x8f, 0xb1, 0xea, 0.14),
-    violet: rgb(0xb9a3ec),
-    violet_soft: rgba(0xb9, 0xa3, 0xec, 0.12),
-    flame: rgb(0xf0a24a),
-    flame_soft: rgba(0xf0, 0xa2, 0x4a, 0.12),
-    input_bg: rgb(0x1b2340),
+    bg0: rgb(0x120b08),
+    bg1: rgb(0x1c120d),
+    surface: rgb(0x241710),
+    surface2: rgb(0x2e1e15),
+    surface3: rgb(0x3a271b),
+    line: hexa(0xc9a25a, 0.22),
+    line2: hexa(0xc9a25a, 0.40),
+    text: rgb(0xefe3cc),
+    muted: rgb(0xbfae8f),
+    gold: rgb(0xc9a25a),
+    gold2: rgb(0xe3c27e),
+    gold_soft: hexa(0xc9a25a, 0.14),
+    on_gold: rgb(0x23160b),
+    hebrew: rgb(0xe3c27e),
+    ok: rgb(0x8cc49a),
+    ok_soft: hexa(0x8cc49a, 0.14),
+    bad: rgb(0xe39580),
+    bad_soft: hexa(0xe39580, 0.14),
+    info: rgb(0x9fb7d9),
+    info_soft: hexa(0x9fb7d9, 0.14),
+    violet: rgb(0xc0a6e0),
+    violet_soft: hexa(0xc0a6e0, 0.12),
+    flame: rgb(0xe8a052),
+    flame_soft: hexa(0xe8a052, 0.12),
+    input_bg: rgb(0x1a110c),
+    texture: "tex-walnut",
+    side_texture: "tex-leather",
+    veil: hexa(0x120b08, 0.35),
+    side_veil: hexa(0x120b08, 0.45),
+    side_tint: hexa(0x000000, 0.0),
+    lamp: hexa(0xffbe6e, 0.10),
+    vignette: hexa(0x000000, 0.0),
+    brass_hi: rgb(0xecd08f),
+    brass_mid: rgb(0xd2ad62),
+    brass_lo: rgb(0xb08a45),
+    brass_edge: rgb(0x7a5a26),
 };
 
-/// The light «Пергамент» palette (§T.2).
+/// The light «Пергамент» palette: matte klaf (tan/ochre) with iron-gall ink.
 pub const PARCHMENT: Palette = Palette {
-    bg0: rgb(0xf3ead6),
-    bg1: rgb(0xebdfc4),
-    surface: rgb(0xfbf6ea),
-    surface2: rgb(0xf4ecda),
-    surface3: rgb(0xebdfc6),
-    line: rgba(0x46, 0x32, 0x0f, 0.10),
-    line2: rgba(0x46, 0x32, 0x0f, 0.20),
-    text: rgb(0x2b2316),
-    muted: rgb(0x6d604a),
-    gold: rgb(0x9c7514),
-    gold2: rgb(0x7f5f0d),
-    gold_soft: rgba(0x9c, 0x75, 0x14, 0.13),
-    on_gold: rgb(0xfffaf0),
-    hebrew: rgb(0x5a400a),
-    ok: rgb(0x2f7d55),
-    ok_soft: rgba(0x2f, 0x7d, 0x55, 0.12),
-    bad: rgb(0xa4402e),
-    bad_soft: rgba(0xa4, 0x40, 0x2e, 0.10),
-    info: rgb(0x335f9e),
-    info_soft: rgba(0x33, 0x5f, 0x9e, 0.10),
-    violet: rgb(0x6449a8),
-    violet_soft: rgba(0x64, 0x49, 0xa8, 0.10),
-    flame: rgb(0xd08a2d),
-    flame_soft: rgba(0xd0, 0x8a, 0x2d, 0.12),
-    input_bg: rgb(0xfffdf7),
+    bg0: rgb(0xa48c65),
+    bg1: rgb(0xb39b72),
+    surface: rgb(0xd8c59f),
+    surface2: rgb(0xcdb891),
+    surface3: rgb(0xc2ab83),
+    line: hexa(0x6b4712, 0.22),
+    line2: hexa(0x6b4712, 0.40),
+    text: rgb(0x2a1a0c),
+    muted: rgb(0x4f3a26),
+    gold: rgb(0x8a6420),
+    gold2: rgb(0x553609),
+    gold_soft: hexa(0x8a6420, 0.14),
+    on_gold: rgb(0x2a1a0c),
+    hebrew: rgb(0x553609),
+    ok: rgb(0x285636),
+    ok_soft: hexa(0x285636, 0.12),
+    bad: rgb(0x8a2f1e),
+    bad_soft: hexa(0x8a2f1e, 0.10),
+    info: rgb(0x2b4f7e),
+    info_soft: hexa(0x2b4f7e, 0.10),
+    violet: rgb(0x563c8c),
+    violet_soft: hexa(0x563c8c, 0.10),
+    flame: rgb(0x8a5410),
+    flame_soft: hexa(0x8a5410, 0.12),
+    input_bg: rgb(0xe0cfab),
+    texture: "tex-klaf",
+    side_texture: "tex-klaf",
+    veil: hexa(0xe8d6b0, 0.55),
+    side_veil: hexa(0xe8d6b0, 0.55),
+    side_tint: hexa(0x6b4712, 0.06),
+    lamp: hexa(0xfff1cc, 0.10),
+    vignette: hexa(0x3a2510, 0.10),
+    brass_hi: rgb(0xd9b56a),
+    brass_mid: rgb(0xc8a258),
+    brass_lo: rgb(0xb8914a),
+    brass_edge: rgb(0x6b4712),
 };
 
 /// The timed-studio palette scoped to quiz-show screens (§T.3).
@@ -160,6 +214,17 @@ pub const TIMED: Palette = Palette {
     flame: rgb(0xf2a51f),
     flame_soft: rgba(0xf2, 0xa5, 0x1f, 0.16),
     input_bg: rgb(0x1c1f55),
+    texture: "tex-walnut",
+    side_texture: "tex-leather",
+    veil: hexa(0x05050f, 0.35),
+    side_veil: hexa(0x05050f, 0.45),
+    side_tint: hexa(0x000000, 0.0),
+    lamp: hexa(0xffbe6e, 0.10),
+    vignette: hexa(0x000000, 0.0),
+    brass_hi: rgb(0xf6dc86),
+    brass_mid: rgb(0xe6c36a),
+    brass_lo: rgb(0xd4af37),
+    brass_edge: rgb(0xa8821c),
 };
 
 // ---------------------------------------------------------------------------
@@ -248,7 +313,7 @@ pub mod radius {
     /// Small boxes (hebrew figure, differs notes).
     pub const SMALL: f32 = 12.0;
     /// Buttons.
-    pub const BUTTON: f32 = 14.0;
+    pub const BUTTON: f32 = 12.0;
     /// Chips, tags, pills.
     pub const PILL: f32 = 999.0;
     /// Segment buttons / step segments.
@@ -265,6 +330,22 @@ pub mod radius {
     pub const HERO: f32 = 24.0;
     /// Timed quiz-show container.
     pub const TIMED: f32 = 26.0;
+}
+
+/// Control heights: every fixed-height control uses one of these.
+pub mod size {
+    /// Back, exit, ghost links, segments, count chips.
+    pub const BTN_SM: f32 = 36.0;
+    /// Dialog and option buttons (= `spacing::BTN_MIN`).
+    pub const BTN_MD: f32 = 46.0;
+    /// Page CTAs (= `spacing::BTN_LG_MIN`).
+    pub const BTN_LG: f32 = 52.0;
+    /// In-card CTA pills (Играть / Начать / Повторить).
+    pub const PILL: f32 = 32.0;
+    /// Tags, difficulty, review chip.
+    pub const TAG: f32 = 24.0;
+    /// Sidebar items.
+    pub const NAV: f32 = 40.0;
 }
 
 /// Spacing / layout constants.
@@ -317,8 +398,27 @@ fn v_gradient(top: Color, bottom: Color) -> Background {
     ))
 }
 
+/// Three-stop top → bottom gradient.
+fn v_gradient3(top: Color, mid: Color, bottom: Color) -> Background {
+    Background::Gradient(Gradient::Linear(
+        Linear::new(Radians(std::f32::consts::FRAC_PI_2))
+            .add_stop(0.0, top)
+            .add_stop(0.5, mid)
+            .add_stop(1.0, bottom),
+    ))
+}
+
 fn gold_background(p: &Palette) -> Background {
     v_gradient(p.gold2, p.gold)
+}
+
+/// Brass (primary) gradient; `lift` mixes every stop towards `toward`.
+fn brass_background(p: &Palette, toward: Color, lift: f32) -> Background {
+    v_gradient3(
+        mix(p.brass_hi, toward, lift),
+        mix(p.brass_mid, toward, lift),
+        mix(p.brass_lo, toward, lift),
+    )
 }
 
 fn is_light(color: &Color) -> bool {
@@ -339,67 +439,98 @@ fn button_style(background: Option<Background>, text_color: Color) -> button::St
     }
 }
 
-/// Primary gold button: `linear-gradient(180deg, gold2, gold)`, on-gold text.
+/// Primary brass button: three-stop brass gradient, 1 px brass edge,
+/// on-gold label, warm drop shadow.
 pub fn button_primary(p: &Palette, status: button::Status) -> button::Style {
+    let light = is_light(&p.bg0);
+    let border = Border {
+        color: p.brass_edge,
+        width: 1.0,
+        radius: radius::BUTTON.into(),
+    };
     let style = button::Style {
-        border: Border {
-            radius: radius::BUTTON.into(),
-            ..Border::default()
-        },
-        ..button_style(Some(gold_background(p)), p.on_gold)
+        border,
+        ..button_style(Some(brass_background(p, Color::WHITE, 0.0)), p.on_gold)
+    };
+    let shadow = if light {
+        Shadow {
+            color: hexa(0x3a2510, 0.20),
+            offset: Vector::new(0.0, 2.0),
+            blur_radius: 6.0,
+        }
+    } else {
+        Shadow {
+            color: alpha(p.brass_mid, 0.22),
+            offset: Vector::new(0.0, 4.0),
+            blur_radius: 14.0,
+        }
     };
     match status {
-        button::Status::Active => button::Style {
-            shadow: Shadow {
-                color: alpha(p.gold, 0.25),
-                offset: Vector::new(0.0, 6.0),
-                blur_radius: 18.0,
-            },
-            ..style
-        },
+        button::Status::Active => button::Style { shadow, ..style },
         button::Status::Hovered => button::Style {
-            background: Some(v_gradient(
-                mix(p.gold2, Color::WHITE, 0.15),
-                mix(p.gold, Color::WHITE, 0.10),
-            )),
+            background: Some(if light {
+                brass_background(p, rgb(0xfff1cc), 0.10)
+            } else {
+                brass_background(p, Color::WHITE, 0.08)
+            }),
+            shadow,
             ..style
         },
         button::Status::Pressed => button::Style {
-            background: Some(v_gradient(p.gold, p.gold2)),
+            background: Some(v_gradient3(p.brass_lo, p.brass_mid, p.brass_hi)),
             shadow: Shadow::default(),
             ..style
         },
         button::Status::Disabled => button::Style {
-            text_color: alpha(p.on_gold, 0.5),
+            background: Some(Background::Color(p.surface3)),
+            text_color: alpha(p.muted, 0.7),
+            border: Border {
+                color: p.line,
+                ..border
+            },
             ..style
         },
     }
 }
 
-/// Secondary button: surface2 bg, 1 px line2 border.
+/// Secondary button: leather (dark) / darker klaf (parchment) gradient with
+/// a brass border.
 pub fn button_secondary(p: &Palette, status: button::Status) -> button::Style {
     let border = Border {
-        color: p.line2,
+        color: alpha(p.gold, 0.55),
         width: 1.0,
         radius: radius::BUTTON.into(),
     };
-    let style = button_style(Some(Background::Color(p.surface2)), p.text);
+    let base = v_gradient(p.surface2, mix(p.surface2, p.bg0, 0.25));
+    let style = button::Style {
+        border,
+        ..button_style(Some(base), p.text)
+    };
     match status {
         button::Status::Hovered | button::Status::Pressed => button::Style {
-            background: Some(Background::Color(p.surface3)),
-            border,
+            background: Some(v_gradient(
+                mix(p.surface2, p.gold, p.gold_soft.a),
+                mix(mix(p.surface2, p.bg0, 0.25), p.gold, p.gold_soft.a),
+            )),
+            border: Border {
+                color: p.gold2,
+                ..border
+            },
             ..style
         },
         button::Status::Disabled => button::Style {
             text_color: alpha(p.text, 0.45),
-            border,
+            border: Border {
+                color: p.line,
+                ..border
+            },
             ..style
         },
-        button::Status::Active => button::Style { border, ..style },
+        button::Status::Active => style,
     }
 }
 
-/// Ghost / link button: transparent with a 1 px border.
+/// Ghost / link button: transparent with a 1 px line2 border.
 pub fn button_ghost(p: &Palette, status: button::Status) -> button::Style {
     let border = Border {
         color: p.line2,
@@ -408,14 +539,12 @@ pub fn button_ghost(p: &Palette, status: button::Status) -> button::Style {
     };
     let style = button_style(None, p.text);
     match status {
-        button::Status::Hovered => button::Style {
-            background: Some(Background::Color(p.surface)),
-            border,
-            ..style
-        },
-        button::Status::Pressed => button::Style {
-            background: Some(Background::Color(p.surface2)),
-            border,
+        button::Status::Hovered | button::Status::Pressed => button::Style {
+            background: Some(Background::Color(p.gold_soft)),
+            border: Border {
+                color: alpha(p.gold, 0.6),
+                ..border
+            },
             ..style
         },
         button::Status::Disabled => button::Style {
@@ -424,6 +553,43 @@ pub fn button_ghost(p: &Palette, status: button::Status) -> button::Style {
             ..style
         },
         button::Status::Active => button::Style { border, ..style },
+    }
+}
+
+/// Selectable chip / segment (count chips, «20 с / 30 с», settings segments).
+/// `round` gives a pill radius, otherwise the segment radius.
+pub fn choice(p: &Palette, selected: bool, round: bool, status: button::Status) -> button::Style {
+    let radius = if round { radius::PILL } else { radius::SEGMENT };
+    let (bg, border_color, text_color) = if selected {
+        (p.gold_soft, p.gold, p.gold2)
+    } else {
+        (p.surface2, p.line2, p.text)
+    };
+    let style = button::Style {
+        background: Some(Background::Color(bg)),
+        text_color,
+        border: Border {
+            color: border_color,
+            width: 1.0,
+            radius: radius.into(),
+        },
+        shadow: Shadow::default(),
+        snap: true,
+    };
+    match status {
+        button::Status::Hovered | button::Status::Pressed if !selected => button::Style {
+            background: Some(Background::Color(p.surface3)),
+            border: Border {
+                color: alpha(p.gold, 0.6),
+                ..style.border
+            },
+            ..style
+        },
+        button::Status::Disabled => button::Style {
+            text_color: alpha(text_color, 0.45),
+            ..style
+        },
+        _ => style,
     }
 }
 
@@ -545,29 +711,43 @@ fn container_style(p: &Palette, background: Option<Background>) -> container::St
 fn card_shadow(p: &Palette) -> Shadow {
     if is_light(&p.bg0) {
         Shadow {
-            color: rgba(0x50, 0x37, 0x0f, 0.10),
+            color: rgba(0x3a, 0x25, 0x10, 0.18),
             offset: Vector::new(0.0, 3.0),
             blur_radius: 10.0,
         }
     } else {
         Shadow {
-            color: rgba(0x00, 0x00, 0x00, 0.28),
-            offset: Vector::new(0.0, 4.0),
-            blur_radius: 14.0,
+            color: rgba(0x00, 0x00, 0x00, 0.45),
+            offset: Vector::new(0.0, 6.0),
+            blur_radius: 18.0,
         }
     }
 }
 
-/// Card: surface bg, 1 px line border, radius 18, soft shadow.
+/// Card: translucent surface over the window texture (the grain stays
+/// visible); the top edge is slightly lamp-lit. 1 px brass border.
 pub fn card(p: &Palette) -> container::Style {
+    let light = is_light(&p.bg0);
+    let lamp_rgb = Color { a: 1.0, ..p.lamp };
+    let border_color = if light {
+        hexa(0x6b4712, 0.30)
+    } else {
+        alpha(p.gold, 0.35)
+    };
     container::Style {
         border: Border {
-            color: p.line,
+            color: border_color,
             width: 1.0,
             radius: radius::CARD.into(),
         },
         shadow: card_shadow(p),
-        ..container_style(p, Some(Background::Color(p.surface)))
+        ..container_style(
+            p,
+            Some(v_gradient(
+                alpha(mix(p.surface, lamp_rgb, 0.06), 0.90),
+                alpha(p.surface, 0.90),
+            )),
+        )
     }
 }
 
@@ -769,27 +949,108 @@ pub fn text_input(p: &Palette, status: ti::Status) -> ti::Style {
 }
 
 // ---------------------------------------------------------------------------
-// Shell (sidebar, window background)
+// Shell (sidebar, window background, lamp, dividers)
 // ---------------------------------------------------------------------------
 
-/// Window background: bg1 → bg0 vertical gradient (body background).
+/// Window background fallback when the texture is missing: plain bg0.
 pub fn app_background(p: &Palette) -> container::Style {
-    container_style(p, Some(v_gradient(p.bg1, p.bg0)))
+    container_style(p, Some(Background::Color(p.bg0)))
 }
 
-/// Sidebar: slightly translucent bg0 with a right hairline.
+/// Solid veil composited over the window texture.
+pub fn veil(p: &Palette) -> container::Style {
+    container_style(p, Some(Background::Color(p.veil)))
+}
+
+/// Reading-lamp highlight, vertical: a warm pool from the top.
+pub fn lamp_v(p: &Palette) -> container::Style {
+    container_style(
+        p,
+        Some(Background::Gradient(Gradient::Linear(
+            Linear::new(Radians(std::f32::consts::FRAC_PI_2))
+                .add_stop(0.0, p.lamp)
+                .add_stop(0.45, alpha(p.lamp, 0.0))
+                .add_stop(1.0, Color::TRANSPARENT),
+        ))),
+    )
+}
+
+/// Reading-lamp highlight, horizontal: brightest behind the content column.
+pub fn lamp_h(p: &Palette) -> container::Style {
+    container_style(
+        p,
+        Some(Background::Gradient(Gradient::Linear(
+            Linear::new(Radians(0.0))
+                .add_stop(0.0, Color::TRANSPARENT)
+                .add_stop(0.5, alpha(p.lamp, 0.05))
+                .add_stop(1.0, Color::TRANSPARENT),
+        ))),
+    )
+}
+
+/// Parchment edge vignette: the uneven, aged tone at the top and bottom.
+pub fn vignette(p: &Palette) -> container::Style {
+    container_style(
+        p,
+        Some(Background::Gradient(Gradient::Linear(
+            Linear::new(Radians(std::f32::consts::FRAC_PI_2))
+                .add_stop(0.0, p.vignette)
+                .add_stop(0.15, Color::TRANSPARENT)
+                .add_stop(0.85, Color::TRANSPARENT)
+                .add_stop(1.0, alpha(p.vignette, 0.12)),
+        ))),
+    )
+}
+
+/// Sidebar: the side veil (plus the optional tint) over the side texture.
+/// The 1 px brass right border is a separate `divider_v` element in the row.
 pub fn sidebar(p: &Palette) -> container::Style {
-    container::Style {
-        border: Border {
-            color: p.line,
-            width: 1.0,
-            radius: 0.0.into(),
-        },
-        ..container_style(p, Some(Background::Color(alpha(p.bg0, 0.88))))
+    // Composite the tint over the veil ("over" operator).
+    let (v, t) = (p.side_veil, p.side_tint);
+    let a = t.a + v.a * (1.0 - t.a);
+    let bg = if t.a > 0.0 && a > 0.0 {
+        Color {
+            r: (t.r * t.a + v.r * v.a * (1.0 - t.a)) / a,
+            g: (t.g * t.a + v.g * v.a * (1.0 - t.a)) / a,
+            b: (t.b * t.a + v.b * v.a * (1.0 - t.a)) / a,
+            a,
+        }
+    } else {
+        v
+    };
+    container_style(p, Some(Background::Color(bg)))
+}
+
+/// Vertical 1 px hairline (the sidebar's right brass border).
+pub fn divider_v(p: &Palette) -> container::Style {
+    container_style(p, Some(Background::Color(p.line)))
+}
+
+/// Horizontal 1 px hairline for the settings rows (use with `rule::horizontal(1)`).
+pub fn divider_h(p: &Palette) -> rule::Style {
+    rule::Style {
+        color: p.line2,
+        radius: 0.0.into(),
+        fill_mode: rule::FillMode::Full,
+        snap: true,
     }
 }
 
-/// Active sidebar item: gold2 text on gold-soft.
+/// Brass "fillet" section break: a horizontal line fading out at the ends.
+pub fn fillet(p: &Palette) -> container::Style {
+    container_style(
+        p,
+        Some(Background::Gradient(Gradient::Linear(
+            Linear::new(Radians(0.0))
+                .add_stop(0.0, Color::TRANSPARENT)
+                .add_stop(0.5, alpha(p.gold, 0.55))
+                .add_stop(1.0, Color::TRANSPARENT),
+        ))),
+    )
+}
+
+/// Active sidebar item: gold2 text on gold-soft (the 3 px brass left bar is
+/// added by the layout in `main.rs`).
 pub fn button_nav_active(p: &Palette, _status: button::Status) -> button::Style {
     button::Style {
         background: Some(Background::Color(p.gold_soft)),

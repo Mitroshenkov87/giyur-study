@@ -26,6 +26,7 @@ use crate::exam::{self, TimedOption, TimedRes, TimedStatus};
 use crate::game::{self, AwardOutcome};
 use crate::ui::app::{Action, Ctx, Route, Toast};
 use crate::ui::fonts::{SANS, SANS_BOLD, SERIF_BOLD};
+use crate::ui::screens::map::icons;
 use crate::ui::theme::{self, Palette};
 
 /// The studio palette (§T.3), in both app themes.
@@ -226,8 +227,9 @@ fn celebrate_award(ctx: &mut Ctx, award: &AwardOutcome) {
     }
 }
 
-/// Confirm dialog (§0.3): dimmed backdrop (click = cancel) + modal card.
-fn confirm_overlay<'a>(base: Element<'a, Msg>, title: &'a str, body: &'a str) -> Element<'a, Msg> {
+/// Quit-confirm dialog (§0.3): dimmed backdrop (click = cancel) + modal card.
+/// Rendered as a shell layer above the whole window (see `screens::mod.rs`).
+fn confirm_dialog<'a>(title: &'a str, body: &'a str) -> Element<'a, Msg> {
     let p = tp();
     let dialog = container(
         column![
@@ -238,14 +240,8 @@ fn confirm_overlay<'a>(base: Element<'a, Msg>, title: &'a str, body: &'a str) ->
             txt(body).size(theme::text::BODY).color(p.text),
             row![
                 space::horizontal(),
-                button(txt("Отмена").size(15.0))
-                    .padding([10.0, 18.0])
-                    .style(move |_, s| theme::button_ghost(&p, s))
-                    .on_press(Msg::QuitCancel),
-                button(txt("Выйти").size(15.0).font(SANS_BOLD))
-                    .padding([10.0, 18.0])
-                    .style(move |_, s| theme::button_primary(&p, s))
-                    .on_press(Msg::QuitConfirm),
+                tbutton("Отмена", TBtn::Ghost, Some(Msg::QuitCancel)),
+                tbutton("Выйти", TBtn::Primary, Some(Msg::QuitConfirm)),
             ]
             .spacing(10)
             .width(Length::Fill),
@@ -277,15 +273,94 @@ fn confirm_overlay<'a>(base: Element<'a, Msg>, title: &'a str, body: &'a str) ->
     .width(Length::Fill)
     .height(Length::Fill)
     .on_press(Msg::QuitCancel);
-    stack![
-        base,
-        iced::widget::opaque(
-            stack![backdrop, center(dialog)]
-                .width(Length::Fill)
-                .height(Length::Fill)
+    stack![backdrop, center(dialog)]
+        .width(Length::Fill)
+        .height(Length::Fill)
+        .into()
+}
+
+// ---------------------------------------------------------------------------
+// TIMED-palette controls (mirrors of `widgets` helpers scoped to the studio)
+// ---------------------------------------------------------------------------
+
+#[derive(Debug, Clone, Copy)]
+enum TBtn {
+    Primary,
+    Ghost,
+}
+
+/// Fixed-height (BTN_SM) centred-label button in the studio palette.
+fn tbutton<'a>(label: &'a str, kind: TBtn, on_press: Option<Msg>) -> Element<'a, Msg> {
+    let bold = matches!(kind, TBtn::Primary);
+    button(
+        container(
+            txt(label)
+                .size(15.0)
+                .font(if bold { SANS_BOLD } else { SANS }),
         )
-    ]
-    .width(Length::Fill)
+        .center_y(Length::Fill),
+    )
+    .height(theme::size::BTN_SM)
+    .padding([0.0, 18.0])
+    .style(move |_, s| match kind {
+        TBtn::Primary => theme::button_primary(&tp(), s),
+        TBtn::Ghost => theme::button_ghost(&tp(), s),
+    })
+    .on_press_maybe(on_press)
+    .into()
+}
+
+/// «‹ label» back button in the studio palette (metrics of `widgets::back_button`).
+fn tback_button<'a>(label: &'a str, msg: Msg) -> Element<'a, Msg> {
+    button(
+        container(
+            row![
+                icons::icon(icons::Kind::ChevronLeft, 14.0, tp().muted),
+                txt(label).size(15.0),
+            ]
+            .spacing(6)
+            .align_y(Alignment::Center),
+        )
+        .center_y(Length::Fill),
+    )
+    .height(theme::size::BTN_SM)
+    .padding([0.0, 12.0])
+    .style(move |_, s| theme::button_ghost(&tp(), s))
+    .on_press(msg)
+    .into()
+}
+
+/// «× Выйти» in the studio palette (metrics of `widgets::exit_button`).
+fn texit_button<'a>(label: &'a str, msg: Msg) -> Element<'a, Msg> {
+    button(
+        container(
+            row![txt("×").size(16.0).color(tp().muted), txt(label).size(15.0),]
+                .spacing(6)
+                .align_y(Alignment::Center),
+        )
+        .center_y(Length::Fill),
+    )
+    .height(theme::size::BTN_SM)
+    .padding([0.0, 12.0])
+    .style(move |_, s| theme::button_ghost(&tp(), s))
+    .on_press(msg)
+    .into()
+}
+
+/// Selectable chip / segment in the studio palette (see `widgets::choice`).
+fn tchoice<'a>(label: String, selected: bool, round: bool, msg: Msg) -> Element<'a, Msg> {
+    button(
+        container(txt(label).size(theme::text::SMALL).font(if selected {
+            SANS_BOLD
+        } else {
+            SANS
+        }))
+        .center(Length::Fill),
+    )
+    .height(theme::size::BTN_SM)
+    .padding([0.0, 16.0])
+    .style(move |_, status| theme::choice(&tp(), selected, round, status))
+    .on_press(msg)
     .into()
 }
 
@@ -851,19 +926,19 @@ impl Screen {
     pub fn view<'a>(&'a self, ctx: &'a Ctx) -> Element<'a, Msg> {
         match &self.phase {
             Phase::Intro => self.view_intro(ctx),
-            Phase::Run(run) => {
-                let base = self.view_run(run);
-                if run.confirm_quit {
-                    confirm_overlay(
-                        base,
-                        "Выйти из экзамена?",
-                        "Уже данные ответы сохранятся в статистике, но результат игры не будет засчитан.",
-                    )
-                } else {
-                    base
-                }
-            }
+            Phase::Run(run) => self.view_run(run),
             Phase::Results(r) => self.view_results(ctx, r),
+        }
+    }
+
+    /// The quit-confirm dialog, rendered as a shell layer above the window.
+    pub fn dialog<'a>(&'a self, _ctx: &'a Ctx) -> Option<Element<'a, Msg>> {
+        match &self.phase {
+            Phase::Run(run) if run.confirm_quit => Some(confirm_dialog(
+                "Выйти из экзамена?",
+                "Уже данные ответы сохранятся в статистике, но результат игры не будет засчитан.",
+            )),
+            _ => None,
         }
     }
 
@@ -898,16 +973,7 @@ impl Screen {
         let avail = exam::timed_pool(&ctx.lib, &ctx.state).len();
 
         let mut col = Column::new().spacing(20).width(Length::Fill);
-        col = col.push(
-            button(
-                row![txt("‹").size(22.0), txt("На главную").size(15.0)]
-                    .align_y(Alignment::Center)
-                    .spacing(2),
-            )
-            .padding([6.0, 10.0])
-            .style(move |_, s| theme::button_ghost(&p, s))
-            .on_press(Msg::Back),
-        );
+        col = col.push(tback_button("На главную", Msg::Back));
 
         // Hero: static timer ring + title.
         col = col.push(
@@ -936,13 +1002,7 @@ impl Screen {
         let mut chips = Row::new().spacing(8);
         for n in exam::TIMED_COUNTS {
             let selected = count == n;
-            chips = chips.push(
-                button(txt(format!("{n}")).size(theme::text::SMALL).font(SANS_BOLD))
-                    .padding([0.0, 16.0])
-                    .height(theme::spacing::CHIP_MIN)
-                    .style(move |_, status| chip_style(&p, selected, status))
-                    .on_press(Msg::Count(n)),
-            );
+            chips = chips.push(tchoice(format!("{n}"), selected, true, Msg::Count(n)));
         }
         card_col = card_col.push(
             column![muted("Количество вопросов").size(theme::text::SMALL), chips,].spacing(6),
@@ -951,17 +1011,7 @@ impl Screen {
         let mut seg = Row::new().spacing(8);
         for v in [20i64, 30] {
             let selected = secs == v;
-            seg = seg.push(
-                button(
-                    txt(format!("{v} с"))
-                        .size(theme::text::SMALL)
-                        .font(SANS_BOLD),
-                )
-                .padding([0.0, 18.0])
-                .height(theme::spacing::CHIP_MIN)
-                .style(move |_, status| seg_style(&p, selected, status))
-                .on_press(Msg::Secs(v)),
-            );
+            seg = seg.push(tchoice(format!("{v} с"), selected, false, Msg::Secs(v)));
         }
         card_col = card_col
             .push(column![muted("Время на вопрос").size(theme::text::SMALL), seg].spacing(6));
@@ -1037,10 +1087,13 @@ impl Screen {
             );
         }
 
-        let go = button(txt("Начать игру").size(theme::text::BODY).font(SANS_BOLD))
-            .padding([0.0, 26.0])
-            .height(theme::spacing::BTN_LG_MIN)
-            .style(move |_, s| theme::button_tq_go(&p, s));
+        let go = button(
+            container(txt("Начать игру").size(theme::text::BODY).font(SANS_BOLD))
+                .center_y(Length::Fill),
+        )
+        .padding([0.0, 26.0])
+        .height(theme::size::BTN_LG)
+        .style(move |_, s| theme::button_tq_go(&p, s));
         let go = if avail > 0 {
             go.on_press(Msg::Start)
         } else {
@@ -1071,45 +1124,18 @@ impl Screen {
     }
 }
 
-/// Chip button (selected = gold-soft bg, gold border, gold2 text).
-fn chip_style(p: &Palette, selected: bool, status: button::Status) -> button::Style {
-    if selected {
-        button::Style {
-            background: Some(Background::Color(p.gold_soft)),
-            text_color: p.gold2,
-            border: Border {
-                color: p.gold,
-                width: 1.0,
-                radius: theme::radius::PILL.into(),
-            },
-            shadow: Shadow::default(),
-            snap: true,
-        }
-    } else {
-        let hovered = matches!(status, button::Status::Hovered | button::Status::Pressed);
-        button::Style {
-            background: Some(Background::Color(if hovered {
-                p.surface3
-            } else {
-                p.surface2
-            })),
-            text_color: p.text,
-            border: Border {
-                color: p.line2,
-                width: 1.0,
-                radius: theme::radius::PILL.into(),
-            },
-            shadow: Shadow::default(),
-            snap: true,
-        }
-    }
-}
-
-/// Segment button (same colours, segment radius).
-fn seg_style(p: &Palette, selected: bool, status: button::Status) -> button::Style {
-    let mut st = chip_style(p, selected, status);
-    st.border.radius = theme::radius::SEGMENT.into();
-    st
+/// A fixed-height BTN_MIN button with a centred label (studio palette).
+fn mid_button<'a>(
+    label: Element<'a, Msg>,
+    style: for<'t> fn(&'t Palette, button::Status) -> button::Style,
+    on_press: Option<Msg>,
+) -> Element<'a, Msg> {
+    button(container(label).center_y(Length::Fill))
+        .padding([0.0, 20.0])
+        .height(theme::size::BTN_MD)
+        .style(move |_, s| style(&tp(), s))
+        .on_press_maybe(on_press)
+        .into()
 }
 
 // ---------------------------------------------------------------------------
@@ -1126,14 +1152,7 @@ impl Screen {
         let mut col = Column::new().spacing(16).width(Length::Fill);
 
         // Top bar: quit, counter, score pills.
-        let quit = button(
-            row![txt("×").size(18.0), txt("Выйти").size(15.0)]
-                .spacing(6)
-                .align_y(Alignment::Center),
-        )
-        .padding([6.0, 10.0])
-        .style(move |_, s| theme::button_ghost(&p, s))
-        .on_press(Msg::Quit);
+        let quit = texit_button("Выйти", Msg::Quit);
         let counter = iced::widget::rich_text::<(), Msg, Theme, Renderer>(vec![
             iced::widget::text::Span::new("Вопрос ")
                 .font(SERIF_BOLD)
@@ -1230,7 +1249,7 @@ impl Screen {
                     .color(diff_color)
             )
             .padding([0.0, 12.0])
-            .height(26.0)
+            .center_y(Length::Fixed(theme::size::TAG))
             .style(move |_| container::Style {
                 background: Some(Background::Color(alpha(diff_color, 0.14))),
                 border: Border {
@@ -1276,12 +1295,16 @@ impl Screen {
         match run.phase {
             QPhase::Intro | QPhase::Active => {
                 let skip = button(
-                    txt("Не знаю — дальше")
-                        .size(theme::text::BODY)
-                        .color(p.gold2),
+                    container(
+                        txt("Не знаю — дальше")
+                            .size(theme::text::BODY)
+                            .color(p.gold2),
+                    )
+                    .center(Length::Fill),
                 )
+                .width(Length::Fixed(220.0))
                 .padding([0.0, 20.0])
-                .height(theme::spacing::BTN_MIN)
+                .height(theme::size::BTN_MD)
                 .style(move |_, status| {
                     let hovered =
                         matches!(status, button::Status::Hovered | button::Status::Pressed);
@@ -1422,30 +1445,34 @@ impl Screen {
         let mut controls = Row::new().spacing(10).align_y(Alignment::Center);
         if run.auto_setting {
             let pause = if run.auto_paused {
-                button(txt("Автопереход на паузе").size(theme::text::BODY))
-                    .padding([0.0, 18.0])
-                    .height(theme::spacing::BTN_MIN)
-                    .style(move |_, s| theme::button_ghost(&p, s))
+                mid_button(
+                    txt("Автопереход на паузе").size(theme::text::BODY).into(),
+                    theme::button_ghost,
+                    None,
+                )
             } else {
-                button(txt("Пауза").size(theme::text::BODY))
-                    .padding([0.0, 18.0])
-                    .height(theme::spacing::BTN_MIN)
-                    .style(move |_, s| theme::button_ghost(&p, s))
-                    .on_press(Msg::Pause)
+                mid_button(
+                    txt("Пауза").size(theme::text::BODY).into(),
+                    theme::button_ghost,
+                    Some(Msg::Pause),
+                )
             };
             controls = controls.push(pause);
         }
         controls = controls.push(
             button(
-                row![
-                    txt(next_label).size(theme::text::BODY).font(SANS_BOLD),
-                    kbd("Enter"),
-                ]
-                .spacing(10)
-                .align_y(Alignment::Center),
+                container(
+                    row![
+                        txt(next_label).size(theme::text::BODY).font(SANS_BOLD),
+                        kbd("Enter"),
+                    ]
+                    .spacing(10)
+                    .align_y(Alignment::Center),
+                )
+                .center_y(Length::Fill),
             )
             .padding([0.0, 22.0])
-            .height(theme::spacing::BTN_MIN)
+            .height(theme::size::BTN_MD)
             .style(move |_, s| theme::button_tq_go(&p, s))
             .on_press(Msg::Next),
         );
@@ -1574,27 +1601,34 @@ impl Screen {
         // Buttons.
         let mut buttons = Row::new().spacing(10).align_y(Alignment::Center);
         buttons = buttons.push(
-            button(txt("Ещё раз").size(theme::text::BODY).font(SANS_BOLD))
-                .padding([0.0, 24.0])
-                .height(theme::spacing::BTN_LG_MIN)
-                .style(move |_, s| theme::button_tq_go(&p, s))
-                .on_press(Msg::Again),
+            button(
+                container(txt("Ещё раз").size(theme::text::BODY).font(SANS_BOLD))
+                    .center_y(Length::Fill),
+            )
+            .padding([0.0, 24.0])
+            .height(theme::size::BTN_LG)
+            .style(move |_, s| theme::button_tq_go(&p, s))
+            .on_press(Msg::Again),
         );
         if !r.miss_ids.is_empty() {
             buttons = buttons.push(
                 button(
-                    txt(format!("Повторить ошибки ({})", r.miss_ids.len())).size(theme::text::BODY),
+                    container(
+                        txt(format!("Повторить ошибки ({})", r.miss_ids.len()))
+                            .size(theme::text::BODY),
+                    )
+                    .center_y(Length::Fill),
                 )
                 .padding([0.0, 20.0])
-                .height(theme::spacing::BTN_LG_MIN)
+                .height(theme::size::BTN_LG)
                 .style(move |_, s| theme::button_secondary(&p, s))
                 .on_press(Msg::RetryMisses),
             );
         }
         buttons = buttons.push(
-            button(txt("На главную").size(theme::text::BODY))
+            button(container(txt("На главную").size(theme::text::BODY)).center_y(Length::Fill))
                 .padding([0.0, 20.0])
-                .height(theme::spacing::BTN_LG_MIN)
+                .height(theme::size::BTN_LG)
                 .style(move |_, s| theme::button_ghost(&p, s))
                 .on_press(Msg::ToMap),
         );

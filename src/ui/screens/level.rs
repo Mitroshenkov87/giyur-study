@@ -1,7 +1,7 @@
 //! Movement / level choice (PARITY §2): three level cards, confirmation
 //! dialog when changing an already chosen movement. Progress is never reset.
 
-use iced::widget::{button, column, container, opaque, row, space, stack, Column, Row};
+use iced::widget::{button, column, container, row, space, Column, Row};
 use iced::{Alignment, Background, Border, Color, Element, Length};
 
 use crate::content;
@@ -91,12 +91,7 @@ impl Screen {
         let first = !ctx.state.onboarded;
 
         let mut page = Column::new().spacing(10).width(Length::Fill);
-        page = page.push(
-            button(row![txt("‹").size(22.0), txt("Назад").size(15.0)].spacing(2))
-                .padding([6.0, 10.0])
-                .style(move |_, status| theme::button_ghost(&theme::current(), status))
-                .on_press(Msg::Back),
-        );
+        page = page.push(widgets::back_button("Назад", Msg::Back));
         page = page.push(widgets::kicker(if first {
             "Шаг 2 из 2"
         } else {
@@ -121,11 +116,13 @@ impl Screen {
         }
         page = page.push(cards);
 
-        let base: Element<'a, Msg> = page.into();
-        match self.confirm {
-            Some(level) => stack![base, opaque(confirm_dialog(level, p))].into(),
-            None => base,
-        }
+        page.into()
+    }
+
+    /// The movement-change confirm dialog, rendered as a shell layer (§0.3).
+    pub fn dialog<'a>(&'a self, _ctx: &'a Ctx) -> Option<Element<'a, Msg>> {
+        self.confirm
+            .map(|level| confirm_dialog(level, theme::current()))
     }
 }
 

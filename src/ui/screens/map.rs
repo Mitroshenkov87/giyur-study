@@ -32,6 +32,7 @@ pub(crate) mod icons {
         Lock,
         Check,
         ChevronDown,
+        ChevronLeft,
         Flame,
         Star,
         StarDavid,
@@ -99,6 +100,16 @@ pub(crate) mod icons {
                             b.move_to(pt(6.0, 9.0));
                             b.line_to(pt(12.0, 15.0));
                             b.line_to(pt(18.0, 9.0));
+                        }),
+                        st,
+                    );
+                }
+                Kind::ChevronLeft => {
+                    frame.stroke(
+                        &path(&|b| {
+                            b.move_to(pt(15.0, 6.0));
+                            b.line_to(pt(9.0, 12.0));
+                            b.line_to(pt(15.0, 18.0));
                         }),
                         st,
                     );
@@ -540,7 +551,7 @@ pub(crate) fn kicker_owned<'a, Message: 'a>(content: String) -> Element<'a, Mess
     txt(content.to_uppercase())
         .size(theme::text::KICKER)
         .font(fonts::SANS_BOLD)
-        .color(theme::current().gold)
+        .color(theme::current().gold2)
         .into()
 }
 
@@ -606,7 +617,6 @@ impl Screen {
         // ---- Path of sections ----
         let mut path = Column::new().spacing(12).width(Length::Fill);
         let mut current_seen = false;
-        let count = ctx.lib.sections.len();
         for (i, sec) in ctx.lib.sections.iter().enumerate() {
             let unlocked = ctx.lib.is_unlocked(sec, state);
             let stats = sec
@@ -633,7 +643,6 @@ impl Screen {
                 sec,
                 item_state,
                 is_cur,
-                i == count - 1,
                 prev_available,
                 stats.as_ref(),
                 p,
@@ -700,7 +709,7 @@ fn header<'a>(ctx: &'a Ctx, p: theme::Palette) -> Element<'a, Msg> {
         .spacing(10)
         .align_x(Alignment::Start);
 
-    row![left, stats(ctx, p)]
+    row![left, space::horizontal(), stats(ctx, p)]
         .width(Length::Fill)
         .spacing(20)
         .align_y(Alignment::Center)
@@ -869,16 +878,9 @@ fn reminders<'a>(ctx: &'a Ctx, p: theme::Palette) -> Element<'a, Msg> {
         .spacing(10)
         .align_y(Alignment::Center);
         if r.href.is_some() {
-            content = content.push(space::horizontal()).push(
-                container(
-                    txt("Повторить")
-                        .size(theme::text::SMALL)
-                        .font(fonts::SANS_BOLD),
-                )
-                .padding([0.0, 14.0])
-                .height(28.0)
-                .style(move |_| theme::chip(&theme::current())),
-            );
+            content = content
+                .push(space::horizontal())
+                .push(widgets::pill("Повторить", widgets::Pill::Cta));
         }
         let boxed = button(content.width(Length::Fill))
             .width(Length::Fill)
@@ -938,7 +940,7 @@ fn timed_cta<'a>(_p: theme::Palette) -> Element<'a, Msg> {
                     .color(tq.on_gold)
             )
             .padding([0.0, 18.0])
-            .height(30.0)
+            .center_y(Length::Fixed(theme::size::PILL))
             .style(move |_| iced::widget::container::Style {
                 background: Some(v_gradient(tq.gold2, tq.gold)),
                 border: Border {
@@ -1015,30 +1017,10 @@ fn path_item<'a>(
     sec: &'a SectionMeta,
     state: ItemState,
     is_cur: bool,
-    is_last: bool,
     prev_available: Option<usize>,
     stats: Option<&content::SectionStats>,
     p: theme::Palette,
 ) -> Element<'a, Msg> {
-    let node = node_circle(state, is_cur, sec.index + 1, p);
-    let mut node_col = Column::new().spacing(6).align_x(Alignment::Center);
-    node_col = node_col.push(node);
-    if !is_last {
-        node_col = node_col.push(
-            container(space::vertical())
-                .width(2.0)
-                .height(Length::Fill)
-                .style(move |_| iced::widget::container::Style {
-                    background: Some(Background::Color(if state == ItemState::Done {
-                        p.gold
-                    } else {
-                        p.line2
-                    })),
-                    ..iced::widget::container::Style::default()
-                }),
-        );
-    }
-
     // ---- Card content ----
     let dim = state == ItemState::Soon;
     let text_color = if dim { alpha(p.text, 0.58) } else { p.text };
@@ -1088,21 +1070,14 @@ fn path_item<'a>(
             .align_y(Alignment::Center);
             if is_cur {
                 let started = s.read > 0 || s.best.is_some();
-                status = status.push(
-                    container(
-                        txt(if started {
-                            "Продолжить"
-                        } else {
-                            "Начать"
-                        })
-                        .size(theme::text::SMALL)
-                        .font(fonts::SANS_BOLD)
-                        .color(p.gold2),
-                    )
-                    .padding([0.0, 14.0])
-                    .height(28.0)
-                    .style(move |_| theme::chip(&theme::current())),
-                );
+                status = status.push(widgets::pill(
+                    if started {
+                        "Продолжить"
+                    } else {
+                        "Начать"
+                    },
+                    widgets::Pill::Cta,
+                ));
             }
             text_col = text_col.push(status);
         }
@@ -1169,65 +1144,8 @@ fn path_item<'a>(
         b.into()
     };
 
-    row![node_col, card]
-        .spacing(14)
-        .align_y(Alignment::Start)
-        .width(Length::Fill)
-        .into()
-}
-
-fn node_circle<'a>(
-    state: ItemState,
-    is_cur: bool,
-    number: usize,
-    p: theme::Palette,
-) -> Element<'a, Msg> {
-    let size = if is_cur { 60.0 } else { 52.0 };
-    let (bg, border, inner): (Color, Color, Element<'a, Msg>) = match state {
-        ItemState::Done => (
-            p.gold,
-            p.gold,
-            icons::icon(icons::Kind::Check, 22.0, p.on_gold),
-        ),
-        ItemState::Locked | ItemState::Soon => (
-            p.surface3,
-            p.line,
-            icons::icon(icons::Kind::Lock, 18.0, p.muted),
-        ),
-        ItemState::Open if is_cur => (
-            p.gold,
-            p.gold2,
-            txt(number.to_string())
-                .size(20.0)
-                .font(fonts::SANS_BOLD)
-                .color(p.on_gold)
-                .into(),
-        ),
-        ItemState::Open => (
-            p.surface3,
-            p.line2,
-            txt(number.to_string())
-                .size(17.0)
-                .font(fonts::SANS_BOLD)
-                .color(p.text)
-                .into(),
-        ),
-    };
-    container(inner)
-        .width(Length::Fixed(size))
-        .height(Length::Fixed(size))
-        .center_x(Length::Fixed(size))
-        .center_y(Length::Fixed(size))
-        .style(move |_| iced::widget::container::Style {
-            background: Some(Background::Color(bg)),
-            border: Border {
-                color: border,
-                width: 1.5,
-                radius: theme::radius::PILL.into(),
-            },
-            ..iced::widget::container::Style::default()
-        })
-        .into()
+    // The rail column was dropped (audit §1.2): cards align with the banner.
+    card
 }
 
 /// Format a best-test score like the PWA (`85`, `85.5`).

@@ -1,8 +1,8 @@
-# Giyur Study — нативное приложение (Rust)
+# Шорашим (Shorashim) — основы иудаизма и подготовка к гиюру
 
 **Русский** · [English](#english)
 
-Офлайн-учебник на русском языке для подготовки к гиюру и собеседованию в бейт-дине. Это полностью нативная версия на Rust (без браузера и webview) приложения Giyur Study: 8 разделов с уроками по уровням, карточки «Вспомнил / Не вспомнил» с интервальным повторением (1 → 3 → 7 → 14 → 30 дней), тесты по разделам, общий экзамен, пробное собеседование в бейт-дине и экзамен на время из 20 вопросов — от лёгких к трудным, каждый раз новый.
+Офлайн-учебник на русском языке: основы иудаизма и подготовка к гиюру и собеседованию в бейт-дине. «Шорашим» (שורשים, «корни») — полностью нативное приложение на Rust (без браузера и webview), прежнее название — Giyur Study: 8 разделов с уроками по уровням, карточки «Вспомнил / Не вспомнил» с интервальным повторением (1 → 3 → 7 → 14 → 30 дней), тесты по разделам, общий экзамен, пробное собеседование в бейт-дине и экзамен на время из 20 вопросов — от лёгких к трудным, каждый раз новый.
 
 Три течения — реформистское, консервативное (Масорти) и ортодоксальное — устроены как вложенные уровни строгости: каждый следующий включает всё из предыдущего. Есть XP, дневная цель, серия дней с «заморозкой», значки и карта пути.
 
@@ -19,7 +19,7 @@
 | ![Карточки](docs/screenshots/deck.webp) | |
 
 ## Скачать
-Готовый `.exe` для Windows (x64) — на странице [Releases](../../releases). Установка не нужна: скачайте и запустите. Прогресс хранится в `%APPDATA%\GiyurStudy\progress.json`.
+Готовый `.exe` для Windows (x64) — на странице [Releases](../../releases). Установка не нужна: скачайте и запустите. Прогресс хранится в `%APPDATA%\Shorashim\progress.json` (прогресс из прежней версии `GiyurStudy` переносится автоматически).
 
 ## Сборка
 Нужен Rust (stable) — <https://rustup.rs>.
@@ -34,7 +34,7 @@ Windows-сборка из Linux (MinGW):
 rustup target add x86_64-pc-windows-gnu
 sudo apt install gcc-mingw-w64-x86-64
 cargo build --release --target x86_64-pc-windows-gnu
-# → target/x86_64-pc-windows-gnu/release/giyur-study.exe
+# → target/x86_64-pc-windows-gnu/release/shorashim.exe
 ```
 На Linux нужны обычные библиотеки окна: `libxkbcommon`, `libwayland`/`libx11`, драйвер Vulkan или OpenGL (если GPU нет, включается программная отрисовка).
 
@@ -50,16 +50,16 @@ Apache License 2.0 — см. [`LICENSE`](LICENSE) и [`NOTICE`](NOTICE). Шри�
 
 ## English
 
-**Giyur Study** is an offline, Russian-language study app for people preparing for giyur (conversion to Judaism) and the beit din interview. This repository is the full native Rust rewrite (no browser, no webview) of the Giyur Study PWA. The UI and content are in Russian.
+**Shorashim** (Hebrew שורשים, “roots”; formerly Giyur Study) is an offline, Russian-language app on the foundations of Judaism for people preparing for giyur (conversion to Judaism) and the beit din interview. This repository is the full native Rust rewrite (no browser, no webview) of the earlier Giyur Study PWA. The UI and content are in Russian.
 
-Features: 8 sections of leveled lessons; flashcards with spaced repetition (1 → 3 → 7 → 14 → 30 days); section tests, a general exam, a mock beit-din interview and a timed 20-question exam that ramps from easy to hard and changes every run; three movements (Reform ⊂ Conservative/Masorti ⊂ Orthodox) as nested levels of strictness; XP, a daily goal, a streak with freezes, badges and a path map; a navy-and-gold dark theme and a light «Parchment» theme.
+Features: 8 sections of leveled lessons; flashcards with spaced repetition (1 → 3 → 7 → 14 → 30 days); section tests, a general exam, a mock beit-din interview and a timed 20-question exam that ramps from easy to hard and changes every run; three movements (Reform ⊂ Conservative/Masorti ⊂ Orthodox) as nested levels of strictness; XP, a daily goal, a streak with freezes, badges and a path map; a dark “library” theme (walnut, leather and brass) and a matte «Пергамент» (klaf parchment) theme.
 
 > **Note.** The content must be checked with your rabbi. Conversion programs differ by movement and by beit din.
 
 Screenshots: see the table above ([`docs/screenshots/`](docs/screenshots)).
 
 ### Download
-Get the Windows x64 `.exe` from [Releases](../../releases). No installer; progress is stored in `%APPDATA%\GiyurStudy\progress.json`.
+Get the Windows x64 `.exe` from [Releases](../../releases). No installer; progress is stored in `%APPDATA%\Shorashim\progress.json` (progress from the old `GiyurStudy` folder is copied over automatically).
 
 ### Build
 ```sh

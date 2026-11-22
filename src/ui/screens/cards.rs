@@ -439,14 +439,18 @@ impl Screen {
             .on_press(Msg::Flip);
 
         // Grade buttons, disabled until the card is flipped.
-        let knew = lg_button(
-            grade_label("Вспомнил", "1"),
-            BtnStyle::Primary,
+        let knew = widgets::btn_icon(
+            grade_key("1"),
+            "Вспомнил",
+            widgets::Btn::Primary,
+            widgets::BtnSize::Lg,
             self.flipped.then_some(Msg::Grade(true)),
         );
-        let miss = lg_button(
-            grade_label("Не вспомнил", "2"),
-            BtnStyle::Secondary,
+        let miss = widgets::btn_icon(
+            grade_key("2"),
+            "Не вспомнил",
+            widgets::Btn::Secondary,
+            widgets::BtnSize::Lg,
             self.flipped.then_some(Msg::Grade(false)),
         );
         let grades = row![
@@ -494,14 +498,16 @@ impl Screen {
             .width(Length::Fill);
 
         let buttons = row![
-            lg_button(
-                txt(self.done_label.clone()).into(),
-                BtnStyle::Primary,
+            widgets::btn(
+                self.done_label.clone(),
+                widgets::Btn::Primary,
+                widgets::BtnSize::Lg,
                 Some(Msg::Go(self.back.clone())),
             ),
-            lg_button(
-                txt("На карту").into(),
-                BtnStyle::Ghost,
+            widgets::btn(
+                "На карту",
+                widgets::Btn::Ghost,
+                widgets::BtnSize::Lg,
                 Some(Msg::Go(Route::Map)),
             ),
         ]
@@ -559,16 +565,8 @@ impl Screen {
 // ---------------------------------------------------------------------------
 
 fn header<'a>(back_label: &'a str, back: Msg, kicker: &'a str, title: &'a str) -> Element<'a, Msg> {
-    let p = palette();
     column![
-        button(
-            row![txt("‹").size(22.0), txt(back_label).size(15.0)]
-                .align_y(Alignment::Center)
-                .spacing(2),
-        )
-        .padding([6.0, 10.0])
-        .style(move |_, s| theme::button_ghost(&p, s))
-        .on_press(back),
+        widgets::back_button(back_label, back),
         widgets::kicker(kicker),
         widgets::heading(title, 1),
     ]
@@ -577,53 +575,20 @@ fn header<'a>(back_label: &'a str, back: Msg, kicker: &'a str, title: &'a str) -
     .into()
 }
 
-#[derive(Debug, Clone, Copy)]
-enum BtnStyle {
-    Primary,
-    Secondary,
-    Ghost,
-}
-
-/// Large button (§T.5 lg); disabled when `on_press` is `None`.
-fn lg_button<'a>(
-    label: Element<'a, Msg>,
-    style: BtnStyle,
-    on_press: Option<Msg>,
-) -> Element<'a, Msg> {
+/// The small key-hint box shown before a grade label («[1]», §6).
+fn grade_key<'a>(key: &'a str) -> Element<'a, Msg> {
     let p = palette();
-    let b = button(container(label).center_x(Length::Fill))
-        .padding([14.0, 22.0])
-        .style(move |_, s| match style {
-            BtnStyle::Primary => theme::button_primary(&p, s),
-            BtnStyle::Secondary => theme::button_secondary(&p, s),
-            BtnStyle::Ghost => theme::button_ghost(&p, s),
-        });
-    let b = match on_press {
-        Some(m) => b.on_press(m),
-        None => b,
-    };
-    b.into()
-}
-
-/// «Вспомнил [1]» label with the key hint (§6).
-fn grade_label(text_: &'static str, key: &'static str) -> Element<'static, Msg> {
-    let p = palette();
-    row![
-        txt(text_).size(theme::text::BODY).font(SANS_BOLD),
-        container(txt(key).size(theme::text::SMALL - 2.0).font(SANS_BOLD))
-            .padding([1.0, 6.0])
-            .style(move |_| container::Style {
-                border: Border {
-                    color: p.line2,
-                    width: 1.0,
-                    radius: 4.0.into(),
-                },
-                ..Default::default()
-            }),
-    ]
-    .spacing(8)
-    .align_y(Alignment::Center)
-    .into()
+    container(txt(key).size(theme::text::SMALL - 2.0).font(SANS_BOLD))
+        .padding([1.0, 6.0])
+        .style(move |_| container::Style {
+            border: Border {
+                color: p.line2,
+                width: 1.0,
+                radius: 4.0.into(),
+            },
+            ..Default::default()
+        })
+        .into()
 }
 
 /// The flip card container (radius 22; gold hairline front, gold-tinted back).
@@ -739,9 +704,10 @@ fn help_view<'a>() -> Element<'a, Msg> {
             list,
             row![
                 Space::new().width(Length::Fill),
-                lg_button(
-                    txt("Понятно, начнём").into(),
-                    BtnStyle::Primary,
+                widgets::btn(
+                    "Понятно, начнём",
+                    widgets::Btn::Primary,
+                    widgets::BtnSize::Lg,
                     Some(Msg::HelpOk),
                 ),
                 Space::new().width(Length::Fill),
@@ -766,9 +732,10 @@ fn empty_view<'a>(empty_text: &'a str) -> Element<'a, Msg> {
                 .color(p.muted)
                 .align_x(iced::alignment::Horizontal::Center)
                 .width(Length::Fill),
-            lg_button(
-                txt("На карту").into(),
-                BtnStyle::Primary,
+            widgets::btn(
+                "На карту",
+                widgets::Btn::Primary,
+                widgets::BtnSize::Lg,
                 Some(Msg::Go(Route::Map)),
             ),
         ]
@@ -786,14 +753,7 @@ fn not_found_view(guard: &Guard) -> Element<'static, Msg> {
         Guard::SectionLocked => ("Раздел закрыт", "Раздел закрыт или не найден."),
     };
     column![
-        button(
-            row![txt("‹").size(22.0), txt("Карта").size(15.0)]
-                .align_y(Alignment::Center)
-                .spacing(2),
-        )
-        .padding([6.0, 10.0])
-        .style(move |_, s| theme::button_ghost(&p, s))
-        .on_press(Msg::Go(Route::Map)),
+        widgets::back_button("Карта", Msg::Go(Route::Map)),
         widgets::heading(title, 1),
         widgets::card(
             column![
@@ -806,9 +766,10 @@ fn not_found_view(guard: &Guard) -> Element<'static, Msg> {
                     .color(p.muted)
                     .align_x(iced::alignment::Horizontal::Center)
                     .width(Length::Fill),
-                lg_button(
-                    txt("На карту").into(),
-                    BtnStyle::Primary,
+                widgets::btn(
+                    "На карту",
+                    widgets::Btn::Primary,
+                    widgets::BtnSize::Lg,
                     Some(Msg::Go(Route::Map)),
                 ),
             ]

@@ -134,11 +134,20 @@ const IMAGES: &[(&str, &[u8])] = &[
         "section-shabbat",
         include_bytes!("../../assets/img/section-shabbat.webp"),
     ),
+    ("tex-klaf", include_bytes!("../../assets/img/tex-klaf.webp")),
+    (
+        "tex-leather",
+        include_bytes!("../../assets/img/tex-leather.webp"),
+    ),
+    (
+        "tex-walnut",
+        include_bytes!("../../assets/img/tex-walnut.webp"),
+    ),
     ("welcome", include_bytes!("../../assets/img/welcome.webp")),
 ];
 
 /// Window icon source.
-const ICON_256: &[u8] = include_bytes!("../../assets/icon/giyur-study-256.webp");
+const ICON_256: &[u8] = include_bytes!("../../assets/icon/shorashim-256.webp");
 
 /// Decode a WebP byte slice to RGBA pixels.
 fn decode(bytes: &[u8]) -> Option<(u32, u32, Vec<u8>)> {

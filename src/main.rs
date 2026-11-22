@@ -1,15 +1,15 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-//! Giyur Study — native desktop app (iced).
+//! Шорашим (Shorashim) — native desktop app (iced).
 
 use std::time::{Duration, Instant};
 
 use iced::widget::{button, column, container, image, row, scrollable, stack, text, Column};
 use iced::{Alignment, Element, Font, Length, Subscription, Task, Theme};
 
-use giyur_study::ui::app::{Action, Ctx, Deck, Route};
-use giyur_study::ui::screens::{self, Current};
-use giyur_study::ui::theme::{self, ThemeKind};
-use giyur_study::ui::{assets, fonts, widgets};
+use shorashim::ui::app::{Action, Ctx, Deck, Route};
+use shorashim::ui::screens::{self, Current};
+use shorashim::ui::theme::{self, ThemeKind};
+use shorashim::ui::{assets, fonts, widgets};
 
 const MAIN_SCROLL: &str = "main-scroll";
 
@@ -25,7 +25,6 @@ enum Message {
     Screen(screens::Msg),
     Nav(Route),
     Tick(Instant),
-    FontLoaded,
 }
 
 fn theme_kind(ctx: &Ctx) -> ThemeKind {
@@ -49,11 +48,6 @@ impl App {
             Route::Welcome
         };
         let screen = Current::open(&mut ctx, &route);
-        let fonts = Task::batch(
-            fonts::all()
-                .into_iter()
-                .map(|f| iced::font::load(f).map(|_| Message::FontLoaded)),
-        );
         (
             App {
                 ctx,
@@ -61,7 +55,7 @@ impl App {
                 history: Vec::new(),
                 screen,
             },
-            fonts,
+            Task::none(),
         )
     }
 
@@ -109,7 +103,6 @@ impl App {
             },
             Message::Nav(r) => return self.go(r),
             Message::Tick(now) => self.ctx.toasts.retain(|t| t.until > now),
-            Message::FontLoaded => {}
         }
         Task::none()
     }
@@ -139,35 +132,71 @@ impl App {
                 .width(36)
                 .height(36),
                 column![
-                    text("Giyur Study").font(fonts::SERIF_BOLD).size(18),
-                    text("подготовка к гиюру").size(12).color(p.muted),
+                    text("Шорашим").font(fonts::SERIF_BOLD).size(18),
+                    text("основы иудаизма").size(12).color(p.muted),
                 ]
             ]
             .spacing(10)
             .align_y(Alignment::Center),
         )
+        .width(Length::Fill)
+        .padding([8, 10])
         .style(move |_, s| theme::button_ghost(&p, s))
         .on_press(Message::Nav(Route::Map));
         col = col.push(brand).push(iced::widget::space().height(14));
         for (i, (label, route)) in items.into_iter().enumerate() {
             let is_active = active == Some(i);
-            let b = button(text(label).size(15).shaping(text::Shaping::Advanced))
-                .width(Length::Fill)
-                .padding([10, 14])
-                .style(move |_, s| {
-                    if is_active {
-                        theme::button_nav_active(&p, s)
-                    } else {
-                        theme::button_ghost(&p, s)
-                    }
-                })
-                .on_press(Message::Nav(route));
+            // 3 px brass left bar on the active item (transparent strut else).
+            let bar = container(iced::widget::space())
+                .width(3)
+                .height(20)
+                .style(move |_| iced::widget::container::Style {
+                    background: is_active.then_some(iced::Background::Color(p.gold)),
+                    border: iced::Border {
+                        radius: 2.0.into(),
+                        ..Default::default()
+                    },
+                    ..Default::default()
+                });
+            let b = button(
+                container(
+                    row![bar, text(label).size(15).shaping(text::Shaping::Advanced)]
+                        .spacing(10)
+                        .align_y(Alignment::Center),
+                )
+                .center_y(Length::Fill),
+            )
+            .width(Length::Fill)
+            .height(theme::size::NAV)
+            .padding([0, 12])
+            .style(move |_, s| {
+                if is_active {
+                    theme::button_nav_active(&p, s)
+                } else {
+                    theme::button_ghost(&p, s)
+                }
+            })
+            .on_press(Message::Nav(route));
             col = col.push(b);
         }
-        container(col)
+        let panel = container(col)
+            .width(230)
             .height(Length::Fill)
-            .style(move |_| theme::sidebar(&p))
-            .into()
+            .style(move |_| theme::sidebar(&p));
+        // Leather (dark) / darker klaf (parchment) under the side veil: the
+        // sidebar reads as a different material than the window.
+        match assets::img(p.side_texture) {
+            Some(handle) => stack![
+                image(handle)
+                    .width(230)
+                    .height(Length::Fill)
+                    .content_fit(iced::ContentFit::Cover)
+                    .filter_method(image::FilterMethod::Linear),
+                panel,
+            ]
+            .into(),
+            None => panel.into(),
+        }
     }
 
     fn toasts(&self) -> Element<'_, Message> {
@@ -204,35 +233,95 @@ impl App {
     }
 
     fn view(&self) -> Element<'_, Message> {
+        let p = theme::current();
         let body: Element<'_, Message> = self.screen.view(&self.ctx).map(Message::Screen);
-        let main = container(
-            scrollable(
-                // Inner box caps the reading width; the outer one centres it,
-                // so maximized windows don't leave the content on the left.
-                container(
-                    container(body)
-                        .padding([28, 32])
-                        .width(Length::Fill)
-                        .max_width(1040),
-                )
-                .center_x(Length::Fill),
-            )
-            .height(Length::Fill),
+        // Inner box caps the reading width; the outer one centres it,
+        // so maximized windows don't leave the content on the left.
+        let inner = container(
+            container(body)
+                .padding([28, 32])
+                .width(Length::Fill)
+                .max_width(1040),
         )
-        .width(Length::Fill)
-        .height(Length::Fill);
-        let content: Element<'_, Message> = if self.screen.bare(&self.ctx) {
-            main.into()
+        .center_x(Length::Fill);
+        let bare = self.screen.bare(&self.ctx);
+        let main: Element<'_, Message> = if bare {
+            // Shrink-height scrollable: centres when the content fits,
+            // scrolls when it doesn't (welcome / first-run level choice).
+            container(scrollable(inner).height(Length::Shrink))
+                .center(Length::Fill)
+                .into()
         } else {
-            row![self.sidebar(), main].into()
+            container(scrollable(inner).height(Length::Fill))
+                .width(Length::Fill)
+                .height(Length::Fill)
+                .into()
         };
-        let base = container(content)
+        let content: Element<'_, Message> = if bare {
+            main
+        } else {
+            row![
+                self.sidebar(),
+                container(iced::widget::space())
+                    .width(1)
+                    .height(Length::Fill)
+                    .style(move |_| theme::divider_v(&p)),
+                main,
+            ]
+            .into()
+        };
+
+        // Window background: the theme texture under a solid veil and two
+        // crossed lamp gradients; bg0 alone is the fallback (no texture).
+        let mut bg = stack![container(iced::widget::space())
             .width(Length::Fill)
             .height(Length::Fill)
-            .style(|_| theme::app_background(&theme::current()));
+            .style(move |_| theme::app_background(&p))];
+        if let Some(handle) = assets::img(p.texture) {
+            bg = bg.push(
+                image(handle)
+                    .width(Length::Fill)
+                    .height(Length::Fill)
+                    .content_fit(iced::ContentFit::Cover)
+                    .filter_method(image::FilterMethod::Linear),
+            );
+        }
+        bg = bg
+            .push(
+                container(iced::widget::space())
+                    .width(Length::Fill)
+                    .height(Length::Fill)
+                    .style(move |_| theme::veil(&p)),
+            )
+            .push(
+                container(iced::widget::space())
+                    .width(Length::Fill)
+                    .height(Length::Fill)
+                    .style(move |_| theme::lamp_v(&p)),
+            )
+            .push(
+                container(iced::widget::space())
+                    .width(Length::Fill)
+                    .height(Length::Fill)
+                    .style(move |_| theme::lamp_h(&p)),
+            );
+        if p.vignette.a > 0.0 {
+            bg = bg.push(
+                container(iced::widget::space())
+                    .width(Length::Fill)
+                    .height(Length::Fill)
+                    .style(move |_| theme::vignette(&p)),
+            );
+        }
+        bg = bg.push(content);
+
         // Always the same root widget, so scroll position and focus survive
-        // toasts appearing and expiring.
-        stack![base, self.toasts()].into()
+        // toasts and dialogs appearing and expiring.
+        let mut layers = stack![bg, self.toasts()];
+        if let Some(d) = self.screen.dialog(&self.ctx) {
+            layers = layers.push(iced::widget::opaque(d.map(Message::Screen)));
+        }
+        layers.into()
     }
 
     fn subscription(&self) -> Subscription<Message> {
@@ -252,7 +341,7 @@ impl App {
     }
 
     fn title(&self) -> String {
-        "Giyur Study — подготовка к гиюру".to_string()
+        "Шорашим — основы иудаизма и подготовка к гиюру".to_string()
     }
 }
 
@@ -269,7 +358,7 @@ fn parse_route(r: &str) -> Option<Route> {
         "cards" => Route::Cards(Deck::Lesson(v)),
         "deck" => Route::Cards(Deck::Section(v)),
         "exam" => Route::Exam(if v.is_empty() { None } else { Some(v) }),
-        "examrun" => Route::ExamRun(giyur_study::ui::app::ExamSpec::Section { id: v, count: 20 }),
+        "examrun" => Route::ExamRun(shorashim::ui::app::ExamSpec::Section { id: v, count: 20 }),
         "timed" => Route::Timed,
         "timedrun" => Route::TimedRun { retry_ids: None },
         "progress" => Route::Progress,
@@ -310,7 +399,7 @@ fn main() -> iced::Result {
         ..Default::default()
     };
     settings.exit_on_close_request = true;
-    iced::application(App::new, App::update, App::view)
+    let app = iced::application(App::new, App::update, App::view)
         .title(App::title)
         .theme(App::theme)
         .subscription(App::subscription)
@@ -320,6 +409,11 @@ fn main() -> iced::Result {
             STEPS[app.ctx.state.settings.font_step.clamp(0, 3) as usize] / 17.0
         })
         .window(settings)
-        .default_font(Font::with_name("Noto Sans"))
+        .default_font(Font::with_name("Noto Sans"));
+    // Register the embedded fonts up front, so the very first frame already
+    // uses them (no font-load race on the first paint).
+    fonts::all()
+        .into_iter()
+        .fold(app, |app, font| app.font(font))
         .run()
 }

@@ -56,7 +56,8 @@ impl Screen {
 
         let mut page = Column::new().spacing(18).width(Length::Fill);
 
-        // ---- Header: emblem · back/kicker/h1/sub · ring ----
+        // ---- Header: back · emblem · kicker/h1/sub · ring ----
+        page = page.push(widgets::back_button("Карта", Msg::Go(Route::Map)));
         let ring = stack![
             icons::ring(stats.pct as f32 / 100.0, 76.0, p.gold),
             container(
@@ -70,7 +71,6 @@ impl Screen {
             .center_y(76.0),
         ];
         let head_text = column![
-            back_button("Карта", Msg::Go(Route::Map)),
             kicker_owned(format!("Раздел {}", sec.index + 1)),
             widgets::heading(&sec.title, 1),
             txt(&sec.subtitle).size(theme::text::BODY).color(p.muted),
@@ -142,14 +142,6 @@ impl Screen {
 
         page.into()
     }
-}
-
-fn back_button<'a>(label: &'a str, msg: Msg) -> Element<'a, Msg> {
-    button(row![txt("‹").size(22.0), txt(label).size(15.0)].spacing(2))
-        .padding([6.0, 10.0])
-        .style(move |_, status| theme::button_ghost(&theme::current(), status))
-        .on_press(msg)
-        .into()
 }
 
 fn action_card<'a>(
@@ -310,7 +302,7 @@ fn lesson_row<'a>(
 /// «Не найдено» / «Раздел закрыт» view (§0.3, §4).
 fn not_found<'a>(message: &'a str, locked: bool, p: theme::Palette) -> Element<'a, Msg> {
     column![
-        back_button("Карта", Msg::Go(Route::Map)),
+        widgets::back_button("Карта", Msg::Go(Route::Map)),
         widgets::heading(
             if locked {
                 "Раздел закрыт"
@@ -323,14 +315,12 @@ fn not_found<'a>(message: &'a str, locked: bool, p: theme::Palette) -> Element<'
             column![
                 icons::icon(icons::Kind::StarDavid, 56.0, p.gold),
                 txt(message).size(theme::text::BODY).color(p.text),
-                button(
-                    txt("На карту")
-                        .size(theme::text::BODY)
-                        .font(fonts::SANS_BOLD)
-                )
-                .padding([12.0, 26.0])
-                .style(move |_, status| theme::button_primary(&theme::current(), status))
-                .on_press(Msg::Go(Route::Map)),
+                widgets::btn(
+                    "На карту",
+                    widgets::Btn::Primary,
+                    widgets::BtnSize::Lg,
+                    Some(Msg::Go(Route::Map)),
+                ),
             ]
             .spacing(16)
             .align_x(Alignment::Center)

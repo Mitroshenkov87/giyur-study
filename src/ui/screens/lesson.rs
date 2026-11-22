@@ -153,13 +153,6 @@ impl Screen {
         );
 
         let mut article = Column::new().spacing(14).width(Length::Fill);
-        // Review badge, floated right (gold-soft pill).
-        article = article.push(
-            Row::new()
-                .width(Length::Fill)
-                .push(Space::new().width(Length::Fill))
-                .push(widgets::chip::<Msg>("Требует проверки раввином")),
-        );
 
         let mut group = 0u32;
         for block in ctx.lib.lesson_blocks(lesson, user) {
@@ -190,9 +183,10 @@ impl Screen {
                     .size(theme::text::BODY)
                     .font(SANS_BOLD)
                     .color(p.ok),
-                lg_button(
-                    txt("К карточкам урока"),
-                    BtnKind::Primary,
+                widgets::btn(
+                    "К карточкам урока",
+                    widgets::Btn::Primary,
+                    widgets::BtnSize::Lg,
                     Some(Msg::Go(Route::Cards(Deck::Lesson(lesson.id.clone())))),
                 ),
             ]
@@ -200,9 +194,10 @@ impl Screen {
             .align_y(Alignment::Center)
             .into()
         } else {
-            row![lg_button(
-                txt("Отметить прочитанным"),
-                BtnKind::Primary,
+            row![widgets::btn(
+                "Отметить прочитанным",
+                widgets::Btn::Primary,
+                widgets::BtnSize::Lg,
                 Some(Msg::MarkRead),
             )]
             .into()
@@ -247,47 +242,20 @@ impl Screen {
 // Pieces
 // ---------------------------------------------------------------------------
 
-fn back_button<'a>(label: &'a str, msg: Msg) -> Element<'a, Msg> {
-    let p = palette();
-    button(
-        row![txt("‹").size(22.0), txt(label).size(15.0)]
-            .align_y(Alignment::Center)
-            .spacing(2),
-    )
-    .padding([6.0, 10.0])
-    .style(move |_, s| theme::button_ghost(&p, s))
-    .on_press(msg)
-    .into()
-}
-
 fn header<'a>(back_label: &'a str, back: Msg, kicker: &'a str, title: &'a str) -> Element<'a, Msg> {
     column![
-        back_button(back_label, back),
-        widgets::kicker(kicker),
+        widgets::back_button(back_label, back),
+        row![
+            widgets::kicker(kicker),
+            Space::new().width(Length::Fill),
+            widgets::chip::<Msg>("Требует проверки раввином"),
+        ]
+        .align_y(Alignment::Center),
         widgets::heading(title, 1),
     ]
     .spacing(10)
     .width(Length::Fill)
     .into()
-}
-
-#[derive(Debug, Clone, Copy)]
-enum BtnKind {
-    Primary,
-}
-
-fn lg_button<'a>(label: Text<'a>, kind: BtnKind, on_press: Option<Msg>) -> Element<'a, Msg> {
-    let p = palette();
-    let b = button(label.size(theme::text::BODY).font(SANS_BOLD))
-        .padding([14.0, 26.0])
-        .style(move |_, s| match kind {
-            BtnKind::Primary => theme::button_primary(&p, s),
-        });
-    let b = match on_press {
-        Some(m) => b.on_press(m),
-        None => b,
-    };
-    b.into()
 }
 
 fn block_differs(b: &Block) -> &[Differs] {
@@ -438,10 +406,16 @@ fn sources_footer<'a>(
     let p = palette();
     let mut col = Column::new().spacing(10).width(Length::Fill);
     col = col.push(
+        container(Space::new())
+            .height(1.0)
+            .width(Length::Fill)
+            .style(move |_| theme::fillet(&palette())),
+    );
+    col = col.push(
         txt("Источники")
             .size(theme::text::H3)
             .font(crate::ui::fonts::SERIF_BOLD)
-            .color(p.gold),
+            .color(p.gold2),
     );
     for s in &srcs {
         let title = s.title.clone().unwrap_or_else(|| s.id.clone());
@@ -486,7 +460,7 @@ fn not_found_view(guard: &Guard) -> Element<'static, Msg> {
         Guard::Locked => ("Раздел закрыт", "Этот раздел пока закрыт."),
     };
     column![
-        back_button("Карта", Msg::Go(Route::Map)),
+        widgets::back_button("Карта", Msg::Go(Route::Map)),
         widgets::heading(title, 1),
         widgets::card(
             column![
@@ -498,7 +472,12 @@ fn not_found_view(guard: &Guard) -> Element<'static, Msg> {
                     .size(theme::text::BODY)
                     .color(p.muted)
                     .align_x(Horizontal::Center),
-                lg_button(txt("На карту"), BtnKind::Primary, Some(Msg::Go(Route::Map)),),
+                widgets::btn(
+                    "На карту",
+                    widgets::Btn::Primary,
+                    widgets::BtnSize::Lg,
+                    Some(Msg::Go(Route::Map)),
+                ),
             ]
             .spacing(14)
             .align_x(Alignment::Center)

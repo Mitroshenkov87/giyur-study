@@ -95,6 +95,18 @@ impl Current {
         }
     }
 
+    /// The screen's modal dialog layer, if any (rendered by the shell above
+    /// the whole window, so it centres on the window, not the page).
+    pub fn dialog<'a>(&'a self, ctx: &'a Ctx) -> Option<Element<'a, Msg>> {
+        match self {
+            Current::Level(s) => s.dialog(ctx).map(|d| d.map(Msg::Level)),
+            Current::Settings(s) => s.dialog(ctx).map(|d| d.map(Msg::Settings)),
+            Current::Exam(s) => s.dialog(ctx).map(|d| d.map(Msg::Exam)),
+            Current::Timed(s) => s.dialog(ctx).map(|d| d.map(Msg::Timed)),
+            _ => None,
+        }
+    }
+
     pub fn subscription(&self) -> Subscription<Msg> {
         match self {
             Current::Welcome(s) => s.subscription().map(Msg::Welcome),

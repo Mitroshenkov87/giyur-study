@@ -1315,21 +1315,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "giyur-study"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "dirs",
- "iced",
- "image",
- "rand 0.8.8",
- "rfd",
- "serde",
- "serde_json",
- "winresource",
-]
-
-[[package]]
 name = "gl_generator"
 version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3566,6 +3551,21 @@ name = "shlex"
 version = "2.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f8fadd59c855ef2080decdef8ff161eb6661b86933c9d82e5ba29dc602a55aba"
+
+[[package]]
+name = "shorashim"
+version = "0.2.0"
+dependencies = [
+ "chrono",
+ "dirs",
+ "iced",
+ "image",
+ "rand 0.8.8",
+ "rfd",
+ "serde",
+ "serde_json",
+ "winresource",
+]
 
 [[package]]
 name = "signal-hook-registry"

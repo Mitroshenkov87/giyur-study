@@ -117,7 +117,8 @@ pub struct Ctx {
 
 impl Ctx {
     pub fn load() -> Ctx {
-        let path = std::env::var_os("GIYUR_STUDY_DATA")
+        let path = std::env::var_os("SHORASHIM_DATA")
+            .or_else(|| std::env::var_os("GIYUR_STUDY_DATA"))
             .map(PathBuf::from)
             .unwrap_or_else(storage::default_path);
         let today = chrono::Local::now().date_naive();

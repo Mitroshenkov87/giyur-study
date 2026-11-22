@@ -694,7 +694,6 @@ impl Screen {
         ]
         .spacing(16)
         .width(Length::Fill)
-        .max_width(theme::spacing::CONTENT_MAX)
         .into()
     }
 
@@ -720,6 +719,8 @@ impl Screen {
             )
             .padding([14.0, 10.0])
             .width(Length::FillPortion(1))
+            .height(Length::Fill)
+            .align_y(Vertical::Center)
             .style(move |_| theme::card(&p))
             .into()
         };
@@ -1288,13 +1289,15 @@ fn badge_cell<'a>(b: &'a BadgeItem, p: Palette) -> Element<'a, Msg> {
             .size(theme::text::SMALL - 1.5)
             .color(p.muted)
             .align_x(Horizontal::Center)
-            .width(Length::Fill),
+            .width(Length::Fill)
+            .wrapping(iced::widget::text::Wrapping::WordOrGlyph),
     );
 
     let earned = b.earned;
     let body: Element<'a, Msg> = container(content)
         .padding(12.0)
         .width(Length::Fill)
+        .height(Length::Fixed(150.0))
         .style(move |_| container::Style {
             background: Some(Background::Color(if earned {
                 p.surface2

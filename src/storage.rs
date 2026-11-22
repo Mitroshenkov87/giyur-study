@@ -348,7 +348,7 @@ const SETTINGS_KINDS: &[(&str, Kind)] = &[
 /// deserialise with defaults. Returns the Russian error strings of the PWA.
 pub fn import_value(v: &mut serde_json::Value, today: &str) -> Result<(), String> {
     if !looks_valid(v) {
-        return Err("Это не файл прогресса Giyur Study.".to_string());
+        return Err("Это не файл прогресса «Шорашим».".to_string());
     }
     if let Some(schema) = v.get("schema").and_then(|s| s.as_i64()) {
         if schema > SCHEMA {
@@ -422,7 +422,7 @@ impl State {
             .map_err(|_| "Файл не является корректным JSON.".to_string())?;
         import_value(&mut v, today)?;
         let mut s: State = serde_json::from_value(v)
-            .map_err(|_| "Это не файл прогресса Giyur Study.".to_string())?;
+            .map_err(|_| "Это не файл прогресса «Шорашим».".to_string())?;
         fill(&mut s);
         Ok(s)
     }
@@ -459,13 +459,34 @@ impl State {
     }
 }
 
-/// Default progress file path: config_dir()/GiyurStudy/progress.json
-/// (%APPDATA%\GiyurStudy\progress.json on Windows).
+/// Folder name under config_dir() (%APPDATA% on Windows).
+pub const DATA_DIR: &str = "Shorashim";
+/// Folder used before the rename to Shorashim (v0.1.x).
+pub const LEGACY_DATA_DIR: &str = "GiyurStudy";
+
+/// Default progress file path: config_dir()/Shorashim/progress.json
+/// (%APPDATA%\Shorashim\progress.json on Windows). Progress saved by
+/// v0.1.x under GiyurStudy is copied over on first start.
 pub fn default_path() -> PathBuf {
-    dirs::config_dir()
-        .unwrap_or_else(|| PathBuf::from("."))
-        .join("GiyurStudy")
-        .join("progress.json")
+    let base = dirs::config_dir().unwrap_or_else(|| PathBuf::from("."));
+    let path = base.join(DATA_DIR).join("progress.json");
+    migrate_legacy(&base.join(LEGACY_DATA_DIR).join("progress.json"), &path);
+    path
+}
+
+/// Copy the pre-rename progress file to the new location if the new one does
+/// not exist yet. The old file is left in place, so nothing can be lost.
+/// Returns true when a copy was made.
+pub fn migrate_legacy(old: &Path, new: &Path) -> bool {
+    if new.exists() || !old.is_file() {
+        return false;
+    }
+    if let Some(dir) = new.parent() {
+        if std::fs::create_dir_all(dir).is_err() {
+            return false;
+        }
+    }
+    std::fs::copy(old, new).is_ok()
 }
 
 /// Load state from a file. A corrupt file is kept as <path>.bak and a fresh
@@ -806,6 +827,23 @@ mod tests {
         let (s, ok) = load_checked(&dir, TODAY);
         assert!(!ok);
         assert_eq!(s.xp_total, 0);
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn migrates_legacy_progress_once() {
+        let dir = std::env::temp_dir().join(format!("shorashim-migrate-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        let old = dir.join("GiyurStudy").join("progress.json");
+        let new = dir.join("Shorashim").join("progress.json");
+        std::fs::create_dir_all(old.parent().unwrap()).unwrap();
+        std::fs::write(&old, r#"{"app":"giyur-study","xpTotal":42}"#).unwrap();
+        assert!(migrate_legacy(&old, &new));
+        assert_eq!(load(&new, "2026-11-22").xp_total, 42);
+        assert!(old.exists(), "old file is kept");
+        std::fs::write(&old, r#"{"app":"giyur-study","xpTotal":1}"#).unwrap();
+        assert!(!migrate_legacy(&old, &new), "never overwrites the new file");
+        assert_eq!(load(&new, "2026-11-22").xp_total, 42);
         let _ = std::fs::remove_dir_all(&dir);
     }
 }

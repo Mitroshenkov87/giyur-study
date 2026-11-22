@@ -1,7 +1,7 @@
 //! Live gallery of the `ui` module: every widget with real Russian and Hebrew
 //! samples, plus a theme toggle. Run with `cargo run --example ui_gallery`.
 
-use giyur_study::ui;
+use shorashim::ui;
 
 use iced::widget::{
     button, column, container, image, progress_bar, row, scrollable, space, stack, text,
@@ -392,7 +392,7 @@ fn view(state: &Gallery) -> Element<'_, Message> {
 
 fn main() -> iced::Result {
     iced::application(init, update, view)
-        .title("Giyur Study — витрина UI")
+        .title("Шорашим — витрина UI")
         .theme(|state: &Gallery| theme::iced_theme(state.kind))
         .window(iced::window::Settings {
             size: iced::Size::new(1100.0, 820.0),

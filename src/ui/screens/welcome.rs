@@ -1,7 +1,7 @@
 //! Welcome screen (PARITY §1): hero with overlaid text, feature list,
 //! rabbi-review notice and the «Начать» button.
 
-use iced::widget::{button, column, container, row, space, stack, Column};
+use iced::widget::{column, container, row, space, stack, Column};
 use iced::{Alignment, Background, Border, Color, Element, Length};
 
 use crate::ui::app::{Action, Ctx, Route};
@@ -39,6 +39,7 @@ impl Screen {
                 .width(Length::Fill)
                 .height(Length::Fill)
                 .content_fit(iced::ContentFit::Cover)
+                .border_radius(theme::radius::HERO)
                 .into(),
             None => container(icons::icon(
                 icons::Kind::StarDavid,
@@ -67,12 +68,12 @@ impl Screen {
                     .size(theme::text::KICKER)
                     .font(fonts::SANS_BOLD)
                     .color(over_gold),
-                txt("Giyur Study")
+                txt("Шорашим")
                     .size(42.0)
                     .font(fonts::SERIF_BOLD)
                     .color(over_text),
                 container(
-                    txt("Спокойная, последовательная подготовка к гиюру и собеседованию в бейт-дине.")
+                    txt("Основы иудаизма и спокойная, последовательная подготовка к гиюру и собеседованию в бейт-дине.")
                         .size(theme::text::H3)
                         .color(over_text)
                         .width(Length::Fill),
@@ -82,10 +83,9 @@ impl Screen {
             .spacing(8),
         )
         .padding([20.0, 24.0])
-        .width(Length::Fill)
-        .align_y(iced::alignment::Vertical::Bottom);
+        .width(Length::Fill);
 
-        let hero_height = 360.0;
+        let hero_height = 300.0;
         let hero = container(stack![
             hero_inner,
             container(space::horizontal())
@@ -98,10 +98,14 @@ impl Screen {
                     )),
                     ..iced::widget::container::Style::default()
                 }),
-            container(overlay).width(Length::Fill).height(Length::Fill),
+            container(overlay)
+                .width(Length::Fill)
+                .height(Length::Fill)
+                .align_y(iced::alignment::Vertical::Bottom),
         ])
         .width(Length::Fill)
         .height(hero_height)
+        .clip(true)
         .style(move |_| iced::widget::container::Style {
             border: Border {
                 color: p.line,
@@ -159,18 +163,12 @@ impl Screen {
                 txt("Всё работает без интернета; прогресс хранится только на этом устройстве.")
                     .size(theme::text::SMALL)
                     .color(p.muted),
-                row![
-                    space::horizontal(),
-                    button(
-                        txt("Начать")
-                            .size(theme::text::BODY)
-                            .font(fonts::SANS_BOLD)
-                    )
-                    .padding([14.0, 34.0])
-                    .style(move |_, status| theme::button_primary(&theme::current(), status))
-                    .on_press(Msg::Start),
-                ]
-                .align_y(Alignment::Center),
+                widgets::centered(widgets::btn(
+                    "Начать",
+                    widgets::Btn::Primary,
+                    widgets::BtnSize::Lg,
+                    Some(Msg::Start),
+                )),
             ]
             .spacing(16),
         );

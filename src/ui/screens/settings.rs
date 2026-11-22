@@ -5,7 +5,7 @@
 use iced::alignment::Horizontal;
 use iced::widget::text::{IntoFragment, Shaping};
 use iced::widget::{
-    button, column, container, mouse_area, opaque, row, rule, space, stack, text, Column, Row, Text,
+    button, column, container, mouse_area, row, rule, space, stack, text, Column, Text,
 };
 use iced::{Alignment, Background, Border, Color, Element, Length, Shadow, Theme};
 
@@ -128,7 +128,7 @@ impl Screen {
                 Action::None
             }
             Msg::Export => {
-                let name = format!("giyur-study-progress-{}.json", ctx.today_key());
+                let name = format!("shorashim-progress-{}.json", ctx.today_key());
                 let picked = rfd::FileDialog::new()
                     .add_filter("JSON", &["json"])
                     .set_file_name(&name)
@@ -211,7 +211,7 @@ impl Screen {
 
     pub fn view<'a>(&'a self, ctx: &'a Ctx) -> Element<'a, Msg> {
         let p = palette();
-        let base: Element<'a, Msg> = column![
+        column![
             widgets::page_header("Настройки", None),
             self.general_card(ctx, p),
             self.goal_card(ctx, p),
@@ -220,25 +220,25 @@ impl Screen {
         ]
         .spacing(16)
         .width(Length::Fill)
-        .max_width(theme::spacing::CONTENT_MAX)
-        .into();
+        .into()
+    }
 
+    /// The import / reset confirm dialog, rendered as a shell layer (§0.3).
+    pub fn dialog<'a>(&'a self, _ctx: &'a Ctx) -> Option<Element<'a, Msg>> {
         match &self.confirm {
-            None => base,
-            Some(Confirm::Import(_)) => self.with_dialog(
-                base,
+            None => None,
+            Some(Confirm::Import(_)) => Some(self.dialog_view(
                 "Импортировать прогресс?",
                 "Текущий прогресс на этом устройстве будет заменён данными из файла.",
                 "Импортировать",
                 false,
-            ),
-            Some(Confirm::Reset) => self.with_dialog(
-                base,
+            )),
+            Some(Confirm::Reset) => Some(self.dialog_view(
                 "Сбросить весь прогресс?",
                 "Будут удалены прочитанные уроки, карточки, результаты экзаменов и серия дней. Это действие нельзя отменить (кроме импорта ранее сохранённого файла).",
                 "Сбросить",
                 true,
-            ),
+            )),
         }
     }
 
@@ -253,31 +253,47 @@ impl Screen {
             set_row(
                 "Течение",
                 format!("{level_title} · прогресс сохранится при смене"),
-                secondary_button("Сменить течение", Msg::ChangeLevel),
+                widgets::btn(
+                    "Сменить течение",
+                    widgets::Btn::Secondary,
+                    widgets::BtnSize::Sm,
+                    Some(Msg::ChangeLevel),
+                )
+                .into(),
             ),
             divider(p),
             set_row(
                 "Тема",
                 "Тёмная — основная".to_string(),
-                seg_row(&[
-                    ("Тёмная", s.theme != "parchment", Msg::SetTheme("dark")),
-                    (
+                row![
+                    widgets::choice(
+                        "Тёмная",
+                        s.theme != "parchment",
+                        false,
+                        Msg::SetTheme("dark")
+                    ),
+                    widgets::choice(
                         "Пергамент",
                         s.theme == "parchment",
+                        false,
                         Msg::SetTheme("parchment")
                     ),
-                ],),
+                ]
+                .spacing(4)
+                .into(),
             ),
             divider(p),
             set_row(
                 "Размер шрифта",
                 "Иврит масштабируется тоже".to_string(),
-                seg_row(&[
-                    ("A−", s.font_step == 0, Msg::SetFont(0)),
-                    ("A", s.font_step == 1, Msg::SetFont(1)),
-                    ("A+", s.font_step == 2, Msg::SetFont(2)),
-                    ("A++", s.font_step == 3, Msg::SetFont(3)),
-                ],),
+                row![
+                    widgets::choice("A−", s.font_step == 0, false, Msg::SetFont(0)),
+                    widgets::choice("A", s.font_step == 1, false, Msg::SetFont(1)),
+                    widgets::choice("A+", s.font_step == 2, false, Msg::SetFont(2)),
+                    widgets::choice("A++", s.font_step == 3, false, Msg::SetFont(3)),
+                ]
+                .spacing(4)
+                .into(),
             ),
             divider(p),
             set_row(
@@ -295,10 +311,12 @@ impl Screen {
             set_row(
                 "Экзамен на время",
                 "Секунд на вопрос".to_string(),
-                seg_row(&[
-                    ("20 с", s.timed_seconds == 20, Msg::SetSeconds(20)),
-                    ("30 с", s.timed_seconds != 20, Msg::SetSeconds(30)),
-                ],),
+                row![
+                    widgets::choice("20 с", s.timed_seconds == 20, false, Msg::SetSeconds(20)),
+                    widgets::choice("30 с", s.timed_seconds != 20, false, Msg::SetSeconds(30)),
+                ]
+                .spacing(4)
+                .into(),
             ),
             divider(p),
             set_row(
@@ -373,30 +391,24 @@ impl Screen {
     }
 
     fn data_card<'a>(&'a self, p: Palette) -> Element<'a, Msg> {
-        let export = button(
-            txt("Экспорт прогресса")
-                .size(theme::text::SMALL + 0.5)
-                .align_x(Horizontal::Center),
-        )
-        .padding([10.0, 18.0])
-        .style(move |_, s| theme::button_secondary(&palette(), s))
-        .on_press(Msg::Export);
-        let import = button(
-            txt("Импорт прогресса")
-                .size(theme::text::SMALL + 0.5)
-                .align_x(Horizontal::Center),
-        )
-        .padding([10.0, 18.0])
-        .style(move |_, s| theme::button_secondary(&palette(), s))
-        .on_press(Msg::ImportPick);
-        let reset = button(
-            txt("Сбросить прогресс")
-                .size(theme::text::SMALL + 0.5)
-                .align_x(Horizontal::Center),
-        )
-        .padding([10.0, 18.0])
-        .style(move |_, s| theme::button_danger(&palette(), s))
-        .on_press(Msg::AskReset);
+        let export = widgets::btn(
+            "Экспорт прогресса",
+            widgets::Btn::Secondary,
+            widgets::BtnSize::Sm,
+            Some(Msg::Export),
+        );
+        let import = widgets::btn(
+            "Импорт прогресса",
+            widgets::Btn::Secondary,
+            widgets::BtnSize::Sm,
+            Some(Msg::ImportPick),
+        );
+        let reset = widgets::btn(
+            "Сбросить прогресс",
+            widgets::Btn::Danger,
+            widgets::BtnSize::Sm,
+            Some(Msg::AskReset),
+        );
 
         widgets::card(
             column![
@@ -462,11 +474,12 @@ impl Screen {
             ..plain_container(Some(p.gold_soft))
         });
 
-        let sources_btn =
-            button(txt(format!("Источники ({src_count})")).size(theme::text::SMALL + 0.5))
-                .padding([10.0, 18.0])
-                .style(move |_, s| theme::button_secondary(&palette(), s))
-                .on_press(Msg::GoSources);
+        let sources_btn = widgets::btn(
+            format!("Источники ({src_count})"),
+            widgets::Btn::Secondary,
+            widgets::BtnSize::Sm,
+            Some(Msg::GoSources),
+        );
 
         widgets::card(
             column![
@@ -491,10 +504,9 @@ impl Screen {
         )
     }
 
-    /// Overlay the base view with a §0.3 confirm dialog.
-    fn with_dialog<'a>(
+    /// The §0.3 confirm dialog as a standalone overlay layer.
+    fn dialog_view<'a>(
         &'a self,
-        base: Element<'a, Msg>,
         title: &'a str,
         body: &'a str,
         ok_label: &'a str,
@@ -509,20 +521,23 @@ impl Screen {
         )
         .on_press(Msg::ConfirmCancel);
 
-        let cancel = button(txt("Отмена").size(theme::text::SMALL + 0.5))
-            .padding([10.0, 18.0])
-            .style(move |_, s| theme::button_ghost(&palette(), s))
-            .on_press(Msg::ConfirmCancel);
-        let ok = button(txt(ok_label).size(theme::text::SMALL + 0.5))
-            .padding([10.0, 18.0])
-            .style(move |_, s| {
-                if danger {
-                    theme::button_danger(&palette(), s)
-                } else {
-                    theme::button_primary(&palette(), s)
-                }
-            })
-            .on_press(Msg::ConfirmOk);
+        let cancel = widgets::btn(
+            "Отмена",
+            widgets::Btn::Ghost,
+            widgets::BtnSize::Md,
+            Some(Msg::ConfirmCancel),
+        );
+        let ok_kind = if danger {
+            widgets::Btn::Danger
+        } else {
+            widgets::Btn::Primary
+        };
+        let ok = widgets::btn(
+            ok_label,
+            ok_kind,
+            widgets::BtnSize::Md,
+            Some(Msg::ConfirmOk),
+        );
 
         let modal = container(
             column![
@@ -556,9 +571,8 @@ impl Screen {
         });
 
         stack![
-            base,
-            opaque(backdrop),
-            container(modal).center(Length::Fill).padding(20.0),
+            backdrop,
+            container(modal).center(Length::Fill).padding(20.0)
         ]
         .into()
     }
@@ -571,12 +585,7 @@ impl Screen {
 /// Hairline separator between settings rows.
 fn divider<'a>(p: Palette) -> Element<'a, Msg> {
     rule::horizontal(1)
-        .style(move |_theme: &Theme| iced::widget::rule::Style {
-            color: p.line,
-            radius: 0.0.into(),
-            fill_mode: iced::widget::rule::FillMode::Full,
-            snap: true,
-        })
+        .style(move |_theme: &Theme| theme::divider_h(&p))
         .into()
 }
 
@@ -596,77 +605,28 @@ fn set_row<'a>(label: &'static str, sub: String, control: Element<'a, Msg>) -> E
     .into()
 }
 
-fn secondary_button<'a>(label: &'static str, msg: Msg) -> Element<'a, Msg> {
-    button(txt(label).size(theme::text::SMALL + 0.5))
-        .padding([10.0, 18.0])
-        .style(move |_, s| theme::button_secondary(&palette(), s))
-        .on_press(msg)
-        .into()
-}
-
-/// A row of segmented buttons (§T.6: selected = gold-soft, gold2, gold border).
-fn seg_row<'a>(items: &[(&'static str, bool, Msg)]) -> Element<'a, Msg> {
-    let mut r = Row::new().spacing(4);
-    for (label, selected, msg) in items {
-        let selected = *selected;
-        r = r.push(
-            button(
-                txt(*label)
-                    .size(theme::text::SMALL + 0.5)
-                    .font(if selected { SANS_BOLD } else { SANS })
-                    .align_x(Horizontal::Center),
-            )
-            .padding([9.0, 14.0])
-            .style(move |_, status| seg_style(&palette(), selected, status))
-            .on_press(msg.clone()),
-        );
-    }
-    r.into()
-}
-
-fn seg_style(p: &Palette, selected: bool, status: button::Status) -> button::Style {
-    let base = button::Style {
-        background: Some(Background::Color(if selected {
-            p.gold_soft
-        } else {
-            p.surface2
-        })),
-        text_color: if selected { p.gold2 } else { p.text },
-        border: Border {
-            color: if selected { p.gold } else { p.line2 },
-            width: 1.0,
-            radius: theme::radius::SEGMENT.into(),
-        },
-        shadow: Shadow::default(),
-        snap: true,
-    };
-    match status {
-        button::Status::Hovered | button::Status::Pressed if !selected => button::Style {
-            background: Some(Background::Color(p.surface3)),
-            ..base
-        },
-        _ => base,
-    }
-}
-
 /// Daily-goal segment: full-width row «{title} … {xp} XP» (§12 card 2).
 fn goal_segment<'a>(title: &'static str, xp: i64, selected: bool, p: Palette) -> Element<'a, Msg> {
     button(
-        row![
-            txt(title)
-                .size(theme::text::BODY)
-                .font(if selected { SANS_BOLD } else { SANS })
-                .color(if selected { p.gold2 } else { p.text }),
-            space::horizontal().width(Length::Fill),
-            txt(format!("{xp} XP"))
-                .size(theme::text::SMALL)
-                .color(if selected { p.gold2 } else { p.muted }),
-        ]
-        .align_y(Alignment::Center),
+        container(
+            row![
+                txt(title)
+                    .size(theme::text::BODY)
+                    .font(if selected { SANS_BOLD } else { SANS })
+                    .color(if selected { p.gold2 } else { p.text }),
+                space::horizontal().width(Length::Fill),
+                txt(format!("{xp} XP"))
+                    .size(theme::text::SMALL)
+                    .color(if selected { p.gold2 } else { p.muted }),
+            ]
+            .align_y(Alignment::Center),
+        )
+        .center_y(Length::Fill),
     )
-    .padding([11.0, 14.0])
+    .padding([0.0, 14.0])
+    .height(theme::size::BTN_MD)
     .width(Length::Fill)
-    .style(move |_, status| seg_style(&palette(), selected, status))
+    .style(move |_, status| theme::choice(&palette(), selected, false, status))
     .on_press(Msg::SetGoal(xp))
     .into()
 }

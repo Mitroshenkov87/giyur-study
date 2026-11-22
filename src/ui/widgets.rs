@@ -9,7 +9,7 @@ use iced::alignment::Horizontal;
 use iced::widget::canvas::{self, Canvas, Frame, Path, Stroke};
 use iced::widget::text::{IntoFragment, Shaping};
 use iced::widget::{
-    button, column, container, rich_text, row, space, span, text, Column, Row, Text,
+    button, column, container, rich_text, row, space, span, text, Button, Column, Row, Text,
 };
 use iced::{
     Alignment, Background, Border, Color, Element, Font, Length, Point, Rectangle, Renderer,
@@ -17,6 +17,7 @@ use iced::{
 };
 
 use crate::ui::fonts::{HEBREW, SANS, SANS_BOLD, SERIF_BOLD};
+use crate::ui::screens::map::icons;
 use crate::ui::theme::{self, Movement, Palette};
 
 fn palette() -> Palette {
@@ -39,13 +40,13 @@ fn plain_container(background: Option<Color>) -> iced::widget::container::Style 
     }
 }
 
-/// Kicker line: uppercase, letter-spaced gold label (§0.5).
+/// Kicker line: uppercase, letter-spaced gold2 label (§0.5).
 pub fn kicker<'a, Message: 'a>(content: &'a str) -> Element<'a, Message> {
     let p = palette();
     txt(content.to_uppercase())
         .size(theme::text::KICKER)
         .font(SANS_BOLD)
-        .color(p.gold)
+        .color(p.gold2)
         .into()
 }
 
@@ -521,25 +522,226 @@ pub fn progress_ring<'a, Message: 'a>(pct: f32) -> Element<'a, Message> {
 }
 
 // ---------------------------------------------------------------------------
-// Small widgets
+// Shared controls (§3): the only way to build buttons, pills and chips
 // ---------------------------------------------------------------------------
 
-/// Selected chip pill (gold-soft bg, gold border, gold2 text).
-pub fn chip<'a, Message: 'a>(content: &'a str) -> Element<'a, Message> {
-    container(txt(content).size(theme::text::SMALL).font(SANS_BOLD))
-        .padding([0.0, 16.0])
-        .height(theme::spacing::CHIP_MIN)
-        .style(move |_| theme::chip(&palette()))
+/// Button kind (which theme style to use).
+#[derive(Debug, Clone, Copy)]
+pub enum Btn {
+    Primary,
+    Secondary,
+    Ghost,
+    Danger,
+}
+
+/// Button size (fixed height, horizontal padding, font size).
+#[derive(Debug, Clone, Copy)]
+pub enum BtnSize {
+    Sm,
+    Md,
+    Lg,
+}
+
+fn btn_metrics(size: BtnSize) -> (f32, f32, f32) {
+    match size {
+        BtnSize::Sm => (theme::size::BTN_SM, 12.0, 15.0),
+        BtnSize::Md => (theme::size::BTN_MD, 20.0, 16.0),
+        BtnSize::Lg => (theme::size::BTN_LG, 26.0, 17.0),
+    }
+}
+
+fn btn_style(kind: Btn) -> impl Fn(&Theme, button::Status) -> button::Style {
+    move |_, status| {
+        let p = palette();
+        match kind {
+            Btn::Primary => theme::button_primary(&p, status),
+            Btn::Secondary => theme::button_secondary(&p, status),
+            Btn::Ghost => theme::button_ghost(&p, status),
+            Btn::Danger => theme::button_danger(&p, status),
+        }
+    }
+}
+
+/// The only way to build a text button. Fixed height, centred label.
+pub fn btn<'a, M: Clone + 'a>(
+    label: impl IntoFragment<'a>,
+    kind: Btn,
+    size: BtnSize,
+    on_press: Option<M>,
+) -> Button<'a, M> {
+    let (h, px, fs) = btn_metrics(size);
+    let font = if matches!(kind, Btn::Primary) {
+        SANS_BOLD
+    } else {
+        SANS
+    };
+    button(container(txt(label).size(fs).font(font)).center_y(Length::Fill))
+        .height(h)
+        .padding([0.0, px])
+        .on_press_maybe(on_press)
+        .style(btn_style(kind))
+}
+
+/// Same, with a leading icon (icon + label vertically centred).
+pub fn btn_icon<'a, M: Clone + 'a>(
+    icon: Element<'a, M>,
+    label: impl IntoFragment<'a>,
+    kind: Btn,
+    size: BtnSize,
+    on_press: Option<M>,
+) -> Button<'a, M> {
+    let (h, px, fs) = btn_metrics(size);
+    let font = if matches!(kind, Btn::Primary) {
+        SANS_BOLD
+    } else {
+        SANS
+    };
+    button(
+        container(
+            row![icon, txt(label).size(fs).font(font)]
+                .spacing(8)
+                .align_y(Alignment::Center),
+        )
+        .center_y(Length::Fill),
+    )
+    .height(h)
+    .padding([0.0, px])
+    .on_press_maybe(on_press)
+    .style(btn_style(kind))
+}
+
+/// «‹ label» back button: Sm, ghost, ChevronLeft icon 14 px, spacing 6.
+pub fn back_button<'a, M: Clone + 'a>(label: &'a str, msg: M) -> Element<'a, M> {
+    let p = palette();
+    button(
+        container(
+            row![
+                icons::icon(icons::Kind::ChevronLeft, 14.0, p.muted),
+                txt(label).size(15.0),
+            ]
+            .spacing(6)
+            .align_y(Alignment::Center),
+        )
+        .center_y(Length::Fill),
+    )
+    .height(theme::size::BTN_SM)
+    .padding([0.0, 12.0])
+    .style(move |_, s| theme::button_ghost(&palette(), s))
+    .on_press(msg)
+    .into()
+}
+
+/// «× Выйти»: same metrics as [`back_button`].
+pub fn exit_button<'a, M: Clone + 'a>(label: &'a str, msg: M) -> Element<'a, M> {
+    let p = palette();
+    button(
+        container(
+            row![txt("×").size(16.0).color(p.muted), txt(label).size(15.0),]
+                .spacing(6)
+                .align_y(Alignment::Center),
+        )
+        .center_y(Length::Fill),
+    )
+    .height(theme::size::BTN_SM)
+    .padding([0.0, 12.0])
+    .style(move |_, s| theme::button_ghost(&palette(), s))
+    .on_press(msg)
+    .into()
+}
+
+/// Pill kind (non-interactive).
+#[derive(Debug, Clone, Copy)]
+pub enum Pill {
+    /// Selected chip («Требует проверки раввином»): gold-soft, gold border.
+    Chip,
+    /// Tag (movement, «Скоро», «повтор»): surface3, muted text.
+    Tag,
+    /// In-card CTA («Играть» / «Начать» / «Повторить»), 32 px.
+    Cta,
+    /// Soft tint of the given colour (timed difficulty pill).
+    Tint(Color),
+}
+
+/// Non-interactive pill with a centred label.
+pub fn pill<'a, M: 'a>(label: impl IntoFragment<'a>, kind: Pill) -> Element<'a, M> {
+    let (h, px) = match kind {
+        Pill::Cta => (theme::size::PILL, 14.0),
+        _ => (theme::size::TAG, 12.0),
+    };
+    container(txt(label).size(theme::text::SMALL).font(SANS_BOLD))
+        .padding([0.0, px])
+        .center_y(Length::Fixed(h))
+        .style(move |_| match kind {
+            Pill::Chip | Pill::Cta => theme::chip(&palette()),
+            Pill::Tag => theme::tag(&palette()),
+            Pill::Tint(color) => container::Style {
+                text_color: Some(color),
+                background: Some(Background::Color(Color { a: 0.14, ..color })),
+                border: Border {
+                    radius: theme::radius::PILL.into(),
+                    ..Border::default()
+                },
+                shadow: Shadow::default(),
+                snap: true,
+            },
+        })
         .into()
+}
+
+/// Selectable chip / segment (count chips, «20 с / 30 с», settings segments).
+/// `round` gives a pill radius, otherwise the segment radius.
+pub fn choice<'a, M: Clone + 'a>(
+    label: impl IntoFragment<'a>,
+    selected: bool,
+    round: bool,
+    msg: M,
+) -> Element<'a, M> {
+    button(
+        container(txt(label).size(theme::text::SMALL).font(if selected {
+            SANS_BOLD
+        } else {
+            SANS
+        }))
+        .center(Length::Fill),
+    )
+    .height(theme::size::BTN_SM)
+    .padding([0.0, 16.0])
+    .style(move |_, status| theme::choice(&palette(), selected, round, status))
+    .on_press(msg)
+    .into()
+}
+
+/// Circle / badge with centred content (`d` px diameter).
+pub fn disc<'a, M: 'a>(inner: Element<'a, M>, d: f32, bg: Color, border: Color) -> Element<'a, M> {
+    container(inner)
+        .center(Length::Fixed(d))
+        .style(move |_| container::Style {
+            background: Some(Background::Color(bg)),
+            border: Border {
+                color: border,
+                width: 1.0,
+                radius: theme::radius::PILL.into(),
+            },
+            shadow: Shadow::default(),
+            text_color: None,
+            snap: true,
+        })
+        .into()
+}
+
+/// Horizontally centred block (replaces Space-Fill / elem / Space-Fill rows).
+pub fn centered<'a, M: 'a>(el: impl Into<Element<'a, M>>) -> Element<'a, M> {
+    container(el).center_x(Length::Fill).into()
+}
+
+/// Selected chip pill («Требует проверки раввином», gold-soft, gold border).
+pub fn chip<'a, Message: 'a>(content: &'a str) -> Element<'a, Message> {
+    pill(content, Pill::Chip)
 }
 
 /// Tag pill (surface3 bg, muted text).
 pub fn tag<'a, Message: 'a>(content: &'a str) -> Element<'a, Message> {
-    container(txt(content).size(theme::text::SMALL).font(SANS_BOLD))
-        .padding([0.0, 12.0])
-        .height(30.0)
-        .style(move |_| theme::tag(&palette()))
-        .into()
+    pill(content, Pill::Tag)
 }
 
 /// Card container: surface bg, border, radius 18, padding.
@@ -566,16 +768,7 @@ pub fn page_header<'a, Message: Clone + 'a>(
 ) -> Element<'a, Message> {
     let mut header = Column::new().spacing(10).width(Length::Fill);
     if let Some(message) = back {
-        header = header.push(
-            button(
-                row![txt("‹").size(22.0), txt("Назад").size(15.0)]
-                    .align_y(Alignment::Center)
-                    .spacing(2),
-            )
-            .padding([6.0, 10.0])
-            .style(move |_theme, status| theme::button_ghost(&palette(), status))
-            .on_press(message),
-        );
+        header = header.push(back_button("Назад", message));
     }
     header = header.push(heading(title, 1));
     header.into()

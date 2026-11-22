@@ -41,12 +41,7 @@ impl Screen {
         let p = theme::current();
 
         let mut page = Column::new().spacing(14).width(Length::Fill);
-        page = page.push(
-            button(row![txt("‹").size(22.0), txt("Настройки").size(15.0)].spacing(2))
-                .padding([6.0, 10.0])
-                .style(move |_, status| theme::button_ghost(&theme::current(), status))
-                .on_press(Msg::Back),
-        );
+        page = page.push(widgets::back_button("Настройки", Msg::Back));
         page = page.push(widgets::heading("Источники", 1));
         page = page.push(
             txt("Книги и сайты, на которые опираются материалы. Ссылки открываются во внешнем браузере (нужен интернет).")
@@ -111,7 +106,8 @@ fn source_row<'a>(src: &'a Source, p: theme::Palette) -> Element<'a, Msg> {
     }
     let mut line = row![container(title).width(Length::Fill)]
         .spacing(10)
-        .align_y(Alignment::Center);
+        .align_y(Alignment::Center)
+        .height(Length::Fixed(32.0));
     if let Some(short) = src.movement.as_deref().and_then(movement_tag) {
         line = line.push(widgets::tag(short));
     }
