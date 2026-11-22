@@ -718,6 +718,37 @@ pub fn choice<'a, M: Clone + 'a>(
     .into()
 }
 
+/// Segmented control: equal segments in one bordered box (question count,
+/// timer seconds). `options` are (label, message); `selected` is an index.
+pub fn segmented<'a, M: Clone + 'a>(
+    options: Vec<(String, M)>,
+    selected: Option<usize>,
+) -> Element<'a, M> {
+    let mut r = Row::new().spacing(2).width(Length::Fill);
+    for (i, (label, msg)) in options.into_iter().enumerate() {
+        let is_sel = selected == Some(i);
+        r = r.push(
+            button(
+                container(txt(label).size(theme::text::SMALL).font(if is_sel {
+                    SANS_BOLD
+                } else {
+                    SANS
+                }))
+                .center_x(Length::Fill),
+            )
+            .width(Length::FillPortion(1))
+            .padding([6, 8])
+            .style(move |_, s| theme::segment(&palette(), is_sel, s))
+            .on_press(msg),
+        );
+    }
+    container(r)
+        .padding(3)
+        .width(Length::Fill)
+        .style(|_| theme::segmented_frame(&palette()))
+        .into()
+}
+
 /// Circle / badge with centred content (`d` px diameter).
 pub fn disc<'a, M: 'a>(inner: Element<'a, M>, d: f32, bg: Color, border: Color) -> Element<'a, M> {
     container(inner)

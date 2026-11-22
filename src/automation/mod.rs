@@ -30,7 +30,9 @@ use iced::widget::{container, scrollable, stack};
 use iced::{Element, Length, Size};
 use serde_json::{json, Map, Value};
 
+use crate::storage;
 use crate::ui::app::{Ctx, Deck, ExamSpec, Route};
+use crate::ui::nav;
 use crate::ui::screens::{self, Current};
 use crate::ui::theme::{self, ThemeKind};
 
@@ -100,30 +102,37 @@ impl Outcome {
     }
 }
 
-/// The sidebar items, in order (label, route string).
-pub const NAV: [(&str, &str); 8] = [
-    ("Карта", "map"),
-    ("Календарь", "calendar"),
-    ("Повторение", "cards:review"),
-    ("Экзамен", "timed"),
-    ("Тесты", "exam"),
-    ("Прогресс", "progress"),
-    ("Настройки", "settings"),
-    ("Источники", "sources"),
-];
+/// The sidebar items, in order: current label, pre-v0.5 label (alias),
+/// subtitle, tooltip and route string. Names come from [`crate::ui::nav`],
+/// the single list the sidebar itself uses.
+pub fn nav_items() -> Vec<Value> {
+    nav::ITEMS
+        .iter()
+        .enumerate()
+        .map(|(i, it)| {
+            json!({
+                "label": it.label,
+                "old_label": it.old_label,
+                "subtitle": it.subtitle,
+                "tooltip": it.tooltip,
+                "route": route_str(&nav::route(i)),
+            })
+        })
+        .collect()
+}
 
 /// Command list for `help` and the MCP tool catalogue.
 pub const COMMANDS: &[(&str, &str)] = &[
     ("help", "This list."),
     ("screens", "Routes, sidebar items, sections and lessons you can navigate to."),
     ("state", "Current screen: route, visible texts, clickable controls (stable ids), inputs, progress, settings, toasts. Args: texts (bool, default true)."),
-    ("navigate", "Go to a route: to = \"map\" | \"calendar[:today|month|settings|YYYY-MM-DD]\" | \"section:<id>\" | \"lesson:<id>\" | \"cards:<lessonId>\" | \"deck:<sectionId>\" | \"cards:review\" | \"exam[:<sectionId>]\" | \"examrun:section:<id>[:n]\" | \"examrun:general[:n]\" | \"examrun:beitdin[:n]\" | \"timed\" | \"timedrun\" | \"progress\" | \"settings\" | \"sources\" | \"level\" | \"welcome\", or a sidebar label («Календарь»)."),
+    ("navigate", "Go to a route: to = \"map\" | \"calendar[:today|month|settings|YYYY-MM-DD]\" | \"section:<id>\" | \"lesson:<id>\" | \"cards:<lessonId>\" | \"deck:<sectionId>\" | \"cards:review\" | \"exam[:<sectionId>]\" | \"examrun:section:<id>[:n]\" | \"examrun:general[:n]\" | \"examrun:beitdin[:n]\" | \"timed\" | \"timedrun\" | \"progress\" | \"settings\" | \"sources\" | \"level\" | \"welcome\", or a sidebar label, current or old («Уроки» / «Карта», «Карточки» / «Повторение», «Викторина» / «Экзамен», «Успехи» / «Прогресс», «Календарь», «Тесты», «Настройки», «Источники»)."),
     ("back", "«Назад»: previous screen."),
-    ("press", "Press a control from `state`: id (exact), or label (exact, case-insensitive), or contains (substring); nth picks among several matches (0-based). Links and file dialogs (OpenUrl, Export, ImportPick) need allow_external=true and work only in the windowed app."),
+    ("press", "Press a control from `state`: id (exact), or label (exact, case-insensitive), or contains (substring); nth picks among several matches (0-based). Links, file dialogs and the installer (OpenUrl, Export, ImportPick, Install, AskUninstall) need allow_external=true and work only in the windowed app."),
     ("answer", "Answer the current question: choice (0-based, in the order shown), tf (true/false), text (typed answer, submitted), knew (flashcard: flips if needed, then grades), self_grade (0..1, open answers), auto=true (any answer, for smoke tests); next=true then presses «Далее»."),
     ("type", "Type into an input field: text, input (index from `state`, default 0), append (keep current text), submit (press Enter)."),
     ("select", "Pick from a drop-down listed under `choices` in `state`: choice (index) or target (shown text, substring; nth for several), option (option text, exact or substring)."),
-    ("set", "Change a setting: key = theme (dark|parchment) | font_step (0..3) | translit | unlock_all | timed_sound | timed_auto (bool) | timed_seconds (20|30) | daily_goal (10|20|30|50), value."),
+    ("set", "Change a setting: key = theme (dark|leather; parchment = old name of leather) | font_step (0..3) | translit | unlock_all | timed_sound | timed_auto (bool) | timed_seconds (20|30) | daily_goal (10|20|30|50), value."),
     ("screenshot", "Save a WebP screenshot: path (.webp). Windowed: the real window. Headless: the page; full_page=true for the whole page, width/height optional."),
     ("scroll", "Windowed only: to = \"top\" | \"bottom\" | 0..1."),
     ("wait", "Let time pass: ms (default 1000, max 60000). Timers run (the timed quiz reveals options after a pause)."),
@@ -136,11 +145,9 @@ pub const COMMANDS: &[(&str, &str)] = &[
 /// Returns the route plus an optional calendar tab / date to open after.
 pub fn parse_route(r: &str) -> Option<(Route, Option<screens::calendar::Msg>)> {
     let r = r.trim();
-    if let Some((_, route)) = NAV
-        .iter()
-        .find(|(label, _)| label.to_lowercase() == r.to_lowercase())
-    {
-        return parse_route(route);
+    // A sidebar label, current («Уроки») or pre-v0.5 («Карта»).
+    if let Some(i) = nav::find(r) {
+        return Some((nav::route(i), None));
     }
     let (k, v) = r.split_once(':').unwrap_or((r, ""));
     let v = v.to_string();
@@ -249,8 +256,9 @@ pub fn screen_name(s: &Current) -> &'static str {
 // ------------------------------------------------------------ page probe
 
 pub fn theme_kind(ctx: &Ctx) -> ThemeKind {
-    if ctx.state.settings.theme == "parchment" {
-        ThemeKind::Parchment
+    let t = ctx.state.settings.theme.as_str();
+    if t == storage::LIGHT_THEME || t == storage::LEGACY_LIGHT_THEME {
+        ThemeKind::Leather
     } else {
         ThemeKind::Dark
     }
@@ -481,7 +489,7 @@ fn screens_json(ctx: &Ctx) -> Value {
         })
         .collect();
     json!({
-        "nav": NAV.iter().map(|(l, r)| json!({"label": l, "route": r})).collect::<Vec<_>>(),
+        "nav": nav_items(),
         "routes": ["welcome", "level", "map", "calendar", "calendar:today", "calendar:month", "calendar:settings", "calendar:YYYY-MM-DD", "section:<id>", "lesson:<id>", "cards:<lessonId>", "deck:<sectionId>", "cards:review", "exam", "exam:<sectionId>", "examrun:section:<id>[:n]", "examrun:general[:n]", "examrun:beitdin[:n]", "timed", "timedrun", "progress", "settings", "sources"],
         "sections": sections,
     })
@@ -546,12 +554,19 @@ fn find_control<'v>(view: &'v View, a: &Map<String, Value>) -> Result<&'v Contro
     })
 }
 
-/// Controls that leave the app (browser, native file dialogs). A native
+/// Controls that leave the app (browser, native file dialogs) or change the
+/// system (the built-in installer: install / update, uninstall). A native
 /// dialog blocks the UI thread until a person closes it.
 fn opens_outside(id: &str) -> bool {
-    ["(OpenUrl(", "(Export)", "(ImportPick)"]
-        .iter()
-        .any(|p| id.contains(p))
+    [
+        "(OpenUrl(",
+        "(Export)",
+        "(ImportPick)",
+        "Settings(Install)",
+        "Settings(AskUninstall)",
+    ]
+    .iter()
+    .any(|p| id.contains(p))
 }
 
 fn has_control(view: &View, id: &str) -> bool {
@@ -704,11 +719,16 @@ fn set_setting(host: &mut dyn Host, a: &Map<String, Value>) -> Result<(), String
         let s = &mut host.ctx_mut().state.settings;
         match key.as_str() {
             "theme" => {
-                let t = val.as_str().unwrap_or_default();
-                if !["dark", "parchment"].contains(&t) {
-                    return Err("theme: dark | parchment".into());
-                }
-                s.theme = t.to_string();
+                // «Кожа» is stored as "leather"; "parchment" (its pre-v0.5
+                // name) is accepted as an alias.
+                let t = val.as_str().unwrap_or_default().trim().to_lowercase();
+                s.theme = match t.as_str() {
+                    "dark" | "тёмная" | "темная" => "dark".to_string(),
+                    "leather" | "parchment" | "кожа" | "пергамент" => {
+                        storage::LIGHT_THEME.to_string()
+                    }
+                    _ => return Err("theme: dark | leather (alias: parchment)".into()),
+                };
             }
             "font_step" => s.font_step = (n()? as i64).clamp(0, 3),
             "translit" => s.translit = b()?,

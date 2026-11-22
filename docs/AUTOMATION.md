@@ -40,7 +40,8 @@ shorashim ctl answer knew=true                   # flips, then «Вспомни�
 shorashim ctl navigate examrun:section:osnovy:10
 shorashim ctl answer choice=0 next=true          # first option as shown
 shorashim ctl navigate calendar:2026-12-05
-shorashim ctl set key=theme value=parchment
+shorashim ctl navigate Карточки                  # a sidebar label (old ones like «Повторение» work too)
+shorashim ctl set key=theme value=leather        # «Кожа»; "parchment" is accepted as its old name
 shorashim ctl screenshot /tmp/shot.webp          # the real window, WebP
 shorashim ctl quit
 
@@ -65,13 +66,13 @@ failure, `error`. Action commands reply with a short summary (`screen`,
 | `help` | | the command list |
 | `screens` | | sidebar items, route syntax, sections and lessons with ids |
 | `state` | `texts` (default true) | screen, route, visible `texts`, `controls` (`id`, `label`), `inputs`, `choices` (drop-downs), `progress`, `settings`, `toasts` |
-| `navigate` | `to` | go to a route (below) or a sidebar label like «Календарь» |
+| `navigate` | `to` | go to a route (below) or a sidebar label (current or old, case-insensitive; see below) |
 | `back` | | «Назад»: previous route, or the map |
 | `press` | `id` \| `label` \| `contains`, `nth` | press a control from `state` |
 | `answer` | `choice` \| `tf` \| `text` \| `knew` \| `self_grade` \| `auto`, `next` | answer the current question |
 | `type` | `text`, `input` (index), `append`, `submit` | type into a field (replaces its text unless `append`) |
 | `select` | `choice` (index) or `target` (shown text), `option`, `nth` | pick from a drop-down |
-| `set` | `key`, `value` | `theme` (dark/parchment), `font_step` (0–3), `translit`, `unlock_all`, `timed_sound`, `timed_auto`, `timed_seconds`, `daily_goal` |
+| `set` | `key`, `value` | `theme` (`dark` / `leather` = «Кожа»; `parchment`, its old name, is stored as `leather`), `font_step` (0–3), `translit`, `unlock_all`, `timed_sound`, `timed_auto`, `timed_seconds`, `daily_goal` |
 | `wait` | `ms` (≤ 60000) | let time pass; timers run (the timed quiz reveals options after a pause) |
 | `screenshot` | `path`, `full_page`, `width`, `height` | save a WebP (the extension is forced to `.webp`) |
 | `scroll` | `to` = top / bottom / 0..1 | windowed app only |
@@ -83,6 +84,22 @@ failure, `error`. Action commands reply with a short summary (`screen`,
 `examrun:section:<id>[:n]`, `examrun:general[:n]`, `examrun:beitdin[:n]`,
 `timed`, `timedrun`, `progress`, `settings`, `sources`. Until the first-run
 level choice is made, every route goes to the welcome screen, as in the app.
+
+**Sidebar labels.** `navigate` takes the sidebar names from the app's own
+list (`src/ui/nav.rs`), so commands and the sidebar never disagree. Labels
+from before v0.5 still work as aliases. `screens` returns the list with
+subtitles and tooltips.
+
+| Label | Old label | Route |
+|---|---|---|
+| Уроки | Карта | `map` |
+| Календарь | | `calendar` |
+| Карточки | Повторение | `cards:review` |
+| Викторина | Экзамен | `timed` |
+| Тесты | | `exam` |
+| Успехи | Прогресс | `progress` |
+| Настройки | | `settings` |
+| Источники | | `sources` |
 
 **Control ids** are the Debug form of the message a click publishes, e.g.
 `Map(Go(Section("osnovy")))`, `Exam(PickMc(2))`, `Calendar(NextDay)`. They are
@@ -103,8 +120,10 @@ prefix plus a hash. `label` joins the visible texts inside the control.
 **Inputs:** `state.inputs[i].text` is the field's value, or its placeholder
 when empty.
 
-**Links and file dialogs.** Controls that open a browser or a system file
-dialog (`OpenUrl`, `Export`, `ImportPick`) are refused unless
+**Links, file dialogs and the installer.** Controls that open a browser or a
+system file dialog (`OpenUrl`, `Export`, `ImportPick`), or install, update or
+remove the app on the system (`Settings(Install)`, `Settings(AskUninstall)`),
+are refused unless
 `allow_external=true` is given, and are never pressed headless. A native
 file dialog blocks the app until a person closes it.
 
@@ -123,13 +142,13 @@ shorashim --headless < commands.jsonl          # stdin, keeps going on errors
   used, never your own progress. `--today YYYY-MM-DD` fixes the date.
 - `expect` makes a line an assertion, checked after the command:
   `{"screen": "lesson", "route": "lesson:", "text": "гиюр", "control": "Exam(Start)", "min_xp": 10, "reply": {"dialog": true}}`
-  (`route` is a prefix, `text` / `control` are case-insensitive substrings).
+  (`route` is a prefix, `text` / `control` are case-insensitive substrings, `reply` objects match as subsets).
 - Headless screenshots render the page column (no sidebar) with the
   software renderer.
 
 CI runs `tests/automation.rs`, which plays `tests/scripts/*.jsonl` (first
-run and navigation, a lesson, flashcards, a section test, the timed exam and
-a mock beit-din, the calendar, settings) and checks the MCP server.
+run and navigation, a lesson, flashcards, a section test, the timed quiz («Викторина») and
+a mock beit-din, the calendar, settings, the «Тесты» mode tiles) and checks the MCP server.
 
 ## MCP
 
@@ -165,7 +184,7 @@ Attached mode reconnects when the app restarts; `launch` starts it.
 - **No browser access.** Requests must be newline-delimited JSON objects; an
   HTTP request (e.g. from a web page) is not JSON and is dropped.
 - **Same powers as the user's clicks.** Commands can only do what the UI can
-  do; links and file dialogs need `allow_external`. Headless runs use a
+  do; links, file dialogs and the installer need `allow_external`. Headless runs use a
   throw-away progress file unless `--data` is given.
 
 ## Windows notes

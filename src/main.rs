@@ -6,14 +6,16 @@ use std::time::{Duration, Instant};
 use iced::widget::{button, column, container, image, row, scrollable, stack, text, Column};
 use iced::{Alignment, Element, Font, Length, Subscription, Task, Theme};
 
+use shorashim::storage;
 use shorashim::ui::app::{Action, Ctx, Deck, Route};
 use shorashim::ui::screens::{self, Current};
 use shorashim::ui::theme::{self, ThemeKind};
-use shorashim::ui::{assets, fonts, widgets};
+use shorashim::ui::{assets, fonts, layout, nav, widgets};
 
 use shorashim::automation::server::{self as control, ControlMsg};
 
 const MAIN_SCROLL: &str = "main-scroll";
+const ASIDE_SCROLL: &str = "aside-scroll";
 
 struct App {
     ctx: Ctx,
@@ -29,11 +31,14 @@ enum Message {
     Tick(Instant),
     /// Automation control channel (`--control`, docs/AUTOMATION.md).
     Control(ControlMsg),
+    /// Screenshot hook `SHORASHIM_SCROLL_Y=<px>`: scroll the main column.
+    ScrollTo(f32),
 }
 
 fn theme_kind(ctx: &Ctx) -> ThemeKind {
-    if ctx.state.settings.theme == "parchment" {
-        ThemeKind::Parchment
+    let t = ctx.state.settings.theme.as_str();
+    if t == storage::LIGHT_THEME || t == storage::LEGACY_LIGHT_THEME {
+        ThemeKind::Leather
     } else {
         ThemeKind::Dark
     }
@@ -42,10 +47,18 @@ fn theme_kind(ctx: &Ctx) -> ThemeKind {
 impl App {
     fn new() -> (App, Task<Message>) {
         let mut ctx = Ctx::load();
+        // A newer portable exe than the installed copy: point to Settings.
+        if let shorashim::install::Offer::Update { from, to } = shorashim::install::status().offer()
+        {
+            ctx.toast(
+                &format!("Установлена версия {from}"),
+                &format!("Эта копия новее ({to}). Обновить установленную можно в «Настройках»."),
+                "",
+            );
+        }
         theme::set_current(theme_kind(&ctx));
         let route = if ctx.state.onboarded {
-            std::env::var("GIYUR_START_ROUTE")
-                .ok()
+            shorashim::util::env_hook("START_ROUTE")
                 .and_then(|r| parse_route(&r))
                 .unwrap_or(Route::Map)
         } else {
@@ -59,7 +72,14 @@ impl App {
                 history: Vec::new(),
                 screen,
             },
-            Task::none(),
+            // Screenshot hook: scroll once the first frame is laid out.
+            match shorashim::util::env_hook("SCROLL_Y").and_then(|v| v.parse::<f32>().ok()) {
+                Some(y) => Task::perform(
+                    async { std::thread::sleep(Duration::from_millis(1500)) },
+                    move |_| Message::ScrollTo(y),
+                ),
+                None => Task::none(),
+            },
         )
     }
 
@@ -104,6 +124,7 @@ impl App {
                 Action::SettingsChanged => {
                     theme::set_current(theme_kind(&self.ctx));
                 }
+                Action::Quit => return iced::exit(),
             },
             Message::Nav(r) => return self.go(r),
             Message::Tick(now) => self.ctx.toasts.retain(|t| t.until > now),
@@ -118,24 +139,26 @@ impl App {
                 return Task::batch([task, Task::batch(host.tasks)]);
             }
             Message::Control(ControlMsg::Done) => {}
+            Message::ScrollTo(y) => {
+                return iced::widget::operation::scroll_to(
+                    MAIN_SCROLL,
+                    iced::widget::operation::AbsoluteOffset {
+                        x: None,
+                        y: Some(y),
+                    },
+                )
+            }
         }
         Task::none()
     }
 
     fn sidebar(&self) -> Element<'_, Message> {
-        let p = theme::current();
-        let items: [(&str, Route); 8] = [
-            ("Карта", Route::Map),
-            ("Календарь", Route::Calendar),
-            ("Повторение", Route::Cards(Deck::Review)),
-            ("Экзамен", Route::Timed),
-            ("Тесты", Route::Exam(None)),
-            ("Прогресс", Route::Progress),
-            ("Настройки", Route::Settings),
-            ("Источники", Route::Sources),
-        ];
-        let active = nav_group(&self.route);
-        let mut col = Column::new().spacing(4).padding([18, 12]).width(230);
+        let p = theme::side_palette(theme::current());
+        let active = nav::group(&self.route);
+        let mut col = Column::new()
+            .spacing(2)
+            .padding([28, 12])
+            .width(layout::NAV);
         let brand = button(
             row![
                 image(
@@ -157,15 +180,28 @@ impl App {
         )
         .width(Length::Fill)
         .padding([8, 10])
-        .style(move |_, s| theme::button_ghost(&p, s))
+        .style(move |_, s| theme::button_nav(&p, s))
         .on_press(Message::Nav(Route::Map));
         col = col.push(brand).push(iced::widget::space().height(14));
-        for (i, (label, route)) in items.into_iter().enumerate() {
+        let main_p = theme::current();
+        for (i, item) in nav::ITEMS.iter().enumerate() {
             let is_active = active == Some(i);
+            if i > 0 {
+                // Thin divider between items, inset from the edges.
+                col = col.push(
+                    container(
+                        container(iced::widget::space())
+                            .width(Length::Fill)
+                            .height(1)
+                            .style(move |_| theme::nav_divider(&p)),
+                    )
+                    .padding([0, 12]),
+                );
+            }
             // 3 px brass left bar on the active item (transparent strut else).
             let bar = container(iced::widget::space())
                 .width(3)
-                .height(20)
+                .height(30)
                 .style(move |_| iced::widget::container::Style {
                     background: is_active.then_some(iced::Background::Color(p.gold)),
                     border: iced::Border {
@@ -174,45 +210,113 @@ impl App {
                     },
                     ..Default::default()
                 });
+            let label = column![
+                text(item.label).size(15).shaping(text::Shaping::Advanced),
+                text(item.subtitle)
+                    .size(11.5)
+                    .color(p.muted)
+                    .shaping(text::Shaping::Advanced),
+            ]
+            .spacing(1);
             let b = button(
-                container(
-                    row![bar, text(label).size(15).shaping(text::Shaping::Advanced)]
-                        .spacing(10)
-                        .align_y(Alignment::Center),
-                )
-                .center_y(Length::Fill),
+                container(row![bar, label].spacing(10).align_y(Alignment::Center))
+                    .center_y(Length::Fill),
             )
             .width(Length::Fill)
-            .height(theme::size::NAV)
+            .height(theme::size::NAV_ITEM)
             .padding([0, 12])
             .style(move |_, s| {
                 if is_active {
                     theme::button_nav_active(&p, s)
                 } else {
-                    theme::button_ghost(&p, s)
+                    theme::button_nav(&p, s)
                 }
             })
-            .on_press(Message::Nav(route));
-            col = col.push(b);
+            .on_press(Message::Nav(nav::route(i)));
+            let tip = container(
+                text(item.tooltip)
+                    .size(13)
+                    .color(main_p.text)
+                    .shaping(text::Shaping::Advanced),
+            )
+            .padding([7, 11])
+            .max_width(300);
+            col = col.push(
+                iced::widget::tooltip(b, tip, iced::widget::tooltip::Position::Right)
+                    .gap(6)
+                    .style(move |_| theme::tooltip(&main_p)),
+            );
         }
         let panel = container(col)
-            .width(230)
+            .width(layout::NAV)
             .height(Length::Fill)
             .style(move |_| theme::sidebar(&p));
-        // Leather (dark) / darker klaf (parchment) under the side veil: the
+        // Leather (dark) / dark goatskin («Кожа») under the side veil: the
         // sidebar reads as a different material than the window.
         match assets::img(p.side_texture) {
             Some(handle) => stack![
                 image(handle)
-                    .width(230)
+                    .width(layout::NAV)
                     .height(Length::Fill)
-                    .content_fit(iced::ContentFit::Cover)
+                    .content_fit(iced::ContentFit::Fill)
                     .filter_method(image::FilterMethod::Linear),
                 panel,
             ]
             .into(),
             None => panel.into(),
         }
+    }
+
+    /// The main grid for a window `width` (see `layout::compute`).
+    fn grid(&self, width: f32, want_aside: bool, p: theme::Palette) -> Element<'_, Message> {
+        let g = layout::compute(width, want_aside);
+        let hairline = move || {
+            container(iced::widget::space())
+                .width(1)
+                .height(Length::Fill)
+                .style(move |_| theme::divider_v(&p))
+        };
+        // The scrollable spans everything right of the nav, so the wheel
+        // works over the margins and the scrollbar sits at the window edge;
+        // the aside is drawn on top, fixed, in the reserved space.
+        let reserved = if g.aside { layout::ASIDE } else { 0.0 } + g.right;
+        let page = layout::page(
+            self.screen.view(&self.ctx).map(Message::Screen),
+            g.content,
+            reserved,
+        );
+        let scroll = scrollable(page)
+            .id(MAIN_SCROLL)
+            .width(Length::Fill)
+            .height(Length::Fill);
+        // Keep the widget tree the same shape at every width (iced matches
+        // widget state by position), so resizing across a breakpoint does
+        // not reset the scroll position or input focus.
+        let lead = if g.left > 0.0 { g.left - 1.0 } else { 0.0 };
+        let lead_line: Element<'_, Message> = if g.left > 0.0 {
+            hairline().into()
+        } else {
+            iced::widget::space().width(0).into()
+        };
+        let base = row![
+            iced::widget::space().width(lead),
+            lead_line,
+            self.sidebar(),
+            hairline(),
+            scroll,
+        ]
+        .height(Length::Fill);
+        let overlay: Element<'_, Message> = if g.aside {
+            let aside = shorashim::ui::aside::panel(&self.ctx, Message::Nav(Route::Calendar));
+            row![
+                iced::widget::space().width(g.aside_x()),
+                scrollable(aside).id(ASIDE_SCROLL).height(Length::Fill),
+            ]
+            .into()
+        } else {
+            iced::widget::space().into()
+        };
+        stack![base, overlay].into()
     }
 
     fn toasts(&self) -> Element<'_, Message> {
@@ -250,43 +354,26 @@ impl App {
 
     fn view(&self) -> Element<'_, Message> {
         let p = theme::current();
-        let body: Element<'_, Message> = self.screen.view(&self.ctx).map(Message::Screen);
-        // Inner box caps the reading width; the outer one centres it,
-        // so maximized windows don't leave the content on the left.
-        let inner = container(
-            container(body)
-                .padding([28, 32])
-                .width(Length::Fill)
-                .max_width(1040),
-        )
-        .center_x(Length::Fill);
         let bare = self.screen.bare(&self.ctx);
-        let main: Element<'_, Message> = if bare {
+        let content: Element<'_, Message> = if bare {
             // Shrink-height scrollable: centres when the content fits,
             // scrolls when it doesn't (welcome / first-run level choice).
+            let inner = container(
+                container(self.screen.view(&self.ctx).map(Message::Screen))
+                    .padding([28.0, layout::CONTENT_PAD])
+                    .width(Length::Fill)
+                    .max_width(layout::content_col()),
+            )
+            .center_x(Length::Fill);
             container(scrollable(inner).height(Length::Shrink))
                 .center(Length::Fill)
                 .into()
         } else {
-            container(scrollable(inner).height(Length::Fill))
-                .width(Length::Fill)
-                .height(Length::Fill)
-                .into()
+            // One grid for every screen (src/ui/layout.rs): the nav, the
+            // reading column and the optional quote panel move together.
+            let want_aside = shorashim::ui::aside::enabled(&self.ctx);
+            iced::widget::responsive(move |size| self.grid(size.width, want_aside, p)).into()
         };
-        let content: Element<'_, Message> = if bare {
-            main
-        } else {
-            row![
-                self.sidebar(),
-                container(iced::widget::space())
-                    .width(1)
-                    .height(Length::Fill)
-                    .style(move |_| theme::divider_v(&p)),
-                main,
-            ]
-            .into()
-        };
-
         // Window background: the theme texture under a solid veil and two
         // crossed lamp gradients; bg0 alone is the fallback (no texture).
         let mut bg = stack![container(iced::widget::space())
@@ -298,7 +385,7 @@ impl App {
                 image(handle)
                     .width(Length::Fill)
                     .height(Length::Fill)
-                    .content_fit(iced::ContentFit::Cover)
+                    .content_fit(iced::ContentFit::Fill)
                     .filter_method(image::FilterMethod::Linear),
             );
         }
@@ -368,7 +455,7 @@ impl App {
     }
 }
 
-/// Debug/screenshot hook: `GIYUR_START_ROUTE=section:shabbat` etc.
+/// Debug/screenshot hook: `SHORASHIM_START_ROUTE=section:shabbat` etc.
 fn parse_route(r: &str) -> Option<Route> {
     let (k, v) = r.split_once(':').unwrap_or((r, ""));
     let v = v.to_string();
@@ -378,9 +465,9 @@ fn parse_route(r: &str) -> Option<Route> {
             // Screenshot hook: «calendar», «calendar:month», «calendar:settings»
             // or «calendar:YYYY-MM-DD»; the screen reads the env vars below.
             match v.as_str() {
-                "today" | "month" | "settings" => std::env::set_var("GIYUR_CALENDAR_TAB", &v),
+                "today" | "month" | "settings" => std::env::set_var("SHORASHIM_CALENDAR_TAB", &v),
                 d if chrono::NaiveDate::parse_from_str(d, "%Y-%m-%d").is_ok() => {
-                    std::env::set_var("GIYUR_CALENDAR_DATE", d)
+                    std::env::set_var("SHORASHIM_CALENDAR_DATE", d)
                 }
                 _ => {}
             }
@@ -399,23 +486,8 @@ fn parse_route(r: &str) -> Option<Route> {
         "progress" => Route::Progress,
         "settings" => Route::Settings,
         "sources" => Route::Sources,
-        _ => return None,
-    })
-}
-
-/// Which sidebar item is highlighted for a route.
-fn nav_group(r: &Route) -> Option<usize> {
-    Some(match r {
-        Route::Map | Route::Section(_) | Route::Lesson(_) => 0,
-        Route::Calendar => 1,
-        Route::Cards(Deck::Review) => 2,
-        Route::Cards(_) => 0,
-        Route::Timed | Route::TimedRun { .. } => 3,
-        Route::Exam(_) | Route::ExamRun(_) => 4,
-        Route::Progress => 5,
-        Route::Settings | Route::Level { .. } => 6,
-        Route::Sources => 7,
-        Route::Welcome => return None,
+        // A sidebar label, current or pre-v0.5 («Уроки», «Карта», …).
+        _ => return nav::find(r).map(nav::route),
     })
 }
 
@@ -465,9 +537,14 @@ fn main() -> iced::Result {
     if let Some(code) = shorashim::automation::cli::main_hook() {
         std::process::exit(code);
     }
-    // Screenshot hook: `GIYUR_WINDOW_SIZE=1440x900`.
-    let size = std::env::var("GIYUR_WINDOW_SIZE")
-        .ok()
+    // «Приложения и возможности» runs `shorashim.exe --uninstall`.
+    let args: Vec<String> = std::env::args().collect();
+    if shorashim::install::handle_cli(&args) {
+        return Ok(());
+    }
+    shorashim::install::cleanup_after_update();
+    // Screenshot hook: `SHORASHIM_WINDOW_SIZE=1440x900`.
+    let size = shorashim::util::env_hook("WINDOW_SIZE")
         .and_then(|v| {
             let (w, h) = v.split_once('x')?;
             Some(iced::Size::new(w.parse().ok()?, h.parse().ok()?))

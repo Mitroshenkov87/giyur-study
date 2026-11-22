@@ -213,8 +213,8 @@ impl Session {
         }
         if let Some(obj) = e.get("reply").and_then(Value::as_object) {
             for (k, v) in obj {
-                if reply.get(k) != Some(v) {
-                    return Err(format!("expected reply.{k} = {v}, got {:?}", reply.get(k)));
+                if !reply.get(k).is_some_and(|got| subset(v, got)) {
+                    return Err(format!("expected reply.{k} ⊇ {v}, got {:?}", reply.get(k)));
                 }
             }
         }
@@ -292,5 +292,16 @@ impl Host for Session {
     }
     fn windowed(&self) -> bool {
         false
+    }
+}
+
+/// `want` matches `got` when every key of a `want` object is in `got` with a
+/// matching value (recursively); other values must be equal.
+fn subset(want: &Value, got: &Value) -> bool {
+    match (want, got) {
+        (Value::Object(w), Value::Object(g)) => w
+            .iter()
+            .all(|(k, v)| g.get(k).is_some_and(|gv| subset(v, gv))),
+        _ => want == got,
     }
 }

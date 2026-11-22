@@ -4,6 +4,14 @@
 use chrono::NaiveDate;
 use rand::Rng;
 
+/// Debug / screenshot hook `SHORASHIM_<name>`; the pre-rename
+/// `GIYUR_<name>` spelling is still read so old scripts keep working.
+pub fn env_hook(name: &str) -> Option<String> {
+    std::env::var(format!("SHORASHIM_{name}"))
+        .or_else(|_| std::env::var(format!("GIYUR_{name}")))
+        .ok()
+}
+
 /// Format a date as "YYYY-MM-DD" (JS `U.dayKey`).
 pub fn day_key(d: NaiveDate) -> String {
     d.format("%Y-%m-%d").to_string()

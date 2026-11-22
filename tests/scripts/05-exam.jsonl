@@ -1,4 +1,4 @@
-# Timed exam («Экзамен»): options appear after a pause, the answer locks,
+# Timed quiz («Викторина», «Экзамен» before v0.5): options appear after a pause, the answer locks,
 # then the reveal; quit with confirmation. Auto-advance off for a steady run.
 {"cmd":"press","label":"Начать"}
 {"cmd":"press","contains":"Ортодоксальный"}

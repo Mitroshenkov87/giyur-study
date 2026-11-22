@@ -45,7 +45,7 @@ pub fn mode_title(mode: Mode) -> &'static str {
         Mode::General => "Общий экзамен",
         Mode::Beitdin => "Пробный бейт-дин",
         Mode::Retry => "Работа над ошибками",
-        Mode::Timed => "Экзамен (на время)",
+        Mode::Timed => "Викторина",
         Mode::SelfCheck => "Самопроверка",
         Mode::Rehearsal => "Репетиция бейт-дина",
     }

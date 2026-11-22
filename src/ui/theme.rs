@@ -1,5 +1,5 @@
 //! Palette and widget styles: the dark «Библиотека» default (walnut, oxblood
-//! leather, brass, lamp-light), the matte klaf «Пергамент», and the
+//! leather, brass, lamp-light), the light calf-hide «Кожа», and the
 //! timed-studio palette scoped to quiz-show screens (§T.3).
 //!
 //! Style functions take a [`Palette`]; the active palette is also mirrored in a
@@ -33,7 +33,7 @@ pub struct Palette {
     pub gold2: Color,
     pub gold_soft: Color,
     pub on_gold: Color,
-    /// Hebrew block text (gold2 in dark, `#5a400a` in parchment).
+    /// Hebrew block text (gold2 in dark, `#4a2e06` in «Кожа»).
     pub hebrew: Color,
     pub ok: Color,
     pub ok_soft: Color,
@@ -149,36 +149,40 @@ pub const DARK: Palette = Palette {
     brass_edge: rgb(0x7a5a26),
 };
 
-/// The light «Пергамент» palette: matte klaf (tan/ochre) with iron-gall ink.
-pub const PARCHMENT: Palette = Palette {
-    bg0: rgb(0xa48c65),
-    bg1: rgb(0xb39b72),
-    surface: rgb(0xd8c59f),
-    surface2: rgb(0xcdb891),
-    surface3: rgb(0xc2ab83),
-    line: hexa(0x6b4712, 0.22),
-    line2: hexa(0x6b4712, 0.40),
-    text: rgb(0x2a1a0c),
-    muted: rgb(0x4f3a26),
-    gold: rgb(0x8a6420),
-    gold2: rgb(0x553609),
-    gold_soft: hexa(0x8a6420, 0.14),
-    on_gold: rgb(0x2a1a0c),
-    hebrew: rgb(0x553609),
-    ok: rgb(0x285636),
-    ok_soft: hexa(0x285636, 0.12),
-    bad: rgb(0x8a2f1e),
-    bad_soft: hexa(0x8a2f1e, 0.10),
-    info: rgb(0x2b4f7e),
-    info_soft: hexa(0x2b4f7e, 0.10),
-    violet: rgb(0x563c8c),
-    violet_soft: hexa(0x563c8c, 0.10),
-    flame: rgb(0x8a5410),
-    flame_soft: hexa(0x8a5410, 0.12),
-    input_bg: rgb(0xe0cfab),
+/// The light «Кожа» palette, v0.5: smoothed calf hide. A warm
+/// tan/caramel ground (relative luminance ≈ 0.25, darker than paper so it
+/// does not glare), lighter tooled-hide cards (≈ 0.40) with a darker
+/// pressed edge, and a dark leather sidebar with cream ink
+/// ([`side_palette`]). Body text is ≥ 7.5:1 on cards; `muted` ≈ 6.5:1.
+pub const LEATHER: Palette = Palette {
+    bg0: rgb(0x9c7650),
+    bg1: rgb(0xa8825a),
+    surface: rgb(0xcaa67d),
+    surface2: rgb(0xc09c73),
+    surface3: rgb(0xb5916a),
+    line: hexa(0x4a2e14, 0.24),
+    line2: hexa(0x4a2e14, 0.42),
+    text: rgb(0x22140a),
+    muted: rgb(0x35240f),
+    gold: rgb(0x6a4810),
+    gold2: rgb(0x4a2e06),
+    gold_soft: hexa(0x6a4810, 0.14),
+    on_gold: rgb(0x22140a),
+    hebrew: rgb(0x4a2e06),
+    ok: rgb(0x1d4529),
+    ok_soft: hexa(0x1d4529, 0.12),
+    bad: rgb(0x7a2414),
+    bad_soft: hexa(0x7a2414, 0.10),
+    info: rgb(0x1f3c66),
+    info_soft: hexa(0x1f3c66, 0.10),
+    violet: rgb(0x452c72),
+    violet_soft: hexa(0x452c72, 0.10),
+    flame: rgb(0x6a3c08),
+    flame_soft: hexa(0x6a3c08, 0.12),
+    input_bg: rgb(0xd3b189),
     // Veil, tint, lamp and vignette are baked into the WebP backgrounds.
-    texture: "bg-parchment",
-    side_texture: "side-parchment",
+    texture: "bg-leather",
+    side_texture: "side-leather",
     veil: hexa(0xe8d6b0, 0.0),
     side_veil: hexa(0xe8d6b0, 0.0),
     side_tint: hexa(0x6b4712, 0.0),
@@ -187,8 +191,27 @@ pub const PARCHMENT: Palette = Palette {
     brass_hi: rgb(0xd9b56a),
     brass_mid: rgb(0xc8a258),
     brass_lo: rgb(0xb8914a),
-    brass_edge: rgb(0x6b4712),
+    brass_edge: rgb(0x5a3a10),
 };
+
+/// Palette for the sidebar. In the light theme the sidebar is a strip of
+/// dark leather, so it gets cream ink and brighter brass (≥ 8:1 on the
+/// strip); the dark theme uses its palette unchanged.
+pub fn side_palette(p: Palette) -> Palette {
+    if !is_light(&p.text) {
+        return p;
+    }
+    Palette {
+        text: rgb(0xf3e6cc),
+        muted: rgb(0xd8c3a0),
+        gold: rgb(0xd9b56a),
+        gold2: rgb(0xf0d79a),
+        gold_soft: hexa(0xd9b56a, 0.16),
+        line: hexa(0xf0d79a, 0.18),
+        line2: hexa(0xf0d79a, 0.32),
+        ..p
+    }
+}
 
 /// The timed-studio palette scoped to quiz-show screens (§T.3).
 pub const TIMED: Palette = Palette {
@@ -240,8 +263,8 @@ pub enum ThemeKind {
     /// Тёмная — основная (§T.1).
     #[default]
     Dark,
-    /// Пергамент (§T.2).
-    Parchment,
+    /// Кожа — the light hide theme (§T.2; «Пергамент» before v0.5).
+    Leather,
 }
 
 impl ThemeKind {
@@ -249,7 +272,7 @@ impl ThemeKind {
     pub fn palette(self) -> Palette {
         match self {
             ThemeKind::Dark => DARK,
-            ThemeKind::Parchment => PARCHMENT,
+            ThemeKind::Leather => LEATHER,
         }
     }
 
@@ -257,15 +280,15 @@ impl ThemeKind {
     pub fn title(self) -> &'static str {
         match self {
             ThemeKind::Dark => "Тёмная",
-            ThemeKind::Parchment => "Пергамент",
+            ThemeKind::Leather => "Кожа",
         }
     }
 
     /// The other theme (for a toggle).
     pub fn other(self) -> Self {
         match self {
-            ThemeKind::Dark => ThemeKind::Parchment,
-            ThemeKind::Parchment => ThemeKind::Dark,
+            ThemeKind::Dark => ThemeKind::Leather,
+            ThemeKind::Leather => ThemeKind::Dark,
         }
     }
 }
@@ -291,8 +314,8 @@ pub fn iced_theme(kind: ThemeKind) -> Theme {
     let p = kind.palette();
     Theme::custom(
         match kind {
-            ThemeKind::Dark => "Giyur Dark",
-            ThemeKind::Parchment => "Giyur Parchment",
+            ThemeKind::Dark => "Shorashim Dark",
+            ThemeKind::Leather => "Shorashim Leather",
         },
         IcedPalette {
             background: p.bg0,
@@ -347,8 +370,10 @@ pub mod size {
     pub const PILL: f32 = 32.0;
     /// Tags, difficulty, review chip.
     pub const TAG: f32 = 24.0;
-    /// Sidebar items.
+    /// Sidebar items (single line).
     pub const NAV: f32 = 40.0;
+    /// Sidebar items with a subtitle line (label + grey description).
+    pub const NAV_ITEM: f32 = 50.0;
 }
 
 /// Spacing / layout constants.
@@ -424,8 +449,10 @@ fn brass_background(p: &Palette, toward: Color, lift: f32) -> Background {
     )
 }
 
-fn is_light(color: &Color) -> bool {
-    0.299 * color.r + 0.587 * color.g + 0.114 * color.b > 0.5
+/// A light theme is one with dark ink (the hide theme's background is a
+/// mid-tone tan, so the background alone no longer tells).
+fn is_light(text: &Color) -> bool {
+    0.299 * text.r + 0.587 * text.g + 0.114 * text.b < 0.5
 }
 
 // ---------------------------------------------------------------------------
@@ -445,7 +472,7 @@ fn button_style(background: Option<Background>, text_color: Color) -> button::St
 /// Primary brass button: three-stop brass gradient, 1 px brass edge,
 /// on-gold label, warm drop shadow.
 pub fn button_primary(p: &Palette, status: button::Status) -> button::Style {
-    let light = is_light(&p.bg0);
+    let light = is_light(&p.text);
     let border = Border {
         color: p.brass_edge,
         width: 1.0,
@@ -496,7 +523,7 @@ pub fn button_primary(p: &Palette, status: button::Status) -> button::Style {
     }
 }
 
-/// Secondary button: leather (dark) / darker klaf (parchment) gradient with
+/// Secondary button: leather (dark) / darker hide («Кожа») gradient with
 /// a brass border.
 pub fn button_secondary(p: &Palette, status: button::Status) -> button::Style {
     let border = Border {
@@ -556,6 +583,105 @@ pub fn button_ghost(p: &Palette, status: button::Status) -> button::Style {
             ..style
         },
         button::Status::Active => button::Style { border, ..style },
+    }
+}
+
+/// Sidebar item: no box at rest, a soft wash on hover.
+pub fn button_nav(p: &Palette, status: button::Status) -> button::Style {
+    let style = button_style(None, p.text);
+    match status {
+        button::Status::Hovered | button::Status::Pressed => button::Style {
+            background: Some(Background::Color(alpha(p.gold, 0.06))),
+            text_color: p.gold2,
+            border: Border {
+                radius: radius::BUTTON.into(),
+                ..Border::default()
+            },
+            ..style
+        },
+        _ => style,
+    }
+}
+
+/// Pick list in the theme's materials (iced's default uses the iced
+/// palette's primary colour, a solid dark block on «Кожа»).
+pub fn pick_list(
+    p: &Palette,
+    status: iced::widget::pick_list::Status,
+) -> iced::widget::pick_list::Style {
+    use iced::widget::pick_list::Status;
+    let (edge, bg) = match status {
+        Status::Active => (p.line2, p.input_bg),
+        Status::Hovered => (alpha(p.gold, 0.6), p.input_bg),
+        Status::Opened { .. } => (p.gold, p.surface3),
+    };
+    iced::widget::pick_list::Style {
+        text_color: p.text,
+        placeholder_color: p.muted,
+        handle_color: p.gold2,
+        background: Background::Color(bg),
+        border: Border {
+            color: edge,
+            width: 1.0,
+            radius: radius::SEGMENT.into(),
+        },
+    }
+}
+
+/// The drop-down menu of [`pick_list`].
+pub fn pick_menu(p: &Palette) -> iced::overlay::menu::Style {
+    iced::overlay::menu::Style {
+        background: Background::Color(p.surface),
+        border: Border {
+            color: p.line2,
+            width: 1.0,
+            radius: radius::SEGMENT.into(),
+        },
+        text_color: p.text,
+        selected_text_color: p.gold2,
+        selected_background: Background::Color(p.gold_soft),
+        shadow: Shadow::default(),
+    }
+}
+
+/// Outer frame of a segmented control: one bordered rounded box.
+pub fn segmented_frame(p: &Palette) -> container::Style {
+    container::Style {
+        background: Some(Background::Color(p.surface2)),
+        border: Border {
+            color: p.line2,
+            width: 1.0,
+            radius: radius::SEGMENT.into(),
+        },
+        ..container::Style::default()
+    }
+}
+
+/// One segment inside [`segmented_frame`]: flat; the selected one is a
+/// brass-tinted inset with a brass edge.
+pub fn segment(p: &Palette, selected: bool, status: button::Status) -> button::Style {
+    let hovered = matches!(status, button::Status::Hovered | button::Status::Pressed);
+    let (bg, text_color, border_color) = if selected {
+        (Some(Background::Color(p.gold_soft)), p.gold2, p.gold)
+    } else if hovered {
+        (
+            Some(Background::Color(alpha(p.gold, 0.07))),
+            p.text,
+            Color::TRANSPARENT,
+        )
+    } else {
+        (None, p.text, Color::TRANSPARENT)
+    };
+    button::Style {
+        background: bg,
+        text_color,
+        border: Border {
+            color: border_color,
+            width: if selected { 1.0 } else { 0.0 },
+            radius: (radius::SEGMENT - 3.0).into(),
+        },
+        shadow: Shadow::default(),
+        snap: true,
     }
 }
 
@@ -712,7 +838,7 @@ fn container_style(p: &Palette, background: Option<Background>) -> container::St
 }
 
 fn card_shadow(p: &Palette) -> Shadow {
-    if is_light(&p.bg0) {
+    if is_light(&p.text) {
         Shadow {
             color: rgba(0x3a, 0x25, 0x10, 0.18),
             offset: Vector::new(0.0, 3.0),
@@ -730,10 +856,11 @@ fn card_shadow(p: &Palette) -> Shadow {
 /// Card: translucent surface over the window texture (the grain stays
 /// visible); the top edge is slightly lamp-lit. 1 px brass border.
 pub fn card(p: &Palette) -> container::Style {
-    let light = is_light(&p.bg0);
+    let light = is_light(&p.text);
     let lamp_rgb = Color { a: 1.0, ..p.lamp };
     let border_color = if light {
-        hexa(0x6b4712, 0.30)
+        // Pressed (tooled) edge of a hide panel.
+        hexa(0x4a2e14, 0.50)
     } else {
         alpha(p.gold, 0.35)
     };
@@ -991,7 +1118,7 @@ pub fn lamp_h(p: &Palette) -> container::Style {
     )
 }
 
-/// Parchment edge vignette: the uneven, aged tone at the top and bottom.
+/// Light-theme («Кожа») edge vignette: the uneven, aged tone at the top and bottom.
 pub fn vignette(p: &Palette) -> container::Style {
     container_style(
         p,
@@ -1029,6 +1156,30 @@ pub fn divider_v(p: &Palette) -> container::Style {
     container_style(p, Some(Background::Color(p.line)))
 }
 
+/// Thin divider between sidebar items (side palette, faint).
+pub fn nav_divider(p: &Palette) -> container::Style {
+    container_style(p, Some(Background::Color(alpha(p.line2, 0.55))))
+}
+
+/// Hover tooltip bubble (main palette: a raised surface card).
+pub fn tooltip(p: &Palette) -> container::Style {
+    container::Style {
+        background: Some(Background::Color(p.surface2)),
+        border: Border {
+            color: p.line2,
+            width: 1.0,
+            radius: 10.0.into(),
+        },
+        shadow: iced::Shadow {
+            color: alpha(Color::BLACK, 0.3),
+            offset: iced::Vector::new(0.0, 4.0),
+            blur_radius: 12.0,
+        },
+        text_color: Some(p.text),
+        snap: true,
+    }
+}
+
 /// Horizontal 1 px hairline for the settings rows (use with `rule::horizontal(1)`).
 pub fn divider_h(p: &Palette) -> rule::Style {
     rule::Style {
@@ -1054,9 +1205,13 @@ pub fn fillet(p: &Palette) -> container::Style {
 
 /// Active sidebar item: gold2 text on gold-soft (the 3 px brass left bar is
 /// added by the layout in `main.rs`).
-pub fn button_nav_active(p: &Palette, _status: button::Status) -> button::Style {
+pub fn button_nav_active(p: &Palette, status: button::Status) -> button::Style {
+    let wash = match status {
+        button::Status::Hovered | button::Status::Pressed => 0.22,
+        _ => 0.16,
+    };
     button::Style {
-        background: Some(Background::Color(p.gold_soft)),
+        background: Some(Background::Color(alpha(p.gold, wash))),
         text_color: p.gold2,
         border: Border {
             color: p.gold,
@@ -1064,5 +1219,26 @@ pub fn button_nav_active(p: &Palette, _status: button::Status) -> button::Style 
             radius: radius::BUTTON.into(),
         },
         ..button_style(None, p.gold2)
+    }
+}
+
+/// Clickable card in the wide-window side panel («Сегодня» → calendar):
+/// looks like [`card`], brass border brightens on hover.
+pub fn aside_card(p: &Palette, status: button::Status) -> button::Style {
+    let c = card(p);
+    let hovered = matches!(status, button::Status::Hovered | button::Status::Pressed);
+    button::Style {
+        background: c.background,
+        text_color: p.text,
+        border: Border {
+            color: if hovered {
+                alpha(p.gold, 0.70)
+            } else {
+                c.border.color
+            },
+            ..c.border
+        },
+        shadow: c.shadow,
+        snap: true,
     }
 }
