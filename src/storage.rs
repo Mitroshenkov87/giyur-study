@@ -288,6 +288,7 @@ fn fill(s: &mut State) {
 /// Map fields that must be JSON objects (js/storage.js importJSON list).
 const OBJECT_FIELDS: &[&str] = &[
     "lessonsRead",
+    "studyMode",
     "cards",
     "questions",
     "best",

@@ -399,7 +399,13 @@ pub fn build<'a>(
                 .iter()
                 .filter_map(|id| lib.question(id).map(|(q, _)| q))
                 .collect();
-            util::shuffle(&pool, rng)
+            if opts.mode == Mode::Retry {
+                util::shuffle(&pool, rng)
+            } else {
+                // study::self_check_ids / rehearsal_ids already order the
+                // questions (new first, easy → hard): keep that order.
+                pool
+            }
         }
         // The timed exam is built by build_timed, not E.build.
         Mode::Timed => Vec::new(),

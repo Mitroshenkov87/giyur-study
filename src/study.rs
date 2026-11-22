@@ -99,11 +99,16 @@ fn difficulty_rank(q: &Question) -> u8 {
     }
 }
 
-/// Pick up to `n` question ids: not-yet-known first, then by difficulty
+/// Pick up to `n` question ids: not yet `done` first, then by difficulty
 /// (easy → hard), keeping bank order otherwise. Deterministic.
-fn pick(qs: Vec<&Question>, state: &State, n: usize) -> Vec<String> {
+fn pick(
+    qs: Vec<&Question>,
+    state: &State,
+    n: usize,
+    done: fn(&State, &str) -> bool,
+) -> Vec<String> {
     let mut qs: Vec<(usize, &Question)> = qs.into_iter().enumerate().collect();
-    qs.sort_by_key(|(i, q)| (is_known(state, q.id()), difficulty_rank(q), *i));
+    qs.sort_by_key(|(i, q)| (done(state, q.id()), difficulty_rank(q), *i));
     qs.into_iter()
         .take(n)
         .map(|(_, q)| q.id().to_string())
@@ -129,13 +134,19 @@ pub fn self_check_ids(
         .into_iter()
         .filter(|q| !q.is_open())
         .collect();
-    pick(qs, state, SELF_CHECK_SIZE)
+    pick(qs, state, SELF_CHECK_SIZE, is_known)
 }
 
-/// «Репетиция бейт-дина» for a section: its open questions, unrehearsed first.
+/// «Репетиция бейт-дина» for a section: its open questions, never
+/// rehearsed first (a «частично» grade must not pin the same few forever).
 pub fn rehearsal_ids(lib: &Library, sec: &SectionMeta, state: &State) -> Vec<String> {
     let user = Library::user_level(state);
-    pick(lib.section_interview(sec, user), state, REHEARSAL_SIZE)
+    pick(
+        lib.section_interview(sec, user),
+        state,
+        REHEARSAL_SIZE,
+        is_practiced,
+    )
 }
 
 // ---- Per-lesson prep ----
@@ -256,6 +267,16 @@ fn ratio(a: usize, b: usize) -> f64 {
     }
 }
 
+/// Score of one readiness part: a part with nothing in it (no cards, no
+/// questions at this level) counts as done, so its weight is not lost.
+fn part(a: usize, b: usize) -> f64 {
+    if b == 0 {
+        1.0
+    } else {
+        a as f64 / b as f64
+    }
+}
+
 /// Section exam readiness (docs/STRUCTURE.md §Готовность).
 pub fn readiness(lib: &Library, sec: &SectionMeta, state: &State) -> Readiness {
     let user: Level = Library::user_level(state);
@@ -270,7 +291,7 @@ pub fn readiness(lib: &Library, sec: &SectionMeta, state: &State) -> Readiness {
         .filter(|c| crate::srs::is_mastered(state, &c.id))
         .count();
     let cards_score = if cards.is_empty() {
-        0.0
+        1.0
     } else {
         cards
             .iter()
@@ -278,28 +299,39 @@ pub fn readiness(lib: &Library, sec: &SectionMeta, state: &State) -> Readiness {
             .sum::<f64>()
             / cards.len() as f64
     };
-    let (mut checks, mut checks_known, mut interview, mut interview_known) = (0, 0, 0, 0);
-    for q in lib.questions(sec, user) {
-        let known = is_known(state, q.id()) as usize;
-        if q.is_open() {
-            interview += 1;
-            interview_known += known;
-        } else {
-            checks += 1;
-            checks_known += known;
-        }
+    let (mut checks, mut checks_known) = (0, 0);
+    for q in lib
+        .questions(sec, user)
+        .into_iter()
+        .filter(|q| !q.is_open())
+    {
+        checks += 1;
+        checks_known += is_known(state, q.id()) as usize;
     }
+    let interview_qs = lib.section_interview(sec, user);
+    let interview = interview_qs.len();
+    let interview_known = interview_qs
+        .iter()
+        .filter(|q| is_known(state, q.id()))
+        .count();
     let best = Library::best(state, &sec.id);
     let test_score = (best.unwrap_or(0.0) / 100.0).clamp(0.0, 1.0);
     let score = W_CARDS * cards_score
-        + W_CHECKS * ratio(checks_known, checks)
-        + W_INTERVIEW * ratio(interview_known, interview)
+        + W_CHECKS * part(checks_known, checks)
+        + W_INTERVIEW * part(interview_known, interview)
         + W_TEST * test_score;
     let pct = (score * 100.0).round() as i64;
     let passed = best.map(|b| b >= PASS).unwrap_or(false);
-    let all_read = !lessons.is_empty() && read == lessons.len();
+    let all_read = read == lessons.len();
+    let started = read > 0
+        || best.is_some()
+        || cards.iter().any(|c| state.cards.contains_key(&c.id))
+        || lib
+            .questions(sec, user)
+            .iter()
+            .any(|q| is_practiced(state, q.id()));
 
-    let band = if pct == 0 {
+    let band = if !started || pct == 0 {
         Band::NotStarted
     } else if pct < 35 {
         Band::FirstSteps
@@ -312,27 +344,49 @@ pub fn readiness(lib: &Library, sec: &SectionMeta, state: &State) -> Readiness {
     };
 
     // Next step: read in order; then close the weakest read lesson's
-    // self-check; then cards, beit-din answers, the test.
+    // self-check; then cards, beit-din answers, the test; after that the
+    // part with the biggest weighted gap until «Готовы».
+    let weakest_lesson = || {
+        lessons
+            .iter()
+            .map(|l| (l, lesson_prep(lib, sec, &l.id, state)))
+            .filter(|(_, p)| p.checks > 0 && p.checks_known < p.checks)
+            .min_by(|a, b| {
+                ratio(a.1.checks_known, a.1.checks)
+                    .partial_cmp(&ratio(b.1.checks_known, b.1.checks))
+                    .unwrap_or(std::cmp::Ordering::Equal)
+            })
+            .map(|(l, p)| (l.id.clone(), ratio(p.checks_known, p.checks)))
+    };
     let next = if let Some(l) = lessons.iter().find(|l| !Library::is_read(state, &l.id)) {
         NextStep::Read(l.id.clone())
-    } else if let Some(l) = lessons
-        .iter()
-        .map(|l| (l, lesson_prep(lib, sec, &l.id, state)))
-        .filter(|(_, p)| p.checks > 0 && ratio(p.checks_known, p.checks) < 0.6)
-        .min_by(|a, b| {
-            ratio(a.1.checks_known, a.1.checks)
-                .partial_cmp(&ratio(b.1.checks_known, b.1.checks))
-                .unwrap_or(std::cmp::Ordering::Equal)
-        })
-        .map(|(l, _)| l)
-    {
-        NextStep::SelfCheck(l.id.clone())
+    } else if let Some((id, _)) = weakest_lesson().filter(|(_, r)| *r < 0.6) {
+        NextStep::SelfCheck(id)
     } else if !cards.is_empty() && cards_score < 0.5 {
         NextStep::Cards
     } else if interview > 0 && ratio(interview_known, interview) < 0.6 {
         NextStep::Rehearse
     } else if !passed {
         NextStep::Test
+    } else if band != Band::Ready {
+        let gaps = [
+            (W_CARDS * (1.0 - cards_score), 0),
+            (W_CHECKS * (1.0 - part(checks_known, checks)), 1),
+            (W_INTERVIEW * (1.0 - part(interview_known, interview)), 2),
+            (W_TEST * (1.0 - test_score), 3),
+        ];
+        let (_, which) = gaps
+            .iter()
+            .copied()
+            .fold((-1.0, 3), |acc, g| if g.0 > acc.0 { g } else { acc });
+        match which {
+            0 => NextStep::Cards,
+            1 => weakest_lesson()
+                .map(|(id, _)| NextStep::SelfCheck(id))
+                .unwrap_or(NextStep::Test),
+            2 => NextStep::Rehearse,
+            _ => NextStep::Test,
+        }
     } else if cards_mastered < cards.len() {
         NextStep::Cards
     } else {
@@ -567,5 +621,153 @@ mod tests {
     #[test]
     fn weights_sum_to_one() {
         assert!((W_CARDS + W_CHECKS + W_INTERVIEW + W_TEST - 1.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn done_only_when_ready() {
+        // Everything read and mastered, 60% of both question kinds, test 80%:
+        // 0.20 + 0.15 + 0.12 + 0.28 = 75% → «Почти готовы», not «пройден».
+        let lib = lib();
+        let mut state = State::default();
+        let sec = lib.section("kashrut").unwrap();
+        let user = Library::user_level(&state);
+        for l in lib.lessons(sec, user) {
+            state.lessons_read.insert(l.id.clone(), "2026-11-22".into());
+        }
+        for c in lib.section_cards(sec, user) {
+            state.cards.entry(c.id.clone()).or_default().m = true;
+        }
+        let closed: Vec<_> = lib
+            .questions(sec, user)
+            .into_iter()
+            .filter(|q| !q.is_open())
+            .collect();
+        for q in closed.iter().take((closed.len() * 6).div_ceil(10)) {
+            know(&mut state, q.id());
+        }
+        let open = lib.section_interview(sec, user);
+        for q in open.iter().take((open.len() * 6).div_ceil(10)) {
+            know(&mut state, q.id());
+        }
+        state.best.insert("kashrut".into(), 80.0);
+        let r = readiness(&lib, sec, &state);
+        assert!(r.pct < 80, "pct {}", r.pct);
+        assert_eq!(r.band, Band::Almost);
+        assert_ne!(r.next, NextStep::Done);
+    }
+
+    fn tiny_lib(cards: bool) -> Library {
+        let manifest = r#"{"sections":[{"id":"t","file":"t.json"}]}"#;
+        let section = format!(
+            r#"{{"id":"t","lessons":[{{"id":"t-1","cards":[{}]}}],
+               "questions":[{{"id":"t-q1","lessonId":"t-1","format":"tf","difficulty":"easy","answer":true}}]}}"#,
+            if cards { r#"{"id":"t-1-c1"}"# } else { "" }
+        );
+        Library::from_json(manifest, &[section.as_str()]).unwrap()
+    }
+
+    #[test]
+    fn empty_parts_count_as_done() {
+        // No cards and no open questions: the remaining parts can still
+        // reach 100% and «Готовы».
+        let lib = tiny_lib(false);
+        let sec = &lib.sections[0];
+        let mut state = State::default();
+        let r0 = readiness(&lib, sec, &state);
+        assert_eq!(r0.band, Band::NotStarted);
+        assert_eq!(r0.next, NextStep::Read("t-1".into()));
+        state.lessons_read.insert("t-1".into(), "2026-11-22".into());
+        know(&mut state, "t-q1");
+        state.best.insert("t".into(), 100.0);
+        let r = readiness(&lib, sec, &state);
+        assert_eq!(r.pct, 100);
+        assert_eq!(r.band, Band::Ready);
+        assert_eq!(r.next, NextStep::Done);
+        // With a card that is not mastered yet: ready by score, cards next.
+        let lib = tiny_lib(true);
+        let r = readiness(&lib, &lib.sections[0], &state);
+        assert_eq!(r.pct, 80);
+        assert_eq!(r.next, NextStep::Cards);
+    }
+
+    #[test]
+    fn band_edges() {
+        let lib = tiny_lib(true);
+        let sec = &lib.sections[0];
+        let mut state = State::default();
+        state.lessons_read.insert("t-1".into(), "2026-11-22".into());
+        // One unpractised card: read only = the empty interview part (20%).
+        assert_eq!(readiness(&lib, sec, &state).band, Band::FirstSteps);
+        know(&mut state, "t-q1"); // +25 → 45%
+        assert_eq!(readiness(&lib, sec, &state).band, Band::InProgress);
+        state.best.insert("t".into(), 70.0); // +24.5 → 70%, test not passed
+        assert_eq!(readiness(&lib, sec, &state).band, Band::Almost);
+        state.best.insert("t".into(), 80.0); // 73% < 80
+        assert_eq!(readiness(&lib, sec, &state).band, Band::Almost);
+        state.best.insert("t".into(), 100.0); // 80%, passed, all read
+        assert_eq!(readiness(&lib, sec, &state).band, Band::Ready);
+    }
+
+    #[test]
+    fn rehearsal_moves_on_after_a_partial_grade() {
+        let lib = lib();
+        let mut state = State::default();
+        let sec = lib.section("beit-din").unwrap();
+        let first = rehearsal_ids(&lib, sec, &state);
+        // Rehearsed but graded «частично» (streak 0): still not known…
+        for id in &first {
+            state.questions.insert(
+                id.clone(),
+                QuestionStat {
+                    n: 1,
+                    miss: 0.5,
+                    streak: 0,
+                    last: "2026-11-22".into(),
+                },
+            );
+        }
+        // …yet the next rehearsal brings new questions.
+        let second = rehearsal_ids(&lib, sec, &state);
+        assert!(second.iter().all(|id| !first.contains(id)));
+    }
+
+    #[test]
+    fn practice_runs_keep_the_picked_order_and_do_not_touch_best() {
+        use crate::exam::{self, BuildOpts, Mode};
+        let lib = lib();
+        let mut state = State::default();
+        let sec = lib.section("shabbat").unwrap();
+        let ids = self_check_ids(&lib, sec, "shabbat-2", &state);
+        let mut rng = rand::thread_rng();
+        let session = exam::build(
+            &lib,
+            &state,
+            BuildOpts {
+                mode: Mode::SelfCheck,
+                section_id: Some("shabbat".into()),
+                count: None,
+                only_unlocked: None,
+                ids: Some(ids.clone()),
+            },
+            &mut rng,
+        );
+        let got: Vec<String> = session.items.iter().map(|i| i.q.id().to_string()).collect();
+        assert_eq!(got, ids);
+        let today = chrono::NaiveDate::from_ymd_opt(2026, 11, 22).unwrap();
+        let res = exam::finish(&lib, &session, &mut state, today);
+        assert_eq!(res.mode, Mode::SelfCheck);
+        assert!(!state.best.contains_key("shabbat"));
+        assert_eq!(
+            state.exams.last().and_then(|e| e["mode"].as_str()),
+            Some("selfcheck")
+        );
+    }
+
+    #[test]
+    fn null_study_mode_does_not_lose_progress() {
+        let text = r#"{"app":"giyur-study","settings":{"level":"orthodox"},"xpTotal":42,"studyMode":null}"#;
+        let s = State::import_json(text, "2026-11-22").unwrap();
+        assert_eq!(s.xp_total, 42);
+        assert!(s.study_mode.is_empty());
     }
 }

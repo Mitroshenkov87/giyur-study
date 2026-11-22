@@ -272,7 +272,7 @@ impl Screen {
             icons::Kind::StarDavid,
             false,
             "Репетиция бейт-дина",
-            format!("Отработано {} из {}", rd.interview_known, rd.interview),
+            format!("Верно {} из {}", rd.interview_known, rd.interview),
             Msg::Rehearse,
             p,
         );
@@ -303,7 +303,7 @@ impl Screen {
         page = page.push(list);
 
         page = page.push(cta_row(
-            "Что-то забылось? Вернитесь к текстам уроков.",
+            "Что-то подзабылось? Вернитесь к текстам уроков.",
             "← Читать",
             Msg::Mode(StudyMode::Read),
             p,
@@ -485,7 +485,12 @@ fn readiness_card<'a>(
     let parts = column![
         bar_line(
             "Карточки",
-            format!("{} из {} выучено", rd.cards_mastered, rd.cards),
+            format!(
+                "{} из {} выучено · прогресс {}%",
+                rd.cards_mastered,
+                rd.cards,
+                (rd.cards_score * 100.0).round() as i64
+            ),
             rd.cards_score,
             p
         ),
@@ -497,7 +502,7 @@ fn readiness_card<'a>(
         ),
         bar_line(
             "Ответы для бейт-дина",
-            format!("{} из {} отработано", rd.interview_known, rd.interview),
+            format!("{} из {} верно", rd.interview_known, rd.interview),
             frac(rd.interview_known, rd.interview),
             p
         ),

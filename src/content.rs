@@ -705,11 +705,23 @@ impl Library {
             .collect()
     }
 
-    /// The section's open (interview) questions.
+    /// The section's open (interview) questions that belong to a lesson
+    /// visible at the user level (the ones shown under «Что спрашивают»).
     pub fn section_interview<'a>(&self, sec: &'a SectionMeta, user: Level) -> Vec<&'a Question> {
+        let visible: Vec<&str> = self
+            .lessons(sec, user)
+            .iter()
+            .map(|l| l.id.as_str())
+            .collect();
         self.questions(sec, user)
             .into_iter()
-            .filter(|q| q.is_open())
+            .filter(|q| {
+                q.is_open()
+                    && q.common()
+                        .lesson_id
+                        .as_deref()
+                        .is_some_and(|l| visible.contains(&l))
+            })
             .collect()
     }
 
