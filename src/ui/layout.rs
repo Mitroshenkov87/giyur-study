@@ -11,6 +11,9 @@
 //! slightly left of centre and the right side filled. On narrow windows the
 //! margins collapse first, then the aside goes, then the content shrinks.
 
+use iced::widget::{container, row, space};
+use iced::{Element, Length};
+
 /// Navigation column width.
 pub const NAV: f32 = 230.0;
 /// Reading width of the content column (cards, text).
@@ -50,6 +53,28 @@ pub const fn content_col() -> f32 {
 /// The group width with or without the aside (nav + 1 px divider + content).
 pub const fn group(aside: bool) -> f32 {
     NAV + 1.0 + content_col() + if aside { ASIDE } else { 0.0 }
+}
+
+/// The scrolled page row of the grid: the reading column (`width` wide,
+/// padded, clipped) plus `reserved` empty space on its right.
+///
+/// The column is forced to `Shrink` height. Inside the vertical scrollable
+/// the row's height is "compressed", and iced gives a child that asks for
+/// `Fill` height only as much as its siblings (here: an empty spacer, 0 px).
+/// Any screen whose widget tree contains a `Fill`-height element (a quote's
+/// accent bar, an expanded «у других течений» note, …) used to be clipped
+/// to nothing — e.g. lesson shabbat-1 opened blank.
+pub fn page<'a, Message: 'a>(
+    screen: Element<'a, Message>,
+    width: f32,
+    reserved: f32,
+) -> Element<'a, Message> {
+    let body = container(screen)
+        .padding([28.0, CONTENT_PAD])
+        .width(width)
+        .height(Length::Shrink)
+        .clip(true);
+    row![body, space().width(reserved)].into()
 }
 
 /// Lay the grid out for a window `width`; `want_aside` is the user setting.

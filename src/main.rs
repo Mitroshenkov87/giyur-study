@@ -6,10 +6,11 @@ use std::time::{Duration, Instant};
 use iced::widget::{button, column, container, image, row, scrollable, stack, text, Column};
 use iced::{Alignment, Element, Font, Length, Subscription, Task, Theme};
 
+use shorashim::storage;
 use shorashim::ui::app::{Action, Ctx, Deck, Route};
 use shorashim::ui::screens::{self, Current};
 use shorashim::ui::theme::{self, ThemeKind};
-use shorashim::ui::{assets, fonts, layout, widgets};
+use shorashim::ui::{assets, fonts, layout, nav, widgets};
 
 const MAIN_SCROLL: &str = "main-scroll";
 const ASIDE_SCROLL: &str = "aside-scroll";
@@ -31,8 +32,9 @@ enum Message {
 }
 
 fn theme_kind(ctx: &Ctx) -> ThemeKind {
-    if ctx.state.settings.theme == "parchment" {
-        ThemeKind::Parchment
+    let t = ctx.state.settings.theme.as_str();
+    if t == storage::LIGHT_THEME || t == storage::LEGACY_LIGHT_THEME {
+        ThemeKind::Leather
     } else {
         ThemeKind::Dark
     }
@@ -136,18 +138,8 @@ impl App {
     }
 
     fn sidebar(&self) -> Element<'_, Message> {
-        let p = theme::current();
-        let items: [(&str, Route); 8] = [
-            ("Карта", Route::Map),
-            ("Календарь", Route::Calendar),
-            ("Повторение", Route::Cards(Deck::Review)),
-            ("Экзамен", Route::Timed),
-            ("Тесты", Route::Exam(None)),
-            ("Прогресс", Route::Progress),
-            ("Настройки", Route::Settings),
-            ("Источники", Route::Sources),
-        ];
-        let active = nav_group(&self.route);
+        let p = theme::side_palette(theme::current());
+        let active = nav::group(&self.route);
         let mut col = Column::new()
             .spacing(2)
             .padding([28, 12])
@@ -176,12 +168,25 @@ impl App {
         .style(move |_, s| theme::button_nav(&p, s))
         .on_press(Message::Nav(Route::Map));
         col = col.push(brand).push(iced::widget::space().height(14));
-        for (i, (label, route)) in items.into_iter().enumerate() {
+        let main_p = theme::current();
+        for (i, item) in nav::ITEMS.iter().enumerate() {
             let is_active = active == Some(i);
+            if i > 0 {
+                // Thin divider between items, inset from the edges.
+                col = col.push(
+                    container(
+                        container(iced::widget::space())
+                            .width(Length::Fill)
+                            .height(1)
+                            .style(move |_| theme::nav_divider(&p)),
+                    )
+                    .padding([0, 12]),
+                );
+            }
             // 3 px brass left bar on the active item (transparent strut else).
             let bar = container(iced::widget::space())
                 .width(3)
-                .height(20)
+                .height(30)
                 .style(move |_| iced::widget::container::Style {
                     background: is_active.then_some(iced::Background::Color(p.gold)),
                     border: iced::Border {
@@ -190,16 +195,20 @@ impl App {
                     },
                     ..Default::default()
                 });
+            let label = column![
+                text(item.label).size(15).shaping(text::Shaping::Advanced),
+                text(item.subtitle)
+                    .size(11.5)
+                    .color(p.muted)
+                    .shaping(text::Shaping::Advanced),
+            ]
+            .spacing(1);
             let b = button(
-                container(
-                    row![bar, text(label).size(15).shaping(text::Shaping::Advanced)]
-                        .spacing(10)
-                        .align_y(Alignment::Center),
-                )
-                .center_y(Length::Fill),
+                container(row![bar, label].spacing(10).align_y(Alignment::Center))
+                    .center_y(Length::Fill),
             )
             .width(Length::Fill)
-            .height(theme::size::NAV)
+            .height(theme::size::NAV_ITEM)
             .padding([0, 12])
             .style(move |_, s| {
                 if is_active {
@@ -208,14 +217,26 @@ impl App {
                     theme::button_nav(&p, s)
                 }
             })
-            .on_press(Message::Nav(route));
-            col = col.push(b);
+            .on_press(Message::Nav(nav::route(i)));
+            let tip = container(
+                text(item.tooltip)
+                    .size(13)
+                    .color(main_p.text)
+                    .shaping(text::Shaping::Advanced),
+            )
+            .padding([7, 11])
+            .max_width(300);
+            col = col.push(
+                iced::widget::tooltip(b, tip, iced::widget::tooltip::Position::Right)
+                    .gap(6)
+                    .style(move |_| theme::tooltip(&main_p)),
+            );
         }
         let panel = container(col)
             .width(layout::NAV)
             .height(Length::Fill)
             .style(move |_| theme::sidebar(&p));
-        // Leather (dark) / darker klaf (parchment) under the side veil: the
+        // Leather (dark) / dark goatskin («Кожа») under the side veil: the
         // sidebar reads as a different material than the window.
         match assets::img(p.side_texture) {
             Some(handle) => stack![
@@ -240,15 +261,16 @@ impl App {
                 .height(Length::Fill)
                 .style(move |_| theme::divider_v(&p))
         };
-        let body = container(self.screen.view(&self.ctx).map(Message::Screen))
-            .padding([28.0, layout::CONTENT_PAD])
-            .width(g.content)
-            .clip(true);
         // The scrollable spans everything right of the nav, so the wheel
         // works over the margins and the scrollbar sits at the window edge;
         // the aside is drawn on top, fixed, in the reserved space.
         let reserved = if g.aside { layout::ASIDE } else { 0.0 } + g.right;
-        let scroll = scrollable(row![body, iced::widget::space().width(reserved)])
+        let page = layout::page(
+            self.screen.view(&self.ctx).map(Message::Screen),
+            g.content,
+            reserved,
+        );
+        let scroll = scrollable(page)
             .id(MAIN_SCROLL)
             .width(Length::Fill)
             .height(Length::Fill);
@@ -446,23 +468,8 @@ fn parse_route(r: &str) -> Option<Route> {
         "progress" => Route::Progress,
         "settings" => Route::Settings,
         "sources" => Route::Sources,
-        _ => return None,
-    })
-}
-
-/// Which sidebar item is highlighted for a route.
-fn nav_group(r: &Route) -> Option<usize> {
-    Some(match r {
-        Route::Map | Route::Section(_) | Route::Lesson(_) => 0,
-        Route::Calendar => 1,
-        Route::Cards(Deck::Review) => 2,
-        Route::Cards(_) => 0,
-        Route::Timed | Route::TimedRun { .. } => 3,
-        Route::Exam(_) | Route::ExamRun(_) => 4,
-        Route::Progress => 5,
-        Route::Settings | Route::Level { .. } => 6,
-        Route::Sources => 7,
-        Route::Welcome => return None,
+        // A sidebar label, current or pre-v0.5 («Уроки», «Карта», …).
+        _ => return nav::find(r).map(nav::route),
     })
 }
 

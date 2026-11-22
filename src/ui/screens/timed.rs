@@ -1,4 +1,4 @@
-//! «Экзамен» — timed quiz-show (PARITY §10): intro/setup, run, results.
+//! «Викторина» (was «Экзамен») — timed quiz-show (PARITY §10): intro/setup, run, results.
 //!
 //! Three PWA routes (`#/timed`, `#/timed-run`, `#/timed-results`) are phases
 //! of one screen; `Route::Timed` / `Route::TimedRun { retry_ids }` are the
@@ -935,7 +935,7 @@ impl Screen {
     pub fn dialog<'a>(&'a self, _ctx: &'a Ctx) -> Option<Element<'a, Msg>> {
         match &self.phase {
             Phase::Run(run) if run.confirm_quit => Some(confirm_dialog(
-                "Выйти из экзамена?",
+                "Выйти из викторины?",
                 "Уже данные ответы сохранятся в статистике, но результат игры не будет засчитан.",
             )),
             _ => None,
@@ -981,7 +981,7 @@ impl Screen {
                 timer_ring(1.0, secs, 96.0, false, false),
                 column![
                     kicker("РЕЖИМ ТЕЛЕВИКТОРИНЫ"),
-                    txt("Экзамен").size(37.0).font(SERIF_BOLD).color(p.gold2),
+                    txt("Викторина").size(37.0).font(SERIF_BOLD).color(p.gold2),
                     muted(
                         "Сначала — вопрос. Через пару секунд — четыре варианта ответа и таймер. \
                          Один выбор, без права на исправление.",
@@ -1553,10 +1553,7 @@ impl Screen {
             .spacing(10)
             .width(Length::Fill)
             .align_x(Alignment::Center);
-        head = head.push(kicker(format!(
-            "ЭКЗАМЕН (НА ВРЕМЯ) · {} С НА ВОПРОС",
-            res.seconds
-        )));
+        head = head.push(kicker(format!("ВИКТОРИНА · {} С НА ВОПРОС", res.seconds)));
         head = head.push(result_ring(res.pct, 150.0));
         head = head.push(
             txt(title)

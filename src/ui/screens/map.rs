@@ -747,7 +747,7 @@ fn header<'a>(ctx: &'a Ctx, p: theme::Palette) -> Element<'a, Msg> {
     })
     .on_press(Msg::Go(Route::Level { reopened: true }));
 
-    let left = column![chip, widgets::heading("Карта разделов", 1)]
+    let left = column![chip, widgets::heading("Уроки", 1)]
         .spacing(10)
         .align_x(Alignment::Start);
 
@@ -956,7 +956,7 @@ fn reminders<'a>(ctx: &'a Ctx, p: theme::Palette) -> Element<'a, Msg> {
 }
 
 // ---------------------------------------------------------------------------
-// Timed exam CTA (§3)
+// «Викторина» (timed quiz) CTA (§3)
 // ---------------------------------------------------------------------------
 
 fn timed_cta<'a>(_p: theme::Palette) -> Element<'a, Msg> {
@@ -965,7 +965,7 @@ fn timed_cta<'a>(_p: theme::Palette) -> Element<'a, Msg> {
         row![
             icons::icon(icons::Kind::Timer, 26.0, tq.gold2),
             column![
-                txt("Экзамен")
+                txt("Викторина")
                     .size(theme::text::BODY)
                     .font(fonts::SANS_BOLD)
                     .color(tq.text),
