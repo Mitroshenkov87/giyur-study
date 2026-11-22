@@ -1,0 +1,17 @@
+# Settings through commands and through the screen.
+{"cmd":"press","label":"Начать"}
+{"cmd":"press","contains":"Ортодоксальный"}
+{"cmd":"set","key":"theme","value":"leather","expect":{"reply":{"ok":true}}}
+{"cmd":"state","texts":false,"expect":{"reply":{"settings":{"theme":"leather"}}}}
+{"cmd":"set","key":"theme","value":"dark"}
+{"cmd":"state","texts":false,"expect":{"reply":{"settings":{"theme":"dark"}}}}
+# "parchment" is the light theme's pre-v0.5 name: stored as "leather".
+{"cmd":"set","key":"theme","value":"parchment","expect":{"reply":{"ok":true}}}
+{"cmd":"state","texts":false,"expect":{"reply":{"settings":{"theme":"leather"}}}}
+{"cmd":"set","key":"font_step","value":2}
+{"cmd":"navigate","to":"settings","expect":{"screen":"settings"}}
+{"cmd":"state","expect":{"screen":"settings"}}
+# Text-less sliding switches are listed (label «вкл» / «выкл») and pressable.
+{"cmd":"navigate","to":"Настройки","expect":{"control":"Settings(ToggleTranslit)"}}
+{"cmd":"press","id":"Settings(ToggleTranslit)"}
+{"cmd":"state","texts":false,"expect":{"reply":{"settings":{"translit":false}}}}

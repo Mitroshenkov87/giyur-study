@@ -1,4 +1,4 @@
-{"version":"1.0.0","contentVersion":"2026-11-15","reviewStatus":"требует проверки раввином",
+{"version":"1.0.0","contentVersion":"2026-11-22","reviewStatus":"требует проверки раввином",
  "sections":[
   {"id":"osnovy","file":"sections/01-osnovy.json"},
   {"id":"ivrit","file":"sections/02-ivrit.json"},

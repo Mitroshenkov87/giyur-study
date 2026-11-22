@@ -27,6 +27,18 @@ jobs:
         run: cargo test --all-targets
       - name: Build release
         run: cargo build --release
+      - name: Automation smoke (release exe, headless script)
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath target/release/shorashim.exe -ArgumentList '--headless','--script','tests/scripts/01-navigate.jsonl','--today','2026-11-22' -Wait -NoNewWindow -PassThru -RedirectStandardOutput smoke.jsonl -RedirectStandardError smoke.err
+          Get-Content smoke.jsonl
+          if ($p.ExitCode -ne 0) { Get-Content smoke.err; exit 1 }
+          if ((Get-Content smoke.jsonl).Count -lt 10) { Write-Error "too few replies"; exit 1 }
+      - name: Automation smoke (console companion shorashim-ctl.exe)
+        shell: pwsh
+        run: |
+          target/release/shorashim-ctl.exe --headless --script tests/scripts/02-lesson.jsonl --today 2026-11-22
+          if ($LASTEXITCODE -ne 0) { exit 1 }
       - name: Package
         shell: pwsh
         run: |
@@ -34,6 +46,9 @@ jobs:
           # PR refs look like "1/merge"; keep the file name path-safe.
           $ref = "${{ github.ref_name }}" -replace '[\\/]', '-'
           Copy-Item target/release/shorashim.exe "dist/Shorashim-$ref-windows-x64.exe"
+          # Console companion for command control (docs/AUTOMATION.md); keeps
+          # its plain name, which `shorashim-ctl launch` relies on.
+          Copy-Item target/release/shorashim-ctl.exe dist/
           Copy-Item LICENSE, NOTICE dist/
       - uses: actions/upload-artifact@v4
         with:
@@ -45,6 +60,7 @@ jobs:
         with:
           files: |
             dist/Shorashim-${{ github.ref_name }}-windows-x64.exe
+            dist/shorashim-ctl.exe
             dist/LICENSE
             dist/NOTICE
 
@@ -60,3 +76,5 @@ jobs:
         run: cargo test --all-targets
       - name: Build
         run: cargo build --release
+      - name: Automation smoke (release binary, headless script)
+        run: target/release/shorashim --headless --script tests/scripts/01-navigate.jsonl --today 2026-11-22

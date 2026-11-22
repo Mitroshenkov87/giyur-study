@@ -1,5 +1,5 @@
 //! Map / home screen (PARITY §3): header with level chip, goal ring, streak
-//! and due stats, reminder banners, timed-exam CTA and the vertical path of
+//! and due stats, reminder banners, the «Маалот» CTA and the vertical path of
 //! section nodes. Also hosts the small canvas icon/emblem helpers shared by
 //! the sibling screens (welcome, level, section, sources).
 
@@ -45,6 +45,14 @@ pub(crate) mod icons {
         Shuffle,
         /// Balance scales: the beit din.
         Scales,
+        /// A circle with one half filled: the «50 на 50» lifeline.
+        Half,
+        /// A speech bubble: «Спросить раввина».
+        Speech,
+        /// Two rails and rungs: the «Маалот» ladder quiz.
+        Ladder,
+        /// A shield: a safe step of the ladder.
+        Shield,
     }
 
     struct Icon {
@@ -352,6 +360,70 @@ pub(crate) mod icons {
                                 b.quadratic_curve_to(pt(cx, 17.0), pt(cx + 3.0, 13.0));
                                 b.line_to(pt(cx - 3.0, 13.0));
                             }
+                        }),
+                        st,
+                    );
+                }
+                Kind::Half => {
+                    frame.fill(
+                        &path(&|b| {
+                            b.move_to(pt(12.0, 3.5));
+                            b.arc(canvas::path::Arc {
+                                center: pt(12.0, 12.0),
+                                radius: 8.5 * s,
+                                start_angle: Radians(-std::f32::consts::FRAC_PI_2),
+                                end_angle: Radians(std::f32::consts::FRAC_PI_2),
+                            });
+                            b.close();
+                        }),
+                        self.color,
+                    );
+                    frame.stroke(&Path::circle(pt(12.0, 12.0), 8.5 * s), st);
+                }
+                Kind::Speech => {
+                    frame.stroke(
+                        &path(&|b| {
+                            b.move_to(pt(6.0, 4.5));
+                            b.line_to(pt(18.0, 4.5));
+                            b.quadratic_curve_to(pt(21.0, 4.5), pt(21.0, 7.5));
+                            b.line_to(pt(21.0, 13.5));
+                            b.quadratic_curve_to(pt(21.0, 16.5), pt(18.0, 16.5));
+                            b.line_to(pt(11.0, 16.5));
+                            b.line_to(pt(6.5, 20.5));
+                            b.line_to(pt(7.0, 16.5));
+                            b.line_to(pt(6.0, 16.5));
+                            b.quadratic_curve_to(pt(3.0, 16.5), pt(3.0, 13.5));
+                            b.line_to(pt(3.0, 7.5));
+                            b.quadratic_curve_to(pt(3.0, 4.5), pt(6.0, 4.5));
+                            b.close();
+                            line(b, 7.5, 9.0, 16.5, 9.0);
+                            line(b, 7.5, 12.5, 13.5, 12.5);
+                        }),
+                        st,
+                    );
+                }
+                Kind::Ladder => {
+                    frame.stroke(
+                        &path(&|b| {
+                            line(b, 7.0, 2.5, 7.0, 21.5);
+                            line(b, 17.0, 2.5, 17.0, 21.5);
+                            for y in [6.0_f32, 10.5, 15.0, 19.5] {
+                                line(b, 7.0, y, 17.0, y);
+                            }
+                        }),
+                        st,
+                    );
+                }
+                Kind::Shield => {
+                    frame.stroke(
+                        &path(&|b| {
+                            b.move_to(pt(12.0, 3.0));
+                            b.line_to(pt(19.5, 6.0));
+                            b.line_to(pt(19.5, 11.5));
+                            b.bezier_curve_to(pt(19.5, 16.0), pt(16.0, 19.5), pt(12.0, 21.0));
+                            b.bezier_curve_to(pt(8.0, 19.5), pt(4.5, 16.0), pt(4.5, 11.5));
+                            b.line_to(pt(4.5, 6.0));
+                            b.close();
                         }),
                         st,
                     );
@@ -971,27 +1043,29 @@ fn reminders<'a>(ctx: &'a Ctx, p: theme::Palette) -> Element<'a, Msg> {
 }
 
 // ---------------------------------------------------------------------------
-// «Викторина» (timed quiz) CTA (§3)
+// «Маалот» ladder quiz CTA (§3)
 // ---------------------------------------------------------------------------
 
 fn timed_cta<'a>(_p: theme::Palette) -> Element<'a, Msg> {
-    let tq = theme::TIMED;
+    // The banner is oxblood leather in both themes, so its text and brass
+    // come from the dark palette: light ink on dark leather stays readable.
+    let tq = theme::DARK;
     button(
         row![
-            icons::icon(icons::Kind::Timer, 26.0, tq.gold2),
+            icons::icon(icons::Kind::Ladder, 26.0, tq.gold2),
             column![
-                txt("Викторина")
+                txt("Маалот — лестница знаний")
                     .size(theme::text::BODY)
                     .font(fonts::SANS_BOLD)
                     .color(tq.text),
-                txt("Вопрос, четыре варианта и таймер — как в телевикторине")
+                txt("15 ступеней от лёгких вопросов к трудным, три подсказки")
                     .size(theme::text::SMALL)
                     .color(tq.muted),
             ]
             .spacing(2)
             .width(Length::Fill),
             container(
-                txt("Играть")
+                txt("Подняться")
                     .size(theme::text::SMALL)
                     .font(fonts::SANS_BOLD)
                     .color(tq.on_gold)
@@ -999,7 +1073,7 @@ fn timed_cta<'a>(_p: theme::Palette) -> Element<'a, Msg> {
             .padding([0.0, 18.0])
             .center_y(Length::Fixed(theme::size::PILL))
             .style(move |_| iced::widget::container::Style {
-                background: Some(v_gradient(tq.gold2, tq.gold)),
+                background: Some(v_gradient(tq.brass_hi, tq.brass_lo)),
                 border: Border {
                     radius: theme::radius::PILL.into(),
                     ..Border::default()

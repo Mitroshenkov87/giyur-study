@@ -5,7 +5,7 @@
 //! Pure logic, no UI: the section and lesson screens render what this
 //! module computes.
 
-use crate::content::{Library, Question, SectionMeta, PASS};
+use crate::content::{Difficulty, Library, Question, SectionMeta, PASS};
 use crate::storage::{Level, State};
 
 /// The two ways to work with a section.
@@ -79,6 +79,54 @@ pub fn is_known(state: &State, qid: &str) -> bool {
 /// Answered (or rehearsed) at least once.
 pub fn is_practiced(state: &State, qid: &str) -> bool {
     state.questions.get(qid).map(|s| s.n > 0).unwrap_or(false)
+}
+
+/// Questions of one difficulty level: how many exist at the user's level
+/// and how many were answered right last time («освоено»).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct LevelCount {
+    pub difficulty: Difficulty,
+    pub total: usize,
+    pub known: usize,
+}
+
+impl LevelCount {
+    /// «Лёгкие» / «Средние» / «Трудные».
+    pub fn title(&self) -> &'static str {
+        match self.difficulty {
+            Difficulty::Easy => "Лёгкие",
+            Difficulty::Medium => "Средние",
+            Difficulty::Hard => "Трудные",
+        }
+    }
+}
+
+/// Easy / medium / hard counts of a set of questions (missing difficulty
+/// counts as medium, as in the exam ramp).
+pub fn level_counts<'q>(
+    questions: impl IntoIterator<Item = &'q Question>,
+    state: &State,
+) -> [LevelCount; 3] {
+    let mut out = [Difficulty::Easy, Difficulty::Medium, Difficulty::Hard].map(|d| LevelCount {
+        difficulty: d,
+        total: 0,
+        known: 0,
+    });
+    for q in questions {
+        let i = match q.common().difficulty {
+            Some(Difficulty::Easy) => 0,
+            Some(Difficulty::Hard) => 2,
+            _ => 1,
+        };
+        out[i].total += 1;
+        out[i].known += is_known(state, q.id()) as usize;
+    }
+    out
+}
+
+/// Level counts of one section at the user's level.
+pub fn section_level_counts(lib: &Library, sec: &SectionMeta, state: &State) -> [LevelCount; 3] {
+    level_counts(lib.questions(sec, Library::user_level(state)), state)
 }
 
 /// Card progress 0..=1: mastered = 1, otherwise SRS level / 5.
@@ -438,6 +486,24 @@ mod tests {
                 last: "2026-11-22".into(),
             },
         );
+    }
+
+    #[test]
+    fn level_counts_add_up_and_track_known() {
+        let lib = lib();
+        let mut state = State::default();
+        let sec = lib.section("shabbat").unwrap();
+        let all = lib.questions(sec, Library::user_level(&state));
+        let c = section_level_counts(&lib, sec, &state);
+        assert_eq!(c.iter().map(|x| x.total).sum::<usize>(), all.len());
+        assert!(c.iter().all(|x| x.total > 0 && x.known == 0));
+        let easy = all
+            .iter()
+            .find(|q| q.common().difficulty == Some(Difficulty::Easy))
+            .unwrap();
+        know(&mut state, easy.id());
+        let c = section_level_counts(&lib, sec, &state);
+        assert_eq!((c[0].title(), c[0].known), ("Лёгкие", 1));
     }
 
     #[test]

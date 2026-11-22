@@ -1,0 +1,13 @@
+# «Тесты» setup: the three mode tiles must be laid out (non-zero height) and
+# pressable. Regression: inside the page scrollable they used to collapse to
+# zero height, so the probe found no Exam(Mode(..)) controls.
+{"cmd":"press","label":"Начать"}
+{"cmd":"press","contains":"Ортодоксальный"}
+{"cmd":"navigate","to":"exam","expect":{"screen":"exam","control":"Exam(Mode(Section))"}}
+{"cmd":"state","expect":{"control":"Exam(Mode(Beitdin))"}}
+{"cmd":"press","id":"Exam(Mode(General))"}
+{"cmd":"press","label":"10"}
+{"cmd":"press","id":"Exam(Start)","expect":{"route":"examrun:general"}}
+{"cmd":"navigate","to":"exam"}
+{"cmd":"press","contains":"Пробный бейт-дин"}
+{"cmd":"press","id":"Exam(Start)","expect":{"route":"examrun:beitdin"}}

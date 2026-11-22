@@ -66,8 +66,6 @@ pub enum Msg {
     SetFont(i64),
     ToggleUnlockAll,
     ToggleTranslit,
-    ToggleTimedSound,
-    ToggleTimedAuto,
     SetSeconds(i64),
     SetGoal(i64),
     Export,
@@ -122,20 +120,8 @@ impl Screen {
                 ctx.toast("Сохранено", "", "");
                 Action::None
             }
-            Msg::ToggleTimedSound => {
-                ctx.state.settings.timed_sound = !ctx.state.settings.timed_sound;
-                ctx.save();
-                ctx.toast("Сохранено", "", "");
-                Action::None
-            }
-            Msg::ToggleTimedAuto => {
-                ctx.state.settings.timed_auto = !ctx.state.settings.timed_auto;
-                ctx.save();
-                ctx.toast("Сохранено", "", "");
-                Action::None
-            }
             Msg::SetSeconds(v) => {
-                ctx.state.settings.timed_seconds = if v == 20 { 20 } else { 30 };
+                ctx.state.settings.timed_seconds = crate::ladder::sanitize_seconds(v);
                 ctx.save();
                 Action::None
             }
@@ -413,26 +399,16 @@ impl Screen {
             ),
             divider(p),
             set_row(
-                "Викторина",
-                "Секунд на вопрос".to_string(),
-                row![
-                    widgets::choice("20 с", s.timed_seconds == 20, false, Msg::SetSeconds(20)),
-                    widgets::choice("30 с", s.timed_seconds != 20, false, Msg::SetSeconds(30)),
-                ]
-                .spacing(4)
-                .into(),
-            ),
-            divider(p),
-            set_row(
-                "Звук в викторине",
-                "Короткие сигналы: таймер, верно/неверно".to_string(),
-                switch(s.timed_sound, Msg::ToggleTimedSound, p),
-            ),
-            divider(p),
-            set_row(
-                "Автопереход в викторине",
-                "Следующий вопрос через 2 секунды (можно поставить на паузу)".to_string(),
-                switch(s.timed_auto, Msg::ToggleTimedAuto, p),
+                "Маалот",
+                "Таймер на вопрос в лестнице знаний".to_string(),
+                {
+                    let cur = crate::ladder::timer_seconds(&ctx.state);
+                    let mut r = iced::widget::Row::new().spacing(4);
+                    for (v, label) in crate::ladder::TIMER_CHOICES {
+                        r = r.push(widgets::choice(label, cur == v, false, Msg::SetSeconds(v)));
+                    }
+                    r.into()
+                },
             ),
             container(
                 txt("שְׁמַע יִשְׂרָאֵל")
@@ -865,7 +841,7 @@ fn switch<'a>(on: bool, msg: Msg, p: Palette) -> Element<'a, Msg> {
     } else {
         row![knob, space::horizontal().width(Length::Fixed(22.0))].into()
     };
-    button(
+    let button = button(
         container(inner)
             .padding(4.0)
             .width(Length::Fixed(50.0))
@@ -884,6 +860,8 @@ fn switch<'a>(on: bool, msg: Msg, p: Palette) -> Element<'a, Msg> {
     )
     .padding(0)
     .style(|_, _| iced::widget::button::Style::default())
-    .on_press(msg)
-    .into()
+    .on_press(msg);
+    // The switch has no text of its own: report its state so the automation
+    // probe lists it as a control (id = its message, e.g. Settings(ToggleTranslit)).
+    crate::automation::reported(button, if on { "вкл" } else { "выкл" })
 }
