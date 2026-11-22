@@ -39,7 +39,10 @@ impl App {
         let mut ctx = Ctx::load();
         theme::set_current(theme_kind(&ctx));
         let route = if ctx.state.onboarded {
-            Route::Map
+            std::env::var("GIYUR_START_ROUTE")
+                .ok()
+                .and_then(|r| parse_route(&r))
+                .unwrap_or(Route::Map)
         } else {
             Route::Welcome
         };
@@ -237,6 +240,29 @@ impl App {
     fn title(&self) -> String {
         "Giyur Study — подготовка к гиюру".to_string()
     }
+}
+
+/// Debug/screenshot hook: `GIYUR_START_ROUTE=section:shabbat` etc.
+fn parse_route(r: &str) -> Option<Route> {
+    let (k, v) = r.split_once(':').unwrap_or((r, ""));
+    let v = v.to_string();
+    Some(match k {
+        "map" => Route::Map,
+        "level" => Route::Level { reopened: true },
+        "section" => Route::Section(v),
+        "lesson" => Route::Lesson(v),
+        "cards" if v == "review" => Route::Cards(Deck::Review),
+        "cards" => Route::Cards(Deck::Lesson(v)),
+        "deck" => Route::Cards(Deck::Section(v)),
+        "exam" => Route::Exam(if v.is_empty() { None } else { Some(v) }),
+        "examrun" => Route::ExamRun(giyur_study::ui::app::ExamSpec::Section(v)),
+        "timed" => Route::Timed,
+        "timedrun" => Route::TimedRun { retry_ids: None },
+        "progress" => Route::Progress,
+        "settings" => Route::Settings,
+        "sources" => Route::Sources,
+        _ => return None,
+    })
 }
 
 /// Which sidebar item is highlighted for a route.

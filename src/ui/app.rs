@@ -98,6 +98,9 @@ pub struct Ctx {
     pub today_override: Option<NaiveDate>,
     /// Test hook: timed-exam seconds override (PWA `?testTimer=`).
     pub test_timer: Option<u32>,
+    /// False when an existing progress file could not be read: never
+    /// overwrite it (PARITY: storage unavailable → progress not saved).
+    pub writable: bool,
 }
 
 impl Ctx {
@@ -106,7 +109,7 @@ impl Ctx {
             .map(PathBuf::from)
             .unwrap_or_else(storage::default_path);
         let today = chrono::Local::now().date_naive();
-        let state = storage::load(&path, &crate::util::day_key(today));
+        let (state, writable) = storage::load_checked(&path, &crate::util::day_key(today));
         let mut ctx = Ctx {
             lib: Library::embedded(),
             state,
@@ -116,10 +119,20 @@ impl Ctx {
             test_timer: std::env::var("GIYUR_TEST_TIMER")
                 .ok()
                 .and_then(|v| v.parse().ok()),
+            writable,
         };
-        // Spend streak freezes for missed days on start (js/game.js).
+        if !writable {
+            ctx.toast(
+                "Файл прогресса недоступен",
+                "Прогресс не сохранится, пока файл занят или повреждён.",
+                "⚠",
+            );
+        }
+        // js/game.js G.init: spend streak freezes for missed days, then
+        // unlock already-earned badges quietly.
         let today = ctx.today();
         game::apply_freezes(&mut ctx.state, today);
+        let _ = game::check_badges(&ctx.lib, &mut ctx.state, today);
         ctx.save();
         ctx
     }
@@ -135,6 +148,9 @@ impl Ctx {
 
     /// Persist progress (atomic write). Errors are reported as a toast.
     pub fn save(&mut self) {
+        if !self.writable {
+            return;
+        }
         if let Err(e) = storage::save(&self.path, &self.state) {
             self.toast("Не удалось сохранить прогресс", &e.to_string(), "⚠");
         }

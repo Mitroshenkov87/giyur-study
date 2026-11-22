@@ -161,6 +161,9 @@ impl Screen {
                 Some(Confirm::Import(text)) => match State::import_json(&text, &ctx.today_key()) {
                     Ok(state) => {
                         ctx.state = state;
+                        let today = ctx.today();
+                        let _ = crate::game::check_badges(&ctx.lib, &mut ctx.state, today);
+                        ctx.writable = true;
                         ctx.save();
                         ctx.toast("Прогресс импортирован", "", "");
                         Action::SettingsChanged

@@ -642,7 +642,13 @@ fn normalize_setup(setup: &mut Setup, ctx: &Ctx, preset: Option<&String>) {
 fn build_run(ctx: &Ctx, spec: &ExamSpec) -> Option<Run> {
     let (mode, section_id, count, only_unlocked, ids) = match spec {
         ExamSpec::Section(id) => (Mode::Section, Some(id.clone()), None, None, None),
-        ExamSpec::General { count } => (Mode::General, None, Some(*count), Some(true), None),
+        ExamSpec::General { count } => (
+            Mode::General,
+            None,
+            Some(*count),
+            Some(setup_store().lock().expect("setup lock").only_unlocked),
+            None,
+        ),
         ExamSpec::BeitDin { count } => (Mode::Beitdin, None, Some(*count), None, None),
         ExamSpec::Retry { ids } => (Mode::Retry, None, None, None, Some(ids.clone())),
     };
