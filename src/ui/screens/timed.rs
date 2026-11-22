@@ -145,9 +145,9 @@ fn divider<'a>() -> Element<'a, Msg> {
 
 fn tier_word(d: Option<Difficulty>) -> &'static str {
     match d {
-        Some(Difficulty::Easy) => "лёгкий",
-        Some(Difficulty::Hard) => "трудный",
-        _ => "средний",
+        Some(Difficulty::Easy) => "лёгкая",
+        Some(Difficulty::Hard) => "трудная",
+        _ => "средняя",
     }
 }
 
@@ -592,6 +592,9 @@ struct Run {
     confirm_at: Option<Instant>,
     /// Screenshot hook: the clock does not run.
     frozen: bool,
+    /// Set the moment the run ends (fall, time out, top or walk away):
+    /// `ladder::finish` has run, so leaving the screen keeps the result.
+    done: Option<Box<Results>>,
 }
 
 impl Run {
@@ -605,6 +608,7 @@ impl Run {
             confirm: false,
             confirm_at: None,
             frozen: false,
+            done: None,
         };
         run.start_clock();
         run
@@ -642,6 +646,10 @@ impl Run {
         let today = ctx.today();
         let right = self.ladder.answer(&mut ctx.state, k, today);
         ctx.save();
+        if self.ladder.outcome.is_some() {
+            // Fall or top: record the result now, not on «Итоги».
+            self.finish(ctx);
+        }
         self.reveal = Some(Reveal {
             step,
             no,
@@ -651,6 +659,19 @@ impl Run {
         });
     }
 
+    /// Run `ladder::finish` once and keep the result.
+    fn finish(&mut self, ctx: &mut Ctx) {
+        if self.done.is_none() {
+            let res = finish_run(ctx, self);
+            self.done = Some(Box::new(res));
+        }
+    }
+
+    /// The question's time is up but no tick has handled it yet.
+    fn expired(&self) -> bool {
+        !self.frozen && self.secs > 0 && self.playing() && Instant::now() >= self.timer_end
+    }
+
     /// From a right answer's reveal to the next step.
     fn advance(&mut self) {
         self.reveal = None;
@@ -658,7 +679,15 @@ impl Run {
     }
 
     fn tick(&mut self, ctx: &mut Ctx, now: Instant) {
-        if self.frozen || self.secs <= 0 || !self.playing() {
+        if self.frozen || self.secs <= 0 {
+            return;
+        }
+        // The time ran out before the dialog opened: close it, time out.
+        if self.confirm && self.confirm_at.is_some_and(|at| at >= self.timer_end) {
+            self.confirm = false;
+            self.confirm_at = None;
+        }
+        if !self.playing() {
             return;
         }
         let left = self.timer_end.saturating_duration_since(now);
@@ -783,7 +812,8 @@ fn demo_phase(ctx: &mut Ctx, mode: &str) -> Phase {
     match mode {
         "top" => {
             climb(&mut run, ctx, ladder::STEPS);
-            Phase::Results(Box::new(finish_run(ctx, &run)))
+            run.finish(ctx);
+            run.done.take().map(Phase::Results).unwrap_or(Phase::Setup)
         }
         "result" => {
             climb(&mut run, ctx, 7);
@@ -792,7 +822,8 @@ fn demo_phase(ctx: &mut Ctx, mode: &str) -> Phase {
                 .current()
                 .and_then(|s| (0..s.opts.len()).find(|&i| !s.opts[i].right));
             run.answer(ctx, wrong);
-            Phase::Results(Box::new(finish_run(ctx, &run)))
+            run.finish(ctx);
+            run.done.take().map(Phase::Results).unwrap_or(Phase::Setup)
         }
         _ => {
             climb(&mut run, ctx, 6);
@@ -851,9 +882,23 @@ impl Screen {
 
     /// Run → results (the only place `ladder::finish` is called in play).
     fn end(&mut self, ctx: &mut Ctx) {
-        if let Phase::Run(run) = &self.phase {
-            let res = finish_run(ctx, run);
-            self.phase = Phase::Results(Box::new(res));
+        if let Phase::Run(run) = &mut self.phase {
+            run.finish(ctx);
+            if let Some(res) = run.done.take() {
+                self.phase = Phase::Results(res);
+            }
+        }
+    }
+
+    /// The user leaves the screen (sidebar, map): a run in progress ends
+    /// as if walked away, so climbed steps, XP and the record are kept;
+    /// a finished run already has its result.
+    pub fn leave(&mut self, ctx: &mut Ctx) {
+        if let Phase::Run(run) = &mut self.phase {
+            if run.ladder.outcome.is_none() && run.ladder.climbed > 0 && !run.frozen {
+                run.ladder.walk_away();
+                run.finish(ctx);
+            }
         }
     }
 
@@ -867,14 +912,18 @@ impl Screen {
             Msg::ToMap => return Action::Go(Route::Map),
             Msg::Pick(k) => {
                 if let Phase::Run(run) = &mut self.phase {
-                    if run.can_pick(k) {
+                    if run.expired() {
+                        run.answer(ctx, None);
+                    } else if run.can_pick(k) {
                         run.answer(ctx, Some(k));
                     }
                 }
             }
             Msg::Help(l) => {
                 if let Phase::Run(run) = &mut self.phase {
-                    if run.playing() {
+                    if run.expired() {
+                        run.answer(ctx, None);
+                    } else if run.playing() {
                         run.ladder
                             .use_lifeline(&ctx.lib, l, &mut rand::thread_rng());
                     }
@@ -882,7 +931,9 @@ impl Screen {
             }
             Msg::WalkAway => {
                 if let Phase::Run(run) = &mut self.phase {
-                    if run.ladder.outcome.is_none() && !run.confirm {
+                    if run.expired() {
+                        run.answer(ctx, None);
+                    } else if run.ladder.outcome.is_none() && !run.confirm {
                         run.confirm = true;
                         run.confirm_at = Some(Instant::now());
                     }
@@ -983,9 +1034,7 @@ impl Screen {
                 Some(if n == 0 {
                     confirm_dialog(
                         "Выйти из игры?".to_string(),
-                        "Ступеней пока нет, поэтому игра не будет засчитана. \
-                         Данные ответы уже сохранены в статистике."
-                            .to_string(),
+                        "Ответов пока нет, игра не будет засчитана.".to_string(),
                         "Выйти".to_string(),
                     )
                 } else {
@@ -1908,6 +1957,47 @@ mod tests {
 
     fn right(s: &Screen) -> usize {
         run(s).ladder.current().unwrap().right_index()
+    }
+
+    #[test]
+    fn leaving_mid_climb_keeps_the_steps_and_a_fall_is_recorded_once() {
+        let mut c = ctx();
+        let mut s = run_screen(&mut c);
+        for _ in 0..3 {
+            let k = right(&s);
+            s.update(&mut c, Msg::Pick(k));
+            s.update(&mut c, Msg::Next);
+        }
+        // Leaving through the sidebar = walking away with 3 steps.
+        s.leave(&mut c);
+        assert_eq!(ladder::best(&c.state), 3);
+        assert_eq!(c.state.counters.get(ladder::RUNS_KEY), Some(&1));
+        // A fall is recorded at once; «Итоги» and leaving add nothing.
+        let mut s = run_screen(&mut c);
+        let w = {
+            let st = run(&s).ladder.current().unwrap();
+            (0..st.opts.len()).find(|&i| !st.opts[i].right).unwrap()
+        };
+        s.update(&mut c, Msg::Pick(w));
+        assert_eq!(c.state.counters.get(ladder::RUNS_KEY), Some(&2));
+        s.leave(&mut c);
+        s.update(&mut c, Msg::Next);
+        assert!(matches!(s.phase, Phase::Results(_)));
+        s.leave(&mut c);
+        assert_eq!(c.state.counters.get(ladder::RUNS_KEY), Some(&2));
+    }
+
+    #[test]
+    fn an_expired_timer_turns_a_late_click_into_a_time_out() {
+        let mut c = ctx();
+        let mut s = run_screen(&mut c);
+        if let Phase::Run(r) = &mut s.phase {
+            r.timer_end = Instant::now() - Duration::from_millis(5);
+        }
+        let k = right(&s);
+        s.update(&mut c, Msg::Pick(k));
+        let rv = run(&s).reveal.as_ref().unwrap();
+        assert!(!rv.right && rv.pick.is_none());
     }
 
     #[test]

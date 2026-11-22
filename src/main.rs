@@ -92,6 +92,7 @@ impl App {
                 self.history.remove(0);
             }
         }
+        self.screen.leave(&mut self.ctx);
         self.screen = Current::open(&mut self.ctx, &route);
         let keep_scroll = matches!(route, Route::ExamRun(_) | Route::TimedRun { .. });
         self.route = route;

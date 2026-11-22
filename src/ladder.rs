@@ -364,46 +364,97 @@ fn stem(w: &str) -> String {
     w[..keep].iter().collect()
 }
 
+fn is_word(c: char) -> bool {
+    c.is_alphanumeric()
+}
+
+/// Letters and digits only, lower case, ё → е: for «is it still in there».
+fn squash(t: &str) -> String {
+    t.to_lowercase()
+        .replace('ё', "е")
+        .chars()
+        .filter(|c| is_word(*c))
+        .collect()
+}
+
+/// Short words of distractors that are too common to hide.
+const STOP: [&str; 16] = [
+    "над",
+    "для",
+    "при",
+    "без",
+    "под",
+    "что",
+    "как",
+    "это",
+    "или",
+    "его",
+    "она",
+    "они",
+    "все",
+    "был",
+    "только",
+    "после",
+];
+
 /// Hide the options inside a text, so the rabbi points the way without
-/// saying an option out loud: every word of the text that has the stem of
-/// a content word (three letters or more) of an option becomes «…», except
-/// words the question itself already shows. Runs of hidden words collapse
-/// into one «…».
-pub fn mask_options(text: &str, options: &[&str], prompt: &str) -> String {
-    let is_word = |c: char| c.is_alphanumeric();
+/// saying an option out loud. Hidden («…»), unless the question itself
+/// already shows the word:
+/// - every word of three letters or more and every number of the right
+///   option, in any word form, and the whole right option when it is a
+///   single short word or letter;
+/// - the content words and numbers of the wrong options (not the small
+///   common words);
+/// - every number in the text when the right option has a number (so an
+///   expanded list such as «95, 96, 97» cannot survive).
+///
+/// Runs of hidden words collapse into one «…». Returns None when the right
+/// option still shows through.
+pub fn mask_options(text: &str, right: &str, wrong: &[&str], prompt: &str) -> Option<String> {
     let shown: std::collections::HashSet<String> = prompt
         .split(|c: char| !is_word(c))
-        .filter(|w| w.chars().count() >= 3)
+        .filter(|w| !w.is_empty())
         .map(stem)
         .collect();
-    const STOP: [&str; 16] = [
-        "над",
-        "для",
-        "при",
-        "без",
-        "под",
-        "что",
-        "как",
-        "это",
-        "или",
-        "его",
-        "она",
-        "они",
-        "все",
-        "был",
-        "только",
-        "после",
-    ];
-    let stems: Vec<String> = options
-        .iter()
-        .flat_map(|o| o.split(|c: char| !is_word(c)))
-        .filter(|w| w.chars().count() >= 3 && !STOP.contains(&w.to_lowercase().as_str()))
-        .map(stem)
-        .filter(|s| !shown.contains(s))
-        .collect();
-    if stems.is_empty() {
-        return text.to_string();
+    let tokens = |o: &str| -> Vec<String> {
+        o.split(|c: char| !is_word(c))
+            .filter(|w| !w.is_empty())
+            .map(str::to_string)
+            .collect()
+    };
+    let right_tokens = tokens(right);
+    let mut stems: Vec<String> = Vec::new();
+    let mut exact: Vec<String> = Vec::new();
+    for w in &right_tokens {
+        let digits = w.chars().all(|c| c.is_ascii_digit());
+        if w.chars().count() >= 3 || digits || right_tokens.len() == 1 {
+            let st = stem(w);
+            if !shown.contains(&st) {
+                if w.chars().count() >= 3 {
+                    stems.push(st);
+                } else {
+                    exact.push(st);
+                }
+            }
+        }
     }
+    for o in wrong {
+        for w in tokens(o) {
+            let digits = w.chars().all(|c| c.is_ascii_digit());
+            let low = w.to_lowercase();
+            if (w.chars().count() >= 3 && !STOP.contains(&low.as_str())) || digits {
+                let st = stem(&w);
+                if !shown.contains(&st) {
+                    if w.chars().count() >= 3 {
+                        stems.push(st);
+                    } else {
+                        exact.push(st);
+                    }
+                }
+            }
+        }
+    }
+    let all_numbers = right.chars().any(|c| c.is_ascii_digit());
     // Split into word and non-word runs, keeping everything.
     let mut parts: Vec<(bool, String)> = Vec::new();
     for c in text.chars() {
@@ -416,22 +467,33 @@ pub fn mask_options(text: &str, options: &[&str], prompt: &str) -> String {
     let hidden: Vec<bool> = parts
         .iter()
         .map(|(w, t)| {
-            *w && t.chars().count() >= 3 && {
-                let st = stem(t);
-                let low = t.to_lowercase().replace('ё', "е");
-                stems
-                    .iter()
-                    .any(|s| st == *s || low.starts_with(s.as_str()))
+            if !*w {
+                return false;
             }
+            let st = stem(t);
+            let low = t.to_lowercase().replace('ё', "е");
+            (all_numbers && t.chars().all(|c| c.is_ascii_digit()))
+                || exact.contains(&st)
+                || (t.chars().count() >= 3
+                    && stems
+                        .iter()
+                        .any(|s| st == *s || low.starts_with(s.as_str())))
         })
         .collect();
     let mut out = String::new();
     let mut i = 0;
     while i < parts.len() {
         if hidden[i] {
-            // Swallow following «word, space, word» runs of hidden words.
+            // Swallow following «word, separator, word» runs of hidden words
+            // («29 или 30», «95, 96, 97»).
             let mut j = i;
-            while j + 2 < parts.len() && hidden[j + 2] && parts[j + 1].1.trim().is_empty() {
+            while j + 2 < parts.len()
+                && hidden[j + 2]
+                && parts[j + 1]
+                    .1
+                    .chars()
+                    .all(|c| c.is_whitespace() || c == ',' || c == '–' || c == '-')
+            {
                 j += 2;
             }
             out.push('…');
@@ -441,11 +503,21 @@ pub fn mask_options(text: &str, options: &[&str], prompt: &str) -> String {
             i += 1;
         }
     }
-    out
+    let r = squash(right);
+    let leaks = if r.chars().count() < 3 {
+        // A letter or a short number: only a whole word gives it away.
+        out.split(|c: char| !is_word(c)).any(|w| squash(w) == r)
+    } else {
+        squash(&out).contains(&r)
+    };
+    if r.is_empty() || leaks {
+        return None;
+    }
+    Some(out)
 }
 
 /// Prefix of the rabbi's answer.
-pub const RABBI_LEAD: &str = "Раввин отвечает не прямо, а направлением: ";
+pub const RABBI_LEAD: &str = "Раввин не называет ответ, а только указывает направление: ";
 
 pub fn help(lib: &Library, step: &Step, line: Lifeline, rng: &mut impl Rng) -> Help {
     match line {
@@ -474,19 +546,34 @@ pub fn help(lib: &Library, step: &Step, line: Lifeline, rng: &mut impl Rng) -> H
         }
         Lifeline::Rabbi => {
             let c = step.q.common();
-            let base = c
-                .explanation
-                .clone()
-                .filter(|e| !e.trim().is_empty())
-                .unwrap_or_else(|| "Вспомните урок, из которого этот вопрос.".to_string());
-            let masked = match &step.q {
-                Question::Mc { .. } => {
-                    let opts: Vec<&str> = step.opts.iter().map(|o| o.text.as_str()).collect();
-                    mask_options(&base, &opts, &c.prompt)
+            let lesson = c
+                .lesson_id
+                .as_deref()
+                .and_then(|l| lib.lesson(l))
+                .and_then(|(l, _)| l.title.clone());
+            // When the explanation cannot be told without the answer (true /
+            // false, or the answer still shows), the rabbi sends you back to
+            // the lesson.
+            let right = squash(step.right_text());
+            let fallback = match &lesson {
+                Some(t) if right.chars().count() < 3 || !squash(t).contains(&right) => {
+                    format!("вспомните урок «{t}», из которого взят этот вопрос.")
                 }
-                _ => base,
+                _ => "вспомните урок, из которого взят этот вопрос.".to_string(),
             };
-            Help::Rabbi(masked)
+            let masked = match (&step.q, c.explanation.as_deref()) {
+                (Question::Mc { .. }, Some(e)) if !e.trim().is_empty() => {
+                    let wrong: Vec<&str> = step
+                        .opts
+                        .iter()
+                        .filter(|o| !o.right)
+                        .map(|o| o.text.as_str())
+                        .collect();
+                    mask_options(e, step.right_text(), &wrong, &c.prompt)
+                }
+                _ => None,
+            };
+            Help::Rabbi(masked.unwrap_or(fallback))
         }
     }
 }
@@ -1006,29 +1093,104 @@ mod tests {
         assert_eq!(
             mask_options(
                 "У сома нет чешуи, поэтому он запрещён; карп, лосось и сельдь — кошерны.",
-                &["Лосось", "Сельдь", "Карп", "Сом"],
+                "Сом",
+                &["Лосось", "Сельдь", "Карп"],
                 "Какая из этих рыб некошерна?",
-            ),
-            "У … нет чешуи, поэтому он запрещён; …, … и … — кошерны."
+            )
+            .as_deref(),
+            Some("У … нет чешуи, поэтому он запрещён; … и … — кошерны.")
         );
-        // Words the question already shows and small words stay; runs of
-        // hidden words collapse into one «…».
+        // Words the question shows and small words of distractors stay.
         assert_eq!(
             mask_options(
                 "Кидуш над вином освящает Шаббат.",
-                &["Кидуш над вином", "Авдала", "Хала", "Свечи"],
+                "Кидуш над вином",
+                &["Авдала", "Хала", "Свечи"],
                 "Как освящают Шаббат?",
-            ),
-            "… над … освящает Шаббат."
+            )
+            .as_deref(),
+            Some("… освящает Шаббат.")
+        );
+        // Numbers of the answer, even a list written out in full.
+        assert_eq!(
+            mask_options(
+                "Лунный цикл около 29,5 суток, поэтому месяц длится 29 или 30 дней.",
+                "29 или 30",
+                &["28 или 29", "30 или 31", "Всегда 30"],
+                "Сколько дней может быть в еврейском месяце?",
+            )
+            .as_deref(),
+            Some("Лунный цикл около … суток, поэтому месяц длится … дней.")
         );
         assert_eq!(
             mask_options(
-                "Сотворение мира за шесть дней.",
-                &["Сотворение мира", "Исход", "Синай", "Земля"],
-                "?"
-            ),
-            "… за шесть дней."
+                "Читают псалмы 95, 96, 97, 98, 99 и 29.",
+                "Теилим 95–99 и 29",
+                &["Теилим 1–5", "Теилим 120–134", "Теилим 145–150"],
+                "Какие псалмы читают?",
+            )
+            .as_deref(),
+            Some("Читают псалмы … и ….")
         );
-        assert_eq!(mask_options("Нет ответа", &["ab"], ""), "Нет ответа");
+        // A one-letter answer is hidden too; if it cannot be, None.
+        assert_eq!(
+            mask_options(
+                "Без дагеша это вет — «в».",
+                "в",
+                &["б", "п", "ф"],
+                "Как читается ב?"
+            )
+            .as_deref(),
+            Some("Без дагеша это вет — «…».")
+        );
+        assert_eq!(mask_options("Ответ: да", "Ответ: да", &[], "Ответ?"), None);
+    }
+
+    #[test]
+    fn rabbi_never_leaks_the_right_option_on_the_whole_bank() {
+        let lib = Library::embedded();
+        let mut r = rng();
+        let mut leaks = Vec::new();
+        let (mut fallbacks, mut mc) = (0, 0);
+        for sec in &lib.sections {
+            for q in &sec.data.as_ref().unwrap().questions {
+                if !matches!(q, Question::Mc { .. } | Question::Tf { .. }) {
+                    continue;
+                }
+                let step = prepare(&lib, q, &mut r);
+                let Help::Rabbi(t) = help(&lib, &step, Lifeline::Rabbi, &mut r) else {
+                    unreachable!()
+                };
+                let right = squash(step.right_text());
+                let shows = if right.chars().count() < 3 {
+                    t.split(|c: char| !c.is_alphanumeric())
+                        .any(|w| squash(w) == right)
+                } else {
+                    squash(&t).contains(&right)
+                };
+                if matches!(q, Question::Mc { .. }) {
+                    mc += 1;
+                    fallbacks += t.starts_with("вспомните урок") as usize;
+                }
+                // The fallback names the lesson, which may share a word.
+                if matches!(q, Question::Mc { .. }) && shows && !t.starts_with("вспомните урок")
+                {
+                    leaks.push(format!("{}: {t}", q.id()));
+                }
+                if matches!(q, Question::Tf { .. }) {
+                    assert!(t.starts_with("вспомните урок"), "{}: tf hint {t}", q.id());
+                }
+            }
+        }
+        assert!(
+            leaks.is_empty(),
+            "rabbi hint shows the answer:\n{}",
+            leaks.join("\n")
+        );
+        // The rabbi must help on most questions, not only send you back.
+        assert!(
+            fallbacks * 5 < mc,
+            "rabbi falls back on {fallbacks} of {mc}"
+        );
     }
 }
