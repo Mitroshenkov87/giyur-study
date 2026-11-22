@@ -112,13 +112,13 @@ def setup_render(samples=None, resolution=RESOLUTION):
     img.color_depth = "8"
     sc.render.film_transparent = True
     sc.view_settings.view_transform = "AgX"
-    for look in ("AgX - Medium High Contrast", "Medium High Contrast", "None"):
+    for look in ("AgX - Punchy", "AgX - Medium High Contrast", "None"):
         try:
             sc.view_settings.look = look
             break
         except (TypeError, ValueError):
             continue
-    sc.view_settings.exposure = -0.35
+    sc.view_settings.exposure = -0.5
     world = bpy.data.worlds.get("World") or bpy.data.worlds.new("World")
     sc.world = world
     world.use_nodes = True
