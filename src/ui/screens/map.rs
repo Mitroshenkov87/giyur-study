@@ -32,7 +32,6 @@ pub(crate) mod icons {
         Lock,
         Check,
         ChevronDown,
-        ChevronLeft,
         Flame,
         Star,
         StarDavid,
@@ -41,7 +40,6 @@ pub(crate) mod icons {
         External,
         Snow,
         Timer,
-        X,
     }
 
     struct Icon {
@@ -101,25 +99,6 @@ pub(crate) mod icons {
                             b.move_to(pt(6.0, 9.0));
                             b.line_to(pt(12.0, 15.0));
                             b.line_to(pt(18.0, 9.0));
-                        }),
-                        st,
-                    );
-                }
-                Kind::ChevronLeft => {
-                    frame.stroke(
-                        &path(&|b| {
-                            b.move_to(pt(15.0, 18.0));
-                            b.line_to(pt(9.0, 12.0));
-                            b.line_to(pt(15.0, 6.0));
-                        }),
-                        st,
-                    );
-                }
-                Kind::X => {
-                    frame.stroke(
-                        &path(&|b| {
-                            line(b, 6.0, 6.0, 18.0, 18.0);
-                            line(b, 18.0, 6.0, 6.0, 18.0);
                         }),
                         st,
                     );

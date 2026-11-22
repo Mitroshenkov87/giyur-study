@@ -11,8 +11,6 @@ use crate::ui::screens::map::{heading_owned, icons, kicker_owned, txt};
 use crate::ui::{assets, fonts, theme, widgets};
 
 pub struct Screen {
-    /// Came from the map chip / settings («Назад» returns without changes).
-    reopened: bool,
     /// Pending movement change awaiting confirmation.
     confirm: Option<Level>,
 }
@@ -26,13 +24,8 @@ pub enum Msg {
 }
 
 impl Screen {
-    pub fn new(ctx: &mut Ctx, route: &Route) -> Self {
-        let reopened = matches!(route, Route::Level { reopened: true });
-        let _ = ctx;
-        Screen {
-            reopened,
-            confirm: None,
-        }
+    pub fn new(_ctx: &mut Ctx, _route: &Route) -> Self {
+        Screen { confirm: None }
     }
 
     fn apply(&mut self, ctx: &mut Ctx, level: Level) -> Action {

@@ -124,7 +124,7 @@ impl Screen {
                 ctx.state.settings.daily_goal = xp;
                 // The new goal may already be reached today (js/ui/settings.js).
                 ctx.award(0);
-                ctx.toast("Цель дня", &format!("{xp} XP"), "");
+                ctx.toast(&format!("Цель дня: {xp} XP"), "", "");
                 Action::None
             }
             Msg::Export => {

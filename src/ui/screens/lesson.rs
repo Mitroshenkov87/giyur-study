@@ -498,11 +498,7 @@ fn not_found_view(guard: &Guard) -> Element<'static, Msg> {
                     .size(theme::text::BODY)
                     .color(p.muted)
                     .align_x(Horizontal::Center),
-                lg_button(
-                    txt("На карту"),
-                    BtnKind::Primary,
-                    Some(Msg::Go(Route::Map)),
-                ),
+                lg_button(txt("На карту"), BtnKind::Primary, Some(Msg::Go(Route::Map)),),
             ]
             .spacing(14)
             .align_x(Alignment::Center)
