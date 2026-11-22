@@ -6,6 +6,8 @@ The veil, lamp light and vignette used to be drawn at runtime as stacked
 full-window gradients; baking them keeps the renderer to one image layer.
 Requires Pillow and numpy. Output is WebP only.
 """
+import sys
+
 import numpy as np
 from PIL import Image
 
@@ -45,9 +47,14 @@ if __name__ == "__main__":
     out = {
         "bg-dark": bake("tex-walnut", 0x120B08, 0.35, lamp=0xFFBE6E),
         "side-dark": bake("tex-leather", 0x120B08, 0.45),
-        "bg-parchment": bake("tex-klaf", 0xE8D6B0, 0.55, lamp=0xFFF1CC, vignette=0x3A2510),
-        "side-parchment": bake("tex-klaf", 0xE8D6B0, 0.55, tint=(0x6B4712, 0.06)),
+        # v0.5: a deeper, warmer klaf veil and a dimmer lamp, so the light
+        # theme does not glare on bright screens (about a third less luminance).
+        "bg-parchment": bake("tex-klaf", 0xBFA77E, 0.58, lamp=0xE6D0A2, vignette=0x3A2510),
+        "side-parchment": bake("tex-klaf", 0xB59D74, 0.58, tint=(0x6B4712, 0.08)),
     }
+    only = set(sys.argv[1:])  # e.g. `bg-parchment side-parchment`
     for name, im in out.items():
+        if only and name not in only:
+            continue
         im.save(OUT.format(name), quality=80, method=6)
         print(name, im.resize((1, 1)).getpixel((0, 0)))
