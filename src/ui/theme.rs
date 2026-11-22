@@ -293,18 +293,19 @@ impl ThemeKind {
     }
 }
 
-static CURRENT: RwLock<Option<Palette>> = RwLock::new(None);
-static CURRENT_KIND: RwLock<ThemeKind> = RwLock::new(ThemeKind::Dark);
+static CURRENT: RwLock<Option<(Palette, ThemeKind)>> = RwLock::new(None);
 
 /// Sets the process-global active palette (call on theme switch).
 pub fn set_current(kind: ThemeKind) {
-    *CURRENT.write().expect("theme lock") = Some(kind.palette());
-    *CURRENT_KIND.write().expect("theme lock") = kind;
+    *CURRENT.write().expect("theme lock") = Some((kind.palette(), kind));
 }
 
 /// The active theme kind; [`ThemeKind::Dark`] before [`set_current`].
 pub fn current_kind() -> ThemeKind {
-    *CURRENT_KIND.read().expect("theme lock")
+    CURRENT
+        .read()
+        .expect("theme lock")
+        .map_or(ThemeKind::Dark, |(_, k)| k)
 }
 
 /// Suffix of the theme's rendered art variants (`assets/img/icons/*-wood.webp`
@@ -318,7 +319,7 @@ pub fn art_variant() -> &'static str {
 
 /// The active palette; defaults to [`DARK`] before [`set_current`] is called.
 pub fn current() -> Palette {
-    CURRENT.read().expect("theme lock").unwrap_or(DARK)
+    CURRENT.read().expect("theme lock").map_or(DARK, |(p, _)| p)
 }
 
 // ---------------------------------------------------------------------------
@@ -392,6 +393,8 @@ pub mod size {
     pub const NAV_ITEM: f32 = 50.0;
     /// Rendered 3D icon in a sidebar item.
     pub const NAV_ICON: f32 = 34.0;
+    /// The same icon under the mouse (also the icon's fixed box).
+    pub const NAV_ICON_HOVER: f32 = 40.0;
 }
 
 /// Spacing / layout constants.

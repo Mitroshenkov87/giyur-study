@@ -186,8 +186,10 @@ pub fn names() -> impl Iterator<Item = &'static str> {
 
 /// Procedural 3D art (assets/3d, rendered to WebP): sidebar icons
 /// `icon-<item>-<wood|leather>[-hover]` (128 px) and section medallions
-/// `emblem-<section>-<wood|leather>` (256 px). Decoded lazily on first use,
-/// so only the active theme's variants take memory.
+/// `emblem-<section>-<wood|leather>` (256 px). Decoded lazily on first use and
+/// cached (a theme switch decodes the other set too, about 2 MB in all), and
+/// downscaled once with Lanczos to about twice the display size, because the
+/// GPU image pipeline has no mipmaps and big downscales would alias.
 const ART: &[(&str, &[u8])] = &[
     (
         "icon-lessons-wood",
@@ -395,8 +397,23 @@ pub fn art(name: &str) -> Option<Handle> {
     cache
         .entry(key)
         .or_insert_with(|| {
-            let (w, h, pixels) = decode(bytes)?;
-            Some(Handle::from_rgba(w, h, pixels))
+            let image = image::load_from_memory(bytes).ok()?;
+            let target = if key.starts_with("icon-") { 80 } else { 192 };
+            let rgba = if image.width() > target {
+                image::imageops::resize(
+                    &image.to_rgba8(),
+                    target,
+                    target,
+                    image::imageops::FilterType::Lanczos3,
+                )
+            } else {
+                image.to_rgba8()
+            };
+            Some(Handle::from_rgba(
+                rgba.width(),
+                rgba.height(),
+                rgba.into_raw(),
+            ))
         })
         .clone()
 }

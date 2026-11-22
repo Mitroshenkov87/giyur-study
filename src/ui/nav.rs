@@ -15,6 +15,8 @@ pub struct Item {
     pub tooltip: &'static str,
     /// Label before v0.5 (for commands and old notes), if it changed.
     pub old_label: Option<&'static str>,
+    /// Name of the item's rendered 3D icon (`assets/img/icons/<art>-<theme>.webp`).
+    pub art: &'static str,
 }
 
 /// The sidebar, top to bottom (index = `group` of a route).
@@ -24,24 +26,28 @@ pub const ITEMS: [Item; 8] = [
         subtitle: "тексты по темам",
         tooltip: "Разделы и уроки: тексты по темам с источниками, карточки и тесты каждого раздела",
         old_label: Some("Карта"),
+        art: "lessons",
     },
     Item {
         label: "Календарь",
         subtitle: "еврейский год",
         tooltip: "Еврейский календарь",
         old_label: None,
+        art: "calendar",
     },
     Item {
         label: "Карточки",
         subtitle: "интервальное повторение",
         tooltip: "Карточки с интервальным повторением: всё, что пора повторить сегодня",
         old_label: Some("Повторение"),
+        art: "cards",
     },
     Item {
         label: "Викторина",
         subtitle: "вопросы на время",
         tooltip: "Викторина на время: вопрос, четыре варианта ответа и таймер",
         old_label: Some("Экзамен"),
+        art: "quiz",
     },
     Item {
         label: "Тесты",
@@ -49,31 +55,29 @@ pub const ITEMS: [Item; 8] = [
         tooltip:
             "Тесты по разделам, общий экзамен и пробный бейт-дин: 10–50 вопросов разных форматов",
         old_label: None,
+        art: "tests",
     },
     Item {
         label: "Успехи",
         subtitle: "уровни и статистика",
         tooltip: "Уровень, XP, серия дней, награды и статистика ответов",
         old_label: Some("Прогресс"),
+        art: "progress",
     },
     Item {
         label: "Настройки",
         subtitle: "уровень, тема, шрифт",
         tooltip: "Уровень изучения, тема, размер шрифта, викторина и установка программы",
         old_label: None,
+        art: "settings",
     },
     Item {
         label: "Источники",
         subtitle: "литература",
         tooltip: "Книги и сайты, на которые опираются уроки",
         old_label: None,
+        art: "sources",
     },
-];
-
-/// Art name of each item's 3D icon (`assets/img/icons/<name>-<theme>.webp`),
-/// in [`ITEMS`] order.
-pub const ART: [&str; 8] = [
-    "lessons", "calendar", "cards", "quiz", "tests", "progress", "settings", "sources",
 ];
 
 /// The route an item opens.
@@ -124,6 +128,12 @@ mod tests {
             assert_eq!(group(&route(i)), Some(i), "{}", it.label);
             assert_eq!(find(it.label), Some(i));
             assert!(!it.label.contains(' '), "one word: {}", it.label);
+            for v in ["wood", "leather"] {
+                for h in ["", "-hover"] {
+                    let name = format!("icon-{}-{v}{h}", it.art);
+                    assert!(crate::ui::assets::art(&name).is_some(), "{name}");
+                }
+            }
         }
         assert_eq!(find("Карта"), Some(0));
         assert_eq!(find("повторение"), Some(2));

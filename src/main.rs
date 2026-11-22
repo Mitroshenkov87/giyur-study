@@ -71,7 +71,9 @@ impl App {
                 route,
                 history: Vec::new(),
                 screen,
-                nav_hover: None,
+                // Screenshot hook `SHORASHIM_NAV_HOVER=<index>`: show one
+                // sidebar icon in its hover frame without a mouse.
+                nav_hover: shorashim::util::env_hook("NAV_HOVER").and_then(|v| v.parse().ok()),
             },
             // Screenshot hook: scroll once the first frame is laid out.
             match shorashim::util::env_hook("SCROLL_Y").and_then(|v| v.parse::<f32>().ok()) {
@@ -85,6 +87,8 @@ impl App {
     }
 
     fn go(&mut self, route: Route) -> Task<Message> {
+        // The sidebar may be rebuilt under the cursor; don't leave a stuck hover.
+        self.nav_hover = None;
         // First-launch guard (PARITY §0.1).
         let route = if !self.ctx.state.onboarded
             && !matches!(route, Route::Welcome | Route::Level { .. })
@@ -212,20 +216,29 @@ impl App {
             let hovered = self.nav_hover == Some(i);
             let art_name = format!(
                 "icon-{}-{}{}",
-                nav::ART[i],
+                item.art,
                 theme::art_variant(),
-                if hovered || is_active { "-hover" } else { "" }
+                if hovered { "-hover" } else { "" }
             );
+            // The hovered icon also grows a little inside a fixed box ("pop"),
+            // so the row never shifts.
+            let box_px = theme::size::NAV_ICON_HOVER;
+            let px = if hovered {
+                theme::size::NAV_ICON_HOVER
+            } else {
+                theme::size::NAV_ICON
+            };
             let icon: Element<'_, Message> = match assets::art(&art_name) {
-                Some(h) => image(h)
-                    .width(theme::size::NAV_ICON)
-                    .height(theme::size::NAV_ICON)
-                    .filter_method(image::FilterMethod::Linear)
-                    .into(),
-                None => iced::widget::space()
-                    .width(theme::size::NAV_ICON)
-                    .height(theme::size::NAV_ICON)
-                    .into(),
+                Some(h) => container(
+                    image(h)
+                        .width(px)
+                        .height(px)
+                        .filter_method(image::FilterMethod::Linear),
+                )
+                .center_x(box_px)
+                .center_y(box_px)
+                .into(),
+                None => iced::widget::space().width(box_px).height(box_px).into(),
             };
             let label = column![
                 text(item.label).size(15).shaping(text::Shaping::Advanced),
