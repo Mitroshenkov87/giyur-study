@@ -703,21 +703,36 @@ pub(crate) fn heading_owned<'a, Message: 'a>(content: String, level: u8) -> Elem
 // Screen
 // ---------------------------------------------------------------------------
 
-pub struct Screen;
+pub struct Screen {
+    /// 3D objects whose caption is open (toggled by a click on the model).
+    captions: Vec<crate::ui::model3d::Model>,
+}
 
 #[derive(Debug, Clone)]
 pub enum Msg {
     Go(Route),
+    /// The live 3D model has been drawn by the GPU: rebuild the view
+    /// without its static placeholder.
+    Model3dReady,
+    /// Click on the 3D object: show / hide its caption.
+    ToggleCaption(crate::ui::model3d::Model),
 }
 
 impl Screen {
     pub fn new(_ctx: &mut Ctx, _route: &Route) -> Self {
-        Screen
+        Screen {
+            captions: Vec::new(),
+        }
     }
 
     pub fn update(&mut self, _ctx: &mut Ctx, msg: Msg) -> Action {
         match msg {
             Msg::Go(route) => Action::Go(route),
+            Msg::Model3dReady => Action::None,
+            Msg::ToggleCaption(m) => {
+                toggle(&mut self.captions, m);
+                Action::None
+            }
         }
     }
 
@@ -734,6 +749,7 @@ impl Screen {
         page = page.push(header(ctx, p));
         page = page.push(reminders(ctx, p));
         page = page.push(timed_cta(p));
+        page = page.push(object_of_the_day(ctx, &self.captions));
 
         if !ctx.lib.sections.iter().any(|s| s.available) {
             page = page.push(notice(
@@ -1288,4 +1304,35 @@ pub(crate) fn fmt_pct(v: f64) -> String {
     } else {
         format!("{v:.1}%")
     }
+}
+
+/// Open / close a caption.
+pub(crate) fn toggle(open: &mut Vec<crate::ui::model3d::Model>, m: crate::ui::model3d::Model) {
+    if let Some(i) = open.iter().position(|x| *x == m) {
+        open.remove(i);
+    } else {
+        open.push(m);
+    }
+}
+
+/// «Предмет дня»: one live 3D ritual object, a different one each day,
+/// linking to its section.
+fn object_of_the_day<'a>(ctx: &'a Ctx, captions: &[crate::ui::model3d::Model]) -> Element<'a, Msg> {
+    use crate::ui::model3d::{card, Model};
+    let model = Model::of_the_day(ctx.today());
+    let info = model.info();
+    card::card(
+        ctx,
+        model,
+        Some("Предмет дня"),
+        captions.contains(&model),
+        card::Msgs {
+            ready: Msg::Model3dReady,
+            toggle_caption: Msg::ToggleCaption(model),
+            link: Some((
+                format!("Раздел «{}»", info.section_title),
+                Msg::Go(Route::Section(info.section.to_string())),
+            )),
+        },
+    )
 }

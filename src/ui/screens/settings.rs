@@ -77,6 +77,7 @@ pub enum Msg {
     GoSources,
     GoCalendar,
     ToggleQuotePanel,
+    ToggleModels3d,
     ToggleDesktopShortcut,
     Install,
     AskUninstall,
@@ -222,6 +223,13 @@ impl Screen {
             Msg::GoCalendar => {
                 calendar::open_tab(calendar::Tab::Settings);
                 Action::Go(Route::Calendar)
+            }
+            Msg::ToggleModels3d => {
+                let on = !crate::ui::model3d::enabled(ctx);
+                crate::ui::model3d::set_enabled(ctx, on);
+                ctx.save();
+                ctx.toast("Сохранено", "", "");
+                Action::None
             }
             Msg::ToggleQuotePanel => {
                 let on = !crate::ui::aside::enabled(ctx);
@@ -412,6 +420,12 @@ impl Screen {
                 "Цитата дня",
                 "Панель справа на широком окне: цитата и сегодняшняя дата".to_string(),
                 switch(crate::ui::aside::enabled(ctx), Msg::ToggleQuotePanel, p),
+            ),
+            divider(p),
+            set_row(
+                "Объёмные модели",
+                "Живые 3D-предметы, которые можно вращать мышью (нужна видеокарта)".to_string(),
+                switch(crate::ui::model3d::enabled(ctx), Msg::ToggleModels3d, p),
             ),
             divider(p),
             set_row(

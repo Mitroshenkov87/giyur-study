@@ -373,6 +373,7 @@ impl App {
         // works over the margins and the scrollbar sits at the window edge;
         // the aside is drawn on top, fixed, in the reserved space.
         let reserved = if g.aside { layout::ASIDE } else { 0.0 } + g.right;
+        layout::set_reading_width(g.content - 2.0 * layout::CONTENT_PAD);
         let page = layout::page(
             self.screen.view(&self.ctx).map(Message::Screen),
             g.content,
