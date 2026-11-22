@@ -207,10 +207,15 @@ impl App {
         let body: Element<'_, Message> = self.screen.view(&self.ctx).map(Message::Screen);
         let main = container(
             scrollable(
-                container(body)
-                    .padding([28, 32])
-                    .max_width(980)
-                    .center_x(Length::Fill),
+                // Inner box caps the reading width; the outer one centres it,
+                // so maximized windows don't leave the content on the left.
+                container(
+                    container(body)
+                        .padding([28, 32])
+                        .width(Length::Fill)
+                        .max_width(1040),
+                )
+                .center_x(Length::Fill),
             )
             .height(Length::Fill),
         )
@@ -290,8 +295,16 @@ fn nav_group(r: &Route) -> Option<usize> {
 }
 
 fn main() -> iced::Result {
+    // Screenshot hook: `GIYUR_WINDOW_SIZE=1440x900`.
+    let size = std::env::var("GIYUR_WINDOW_SIZE")
+        .ok()
+        .and_then(|v| {
+            let (w, h) = v.split_once('x')?;
+            Some(iced::Size::new(w.parse().ok()?, h.parse().ok()?))
+        })
+        .unwrap_or(iced::Size::new(1200.0, 820.0));
     let mut settings = iced::window::Settings {
-        size: iced::Size::new(1200.0, 820.0),
+        size,
         min_size: Some(iced::Size::new(720.0, 560.0)),
         icon: assets::window_icon(),
         ..Default::default()
