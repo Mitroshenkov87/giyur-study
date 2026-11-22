@@ -123,6 +123,9 @@ impl Model {
 }
 
 static GPU_READY: AtomicBool = AtomicBool::new(false);
+/// Set by any `prepare` call: the wgpu renderer is active (tiny-skia never
+/// calls it), even if the mesh is still decoding.
+static WGPU_SEEN: AtomicBool = AtomicBool::new(false);
 // Stats (SHORASHIM_3D_STATS=1): summed 3D-pass time incl. a GPU wait.
 static PREP_NS: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
 static PREP_N: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
@@ -155,17 +158,21 @@ pub fn view<'a, M: Clone + 'a>(model: Model, size: f32, warm: bool, on_ready: M)
     })
     .width(Length::Fixed(size))
     .height(Length::Fixed(size));
-    if gpu_ready() {
-        live.into()
+    // Same tree shape before and after the GPU is ready (only the bottom
+    // layer changes), so the viewer keeps its angle and an ongoing drag
+    // when the placeholder is dropped.
+    let under: Element<'a, M> = if gpu_ready() {
+        iced::widget::space()
+            .width(Length::Fixed(size))
+            .height(Length::Fixed(size))
+            .into()
     } else {
-        iced::widget::stack![
-            iced::widget::image(still)
-                .width(Length::Fixed(size))
-                .height(Length::Fixed(size)),
-            live
-        ]
-        .into()
-    }
+        iced::widget::image(still)
+            .width(Length::Fixed(size))
+            .height(Length::Fixed(size))
+            .into()
+    };
+    iced::widget::stack![under, live].into()
 }
 
 /// Static render only (3D switched off).
@@ -190,6 +197,7 @@ pub struct State {
     vel: f32,
     last: Option<Instant>,
     announced: bool,
+    redraws: u32,
     // fps stats
     frames: u32,
     since: Option<Instant>,
@@ -205,6 +213,7 @@ impl Default for State {
             vel: 0.0,
             last: None,
             announced: false,
+            redraws: 0,
             frames: 0,
             since: None,
         }
@@ -299,14 +308,18 @@ impl<M: Clone> shader::Program<M> for Viewer<M> {
                 }
                 // Keep animating only where it can be seen (wgpu); under
                 // tiny-skia the static picture stays and nothing redraws.
-                if gpu_ready() || self.model.slot().get().is_none() {
+                st.redraws = st.redraws.saturating_add(1);
+                let loading = self.model.slot().get().is_none();
+                let waiting_upload =
+                    WGPU_SEEN.load(Ordering::Relaxed) && self.model.mesh().is_some();
+                if gpu_ready() || loading || waiting_upload || st.redraws < 10 {
                     // ~60 fps while dragged or flung, ~30 fps for the idle spin.
                     let busy = st.drag.is_some() || st.vel.abs() > 0.05;
                     let gap = if busy { 16 } else { 33 };
                     Some(Action::request_redraw_at(*now + Duration::from_millis(gap)))
                 } else {
-                    // Model decoded (or skipped) but not drawn by the GPU
-                    // (tiny-skia): stop asking for frames.
+                    // Decoded (or skipped) and no wgpu draw after the first
+                    // frames: tiny-skia, so stop asking for frames.
                     None
                 }
             }
@@ -798,6 +811,7 @@ impl shader::Primitive for Primitive {
         viewport: &Viewport,
     ) {
         let t0 = Instant::now();
+        WGPU_SEEN.store(true, Ordering::Relaxed);
         if !pipe.gpu_model(device, queue, self.model) {
             return;
         }
