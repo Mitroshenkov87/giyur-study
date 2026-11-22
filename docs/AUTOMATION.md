@@ -157,7 +157,9 @@ Attached mode reconnects when the app restarts; `launch` starts it.
   The client refuses a non-loopback address in the control file.
 - **Token.** A random 256-bit token (OS randomness) is written with the port
   to `control.json` next to the progress file (`%APPDATA%\Shorashim\` on
-  Windows, user-only; mode 0600 on Linux). Every request must carry it; a bad
+  Windows, which only the user can read; mode 0600 on Linux). If
+  `SHORASHIM_DATA` points elsewhere on Windows, the file gets that folder's
+  permissions. Every request must carry it; a bad
   token gets one error after a short delay and the connection is closed.
   The token is new for each start. `quit` removes the file.
 - **No browser access.** Requests must be newline-delimited JSON objects; an
