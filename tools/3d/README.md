@@ -37,6 +37,16 @@ is not a separate object, so it was left in; the caption does not describe the
 arrangement as exact. The still of the plate uses pitch 0.55 so the wells and the
 foods are visible (the app start view matches).
 
+Three more models were added the same way (`200000 2048 2048`): `sukkah`,
+`tallit` and `mezuzah`. The sukkah still uses pitch 0.48 so the schach and the
+table inside are visible (the app start view matches). The mezuzah raw export
+had a second case on the back of the doorpost and a third on the right side;
+those were removed (silver components not on the front face, then a wood cap
+on the back) so the post is a solid block with one slanted case. Tefillin was
+not placed: v2 is crisp from the front but the sides show stacked extra slabs
+and a very long strap that could not be cleaned reliably, and v1 (a pair on a
+bag) is recognisable but too melted.
+
 Runtime: `src/ui/model3d` (GLB reader, wgpu shader widget). Debug hooks: `SHORASHIM_3D_STATS=1` (fps and 3D-pass
 time to stderr), `SHORASHIM_3D_YAW=<rad>` (fixed angle, no idle spin), `SHORASHIM_3D_MSAA=1` (no MSAA),
 `SHORASHIM_3D_SIZE=<px>` (fixed model size on all cards; by default 190–280 px, scaled with the reading column).

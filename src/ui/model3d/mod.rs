@@ -67,6 +67,9 @@ pub enum Model {
     SederPlate,
     LulavEtrog,
     MegillatEsther,
+    Sukkah,
+    Tallit,
+    Mezuzah,
 }
 
 /// Card texts and view limits of one model.
@@ -86,7 +89,7 @@ pub struct Info {
 }
 
 /// Bit per model for the per-model GPU-ready flags.
-pub(crate) const ALL: [Model; 11] = [
+pub(crate) const ALL: [Model; 14] = [
     Model::KiddushCup,
     Model::ShabbatCandles,
     Model::Menorah,
@@ -98,6 +101,9 @@ pub(crate) const ALL: [Model; 11] = [
     Model::SederPlate,
     Model::LulavEtrog,
     Model::MegillatEsther,
+    Model::Sukkah,
+    Model::Tallit,
+    Model::Mezuzah,
 ];
 
 enum Load {
@@ -114,7 +120,7 @@ fn slots() -> &'static std::sync::Mutex<HashMap<Model, Load>> {
 
 impl Model {
     /// Objects that rotate as «Предмет дня» on «Уроки», one per day.
-    pub const OF_THE_DAY: [Model; 11] = [
+    pub const OF_THE_DAY: [Model; 14] = [
         Model::KiddushCup,
         Model::Menorah,
         Model::ShabbatCandles,
@@ -126,6 +132,9 @@ impl Model {
         Model::SederPlate,
         Model::LulavEtrog,
         Model::MegillatEsther,
+        Model::Sukkah,
+        Model::Tallit,
+        Model::Mezuzah,
     ];
 
     pub fn of_the_day(day: chrono::NaiveDate) -> Model {
@@ -141,9 +150,11 @@ impl Model {
         match id {
             "osnovy" => &[Model::TorahScroll, Model::Temple, Model::MagenDavid],
             "shabbat" => &[Model::ShabbatCandles, Model::KiddushCup],
+            "ivrit" => &[Model::Tallit, Model::Mezuzah],
             "prazdniki" => &[
                 Model::Shofar,
                 Model::LulavEtrog,
+                Model::Sukkah,
                 Model::Menorah,
                 Model::Hanukkiah,
                 Model::MegillatEsther,
@@ -171,6 +182,9 @@ impl Model {
             Model::SederPlate => asset!("seder-plate.glb"),
             Model::LulavEtrog => asset!("lulav-etrog.glb"),
             Model::MegillatEsther => asset!("megillat-esther.glb"),
+            Model::Sukkah => asset!("sukkah.glb"),
+            Model::Tallit => asset!("tallit.glb"),
+            Model::Mezuzah => asset!("mezuzah.glb"),
         }
     }
 
@@ -187,6 +201,9 @@ impl Model {
             Model::SederPlate => asset!("seder-plate.webp"),
             Model::LulavEtrog => asset!("lulav-etrog.webp"),
             Model::MegillatEsther => asset!("megillat-esther.webp"),
+            Model::Sukkah => asset!("sukkah.webp"),
+            Model::Tallit => asset!("tallit.webp"),
+            Model::Mezuzah => asset!("mezuzah.webp"),
         }
     }
 
@@ -291,6 +308,33 @@ impl Model {
                 section_title: "Праздники",
                 zoom_max: 1.15,
             },
+            Model::Sukkah => Info {
+                kicker: "Праздники · Суккот",
+                title: "Сукка",
+                lead: "Сукка — временная постройка под открытым небом; главная заповедь Суккота — жить в ней.",
+                caption: "«Жить» в сукке значит прежде всего есть там, особенно хлеб и мучные блюда, а также проводить время и — кто может и в чьей общине так принято — спать. Сукка учит смирению и доверию: человек выходит из прочного дома под тонкую крышу и вспоминает, что его защищает не камень, а Всевышний. Перед едой произносят благословение «лешев ба-сукка». Украшения и устройство на этой модели условные.",
+                section: "prazdniki",
+                section_title: "Праздники",
+                zoom_max: 2.0,
+            },
+            Model::Tallit => Info {
+                kicker: "Иврит и молитва",
+                title: "Талит",
+                lead: "Талит (талит гадоль) — большое покрывало с цицит на четырёх углах, которое надевают во время утренней молитвы.",
+                caption: "Цицит — кисти на четырёх углах одежды: «и увидите их, и вспомните все заповеди Господа, и исполните их» (Бемидбар 15:39). Талит гадоль надевают в Шахарит; талит катан носят весь день под одеждой. На этой модели — большой талит на подставке; узлы и обмотки цицит условные.",
+                section: "ivrit",
+                section_title: "Иврит и молитва",
+                zoom_max: 2.0,
+            },
+            Model::Mezuzah => Info {
+                kicker: "Иврит и молитва",
+                title: "Мезуза",
+                lead: "Мезуза — пергамент с двумя первыми отрывками Шма, свёрнутый в футляр и прикреплённый к дверному косяку.",
+                caption: "Заповедь берётся из Шма: «И напиши их на дверных косяках дома твоего и на воротах твоих» (Дварим 6:9). Сойфер пишет на пергаменте (клафе) два отрывка: Дварим 6:4–9 и 11:13–21. Футляр крепят к правому косяку при входе: у ашкеназов наклонно, верхним концом внутрь помещения, у сефардов вертикально. На этой модели — футляр на отрезке косяка; самого пергамента не видно.",
+                section: "ivrit",
+                section_title: "Иврит и молитва",
+                zoom_max: 2.0,
+            },
         }
     }
 
@@ -318,6 +362,8 @@ impl Model {
             Model::Temple => (YAW0, 0.62),
             // The plate is flat: a slightly higher view shows the wells and the foods.
             Model::SederPlate => (YAW0, 0.55),
+            // The sukkah is a small building: a slightly higher view shows the schach and the table inside.
+            Model::Sukkah => (YAW0, 0.48),
             _ => (YAW0, PITCH0),
         }
     }
