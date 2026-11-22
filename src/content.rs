@@ -271,9 +271,9 @@ pub enum Question {
     Open {
         #[serde(flatten)]
         common: QCommon,
-        #[serde(default)]
+        #[serde(default, rename = "modelAnswer")]
         model_answer: String,
-        #[serde(default)]
+        #[serde(default, rename = "keyPoints")]
         key_points: Vec<String>,
     },
 }
@@ -1082,6 +1082,23 @@ mod tests {
         assert_eq!(sec.title, "Основы");
         assert_eq!(sec.subtitle, "Кто такой еврей, Тора и вера");
         assert_eq!(sec.icon, "📜");
+    }
+
+    #[test]
+    fn open_questions_load_model_answer_and_key_points() {
+        // The JSON keys are camelCase (modelAnswer, keyPoints).
+        let lib = lib();
+        let (q, _) = lib.question("osnovy-q8").unwrap();
+        let Question::Open {
+            model_answer,
+            key_points,
+            ..
+        } = q
+        else {
+            panic!("osnovy-q8 must be open")
+        };
+        assert!(!model_answer.is_empty());
+        assert!(!key_points.is_empty());
     }
 
     #[test]
