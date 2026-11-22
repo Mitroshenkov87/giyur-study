@@ -41,7 +41,7 @@ pub enum Route {
     Exam(Option<String>),
     /// Test runner for a prepared session (section, general, beit-din, retry).
     ExamRun(ExamSpec),
-    /// Timed quiz-show intro «Викторина».
+    /// «Викторина»: the «Маалот» ladder setup.
     Timed,
     /// Timed run; `retry_ids` = «Повторить ошибки (n)» from the results screen.
     TimedRun {
@@ -103,6 +103,8 @@ pub enum Action {
     SettingsChanged,
     /// Close the app (after «Удалить из системы» from the installed copy).
     Quit,
+    /// Skip to the next background track (settings «Следующий трек»).
+    MusicNext,
 }
 
 #[derive(Debug, Clone)]
@@ -127,6 +129,11 @@ pub struct Ctx {
     /// False when an existing progress file could not be read: never
     /// overwrite it (PARITY: storage unavailable → progress not saved).
     pub writable: bool,
+    /// Current background-track title, filled by the shell from the player.
+    pub music_title: Option<String>,
+    pub music_available: bool,
+    pub music_error: Option<String>,
+    pub music_track_count: usize,
 }
 
 impl Ctx {
@@ -146,7 +153,14 @@ impl Ctx {
             today_override: None,
             test_timer: crate::util::env_hook("TEST_TIMER").and_then(|v| v.parse().ok()),
             writable,
+            music_title: None,
+            music_available: false,
+            music_error: None,
+            music_track_count: 0,
         };
+        let cat = crate::music::catalog();
+        ctx.music_available = !cat.tracks.is_empty();
+        ctx.music_track_count = cat.tracks.len();
         if !writable {
             ctx.toast(
                 "Файл прогресса недоступен",

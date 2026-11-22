@@ -1,0 +1,18 @@
+# Section test from the «Тесты» setup: 10 questions, any answers, results.
+{"cmd":"press","label":"Начать"}
+{"cmd":"press","contains":"Ортодоксальный"}
+{"cmd":"navigate","to":"exam:osnovy","expect":{"screen":"exam"}}
+{"cmd":"select","target":"Основы","option":"1. Основы","expect":{"screen":"exam"}}
+{"cmd":"press","label":"10"}
+{"cmd":"press","id":"Exam(Start)","expect":{"route":"examrun:section:osnovy:10","text":"Вопрос 1 из 10"}}
+{"cmd":"answer","auto":true,"next":true,"expect":{"text":"Вопрос 2 из 10"}}
+{"cmd":"answer","auto":true,"next":true}
+{"cmd":"answer","auto":true,"next":true}
+{"cmd":"answer","auto":true,"next":true}
+{"cmd":"answer","auto":true,"next":true}
+{"cmd":"answer","auto":true,"next":true}
+{"cmd":"answer","auto":true,"next":true}
+{"cmd":"answer","auto":true,"next":true}
+{"cmd":"answer","auto":true,"next":true}
+{"cmd":"answer","auto":true,"next":true,"expect":{"control":"Exam(NewExam)"}}
+{"cmd":"state","expect":{"control":"К разделу"}}

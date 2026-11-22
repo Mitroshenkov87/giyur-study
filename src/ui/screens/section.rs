@@ -298,6 +298,7 @@ impl Screen {
         p: theme::Palette,
     ) -> Column<'a, Msg> {
         page = page.push(readiness_card(ctx, sec, rd, p));
+        page = page.push(level_counts_card(ctx, sec, p));
 
         // ---- Three ways to practise ----
         let cards_action = action_card(
@@ -489,6 +490,71 @@ fn bar_line<'a>(label: &'a str, value: String, frac: f64, p: theme::Palette) -> 
     .spacing(4)
     .width(Length::Fill)
     .into()
+}
+
+/// «Вопросы по уровням»: easy / medium / hard counts at the user's level
+/// and how many of each were answered right last time. Shared with the
+/// «Тесты» setup screen.
+pub(crate) fn level_counts_row<'a, M: 'a>(
+    counts: &[study::LevelCount; 3],
+    p: theme::Palette,
+) -> Element<'a, M> {
+    let mut r = iced::widget::Row::new().spacing(16).width(Length::Fill);
+    for c in counts {
+        r = r.push(
+            column![
+                row![
+                    txt(c.title())
+                        .size(theme::text::SMALL)
+                        .font(fonts::SANS_BOLD),
+                    iced::widget::Space::new().width(Length::Fill),
+                    txt(c.total.to_string())
+                        .size(theme::text::BODY)
+                        .font(fonts::SANS_BOLD)
+                        .color(p.gold2),
+                ]
+                .align_y(Alignment::Center),
+                progress_bar(0.0..=100.0, (frac(c.known, c.total) * 100.0) as f32)
+                    .girth(6.0)
+                    .style(move |_| theme::progress_bar(&theme::current())),
+                txt(format!("освоено {}", c.known))
+                    .size(theme::text::SMALL)
+                    .color(p.muted),
+            ]
+            .spacing(4)
+            .width(Length::Fill),
+        );
+    }
+    r.into()
+}
+
+/// Card with the per-level question counts of a section.
+fn level_counts_card<'a>(
+    ctx: &'a Ctx,
+    sec: &'a SectionMeta,
+    p: theme::Palette,
+) -> Element<'a, Msg> {
+    let counts = study::section_level_counts(&ctx.lib, sec, &ctx.state);
+    let total: usize = counts.iter().map(|c| c.total).sum();
+    let known: usize = counts.iter().map(|c| c.known).sum();
+    widgets::card(
+        column![
+            row![
+                widgets::kicker("Вопросы по уровням"),
+                iced::widget::Space::new().width(Length::Fill),
+                txt(format!("всего {total} · освоено {known}"))
+                    .size(theme::text::SMALL)
+                    .color(p.muted),
+            ]
+            .align_y(Alignment::Center),
+            level_counts_row::<Msg>(&counts, p),
+            txt("Освоено — последний ответ на вопрос был верным. Считаются вопросы вашего уровня.")
+                .size(theme::text::SMALL)
+                .color(p.muted),
+        ]
+        .spacing(12)
+        .width(Length::Fill),
+    )
 }
 
 fn frac(a: usize, b: usize) -> f64 {
