@@ -148,13 +148,22 @@ fn fixed_yaw() -> Option<f32> {
 
 /// A rotatable model viewport. `on_ready` is published once when the GPU has
 /// drawn it, so the caller can drop its static placeholder.
-pub fn view<'a, M: Clone + 'a>(model: Model, size: f32, warm: bool, on_ready: M) -> Element<'a, M> {
+/// `on_click` (if any) is published on a single click (not a drag, not a
+/// double click), e.g. to show a caption about the object.
+pub fn view<'a, M: Clone + 'a>(
+    model: Model,
+    size: f32,
+    warm: bool,
+    on_ready: M,
+    on_click: Option<M>,
+) -> Element<'a, M> {
     model.preload();
     let still = model.still_image();
     let live = shader::Shader::new(Viewer {
         model,
         warm,
         on_ready,
+        on_click,
     })
     .width(Length::Fixed(size))
     .height(Length::Fixed(size));
@@ -187,14 +196,35 @@ struct Viewer<M> {
     model: Model,
     warm: bool,
     on_ready: M,
+    on_click: Option<M>,
 }
+
+const YAW0: f32 = 0.7;
+const PITCH0: f32 = 0.28;
+const ZOOM_MIN: f32 = 0.8;
+const ZOOM_MAX: f32 = 2.0;
+const DOUBLE_CLICK: Duration = Duration::from_millis(350);
 
 pub struct State {
     yaw: f32,
     pitch: f32,
+    zoom: f32,
+    /// Smoothed towards `zoom_to` (wheel steps glide).
+    zoom_to: f32,
+    /// Hover glow 0..1, eased towards `hovered`.
+    glow: f32,
+    hovered: bool,
     drag: Option<(Point, f32, f32)>,
+    /// Press position and time: a release close by is a click, not a drag.
+    press: Option<(Point, Instant)>,
     last_move: Option<(Point, Instant)>,
-    vel: f32,
+    /// Angular velocity (yaw, pitch) in rad/s for the fling.
+    vel: (f32, f32),
+    /// A single click waits for the double-click window before it fires.
+    pending_click: Option<Instant>,
+    last_click: Option<Instant>,
+    /// Double click: glide back to the initial view.
+    resetting: bool,
     last: Option<Instant>,
     announced: bool,
     redraws: u32,
@@ -206,11 +236,19 @@ pub struct State {
 impl Default for State {
     fn default() -> Self {
         State {
-            yaw: fixed_yaw().unwrap_or(0.7),
-            pitch: 0.28,
+            yaw: fixed_yaw().unwrap_or(YAW0),
+            pitch: PITCH0,
+            zoom: 1.0,
+            zoom_to: 1.0,
+            glow: 0.0,
+            hovered: false,
             drag: None,
+            press: None,
             last_move: None,
-            vel: 0.0,
+            vel: (0.0, 0.0),
+            pending_click: None,
+            last_click: None,
+            resetting: false,
             last: None,
             announced: false,
             redraws: 0,
@@ -233,40 +271,90 @@ impl<M: Clone> shader::Program<M> for Viewer<M> {
         bounds: Rectangle,
         cursor: mouse::Cursor,
     ) -> Option<Action<M>> {
+        let k = 3.2 / bounds.width.max(1.0) / st.zoom.sqrt();
         match event {
             iced::Event::Mouse(mouse::Event::ButtonPressed(mouse::Button::Left)) => {
                 let p = cursor.position_over(bounds)?;
+                let now = Instant::now();
                 st.drag = Some((p, st.yaw, st.pitch));
-                st.last_move = Some((p, Instant::now()));
-                st.vel = 0.0;
+                st.press = Some((p, now));
+                st.last_move = Some((p, now));
+                st.vel = (0.0, 0.0);
+                st.resetting = false;
                 Some(Action::request_redraw().and_capture())
             }
             iced::Event::Mouse(mouse::Event::CursorMoved { position }) => {
-                let (start, yaw0, pitch0) = st.drag?;
-                let k = 3.2 / bounds.width.max(1.0);
+                let over = bounds.contains(*position);
+                let hover_changed = over != st.hovered;
+                st.hovered = over;
+                let Some((start, yaw0, pitch0)) = st.drag else {
+                    return hover_changed.then(Action::request_redraw);
+                };
                 st.yaw = yaw0 + (position.x - start.x) * k;
                 st.pitch = (pitch0 + (position.y - start.y) * k).clamp(-0.5, 1.1);
                 let now = Instant::now();
                 if let Some((lp, lt)) = st.last_move {
                     let dt = (now - lt).as_secs_f32();
-                    if dt > 0.0 {
-                        st.vel = ((position.x - lp.x) * k / dt).clamp(-8.0, 8.0);
+                    if dt > 0.004 {
+                        // Light smoothing so one jittery event does not decide the fling.
+                        let v = ((position.x - lp.x) * k / dt, (position.y - lp.y) * k / dt);
+                        st.vel = (
+                            (st.vel.0 * 0.4 + v.0 * 0.6).clamp(-10.0, 10.0),
+                            (st.vel.1 * 0.4 + v.1 * 0.6).clamp(-4.0, 4.0),
+                        );
                     }
                 }
                 st.last_move = Some((*position, now));
                 Some(Action::request_redraw().and_capture())
             }
+            iced::Event::Mouse(mouse::Event::CursorLeft) => {
+                st.hovered = false;
+                Some(Action::request_redraw())
+            }
             iced::Event::Mouse(mouse::Event::ButtonReleased(mouse::Button::Left)) => {
                 st.drag?;
                 st.drag = None;
+                let now = Instant::now();
                 // Released after holding still: no fling.
                 if st
                     .last_move
-                    .map(|(_, t)| t.elapsed() > Duration::from_millis(80))
+                    .map(|(_, t)| now - t > Duration::from_millis(80))
                     .unwrap_or(true)
                 {
-                    st.vel = 0.0;
+                    st.vel = (0.0, 0.0);
                 }
+                let click = st.press.take().is_some_and(|(p, t)| {
+                    let up = st.last_move.map(|(q, _)| q).unwrap_or(p);
+                    (up.x - p.x).hypot(up.y - p.y) < 5.0 && now - t < Duration::from_millis(400)
+                });
+                if click {
+                    st.vel = (0.0, 0.0);
+                    if st.last_click.is_some_and(|t| now - t < DOUBLE_CLICK) {
+                        // Double click: back to the initial view, no caption toggle.
+                        st.last_click = None;
+                        st.pending_click = None;
+                        st.resetting = true;
+                        st.zoom_to = 1.0;
+                    } else {
+                        st.last_click = Some(now);
+                        st.pending_click = Some(now);
+                    }
+                }
+                Some(Action::request_redraw().and_capture())
+            }
+            iced::Event::Mouse(mouse::Event::WheelScrolled { delta }) => {
+                cursor.position_over(bounds)?;
+                let steps = match delta {
+                    mouse::ScrollDelta::Lines { y, .. } => *y,
+                    mouse::ScrollDelta::Pixels { y, .. } => *y / 60.0,
+                };
+                let to = (st.zoom_to * 1.15f32.powf(steps)).clamp(ZOOM_MIN, ZOOM_MAX);
+                if (to - st.zoom_to).abs() < 1e-4 {
+                    // At a limit: let the page scroll on.
+                    return None;
+                }
+                st.zoom_to = to;
+                st.resetting = false;
                 Some(Action::request_redraw().and_capture())
             }
             iced::Event::Window(iced::window::Event::RedrawRequested(now)) => {
@@ -276,11 +364,38 @@ impl<M: Clone> shader::Program<M> for Viewer<M> {
                     .unwrap_or(0.0);
                 st.last = Some(*now);
                 if st.drag.is_none() {
-                    if fixed_yaw().is_none() {
-                        st.yaw += (IDLE_SPIN + st.vel) * dt;
+                    if st.resetting {
+                        // Glide to the start view along the shortest turn.
+                        let tau = std::f32::consts::TAU;
+                        let dy = ((YAW0 - st.yaw) % tau + tau + tau / 2.0) % tau - tau / 2.0;
+                        let a = 1.0 - (-8.0 * dt).exp();
+                        st.yaw += dy * a;
+                        st.pitch += (PITCH0 - st.pitch) * a;
+                        if dy.abs() < 0.003 && (PITCH0 - st.pitch).abs() < 0.003 {
+                            st.yaw = YAW0;
+                            st.pitch = PITCH0;
+                            st.resetting = false;
+                        }
+                    } else {
+                        let spin = if fixed_yaw().is_none() && !st.hovered {
+                            IDLE_SPIN
+                        } else {
+                            0.0
+                        };
+                        st.yaw += (spin + st.vel.0) * dt;
+                        st.pitch = (st.pitch + st.vel.1 * dt).clamp(-0.5, 1.1);
                     }
-                    st.vel *= (-3.0 * dt).exp();
+                    // Inertia: the fling dies out in about a second.
+                    let decay = (-2.5 * dt).exp();
+                    st.vel = (st.vel.0 * decay, st.vel.1 * decay);
                 }
+                st.zoom += (st.zoom_to - st.zoom) * (1.0 - (-12.0 * dt).exp());
+                let glow_to = if st.hovered || st.drag.is_some() {
+                    1.0
+                } else {
+                    0.0
+                };
+                st.glow += (glow_to - st.glow) * (1.0 - (-10.0 * dt).exp());
                 if stats_enabled() {
                     st.frames += 1;
                     let since = *st.since.get_or_insert(*now);
@@ -306,6 +421,12 @@ impl<M: Clone> shader::Program<M> for Viewer<M> {
                     st.announced = true;
                     return Some(Action::publish(self.on_ready.clone()));
                 }
+                if st.pending_click.is_some_and(|t| *now - t >= DOUBLE_CLICK) {
+                    st.pending_click = None;
+                    if let Some(m) = &self.on_click {
+                        return Some(Action::publish(m.clone()));
+                    }
+                }
                 // Keep animating only where it can be seen (wgpu); under
                 // tiny-skia the static picture stays and nothing redraws.
                 st.redraws = st.redraws.saturating_add(1);
@@ -313,10 +434,17 @@ impl<M: Clone> shader::Program<M> for Viewer<M> {
                 let waiting_upload =
                     WGPU_SEEN.load(Ordering::Relaxed) && self.model.mesh().is_some();
                 if gpu_ready() || loading || waiting_upload || st.redraws < 10 {
-                    // ~60 fps while dragged or flung, ~30 fps for the idle spin.
-                    let busy = st.drag.is_some() || st.vel.abs() > 0.05;
+                    // ~60 fps while touched, flung, zooming or gliding back;
+                    // ~30 fps for the idle spin.
+                    let busy = st.drag.is_some()
+                        || st.vel.0.abs() + st.vel.1.abs() > 0.05
+                        || st.resetting
+                        || (st.zoom_to - st.zoom).abs() > 0.002
+                        || (st.glow > 0.01 && st.glow < 0.99);
                     let gap = if busy { 16 } else { 33 };
                     Some(Action::request_redraw_at(*now + Duration::from_millis(gap)))
+                } else if st.pending_click.is_some() {
+                    Some(Action::request_redraw_at(*now + DOUBLE_CLICK))
                 } else {
                     // Decoded (or skipped) and no wgpu draw after the first
                     // frames: tiny-skia, so stop asking for frames.
@@ -332,6 +460,8 @@ impl<M: Clone> shader::Program<M> for Viewer<M> {
             model: self.model,
             yaw: st.yaw,
             pitch: st.pitch,
+            zoom: st.zoom,
+            glow: st.glow,
             warm: self.warm,
         }
     }
@@ -357,6 +487,8 @@ pub struct Primitive {
     model: Model,
     yaw: f32,
     pitch: f32,
+    zoom: f32,
+    glow: f32,
     warm: bool,
 }
 
@@ -367,6 +499,8 @@ struct Uniforms {
     fit: [f32; 4],
     base: [f32; 4],
     mat: [f32; 4],
+    /// zoom, hover glow, 0, 0
+    fx: [f32; 4],
 }
 
 struct GpuModel {
@@ -385,7 +519,7 @@ struct Target {
     resolve: wgpu::TextureView,
     blit: wgpu::BindGroup,
     shadow: wgpu::Buffer,
-    drawn: Option<(f32, f32, bool)>,
+    drawn: Option<[u32; 5]>,
 }
 
 pub struct Pipeline {
@@ -827,7 +961,13 @@ impl shader::Primitive for Primitive {
         };
         pipe.live.push(self.model);
         let target = pipe.target(device, self.model, size);
-        let key = (self.yaw, self.pitch, self.warm);
+        let key = [
+            self.yaw.to_bits(),
+            self.pitch.to_bits(),
+            self.zoom.to_bits(),
+            (self.glow * 64.0).round() as u32,
+            self.warm as u32,
+        ];
         if target.drawn == Some(key) {
             return;
         }
@@ -847,15 +987,19 @@ impl shader::Primitive for Primitive {
                 if mesh.has_normal_map { 1.0 } else { 0.0 },
                 if self.warm { 1.0 } else { 0.0 },
             ],
+            fx: [self.zoom, self.glow, 0.0, 0.0],
         };
         queue.write_buffer(&ubuf, 0, bytemuck::bytes_of(&u));
         // Contact shadow under the model's lowest point (projected roughly).
         let base_y = (mesh.min_y - mesh.center[1]) * inv_r * self.pitch.cos();
-        let sy = 0.5 - base_y * 3.6 / 4.2 * 0.5 * (size.0 as f32 / size.1 as f32).min(1.0);
+        let sy =
+            0.5 - base_y * 3.6 * self.zoom / 4.2 * 0.5 * (size.0 as f32 / size.1 as f32).min(1.0);
+        // Zoomed in so far that the foot leaves the frame: no shadow.
+        let strength = if sy > 0.97 { 0.0 } else { 0.38 };
         queue.write_buffer(
             &target.shadow,
             0,
-            bytemuck::cast_slice(&[sy.min(0.97), 0.30, 0.06, 0.38f32]),
+            bytemuck::cast_slice(&[sy, 0.30 * self.zoom, 0.06 * self.zoom, strength]),
         );
         let msaa = samples() > 1;
         let mut enc = device.create_command_encoder(&wgpu::CommandEncoderDescriptor {

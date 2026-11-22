@@ -616,7 +616,10 @@ pub(crate) fn heading_owned<'a, Message: 'a>(content: String, level: u8) -> Elem
 // Screen
 // ---------------------------------------------------------------------------
 
-pub struct Screen;
+pub struct Screen {
+    /// Caption about the 3D object, toggled by a click on it.
+    caption: bool,
+}
 
 #[derive(Debug, Clone)]
 pub enum Msg {
@@ -624,17 +627,23 @@ pub enum Msg {
     /// The live 3D model has been drawn by the GPU: rebuild the view
     /// without its static placeholder.
     Model3dReady,
+    /// Click on the 3D object: show / hide its caption.
+    ToggleCaption,
 }
 
 impl Screen {
     pub fn new(_ctx: &mut Ctx, _route: &Route) -> Self {
-        Screen
+        Screen { caption: false }
     }
 
     pub fn update(&mut self, _ctx: &mut Ctx, msg: Msg) -> Action {
         match msg {
             Msg::Go(route) => Action::Go(route),
             Msg::Model3dReady => Action::None,
+            Msg::ToggleCaption => {
+                self.caption = !self.caption;
+                Action::None
+            }
         }
     }
 
@@ -651,7 +660,7 @@ impl Screen {
         page = page.push(header(ctx, p));
         page = page.push(reminders(ctx, p));
         page = page.push(timed_cta(p));
-        page = page.push(kiddush_hero(ctx, p));
+        page = page.push(kiddush_hero(ctx, self.caption, p));
 
         if !ctx.lib.sections.iter().any(|s| s.available) {
             page = page.push(notice(
@@ -1208,41 +1217,71 @@ pub(crate) fn fmt_pct(v: f64) -> String {
 
 /// «Бокал для кидуша»: a live, rotatable 3D model (wgpu) with a static render
 /// as the fallback (tiny-skia, or «Объёмные модели» switched off).
-fn kiddush_hero<'a>(ctx: &'a Ctx, p: theme::Palette) -> Element<'a, Msg> {
+fn kiddush_hero<'a>(ctx: &'a Ctx, caption: bool, p: theme::Palette) -> Element<'a, Msg> {
     use crate::ui::model3d::{self, Model};
     // Screenshot hook `SHORASHIM_3D_SIZE=<px>` (default 190).
     let size = util::env_hook("3D_SIZE")
         .and_then(|v| v.parse::<f32>().ok())
         .unwrap_or(190.0);
-    let model = if model3d::enabled(ctx) {
+    let live = model3d::enabled(ctx);
+    let model = if live {
         model3d::view(
             Model::KiddushCup,
             size,
             p.texture == "bg-dark",
             Msg::Model3dReady,
+            Some(Msg::ToggleCaption),
         )
     } else {
         model3d::still(Model::KiddushCup, size)
     };
-    let hint = if model3d::enabled(ctx) {
-        "Потяните бокал мышью, чтобы рассмотреть его со всех сторон."
+    let hint = if live {
+        "Тяните — повернуть, колесо — приблизить, щелчок — подпись, двойной щелчок — исходный вид."
     } else {
         "Объёмные модели выключены в настройках."
     };
-    let body = column![
+    let mut body = column![
         widgets::kicker("Шаббат"),
         widgets::heading("Бокал для кидуша", 3),
         txt("Кидуш — освящение субботы и праздников: благословение произносят над бокалом вина в начале трапезы.")
             .size(theme::text::BODY)
             .color(p.text)
             .width(Length::Fill),
-        txt(hint).size(theme::text::SMALL).color(p.muted),
-        button(txt("Раздел «Шаббат»").size(theme::text::SMALL).font(fonts::SANS_BOLD))
-            .padding([8.0, 16.0])
-            .style(move |_, s| theme::button_secondary(&p, s))
-            .on_press(Msg::Go(Route::Section("shabbat".to_string()))),
     ]
     .spacing(8)
     .width(Length::Fill);
+    if caption {
+        body = body.push(
+            container(
+                txt("Серебряный бокал с чеканным узором. Для кидуша его наполняют вином или виноградным соком; после благословения пьёт тот, кто произносил кидуш, и делится с сидящими за столом.")
+                    .size(theme::text::SMALL)
+                    .color(p.text)
+                    .width(Length::Fill),
+            )
+            .padding([10.0, 12.0])
+            .width(Length::Fill)
+            .style(move |_| iced::widget::container::Style {
+                background: Some(Background::Color(Color { a: 0.10, ..p.gold })),
+                border: Border {
+                    color: Color { a: 0.55, ..p.gold },
+                    width: 1.0,
+                    radius: theme::radius::PILL.min(10.0).into(),
+                },
+                ..iced::widget::container::Style::default()
+            }),
+        );
+    }
+    body = body
+        .push(txt(hint).size(theme::text::SMALL).color(p.muted))
+        .push(
+            button(
+                txt("Раздел «Шаббат»")
+                    .size(theme::text::SMALL)
+                    .font(fonts::SANS_BOLD),
+            )
+            .padding([8.0, 16.0])
+            .style(move |_, s| theme::button_secondary(&p, s))
+            .on_press(Msg::Go(Route::Section("shabbat".to_string()))),
+        );
     widgets::card(row![model, body].spacing(20).align_y(Alignment::Center))
 }

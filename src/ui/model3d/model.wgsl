@@ -9,6 +9,8 @@ struct U {
     base: vec4<f32>,
     // metallic factor, roughness factor, has_normal_map, warm (theme tint 0..1)
     mat: vec4<f32>,
+    // zoom, hover glow (0..1), 0, 0
+    fx: vec4<f32>,
 };
 
 @group(0) @binding(0) var<uniform> u: U;
@@ -40,7 +42,7 @@ fn vs_model(@location(0) pos: vec3<f32>, @location(1) nrm: vec3<f32>, @location(
     let p = rot((pos - u.fit.xyz) * u.fit.w);
     let v = p - vec3<f32>(0.0, 0.0, CAM_D);
     let aspect = u.view.z;
-    let fy = FOCAL * min(aspect, 1.0);
+    let fy = FOCAL * u.fx.x * min(aspect, 1.0);
     let fx = fy / aspect;
     let near = 0.5; let far = 10.0;
     o.clip = vec4<f32>(v.x * fx, v.y * fy, v.z * far / (near - far) + near * far / (near - far), -v.z);
@@ -151,6 +153,9 @@ fn fs_model(i: VOut, @builtin(front_facing) front: bool) -> @location(0) vec4<f3
     }
     // Warm theme tint (candle light), small.
     col *= mix(vec3<f32>(1.0), vec3<f32>(1.06, 1.0, 0.9), u.mat.w);
+    // Hover: a warm candle-gold rim and a touch more light.
+    let rim = pow(1.0 - nov, 3.0);
+    col = col * (1.0 + 0.12 * u.fx.y) + vec3<f32>(1.0, 0.72, 0.32) * rim * 0.9 * u.fx.y;
     var out = aces(col * 1.1);
     if (u.view.w < 0.5) { out = pow(out, vec3<f32>(1.0 / 2.2)); }
     return vec4<f32>(out, 1.0);
