@@ -1117,4 +1117,98 @@ mod tests {
         assert_eq!(lesson.differs[0].level, Level::Reform);
         assert_eq!(lesson.differs[0].text, "Иначе в реформе");
     }
+
+    // ---- Study structure (docs/STRUCTURE.md) ----
+
+    #[test]
+    fn every_section_has_overview_and_deeper_from_its_sources() {
+        let lib = lib();
+        for sec in &lib.sections {
+            let data = sec.data.as_ref().unwrap();
+            let ov = data
+                .overview
+                .as_ref()
+                .unwrap_or_else(|| panic!("{}: overview", sec.id));
+            assert!(
+                !ov.why.is_empty() && !ov.exam_focus.is_empty(),
+                "{}",
+                sec.id
+            );
+            assert!((3..=5).contains(&ov.goals.len()), "{}: goals", sec.id);
+            assert!((3..=6).contains(&data.deeper.len()), "{}: deeper", sec.id);
+            for d in &data.deeper {
+                let r = d.source_ref.as_deref().unwrap_or("");
+                assert!(
+                    data.sources.iter().any(|s| s.id == r),
+                    "{}: deeper «{}» points at unknown source {r:?}",
+                    sec.id,
+                    d.title
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn every_lesson_has_key_ideas_and_beit_din_questions() {
+        let lib = lib();
+        for sec in &lib.sections {
+            let min = if sec.id == "beit-din" { 3 } else { 2 };
+            for lesson in &sec.data.as_ref().unwrap().lessons {
+                assert!(
+                    (3..=5).contains(&lesson.key_ideas.len()),
+                    "{}: keyIdeas",
+                    lesson.id
+                );
+                // Visible at the lesson's own level and above.
+                let level = lesson.min_level.unwrap_or(Level::Reform);
+                let n = lib.lesson_interview(sec, &lesson.id, Level::Orthodox).len();
+                assert!(n >= min, "{}: {n} beit-din questions", lesson.id);
+                let own = lib.lesson_interview(sec, &lesson.id, level).len();
+                assert!(own >= 1, "{}: none visible at its own level", lesson.id);
+                for q in lib.lesson_interview(sec, &lesson.id, Level::Orthodox) {
+                    let Question::Open {
+                        model_answer,
+                        key_points,
+                        ..
+                    } = q
+                    else {
+                        unreachable!()
+                    };
+                    assert!(
+                        !model_answer.is_empty() && !key_points.is_empty(),
+                        "{}",
+                        q.id()
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn no_christian_framing_in_content() {
+        let banned = [
+            "библи",
+            "ветхий завет",
+            "ветхого завета",
+            "ветхом завете",
+            "новый завет",
+            "нового завета",
+            "новом завете",
+        ];
+        for raw in [
+            include_str!("../content/sections/01-osnovy.json"),
+            include_str!("../content/sections/02-ivrit.json"),
+            include_str!("../content/sections/03-shabbat.json"),
+            include_str!("../content/sections/04-kashrut.json"),
+            include_str!("../content/sections/05-prazdniki.json"),
+            include_str!("../content/sections/06-semya.json"),
+            include_str!("../content/sections/07-etika.json"),
+            include_str!("../content/sections/08-beit-din.json"),
+        ] {
+            let low = raw.to_lowercase();
+            for b in banned {
+                assert!(!low.contains(b), "content contains «{b}»");
+            }
+        }
+    }
 }
