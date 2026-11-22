@@ -175,13 +175,12 @@ impl Screen {
             .spacing(16),
         );
 
-        let overlap = 48.0;
+        // iced's stack sizes to its first child, so an overlapping card would
+        // be clipped: place the card right under the hero instead.
         Column::new()
-            .push(stack![
-                hero,
-                column![space::vertical().height(hero_height - overlap), body_card,]
-                    .width(Length::Fill),
-            ])
+            .push(hero)
+            .push(body_card)
+            .spacing(16)
             .width(Length::Fill)
             .into()
     }
