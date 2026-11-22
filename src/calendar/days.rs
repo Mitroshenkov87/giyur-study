@@ -270,9 +270,14 @@ pub fn day_info(date: NaiveDate, diaspora: bool) -> DayInfo {
             Kind::Minor,
             &if since < 7 {
                 format!(
-                    "Ханука, {}: вечером зажигают {} свечей",
+                    "Ханука, {}: вечером зажигают {} {}",
                     nth(since as u32 + 1),
-                    since + 2
+                    since + 2,
+                    if since + 2 < 5 {
+                        "свечи"
+                    } else {
+                        "свечей"
+                    }
                 )
             } else {
                 "Ханука, 8-й день".to_string()

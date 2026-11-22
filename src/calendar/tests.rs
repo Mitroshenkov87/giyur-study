@@ -227,6 +227,19 @@ fn modern_and_minor_days() {
     // Chanukah 5787: 25 Kislev = Shabbat 5 Dec 2026; 8 days.
     assert!(day_info(g(2026, 12, 4), true).has("erev-chanuka"));
     assert!(day_info(g(2026, 12, 5), true).has("chanuka"));
+    let titles = |d| -> Vec<String> {
+        day_info(d, true)
+            .events
+            .into_iter()
+            .map(|e| e.title)
+            .collect()
+    };
+    assert!(titles(g(2026, 12, 5))
+        .iter()
+        .any(|t| t.ends_with("зажигают 2 свечи")));
+    assert!(titles(g(2026, 12, 11))
+        .iter()
+        .any(|t| t.ends_with("зажигают 8 свечей")));
     assert!(day_info(g(2026, 12, 12), true).has("chanuka"));
     assert!(!day_info(g(2026, 12, 13), true).has("chanuka"));
     // Rosh Chodesh Tevet 5787 (Kislev 5787 has 30 days): 10–11 Dec 2026.
