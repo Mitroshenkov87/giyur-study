@@ -8,6 +8,16 @@
 
 > **Важно.** Материалы требуют проверки раввином. Программы гиюра различаются в зависимости от течения и конкретного бейт-дина — сверяйте всё со своим раввином. Список вопросов для проверки: [`docs/RABBI-REVIEW.md`](docs/RABBI-REVIEW.md).
 
+## Скриншоты
+
+| Карта разделов | Урок |
+|---|---|
+| ![Карта](docs/screenshots/map.webp) | ![Урок](docs/screenshots/lesson.webp) |
+| **Экзамен на время** | **Прогресс** |
+| ![Экзамен](docs/screenshots/timedrun.webp) | ![Прогресс](docs/screenshots/progress.webp) |
+| **Карточки** | |
+| ![Карточки](docs/screenshots/deck.webp) | |
+
 ## Скачать
 Готовый `.exe` для Windows (x64) — на странице [Releases](../../releases). Установка не нужна: скачайте и запустите. Прогресс хранится в `%APPDATA%\GiyurStudy\progress.json`.
 
@@ -34,7 +44,7 @@ cargo build --release --target x86_64-pc-windows-gnu
 Интерфейс написан на [iced](https://iced.rs) 0.14: его движок текста (cosmic-text, шейпинг rustybuzz и Unicode bidi) правильно рисует иврит с огласовками, справа налево, и слова на иврите внутри русских фраз. Это проверено на экране до выбора. egui не подошёл: в нём нет bidi и сложного шейпинга, иврит выходит задом наперёд. Отрисовка — через wgpu, а если видеодрайвера нет, автоматически включается программный режим.
 
 ## Лицензия
-Apache License 2.0 — см. [`LICENSE`](LICENSE) и [`NOTICE`](NOTICE). Шрифты Noto — SIL Open Font License 1.1.
+Apache License 2.0 — см. [`LICENSE`](LICENSE) и [`NOTICE`](NOTICE). Шрифты Noto — SIL Open Font License 1.1, DejaVu Sans — лицензия DejaVu Fonts.
 
 ---
 
@@ -45,6 +55,8 @@ Apache License 2.0 — см. [`LICENSE`](LICENSE) и [`NOTICE`](NOTICE). Шри�
 Features: 8 sections of leveled lessons; flashcards with spaced repetition (1 → 3 → 7 → 14 → 30 days); section tests, a general exam, a mock beit-din interview and a timed 20-question exam that ramps from easy to hard and changes every run; three movements (Reform ⊂ Conservative/Masorti ⊂ Orthodox) as nested levels of strictness; XP, a daily goal, a streak with freezes, badges and a path map; a navy-and-gold dark theme and a light «Parchment» theme.
 
 > **Note.** The content must be checked with your rabbi. Conversion programs differ by movement and by beit din.
+
+Screenshots: see the table above ([`docs/screenshots/`](docs/screenshots)).
 
 ### Download
 Get the Windows x64 `.exe` from [Releases](../../releases). No installer; progress is stored in `%APPDATA%\GiyurStudy\progress.json`.
@@ -62,4 +74,4 @@ The app is built with [iced](https://iced.rs) 0.14. Its text stack (cosmic-text 
 One iced quirk worth knowing for contributors: a Hebrew-only paragraph is already placed flush right by cosmic-text, so give it `width(Fill)` and leave the horizontal alignment at its default. Setting `align_x(Right)` or `Center` shifts it a second time, off-screen.
 
 ### License
-Apache License 2.0 — see [`LICENSE`](LICENSE) and [`NOTICE`](NOTICE). Noto fonts are under the SIL Open Font License 1.1.
+Apache License 2.0 — see [`LICENSE`](LICENSE) and [`NOTICE`](NOTICE). Noto fonts are under the SIL Open Font License 1.1; DejaVu Sans under the DejaVu Fonts license.
