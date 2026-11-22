@@ -19,29 +19,58 @@ _DEFAULT_SAMPLES = 96
 
 
 def _parse_cli():
+    """Args after '--': --out DIR, --samples N, --res PX, --theme wood|leather,
+    --hover (icon hover frame: turned ~15 deg and brighter key)."""
     argv = sys.argv
     argv = argv[argv.index("--") + 1:] if "--" in argv else []
-    out_dir = None
-    samples = None
+    opts = {"out": None, "samples": None, "res": None, "theme": "wood", "hover": False}
     i = 0
     while i < len(argv):
-        if argv[i] == "--out" and i + 1 < len(argv):
-            out_dir = argv[i + 1]
-            i += 2
-        elif argv[i] == "--samples" and i + 1 < len(argv):
-            samples = int(argv[i + 1])
+        a = argv[i]
+        if a == "--hover":
+            opts["hover"] = True
+            i += 1
+        elif a.startswith("--") and a[2:] in opts and i + 1 < len(argv):
+            opts[a[2:]] = argv[i + 1]
             i += 2
         else:
             i += 1
-    return out_dir, samples
+    return opts
 
 
-OUT_DIR, _cli_samples = _parse_cli()
-SAMPLES = _cli_samples if _cli_samples else _DEFAULT_SAMPLES
+_OPTS = _parse_cli()
+OUT_DIR = _OPTS["out"]
+SAMPLES = int(_OPTS["samples"]) if _OPTS["samples"] else _DEFAULT_SAMPLES
+if _OPTS["res"]:
+    RESOLUTION = int(_OPTS["res"])
+THEME = _OPTS["theme"]          # "wood" (dark library) or "leather" (light hide)
+HOVER = bool(_OPTS["hover"])    # hover frame for interactive icons
+HOVER_TURN = 15.0               # degrees added to camera azimuth on hover
 if OUT_DIR is None:
     OUT_DIR = os.path.abspath(
         os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "img", "objects")
     )
+
+
+def variant_name(base):
+    """'nav_lessons' -> 'nav_lessons-wood' / 'nav_lessons-leather-hover'."""
+    return base + "-" + THEME + ("-hover" if HOVER else "")
+
+
+def theme_metal():
+    """Main metal of the theme: polished brass (wood) / dark antique bronze (leather)."""
+    if THEME == "leather":
+        return _metal("Bronze", (0.36, 0.20, 0.09, 1.0), 0.32,
+                      noise_scale=9.0, bump_strength=0.05, bump_distance=0.02)
+    return mat_brass()
+
+
+def theme_accent():
+    """Secondary surface: walnut (wood) / oxblood leather (leather)."""
+    if THEME == "leather":
+        return mat_leather((0.22, 0.06, 0.04, 1.0))
+    return mat_walnut()
+
 
 _RENDERABLE = {"MESH", "CURVE", "SURFACE", "FONT", "META"}
 
@@ -159,6 +188,8 @@ def _cam_direction(elevation_deg, azimuth_deg):
 def frame_object(objs, margin=0.1, focal=72.0, elevation=25.0, azimuth=38.0):
     """3/4 view from slightly above; bounding box fills ~80% of the frame."""
     objs = [o for o in objs if o.type in _RENDERABLE]
+    if HOVER:
+        azimuth += HOVER_TURN
     cam_data = bpy.data.cameras.new("Camera")
     cam = bpy.data.objects.new("Camera", cam_data)
     bpy.context.collection.objects.link(cam)
@@ -211,7 +242,7 @@ def setup_lights(center=None, radius=None):
         radius = max((mx - mn).length * 0.5, 0.1)
     s = radius
     target = Vector(center)
-    _area_light("Key", (1.0, 0.78, 0.55), 600.0, 3.2 * s,
+    _area_light("Key", (1.0, 0.78, 0.55), 600.0 * (1.45 if HOVER else 1.0), 3.2 * s,
                 target + Vector((-1.6 * s, -1.9 * s, 2.4 * s)), target)
     _area_light("Fill", (0.72, 0.80, 1.0), 250.0, 4.0 * s,
                 target + Vector((1.8 * s, -1.0 * s, 0.9 * s)), target)

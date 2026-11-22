@@ -111,3 +111,76 @@ Objects (name -> description)
 Quality bar: these go into a premium-looking app as section header art and
 quiz illustrations. Silhouettes must read clearly at 256 px. Prefer bevels,
 subdivision, smooth shading; avoid default gray materials and z-fighting.
+
+## Status / conventions (added after pilot)
+- `common.py` is FROZEN for parallel work: do NOT edit it. If you need extra
+  helpers, put them in your own script or in a new helper module named for your
+  batch (e.g. `iconkit.py`). Read common.py first and reuse its helpers:
+  reset_scene, setup_render, frame_object(objs, margin, focal, elevation,
+  azimuth), setup_lights, add_shadow_catcher, render(name, out_dir),
+  add_cylinder/add_uv_sphere/add_cone/add_torus/tube_curve/lathe, bevel, smooth,
+  assign, and the mat_* library, plus THEME, HOVER, variant_name(), theme_metal(),
+  theme_accent().
+- Reference pattern: obj_menorah_temple.py and obj_kiddush_cup.py.
+  Call order: reset_scene(); setup_render(); build geometry; frame_object(objs,...);
+  setup_lights(); add_shadow_catcher(); render(name, common.OUT_DIR).
+- Quick test (fast, low quality):
+  `blender -b --factory-startup -P scripts/<file>.py -- --out /tmp/kt --samples 8 --res 384`
+  Then check with Pillow that the PNG's alpha bbox is non-empty and the object
+  isn't clipped (bbox should not touch the image border). Never open or look at
+  the image itself; numbers only. Delete test PNGs afterwards.
+- Final renders are done by the maintainer with render_all.sh; you only write
+  and smoke-test scripts. Max 3 test renders per script; stop when it runs
+  cleanly and the geometry is sound.
+- Output naming: obj_<name>.py renders "<name>". icon_/emblem_/decor_ scripts
+  must render common.variant_name("<name>") so theme/hover variants get
+  separate files.
+
+## Icon set (icon_*.py) — sidebar navigation, both themes, rest + hover
+Small, bold, chunky 3D icons that read at 48-64 px. One object per icon, simple
+silhouette, few parts, thick features, no tiny details. Main material:
+common.theme_metal() (brass on wood theme, dark antique bronze on leather
+theme) with common.theme_accent() for secondary parts (walnut / oxblood
+leather); parchment or wax where natural. Camera: 3/4 view, elevation ~25,
+azimuth ~30 (HOVER adds +15 automatically and brightens the key light).
+No shadow catcher needed for icons (skip add_shadow_catcher) so they sit
+cleanly in a nav row.
+- icon_lessons (Уроки): an open book, thick pages fanned, brass corner caps.
+- icon_calendar (Календарь): a small standing desk calendar/luach page block
+  in a brass frame with a crescent moon emblem on top (Jewish lunar calendar).
+- icon_cards (Карточки): a fanned stack of 3 thick index cards, top one with a
+  brass corner and a raised א.
+- icon_quiz (Викторина): a short brass ladder of 5 rungs climbing to a small
+  crown-like finial (the quiz is a ladder of rising questions). No money, no TV.
+- icon_tests (Проверка знаний): a rolled parchment sheet with a brass
+  check-mark seal / quill pen and inkwell.
+- icon_progress (Мои успехи): a brass goblet-trophy or a pomegranate on a
+  small plinth (pomegranate = 613 mitzvot, fullness). Pick pomegranate on plinth.
+- icon_settings (Настройки): a brass gear/cog with a walnut/leather hub.
+- icon_sources (Источники): a stack of 3 thick leather-bound books (seforim)
+  with brass spine bands, lying flat.
+
+## Section emblems (emblem_*.py) — round medallions, both themes
+Each = a round coin-like medallion (diameter 2, thickness ~0.18, raised bezel
+rim, bevelled) made of theme_metal(), with a theme_accent() inner disc inset,
+and a raised relief symbol (theme_metal, extruded ~0.08) on the inner disc,
+viewed nearly frontal (elevation ~10, azimuth ~15) so the symbol reads.
+- emblem_osnovy: rolled Torah scroll (two rollers with parchment between).
+- emblem_ivrit: the letter א (use text object with font
+  /workspace/shorashim-wt-art/assets/fonts/NotoSerifHebrew-Regular.ttf, extrude).
+- emblem_shabbat: two candles with flames (flames emissive).
+- emblem_kashrut: a fish with clearly visible fins and scales (kosher sign).
+- emblem_prazdniki: a shofar.
+- emblem_semya: a chuppah (canopy cloth on four poles), no people.
+- emblem_etika: balance scales.
+- emblem_beit_din: three high-backed chairs side by side (three judges), no people.
+
+## Decor (decor_*.py) — ornaments for screens, both themes
+- decor_divider: a long thin horizontal brass rule with a pomegranate finial in
+  the centre and small knobs at the ends (aspect ~8:1; still render square, the
+  converter centres it).
+- decor_corner: an L-shaped brass corner bracket with a small engraved scroll
+  curl, for card corners.
+- decor_seal: a round wax seal (deep red wax, irregular rim) stamped with a
+  Star of David, for "passed" / completion states.
+- decor_bookmark: a silk ribbon bookmark (burgundy) with a brass tip, hanging.
