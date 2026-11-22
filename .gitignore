@@ -3,3 +3,5 @@
 /.logs
 /logs
 /target
+/.prompts
+/tools/prompts

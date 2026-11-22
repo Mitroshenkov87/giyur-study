@@ -1,4 +1,0 @@
-## Your files
-src/ui/screens/welcome.rs, src/ui/screens/level.rs, src/ui/screens/map.rs, src/ui/screens/section.rs, src/ui/screens/sources.rs (replace the stubs).
-PARITY sections: §1 Welcome, §2 Movement/level choice (first run → choice → map; reopened from map chip/settings shows «Назад», changing movement asks for confirmation, progress never reset; set state.onboarded and settings.level, return Action::SettingsChanged then Go(Map)), §3 Map/home (header with level chip → Route::Level{reopened:true}, daily-goal ring, streak, freezes, in-app reminder banners from game::reminders, vertical path of section nodes with emblem images, locked/«Скоро»/current «Начать»/«Продолжить», due-cards entry), §4 Section page (lessons list with read state, cards deck entry → Route::Cards(Deck::Section), test → Route::Exam(Some(id)) / ExamRun, locked section → «Раздел закрыт»), §13 Sources.
-JS: js/ui/home.js, js/ui/core.js (shared helpers), js/content.js.
