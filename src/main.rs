@@ -22,6 +22,8 @@ struct App {
     route: Route,
     history: Vec<Route>,
     screen: Current,
+    /// Sidebar item under the mouse (its 3D icon shows the hover frame).
+    nav_hover: Option<usize>,
 }
 
 #[derive(Debug, Clone)]
@@ -33,6 +35,8 @@ enum Message {
     Control(ControlMsg),
     /// Screenshot hook `SHORASHIM_SCROLL_Y=<px>`: scroll the main column.
     ScrollTo(f32),
+    /// Mouse entered (`true`) or left (`false`) a sidebar item.
+    NavHover(usize, bool),
 }
 
 fn theme_kind(ctx: &Ctx) -> ThemeKind {
@@ -71,6 +75,9 @@ impl App {
                 route,
                 history: Vec::new(),
                 screen,
+                // Screenshot hook `SHORASHIM_NAV_HOVER=<index>`: show one
+                // sidebar icon in its hover frame without a mouse.
+                nav_hover: shorashim::util::env_hook("NAV_HOVER").and_then(|v| v.parse().ok()),
             },
             // Screenshot hook: scroll once the first frame is laid out.
             match shorashim::util::env_hook("SCROLL_Y").and_then(|v| v.parse::<f32>().ok()) {
@@ -84,6 +91,8 @@ impl App {
     }
 
     fn go(&mut self, route: Route) -> Task<Message> {
+        // The sidebar may be rebuilt under the cursor; don't leave a stuck hover.
+        self.nav_hover = None;
         // First-launch guard (PARITY §0.1).
         let route = if !self.ctx.state.onboarded
             && !matches!(route, Route::Welcome | Route::Level { .. })
@@ -114,6 +123,13 @@ impl App {
 
     fn update(&mut self, message: Message) -> Task<Message> {
         match message {
+            Message::NavHover(i, inside) => {
+                if inside {
+                    self.nav_hover = Some(i);
+                } else if self.nav_hover == Some(i) {
+                    self.nav_hover = None;
+                }
+            }
             Message::Screen(m) => match self.screen.update(&mut self.ctx, m) {
                 Action::None => {}
                 Action::Go(r) => return self.go(r),
@@ -211,6 +227,35 @@ impl App {
                     },
                     ..Default::default()
                 });
+            // Pre-rendered 3D icon for the theme; the hover frame is the same
+            // object turned 15° with a brighter key light (a cheap "tilt").
+            let hovered = self.nav_hover == Some(i);
+            let art_name = format!(
+                "icon-{}-{}{}",
+                item.art,
+                theme::art_variant(),
+                if hovered { "-hover" } else { "" }
+            );
+            // The hovered icon also grows a little inside a fixed box ("pop"),
+            // so the row never shifts.
+            let box_px = theme::size::NAV_ICON_HOVER;
+            let px = if hovered {
+                theme::size::NAV_ICON_HOVER
+            } else {
+                theme::size::NAV_ICON
+            };
+            let icon: Element<'_, Message> = match assets::art(&art_name) {
+                Some(h) => container(
+                    image(h)
+                        .width(px)
+                        .height(px)
+                        .filter_method(image::FilterMethod::Linear),
+                )
+                .center_x(box_px)
+                .center_y(box_px)
+                .into(),
+                None => iced::widget::space().width(box_px).height(box_px).into(),
+            };
             let label = column![
                 text(item.label).size(15).shaping(text::Shaping::Advanced),
                 text(item.subtitle)
@@ -220,7 +265,7 @@ impl App {
             ]
             .spacing(1);
             let b = button(
-                container(row![bar, label].spacing(10).align_y(Alignment::Center))
+                container(row![bar, icon, label].spacing(8).align_y(Alignment::Center))
                     .center_y(Length::Fill),
             )
             .width(Length::Fill)
@@ -242,6 +287,9 @@ impl App {
             )
             .padding([7, 11])
             .max_width(300);
+            let b = iced::widget::mouse_area(b)
+                .on_enter(Message::NavHover(i, true))
+                .on_exit(Message::NavHover(i, false));
             col = col.push(
                 iced::widget::tooltip(b, tip, iced::widget::tooltip::Position::Right)
                     .gap(6)
