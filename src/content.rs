@@ -1206,6 +1206,9 @@ mod tests {
             "новый завет",
             "нового завета",
             "новом завете",
+            "старый завет",
+            "старого завета",
+            "старом завете",
         ];
         for raw in [
             include_str!("../content/sections/01-osnovy.json"),
@@ -1222,5 +1225,165 @@ mod tests {
                 assert!(!low.contains(b), "content contains «{b}»");
             }
         }
+    }
+
+    /// Bank size floors: about 1000 questions, every level at least a
+    /// fifth of each section, enough multiple choice per level for the
+    /// ladder (it needs five per level and borrows from neighbours).
+    const BANK_MIN_TOTAL: usize = 950;
+    const BANK_MIN_PER_SECTION: usize = 110;
+    const BANK_MIN_LEVEL_PCT: usize = 20;
+    const BANK_MIN_MC_PER_LEVEL: usize = 10;
+
+    /// Words of more than three letters (lower case, ё → е).
+    fn words(s: &str) -> std::collections::HashSet<String> {
+        s.to_lowercase()
+            .replace('ё', "е")
+            .split(|c: char| !c.is_alphanumeric())
+            .filter(|w| w.chars().count() > 3)
+            .map(str::to_string)
+            .collect()
+    }
+
+    /// Prompt plus the right answer: what a question actually tests.
+    fn tested(q: &Question) -> std::collections::HashSet<String> {
+        let mut t = q.common().prompt.clone();
+        match q {
+            Question::Mc {
+                options, answer, ..
+            } => {
+                if let Some(o) = options.get(*answer) {
+                    t.push(' ');
+                    t.push_str(o);
+                }
+            }
+            Question::Typed { answer, .. } => {
+                t.push(' ');
+                t.push_str(answer);
+            }
+            Question::Match { pairs, .. } => {
+                for (a, b) in pairs {
+                    t.push(' ');
+                    t.push_str(a);
+                    t.push(' ');
+                    t.push_str(b);
+                }
+            }
+            _ => {}
+        }
+        words(&t)
+    }
+
+    fn jaccard(
+        a: &std::collections::HashSet<String>,
+        b: &std::collections::HashSet<String>,
+    ) -> f64 {
+        let i = a.intersection(b).count() as f64;
+        let u = a.union(b).count().max(1) as f64;
+        i / u
+    }
+
+    #[test]
+    fn question_bank_has_no_duplicates_or_near_duplicates() {
+        let lib = lib();
+        let mut ids = std::collections::HashSet::new();
+        let mut prompts = std::collections::HashMap::new();
+        for sec in &lib.sections {
+            let data = sec.data.as_ref().unwrap();
+            let lessons: std::collections::HashSet<&str> =
+                data.lessons.iter().map(|l| l.id.as_str()).collect();
+            let t: Vec<(&str, std::collections::HashSet<String>)> =
+                data.questions.iter().map(|q| (q.id(), tested(q))).collect();
+            for q in &data.questions {
+                assert!(
+                    ids.insert(q.id().to_string()),
+                    "duplicate question id {}",
+                    q.id()
+                );
+                let l = q.common().lesson_id.as_deref().unwrap_or("");
+                assert!(lessons.contains(l), "{}: unknown lessonId «{l}»", q.id());
+                let key: String = tested(q)
+                    .into_iter()
+                    .collect::<std::collections::BTreeSet<_>>()
+                    .into_iter()
+                    .collect::<Vec<_>>()
+                    .join(" ");
+                if let Some(other) = prompts.insert(key, q.id().to_string()) {
+                    panic!("{} tests exactly the same as {other}", q.id());
+                }
+            }
+            for i in 0..t.len() {
+                for j in i + 1..t.len() {
+                    let sim = jaccard(&t[i].1, &t[j].1);
+                    assert!(
+                        sim < 0.5,
+                        "{} and {} are near-duplicates ({sim:.2})",
+                        t[i].0,
+                        t[j].0
+                    );
+                }
+            }
+            // Cards: unique ids, no repeated front within a lesson.
+            for l in &data.lessons {
+                let mut fronts = std::collections::HashSet::new();
+                for c in &l.cards {
+                    assert!(ids.insert(c.id.clone()), "duplicate card id {}", c.id);
+                    let f: String = c
+                        .front
+                        .to_lowercase()
+                        .replace('ё', "е")
+                        .chars()
+                        .filter(|c| c.is_alphanumeric())
+                        .collect();
+                    assert!(fronts.insert(f), "{}: repeated card front", c.id);
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn question_bank_is_balanced_by_level_and_format() {
+        let lib = lib();
+        let mut total = 0;
+        for sec in &lib.sections {
+            let qs = &sec.data.as_ref().unwrap().questions;
+            total += qs.len();
+            assert!(
+                qs.len() >= BANK_MIN_PER_SECTION,
+                "{}: only {} questions",
+                sec.id,
+                qs.len()
+            );
+            for d in [Difficulty::Easy, Difficulty::Medium, Difficulty::Hard] {
+                let n = qs
+                    .iter()
+                    .filter(|q| q.common().difficulty == Some(d))
+                    .count();
+                assert!(
+                    n * 100 >= qs.len() * BANK_MIN_LEVEL_PCT,
+                    "{}: {d:?} is {n} of {}",
+                    sec.id,
+                    qs.len()
+                );
+                // The «Маалот» ladder needs multiple choice at every level.
+                let mc = qs
+                    .iter()
+                    .filter(|q| {
+                        q.common().difficulty == Some(d) && matches!(q, Question::Mc { .. })
+                    })
+                    .count();
+                assert!(
+                    mc >= BANK_MIN_MC_PER_LEVEL,
+                    "{}: {d:?} has {mc} multiple-choice",
+                    sec.id
+                );
+            }
+            assert!(
+                qs.iter().all(|q| q.common().difficulty.is_some()),
+                "{}: question without difficulty",
+                sec.id
+            );
+        }
+        assert!(total >= BANK_MIN_TOTAL, "bank has {total} questions");
     }
 }

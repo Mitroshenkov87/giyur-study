@@ -703,6 +703,10 @@ mod tests {
             today_override: None,
             test_timer: None,
             writable: false,
+            music_title: None,
+            music_available: false,
+            music_error: None,
+            music_track_count: 0,
         }
     }
 

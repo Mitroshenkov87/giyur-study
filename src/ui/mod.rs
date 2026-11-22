@@ -8,6 +8,7 @@ pub mod aside;
 pub mod assets;
 pub mod fonts;
 pub mod layout;
+pub mod model3d;
 pub mod nav;
 pub mod screens;
 pub mod theme;

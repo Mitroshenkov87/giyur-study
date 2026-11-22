@@ -18,6 +18,8 @@ use crate::ui::{fonts, theme, widgets};
 pub struct Screen {
     id: String,
     mode: StudyMode,
+    /// 3D objects whose caption is open.
+    captions: Vec<crate::ui::model3d::Model>,
 }
 
 #[derive(Debug, Clone)]
@@ -29,6 +31,10 @@ pub enum Msg {
     SelfCheck(String),
     /// Start the section's beit-din rehearsal.
     Rehearse,
+    /// A 3D object was drawn by the GPU (rebuild without its placeholder).
+    Model3dReady,
+    /// Click on a 3D object: show / hide its caption.
+    ToggleCaption(crate::ui::model3d::Model),
 }
 
 impl Screen {
@@ -42,11 +48,20 @@ impl Screen {
             .section(&id)
             .map(|sec| study::mode_for(&_ctx.lib, sec, &_ctx.state))
             .unwrap_or(StudyMode::Read);
-        Screen { id, mode }
+        Screen {
+            id,
+            mode,
+            captions: Vec::new(),
+        }
     }
 
     pub fn update(&mut self, ctx: &mut Ctx, msg: Msg) -> Action {
         match msg {
+            Msg::Model3dReady => Action::None,
+            Msg::ToggleCaption(m) => {
+                crate::ui::screens::map::toggle(&mut self.captions, m);
+                Action::None
+            }
             Msg::Go(route) => Action::Go(route),
             Msg::Mode(mode) => {
                 self.mode = mode;
@@ -142,6 +157,26 @@ impl Screen {
         page.into()
     }
 
+    fn object_card<'a>(
+        &'a self,
+        ctx: &'a Ctx,
+        m: crate::ui::model3d::Model,
+        section: &str,
+    ) -> Element<'a, Msg> {
+        use crate::ui::model3d::card;
+        card::card(
+            ctx,
+            m,
+            m.kicker_in(section),
+            self.captions.contains(&m),
+            card::Msgs {
+                ready: Msg::Model3dReady,
+                toggle_caption: Msg::ToggleCaption(m),
+                link: None,
+            },
+        )
+    }
+
     #[allow(clippy::too_many_arguments)]
     fn view_read<'a>(
         &'a self,
@@ -166,6 +201,11 @@ impl Screen {
                     page = page.push(widgets::rich_paragraph(intro));
                 }
             }
+        }
+
+        // ---- Ritual objects of the section (live 3D) ----
+        for &m in crate::ui::model3d::Model::for_section(&sec.id) {
+            page = page.push(self.object_card(ctx, m, &sec.id));
         }
 
         // ---- Lessons ----
@@ -258,6 +298,7 @@ impl Screen {
         p: theme::Palette,
     ) -> Column<'a, Msg> {
         page = page.push(readiness_card(ctx, sec, rd, p));
+        page = page.push(level_counts_card(ctx, sec, p));
 
         // ---- Three ways to practise ----
         let cards_action = action_card(
@@ -449,6 +490,71 @@ fn bar_line<'a>(label: &'a str, value: String, frac: f64, p: theme::Palette) -> 
     .spacing(4)
     .width(Length::Fill)
     .into()
+}
+
+/// «Вопросы по уровням»: easy / medium / hard counts at the user's level
+/// and how many of each were answered right last time. Shared with the
+/// «Тесты» setup screen.
+pub(crate) fn level_counts_row<'a, M: 'a>(
+    counts: &[study::LevelCount; 3],
+    p: theme::Palette,
+) -> Element<'a, M> {
+    let mut r = iced::widget::Row::new().spacing(16).width(Length::Fill);
+    for c in counts {
+        r = r.push(
+            column![
+                row![
+                    txt(c.title())
+                        .size(theme::text::SMALL)
+                        .font(fonts::SANS_BOLD),
+                    iced::widget::Space::new().width(Length::Fill),
+                    txt(c.total.to_string())
+                        .size(theme::text::BODY)
+                        .font(fonts::SANS_BOLD)
+                        .color(p.gold2),
+                ]
+                .align_y(Alignment::Center),
+                progress_bar(0.0..=100.0, (frac(c.known, c.total) * 100.0) as f32)
+                    .girth(6.0)
+                    .style(move |_| theme::progress_bar(&theme::current())),
+                txt(format!("освоено {}", c.known))
+                    .size(theme::text::SMALL)
+                    .color(p.muted),
+            ]
+            .spacing(4)
+            .width(Length::Fill),
+        );
+    }
+    r.into()
+}
+
+/// Card with the per-level question counts of a section.
+fn level_counts_card<'a>(
+    ctx: &'a Ctx,
+    sec: &'a SectionMeta,
+    p: theme::Palette,
+) -> Element<'a, Msg> {
+    let counts = study::section_level_counts(&ctx.lib, sec, &ctx.state);
+    let total: usize = counts.iter().map(|c| c.total).sum();
+    let known: usize = counts.iter().map(|c| c.known).sum();
+    widgets::card(
+        column![
+            row![
+                widgets::kicker("Вопросы по уровням"),
+                iced::widget::Space::new().width(Length::Fill),
+                txt(format!("всего {total} · освоено {known}"))
+                    .size(theme::text::SMALL)
+                    .color(p.muted),
+            ]
+            .align_y(Alignment::Center),
+            level_counts_row::<Msg>(&counts, p),
+            txt("Освоено — последний ответ на вопрос был верным. Считаются вопросы вашего уровня.")
+                .size(theme::text::SMALL)
+                .color(p.muted),
+        ]
+        .spacing(12)
+        .width(Length::Fill),
+    )
 }
 
 fn frac(a: usize, b: usize) -> f64 {
