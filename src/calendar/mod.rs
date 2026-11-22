@@ -20,4 +20,5 @@ pub mod hebrew;
 pub mod parasha;
 pub mod prefs;
 pub mod texts;
+pub mod times;
 pub mod zmanim;
