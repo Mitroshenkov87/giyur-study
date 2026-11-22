@@ -281,12 +281,6 @@ fn nav_group(r: &Route) -> Option<usize> {
 }
 
 fn main() -> iced::Result {
-    // Software rendering (tiny-skia) by default: it draws the canvas icons and
-    // rings reliably on every machine, including ones without a working GPU
-    // driver. Set ICED_BACKEND=wgpu to try the GPU renderer.
-    if std::env::var_os("ICED_BACKEND").is_none() {
-        std::env::set_var("ICED_BACKEND", "tiny-skia");
-    }
     let mut settings = iced::window::Settings {
         size: iced::Size::new(1200.0, 820.0),
         min_size: Some(iced::Size::new(720.0, 560.0)),

@@ -426,7 +426,10 @@ impl Screen {
             ]
             .spacing(10)
             .align_x(Alignment::Center)
-            .width(Length::Fill);
+            .width(Length::Fill)
+            // Fixed height: Fill spacers inside the shell's scrollable would
+            // otherwise collapse the card to zero height.
+            .height(Length::Fixed(252.0));
             flip_container(front.into(), false)
         };
         let flip = button(face)
