@@ -9,7 +9,7 @@ use iced::{Alignment, Element, Font, Length, Subscription, Task, Theme};
 use shorashim::ui::app::{Action, Ctx, Deck, Route};
 use shorashim::ui::screens::{self, Current};
 use shorashim::ui::theme::{self, ThemeKind};
-use shorashim::ui::{assets, fonts, widgets};
+use shorashim::ui::{assets, fonts, layout, widgets};
 
 const MAIN_SCROLL: &str = "main-scroll";
 
@@ -120,7 +120,10 @@ impl App {
             ("Источники", Route::Sources),
         ];
         let active = nav_group(&self.route);
-        let mut col = Column::new().spacing(4).padding([18, 12]).width(230);
+        let mut col = Column::new()
+            .spacing(4)
+            .padding([28, 12])
+            .width(layout::NAV);
         let brand = button(
             row![
                 image(
@@ -181,7 +184,7 @@ impl App {
             col = col.push(b);
         }
         let panel = container(col)
-            .width(230)
+            .width(layout::NAV)
             .height(Length::Fill)
             .style(move |_| theme::sidebar(&p));
         // Leather (dark) / darker klaf (parchment) under the side veil: the
@@ -189,7 +192,7 @@ impl App {
         match assets::img(p.side_texture) {
             Some(handle) => stack![
                 image(handle)
-                    .width(230)
+                    .width(layout::NAV)
                     .height(Length::Fill)
                     .content_fit(iced::ContentFit::Cover)
                     .filter_method(image::FilterMethod::Linear),
@@ -198,6 +201,47 @@ impl App {
             .into(),
             None => panel.into(),
         }
+    }
+
+    /// The main grid for a window `width` (see `layout::compute`).
+    fn grid(&self, width: f32, want_aside: bool, p: theme::Palette) -> Element<'_, Message> {
+        let g = layout::compute(width, want_aside);
+        let hairline = move || {
+            container(iced::widget::space())
+                .width(1)
+                .height(Length::Fill)
+                .style(move |_| theme::divider_v(&p))
+        };
+        let body = container(self.screen.view(&self.ctx).map(Message::Screen))
+            .padding([28.0, layout::CONTENT_PAD])
+            .width(g.content);
+        // The scrollable spans everything right of the nav, so the wheel
+        // works over the margins and the scrollbar sits at the window edge;
+        // the aside is drawn on top, fixed, in the reserved space.
+        let reserved = if g.aside { layout::ASIDE } else { 0.0 } + g.right;
+        let scroll = scrollable(row![body, iced::widget::space().width(reserved)])
+            .id(MAIN_SCROLL)
+            .width(Length::Fill)
+            .height(Length::Fill);
+        let mut base = row![].height(Length::Fill);
+        if g.left > 0.0 {
+            base = base
+                .push(iced::widget::space().width(g.left - 1.0))
+                .push(hairline());
+        }
+        base = base.push(self.sidebar()).push(hairline()).push(scroll);
+        if !g.aside {
+            return base.into();
+        }
+        let aside = shorashim::ui::aside::panel(&self.ctx, Message::Nav(Route::Calendar));
+        stack![
+            base,
+            row![
+                iced::widget::space().width(g.aside_x()),
+                container(aside).height(Length::Fill),
+            ]
+        ]
+        .into()
     }
 
     fn toasts(&self) -> Element<'_, Message> {
@@ -235,43 +279,26 @@ impl App {
 
     fn view(&self) -> Element<'_, Message> {
         let p = theme::current();
-        let body: Element<'_, Message> = self.screen.view(&self.ctx).map(Message::Screen);
-        // Inner box caps the reading width; the outer one centres it,
-        // so maximized windows don't leave the content on the left.
-        let inner = container(
-            container(body)
-                .padding([28, 32])
-                .width(Length::Fill)
-                .max_width(1040),
-        )
-        .center_x(Length::Fill);
         let bare = self.screen.bare(&self.ctx);
-        let main: Element<'_, Message> = if bare {
+        let content: Element<'_, Message> = if bare {
             // Shrink-height scrollable: centres when the content fits,
             // scrolls when it doesn't (welcome / first-run level choice).
+            let inner = container(
+                container(self.screen.view(&self.ctx).map(Message::Screen))
+                    .padding([28.0, layout::CONTENT_PAD])
+                    .width(Length::Fill)
+                    .max_width(layout::content_col()),
+            )
+            .center_x(Length::Fill);
             container(scrollable(inner).height(Length::Shrink))
                 .center(Length::Fill)
                 .into()
         } else {
-            container(scrollable(inner).height(Length::Fill))
-                .width(Length::Fill)
-                .height(Length::Fill)
-                .into()
+            // One grid for every screen (src/ui/layout.rs): the nav, the
+            // reading column and the optional quote panel move together.
+            let want_aside = shorashim::ui::aside::enabled(&self.ctx);
+            iced::widget::responsive(move |size| self.grid(size.width, want_aside, p)).into()
         };
-        let content: Element<'_, Message> = if bare {
-            main
-        } else {
-            row![
-                self.sidebar(),
-                container(iced::widget::space())
-                    .width(1)
-                    .height(Length::Fill)
-                    .style(move |_| theme::divider_v(&p)),
-                main,
-            ]
-            .into()
-        };
-
         // Window background: the theme texture under a solid veil and two
         // crossed lamp gradients; bg0 alone is the fallback (no texture).
         let mut bg = stack![container(iced::widget::space())

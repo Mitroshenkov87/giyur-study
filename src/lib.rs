@@ -2,6 +2,7 @@ pub mod calendar;
 pub mod content;
 pub mod exam;
 pub mod game;
+pub mod quotes;
 pub mod srs;
 pub mod storage;
 pub mod study;

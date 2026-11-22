@@ -1066,3 +1066,24 @@ pub fn button_nav_active(p: &Palette, _status: button::Status) -> button::Style 
         ..button_style(None, p.gold2)
     }
 }
+
+/// Clickable card in the wide-window side panel («Сегодня» → calendar):
+/// looks like [`card`], brass border brightens on hover.
+pub fn aside_card(p: &Palette, status: button::Status) -> button::Style {
+    let c = card(p);
+    let hovered = matches!(status, button::Status::Hovered | button::Status::Pressed);
+    button::Style {
+        background: c.background,
+        text_color: p.text,
+        border: Border {
+            color: if hovered {
+                alpha(p.gold, 0.70)
+            } else {
+                c.border.color
+            },
+            ..c.border
+        },
+        shadow: c.shadow,
+        snap: true,
+    }
+}
