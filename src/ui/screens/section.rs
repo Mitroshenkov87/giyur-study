@@ -236,6 +236,8 @@ fn lesson_row<'a>(
     let circle = container(circle_inner)
         .width(36.0)
         .height(36.0)
+        .align_x(iced::alignment::Horizontal::Center)
+        .align_y(iced::alignment::Vertical::Center)
         .style(move |_| iced::widget::container::Style {
             background: Some(Background::Color(if read { p.gold } else { p.surface3 })),
             border: Border {
