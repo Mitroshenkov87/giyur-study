@@ -623,7 +623,7 @@ fn not_found_view(guard: &Guard) -> Element<'static, Msg> {
         Guard::Locked => ("Раздел закрыт", "Этот раздел пока закрыт."),
     };
     column![
-        widgets::back_button("Карта", Msg::Go(Route::Map)),
+        widgets::back_button("Уроки", Msg::Go(Route::Map)),
         widgets::heading(title, 1),
         widgets::card(
             column![
@@ -636,7 +636,7 @@ fn not_found_view(guard: &Guard) -> Element<'static, Msg> {
                     .color(p.muted)
                     .align_x(Horizontal::Center),
                 widgets::btn(
-                    "На карту",
+                    "К урокам",
                     widgets::Btn::Primary,
                     widgets::BtnSize::Lg,
                     Some(Msg::Go(Route::Map)),

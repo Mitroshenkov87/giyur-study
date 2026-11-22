@@ -6,6 +6,8 @@ Source of truth: the earlier PWA (`/workspace/giyur-study`) (index.html, css/app
 All strings below are quoted exactly from the source. `{x}` = interpolated value; `plural(n, a|b|c)` = Russian plural (`U.plural`: 11–14 → c; ends 1 → a; ends 2–4 → b; else c).
 Markup in content strings: `**bold**`, `*italic*`; Hebrew runs (U+0590–05FF, FB1D–FB4F) are auto-wrapped as inline RTL Hebrew (`he-inline`).
 
+> Native renames (v0.5, owner's choice): sidebar and screen titles «Карта» → «Уроки», «Повторение» → «Карточки», «Экзамен» (timed quiz) → «Викторина», «Прогресс» → «Успехи»; the «Тесты» screen h1 is «Тесты»; «На карту» → «К урокам»; the light theme «Пергамент» → «Кожа». Strings below are the PWA originals.
+
 > Note: the PWA has **no** screen called «Кто хочет стать миллионером» and **no lifelines** (no 50/50, hint, etc.). The quiz-show timed mode is titled «Экзамен» / «Экзамен (на время)»; only the badge id `millionaire` (title «20 из 20») refers to it. The only "help" controls are «Не знаю — дальше» and «Пауза» of auto-advance.
 
 ---

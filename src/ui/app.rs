@@ -41,7 +41,7 @@ pub enum Route {
     Exam(Option<String>),
     /// Test runner for a prepared session (section, general, beit-din, retry).
     ExamRun(ExamSpec),
-    /// Timed quiz-show intro «Экзамен».
+    /// Timed quiz-show intro «Викторина».
     Timed,
     /// Timed run; `retry_ids` = «Повторить ошибки (n)» from the results screen.
     TimedRun {
@@ -57,7 +57,7 @@ pub enum Route {
 pub enum Deck {
     Lesson(String),
     Section(String),
-    /// All due cards («Повторение»).
+    /// All due cards («Карточки»).
     Review,
 }
 

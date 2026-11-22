@@ -370,8 +370,10 @@ pub mod size {
     pub const PILL: f32 = 32.0;
     /// Tags, difficulty, review chip.
     pub const TAG: f32 = 24.0;
-    /// Sidebar items.
+    /// Sidebar items (single line).
     pub const NAV: f32 = 40.0;
+    /// Sidebar items with a subtitle line (label + grey description).
+    pub const NAV_ITEM: f32 = 50.0;
 }
 
 /// Spacing / layout constants.
@@ -1152,6 +1154,30 @@ pub fn sidebar(p: &Palette) -> container::Style {
 /// Vertical 1 px hairline (the sidebar's right brass border).
 pub fn divider_v(p: &Palette) -> container::Style {
     container_style(p, Some(Background::Color(p.line)))
+}
+
+/// Thin divider between sidebar items (side palette, faint).
+pub fn nav_divider(p: &Palette) -> container::Style {
+    container_style(p, Some(Background::Color(alpha(p.line2, 0.55))))
+}
+
+/// Hover tooltip bubble (main palette: a raised surface card).
+pub fn tooltip(p: &Palette) -> container::Style {
+    container::Style {
+        background: Some(Background::Color(p.surface2)),
+        border: Border {
+            color: p.line2,
+            width: 1.0,
+            radius: 10.0.into(),
+        },
+        shadow: iced::Shadow {
+            color: alpha(Color::BLACK, 0.3),
+            offset: iced::Vector::new(0.0, 4.0),
+            blur_radius: 12.0,
+        },
+        text_color: Some(p.text),
+        snap: true,
+    }
 }
 
 /// Horizontal 1 px hairline for the settings rows (use with `rule::horizontal(1)`).

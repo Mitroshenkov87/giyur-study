@@ -413,7 +413,7 @@ impl Screen {
             ),
             divider(p),
             set_row(
-                "Экзамен на время",
+                "Викторина",
                 "Секунд на вопрос".to_string(),
                 row![
                     widgets::choice("20 с", s.timed_seconds == 20, false, Msg::SetSeconds(20)),
@@ -424,13 +424,13 @@ impl Screen {
             ),
             divider(p),
             set_row(
-                "Звук в экзамене на время",
+                "Звук в викторине",
                 "Короткие сигналы: таймер, верно/неверно".to_string(),
                 switch(s.timed_sound, Msg::ToggleTimedSound, p),
             ),
             divider(p),
             set_row(
-                "Автопереход в экзамене на время",
+                "Автопереход в викторине",
                 "Следующий вопрос через 2 секунды (можно поставить на паузу)".to_string(),
                 switch(s.timed_auto, Msg::ToggleTimedAuto, p),
             ),
@@ -460,7 +460,7 @@ impl Screen {
         }
 
         let note = row![
-            txt("XP даются за уроки, карточки, тесты и экзамены. За каждые 7 дней серии — заморозка (до двух), она сохранит серию, если вы пропустите день.")
+            txt("XP даются за уроки, карточки, тесты и викторину. За каждые 7 дней серии — заморозка (до двух), она сохранит серию, если вы пропустите день.")
                 .size(theme::text::SMALL)
                 .color(p.muted)
                 .width(Length::Fill),
@@ -468,7 +468,7 @@ impl Screen {
         .width(Length::Fill);
 
         let link = button(
-            txt("Подробнее в разделе «Прогресс»")
+            txt("Подробнее в разделе «Успехи»")
                 .size(theme::text::SMALL)
                 .color(p.gold2),
         )
