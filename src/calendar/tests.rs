@@ -423,7 +423,9 @@ fn texts_cover_every_portion_and_day() {
     use super::texts::Texts;
     let t = Texts::get();
     for (i, (id, _, _)) in parasha::PARASHOT.iter().enumerate() {
-        let p = t.parasha(i as u8).unwrap_or_else(|| panic!("no text for {id}"));
+        let p = t
+            .parasha(i as u8)
+            .unwrap_or_else(|| panic!("no text for {id}"));
         assert_eq!(p.daily.len(), 7, "{id}");
         assert!(!p.summary.is_empty() && !p.theme.is_empty(), "{id}");
     }
@@ -450,7 +452,8 @@ fn texts_cover_every_portion_and_day() {
         include_str!("../../content/calendar/days.json")
     )
     .to_lowercase();
-    for bad in ["библи", "ветхий завет", "новый завет", "христ", "моисей"] {
+    for bad in ["библи", "ветхий завет", "новый завет", "христ", "моисей"]
+    {
         assert!(!all.contains(bad), "{bad}");
     }
 }
