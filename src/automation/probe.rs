@@ -36,10 +36,31 @@ pub struct InputItem {
     pub kind: &'static str,
 }
 
+/// A drop-down (pick list) reported by `automation::reported_choice`.
+#[derive(Debug, Clone)]
+pub struct ChoiceItem {
+    pub bounds: Rectangle,
+    pub shown: String,
+    pub options: Vec<String>,
+}
+
+impl ChoiceItem {
+    /// Where option `i` sits once the menu is open: iced's menu opens right
+    /// below the field, one row per option (text line + pick-list padding).
+    pub fn option_point(&self, i: usize) -> Point {
+        const ROW: f32 = 16.0 * 1.3 + 10.0;
+        Point::new(
+            self.bounds.center_x(),
+            self.bounds.y + self.bounds.height + ROW * i as f32 + ROW / 2.0,
+        )
+    }
+}
+
 /// Result of a scan.
 pub struct Scan<M> {
     pub texts: Vec<TextItem>,
     pub inputs: Vec<InputItem>,
+    pub choices: Vec<ChoiceItem>,
     /// For every text index: the messages a click on it publishes.
     pub clicks: Vec<Vec<M>>,
     /// Height of the first scrollable's content (the page), if any.
@@ -95,6 +116,7 @@ fn with_renderer<R>(f: impl FnOnce(&mut iced::Renderer) -> R) -> R {
 struct Collector {
     texts: Vec<TextItem>,
     inputs: Vec<InputItem>,
+    choices: Vec<ChoiceItem>,
     content_height: Option<f32>,
 }
 
@@ -149,12 +171,25 @@ impl Operation for Collector {
         }
     }
 
+    fn custom(&mut self, _id: Option<&Id>, bounds: Rectangle, state: &mut dyn std::any::Any) {
+        if let Some(c) = state.downcast_ref::<super::reported::ChoiceInfo>() {
+            self.choices.push(ChoiceItem {
+                bounds,
+                shown: c.shown.clone(),
+                options: c.options.clone(),
+            });
+        }
+    }
+
     fn finish(&self) -> Outcome<()> {
         Outcome::None
     }
 }
 
-fn collect<M>(ui: &mut UserInterface<'_, M, Theme, iced::Renderer>, r: &iced::Renderer) -> Collector {
+fn collect<M>(
+    ui: &mut UserInterface<'_, M, Theme, iced::Renderer>,
+    r: &iced::Renderer,
+) -> Collector {
     let mut c = Collector::default();
     ui.operate(r, &mut c);
     c
@@ -189,7 +224,8 @@ pub fn scan<'a, M: Clone>(view: &dyn Fn() -> Element<'a, M>, size: Size) -> Scan
         for t in &c.texts {
             let mut out = Vec::new();
             let center = t.bounds.center();
-            if center.x >= 0.0 && center.y >= 0.0 && center.x < size.width && center.y < size.height {
+            if center.x >= 0.0 && center.y >= 0.0 && center.x < size.width && center.y < size.height
+            {
                 let (_, statuses) = ui.update(
                     &click_events(),
                     mouse::Cursor::Available(center),
@@ -209,6 +245,7 @@ pub fn scan<'a, M: Clone>(view: &dyn Fn() -> Element<'a, M>, size: Size) -> Scan
         Scan {
             texts: c.texts,
             inputs: c.inputs,
+            choices: c.choices,
             clicks,
             content_height: c.content_height,
         }
@@ -267,52 +304,6 @@ pub fn interact<'a, M: Clone>(element: Element<'a, M>, size: Size, steps: &[Step
             }
         }
         out
-    })
-}
-
-/// Lists texts after a click at `at` (e.g. the options of an opened pick
-/// list overlay), then clicks the first text equal to / containing
-/// `option`. Returns the published messages.
-pub fn click_then_pick<'a, M: Clone>(
-    element: Element<'a, M>,
-    size: Size,
-    at: Point,
-    option: &str,
-) -> Result<Vec<M>, String> {
-    with_renderer(|renderer| {
-        let mut ui = UserInterface::build(element, size, Cache::default(), renderer);
-        let mut out = Vec::new();
-        let cursor = mouse::Cursor::Available(at);
-        let _ = ui.update(&click_events(), cursor, renderer, &mut clipboard::Null, &mut out);
-        // A redraw lets the opened overlay lay itself out.
-        let _ = ui.update(
-            &[Event::Window(iced::window::Event::RedrawRequested(
-                iced::time::Instant::now(),
-            ))],
-            cursor,
-            renderer,
-            &mut clipboard::Null,
-            &mut out,
-        );
-        let before = out.len();
-        let c = collect(&mut ui, renderer);
-        let want = option.to_lowercase();
-        let target = c
-            .texts
-            .iter()
-            .rev() // overlay texts come last
-            .find(|t| t.text.to_lowercase() == want)
-            .or_else(|| c.texts.iter().rev().find(|t| t.text.to_lowercase().contains(&want)))
-            .ok_or_else(|| format!("option not found: {option}"))?;
-        let p = target.bounds.center();
-        let _ = ui.update(
-            &click_events(),
-            mouse::Cursor::Available(p),
-            renderer,
-            &mut clipboard::Null,
-            &mut out,
-        );
-        Ok(out.split_off(before.min(out.len())))
     })
 }
 

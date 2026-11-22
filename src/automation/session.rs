@@ -57,7 +57,9 @@ impl Session {
                 (dir.join("progress.json"), Some(TempDir(dir)))
             }
         };
-        let today = opts.today.unwrap_or_else(|| chrono::Local::now().date_naive());
+        let today = opts
+            .today
+            .unwrap_or_else(|| chrono::Local::now().date_naive());
         let (state, writable) = storage::load_checked(&path, &crate::util::day_key(today));
         let mut ctx = Ctx {
             lib: Library::embedded(),
@@ -124,6 +126,7 @@ impl Session {
                 Err(e) => reply = json!({"ok": false, "error": e}),
             },
             Some(Effect::Quit) => self.quit = true,
+            Some(Effect::Wait(ms)) => self.wait(ms),
             Some(Effect::Scroll(_)) | None => {}
         }
         if let Some(expect) = req.get("expect") {
@@ -134,6 +137,28 @@ impl Session {
             }
         }
         reply
+    }
+
+    /// Sleep, feeding the clock-driven messages the windowed app gets from
+    /// its subscriptions (100 ms ticks).
+    fn wait(&mut self, ms: u64) {
+        let end = std::time::Instant::now() + std::time::Duration::from_millis(ms);
+        loop {
+            let now = std::time::Instant::now();
+            match &self.screen {
+                Current::Timed(_) => {
+                    self.dispatch(screens::Msg::Timed(screens::timed::Msg::Tick(now)))
+                }
+                Current::Calendar(_) => {
+                    self.dispatch(screens::Msg::Calendar(screens::calendar::Msg::GeoTick))
+                }
+                _ => {}
+            }
+            if now >= end {
+                break;
+            }
+            std::thread::sleep((end - now).min(std::time::Duration::from_millis(100)));
+        }
     }
 
     /// Script assertions: `"expect": {"screen": "lesson", "route": "lesson:",
@@ -160,7 +185,11 @@ impl Session {
             let view = super::inspect(self);
             if let Some(t) = wants_text {
                 let t = t.to_lowercase();
-                if !view.texts.iter().any(|x| x.text.to_lowercase().contains(&t)) {
+                if !view
+                    .texts
+                    .iter()
+                    .any(|x| x.text.to_lowercase().contains(&t))
+                {
                     return Err(format!("expected text «{t}» on «{route}»"));
                 }
             }

@@ -181,7 +181,9 @@ fn ctl(args: &[String]) -> i32 {
                 continue;
             }
             let reply = match serde_json::from_str::<Value>(t) {
-                Ok(req) => c.call(&req).unwrap_or_else(|e| json!({"ok": false, "error": e})),
+                Ok(req) => c
+                    .call(&req)
+                    .unwrap_or_else(|e| json!({"ok": false, "error": e})),
                 Err(e) => json!({"ok": false, "error": format!("bad JSON: {e}")}),
             };
             if reply["ok"] != json!(true) {

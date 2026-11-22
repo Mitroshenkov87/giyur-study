@@ -18,7 +18,9 @@ pub fn control_file(explicit: Option<PathBuf>) -> PathBuf {
     if let Some(p) = std::env::var_os("SHORASHIM_CONTROL_FILE") {
         return PathBuf::from(p);
     }
-    if let Some(p) = std::env::var_os("SHORASHIM_DATA").or_else(|| std::env::var_os("GIYUR_STUDY_DATA")) {
+    if let Some(p) =
+        std::env::var_os("SHORASHIM_DATA").or_else(|| std::env::var_os("GIYUR_STUDY_DATA"))
+    {
         return super::server::control_path_for(&PathBuf::from(p));
     }
     dirs::config_dir()
@@ -41,9 +43,13 @@ impl Client {
                 file.display()
             )
         })?;
-        let info: Value = serde_json::from_str(&text).map_err(|e| format!("bad control file: {e}"))?;
+        let info: Value =
+            serde_json::from_str(&text).map_err(|e| format!("bad control file: {e}"))?;
         let addr = info["addr"].as_str().ok_or("control file has no addr")?;
-        let token = info["token"].as_str().ok_or("control file has no token")?.to_string();
+        let token = info["token"]
+            .as_str()
+            .ok_or("control file has no token")?
+            .to_string();
         let addr: std::net::SocketAddr = addr.parse().map_err(|e| format!("bad addr: {e}"))?;
         if !addr.ip().is_loopback() {
             return Err("refusing a non-loopback control address".into());
@@ -66,7 +72,9 @@ impl Client {
         }
         writeln!(self.writer, "{req}").map_err(|e| e.to_string())?;
         let mut line = String::new();
-        self.reader.read_line(&mut line).map_err(|e| e.to_string())?;
+        self.reader
+            .read_line(&mut line)
+            .map_err(|e| e.to_string())?;
         if line.trim().is_empty() {
             return Err("the app closed the connection".into());
         }
@@ -81,7 +89,11 @@ pub fn launch(file: &std::path::Path, args: &[String]) -> Result<Value, String> 
     // A companion binary (shorashim-ctl) starts the main app next to it.
     let exe = match exe.file_stem().and_then(|s| s.to_str()) {
         Some(s) if s.starts_with("shorashim-ctl") => {
-            let name = if cfg!(windows) { "shorashim.exe" } else { "shorashim" };
+            let name = if cfg!(windows) {
+                "shorashim.exe"
+            } else {
+                "shorashim"
+            };
             exe.with_file_name(name)
         }
         _ => exe,
@@ -103,7 +115,9 @@ pub fn launch(file: &std::path::Path, args: &[String]) -> Result<Value, String> 
         if now.is_some() && now != old {
             if let Ok(mut c) = Client::connect(file) {
                 if let Ok(v) = c.call(&json!({"cmd": "state", "texts": false})) {
-                    return Ok(json!({"ok": true, "pid": pid, "screen": v["screen"], "route": v["route"]}));
+                    return Ok(
+                        json!({"ok": true, "pid": pid, "screen": v["screen"], "route": v["route"]}),
+                    );
                 }
             }
         }

@@ -1,0 +1,21 @@
+# Timed exam («Экзамен»): options appear after a pause, the answer locks,
+# then the reveal; quit with confirmation. Auto-advance off for a steady run.
+{"cmd":"press","label":"Начать"}
+{"cmd":"press","contains":"Ортодоксальный"}
+{"cmd":"set","key":"timed_auto","value":false}
+{"cmd":"navigate","to":"timed","expect":{"screen":"timed"}}
+{"cmd":"press","label":"10"}
+{"cmd":"press","label":"Начать игру","expect":{"route":"timedrun","control":"Timed(Skip)"}}
+{"cmd":"wait","ms":2600,"expect":{"control":"Timed(Pick("}}
+{"cmd":"answer","choice":0}
+{"cmd":"wait","ms":2500,"expect":{"control":"Timed(Next)"}}
+{"cmd":"answer","next":true}
+{"cmd":"wait","ms":2600,"expect":{"control":"Timed(Skip)"}}
+{"cmd":"press","id":"Timed(Skip)"}
+{"cmd":"press","id":"Timed(Quit)","expect":{"reply":{"dialog":true}}}
+{"cmd":"press","id":"Timed(QuitConfirm)","expect":{"screen":"timed"}}
+# Mock beit-din: open questions, self-graded.
+{"cmd":"navigate","to":"examrun:beitdin:2","expect":{"screen":"exam","text":"Вопрос раввина 1 из 2"}}
+{"cmd":"answer","auto":true,"next":true,"expect":{"text":"Вопрос раввина 2 из 2"}}
+{"cmd":"answer","auto":true,"next":true}
+{"cmd":"state","expect":{"control":"Exam(NewExam)"}}

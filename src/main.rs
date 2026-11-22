@@ -113,7 +113,8 @@ impl App {
                     tasks: Vec::new(),
                 };
                 let tasks = std::mem::take(&mut host.tasks);
-                let (task, _) = control::handle(&mut host, req, tasks, MAIN_SCROLL, Message::Control);
+                let (task, _) =
+                    control::handle(&mut host, req, tasks, MAIN_SCROLL, Message::Control);
                 return Task::batch([task, Task::batch(host.tasks)]);
             }
             Message::Control(ControlMsg::Done) => {}

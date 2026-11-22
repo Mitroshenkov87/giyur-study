@@ -1,0 +1,7 @@
+# Settings through commands and through the screen.
+{"cmd":"press","label":"Начать"}
+{"cmd":"press","contains":"Ортодоксальный"}
+{"cmd":"set","key":"theme","value":"parchment","expect":{"reply":{"ok":true}}}
+{"cmd":"set","key":"font_step","value":2}
+{"cmd":"navigate","to":"settings","expect":{"screen":"settings"}}
+{"cmd":"state","expect":{"screen":"settings"}}

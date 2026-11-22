@@ -50,7 +50,8 @@ fn obj(props: Value, required: &[&str]) -> Value {
 }
 
 fn tools(attach: bool) -> Vec<Value> {
-    let state_flag = json!({"type": "boolean", "description": "Return the full screen state after the action."});
+    let state_flag =
+        json!({"type": "boolean", "description": "Return the full screen state after the action."});
     let mut t = vec![
         ("state", "Read the current screen: route, visible texts, clickable controls with stable ids, input fields, progress, settings and toasts.",
             obj(json!({"texts": {"type": "boolean", "description": "Include all visible texts (default true)."}}), &[])),
@@ -60,23 +61,37 @@ fn tools(attach: bool) -> Vec<Value> {
         ("back", "Go back to the previous screen («Назад»).", obj(json!({"state": state_flag}), &[])),
         ("press", "Press a control listed by `state`: by id (exact), label (exact visible text, case-insensitive) or contains (substring). nth picks among several matches.",
             obj(json!({"id": {"type": "string"}, "label": {"type": "string"}, "contains": {"type": "string"}, "nth": {"type": "integer", "minimum": 0}, "state": state_flag}), &[])),
-        ("answer", "Answer the current question: choice (0-based option index), tf (true/false question), text (typed answer, submitted), knew (flashcard: remembered or not), self_grade (0..1 for open answers). next=true then moves to the next question.",
-            obj(json!({"choice": {"type": "integer", "minimum": 0}, "tf": {"type": "boolean"}, "text": {"type": "string"}, "knew": {"type": "boolean"}, "self_grade": {"type": "number", "minimum": 0, "maximum": 1}, "next": {"type": "boolean"}, "state": state_flag}), &[])),
+        ("answer", "Answer the current question: choice (0-based, in the order shown), tf (true/false question), text (typed answer, submitted), knew (flashcard: remembered or not), self_grade (0..1 for open answers). next=true then moves to the next question.",
+            obj(json!({"choice": {"type": "integer", "minimum": 0}, "tf": {"type": "boolean"}, "text": {"type": "string"}, "knew": {"type": "boolean"}, "self_grade": {"type": "number", "minimum": 0, "maximum": 1}, "auto": {"type": "boolean", "description": "Give any answer (smoke tests)."}, "next": {"type": "boolean"}, "state": state_flag}), &[])),
         ("type", "Type text into an input field (index from `state`). Replaces the current text unless append=true; submit=true presses Enter.",
             obj(json!({"text": {"type": "string"}, "input": {"type": "integer", "minimum": 0}, "append": {"type": "boolean"}, "submit": {"type": "boolean"}, "state": state_flag}), &["text"])),
-        ("select", "Choose an option in a drop-down: target = text shown on the closed drop-down, option = option text.",
-            obj(json!({"target": {"type": "string"}, "option": {"type": "string"}, "state": state_flag}), &["target", "option"])),
+        ("select", "Choose an option in a drop-down from `state.choices`: choice = its index (or target = its shown text), option = option text.",
+            obj(json!({"choice": {"type": "integer", "minimum": 0, "description": "Index from state.choices"}, "target": {"type": "string", "description": "Shown text of the drop-down (substring)"}, "option": {"type": "string"}, "nth": {"type": "integer", "minimum": 0}, "state": state_flag}), &["option"])),
         ("set", "Change a setting.",
             obj(json!({"key": {"type": "string", "enum": ["theme", "font_step", "translit", "unlock_all", "timed_sound", "timed_auto", "timed_seconds", "daily_goal"]}, "value": {"description": "theme: dark|parchment; font_step: 0..3; booleans; timed_seconds: 20|30; daily_goal: 10|20|30|50"}}), &["key", "value"])),
         ("screenshot", "Save a WebP screenshot (the real window when attached; the rendered page when headless). inline=true also returns the image.",
             obj(json!({"path": {"type": "string", "description": "Output .webp path"}, "full_page": {"type": "boolean"}, "width": {"type": "number"}, "height": {"type": "number"}, "inline": {"type": "boolean"}}), &[])),
+        ("wait", "Let time pass so timers run (the timed quiz shows its options after a short pause).",
+            obj(json!({"ms": {"type": "integer", "minimum": 0, "maximum": 60000}}), &[])),
         ("quit", "Close the app (headless: end the session).", obj(json!({}), &[])),
     ];
     if attach {
-        t.push(("scroll", "Scroll the main column of the window: to = top | bottom | 0..1.",
-            obj(json!({"to": {"description": "top | bottom | number 0..1"}}), &["to"])));
-        t.push(("launch", "Start the Shorashim app with its control channel on and wait until it answers.",
-            obj(json!({"args": {"type": "array", "items": {"type": "string"}}}), &[])));
+        t.push((
+            "scroll",
+            "Scroll the main column of the window: to = top | bottom | 0..1.",
+            obj(
+                json!({"to": {"description": "top | bottom | number 0..1"}}),
+                &["to"],
+            ),
+        ));
+        t.push((
+            "launch",
+            "Start the Shorashim app with its control channel on and wait until it answers.",
+            obj(
+                json!({"args": {"type": "array", "items": {"type": "string"}}}),
+                &[],
+            ),
+        ));
     }
     t.into_iter()
         .map(|(name, d, schema)| json!({"name": name, "description": d, "inputSchema": schema}))
@@ -106,15 +121,23 @@ fn call_tool(backend: &mut Backend, name: &str, args: &Value) -> Value {
         if let Backend::Attach { file, client } = backend {
             let extra: Vec<String> = args["args"]
                 .as_array()
-                .map(|a| a.iter().filter_map(|v| v.as_str().map(String::from)).collect())
+                .map(|a| {
+                    a.iter()
+                        .filter_map(|v| v.as_str().map(String::from))
+                        .collect()
+                })
                 .unwrap_or_default();
             *client = None;
-            let v = client::launch(file, &extra).unwrap_or_else(|e| json!({"ok": false, "error": e}));
+            let v =
+                client::launch(file, &extra).unwrap_or_else(|e| json!({"ok": false, "error": e}));
             return tool_result(&v, None);
         }
     }
     let mut req = args.as_object().cloned().unwrap_or_default();
-    let inline = req.remove("inline").and_then(|v| v.as_bool()).unwrap_or(false);
+    let inline = req
+        .remove("inline")
+        .and_then(|v| v.as_bool())
+        .unwrap_or(false);
     req.insert("cmd".into(), json!(name));
     let v = backend.call(&Value::Object(req));
     let image = if inline && name == "screenshot" && v["ok"] == json!(true) {
@@ -129,7 +152,8 @@ fn call_tool(backend: &mut Backend, name: &str, args: &Value) -> Value {
 }
 
 fn tool_result(v: &Value, image: Option<Value>) -> Value {
-    let mut content = vec![json!({"type": "text", "text": serde_json::to_string_pretty(v).unwrap_or_default()})];
+    let mut content =
+        vec![json!({"type": "text", "text": serde_json::to_string_pretty(v).unwrap_or_default()})];
     content.extend(image);
     json!({"content": content, "isError": v["ok"] != json!(true)})
 }
@@ -160,7 +184,11 @@ pub fn main(args: &[String]) -> i32 {
         let msg: Value = match serde_json::from_str(&line) {
             Ok(v) => v,
             Err(e) => {
-                let _ = writeln!(out, "{}", json!({"jsonrpc": "2.0", "id": null, "error": {"code": -32700, "message": e.to_string()}}));
+                let _ = writeln!(
+                    out,
+                    "{}",
+                    json!({"jsonrpc": "2.0", "id": null, "error": {"code": -32700, "message": e.to_string()}})
+                );
                 let _ = out.flush();
                 continue;
             }

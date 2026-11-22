@@ -151,7 +151,10 @@ fn start(
         "port": addr.port(),
         "token": token,
     });
-    write_private(file, &serde_json::to_string_pretty(&info).unwrap_or_default())?;
+    write_private(
+        file,
+        &serde_json::to_string_pretty(&info).unwrap_or_default(),
+    )?;
     let _ = FILE.set(file.to_path_buf());
     let token = Arc::new(token);
     std::thread::Builder::new()
@@ -169,11 +172,22 @@ fn start(
 
 /// Constant-time comparison (the token is a secret).
 fn same(a: &str, b: &str) -> bool {
-    a.len() == b.len() && a.bytes().zip(b.bytes()).fold(0u8, |acc, (x, y)| acc | (x ^ y)) == 0
+    a.len() == b.len()
+        && a.bytes()
+            .zip(b.bytes())
+            .fold(0u8, |acc, (x, y)| acc | (x ^ y))
+            == 0
 }
 
-fn serve(stream: TcpStream, token: &str, mut out: iced::futures::channel::mpsc::Sender<ControlMsg>) {
-    let peer_ok = stream.peer_addr().map(|a| a.ip().is_loopback()).unwrap_or(false);
+fn serve(
+    stream: TcpStream,
+    token: &str,
+    mut out: iced::futures::channel::mpsc::Sender<ControlMsg>,
+) {
+    let peer_ok = stream
+        .peer_addr()
+        .map(|a| a.ip().is_loopback())
+        .unwrap_or(false);
     if !peer_ok {
         return;
     }
@@ -194,7 +208,11 @@ fn serve(stream: TcpStream, token: &str, mut out: iced::futures::channel::mpsc::
         }
         // Not JSON (e.g. a browser's HTTP request): drop the connection.
         let Ok(Value::Object(mut obj)) = serde_json::from_str::<Value>(t) else {
-            let _ = writeln!(writer, "{}", json!({"ok": false, "error": "expected one JSON object per line"}));
+            let _ = writeln!(
+                writer,
+                "{}",
+                json!({"ok": false, "error": "expected one JSON object per line"})
+            );
             return;
         };
         let given = obj
@@ -203,7 +221,11 @@ fn serve(stream: TcpStream, token: &str, mut out: iced::futures::channel::mpsc::
             .unwrap_or_default();
         if !same(&given, token) {
             std::thread::sleep(Duration::from_millis(250));
-            let _ = writeln!(writer, "{}", json!({"ok": false, "error": "bad or missing token"}));
+            let _ = writeln!(
+                writer,
+                "{}",
+                json!({"ok": false, "error": "bad or missing token"})
+            );
             return;
         }
         let (tx, rx) = mpsc::channel();
@@ -245,6 +267,16 @@ pub fn handle<M: Send + 'static>(
                 iced::widget::operation::RelativeOffset {
                     x: None,
                     y: Some(y),
+                },
+            ));
+        }
+        Some(Effect::Wait(ms)) => {
+            let reply = out.reply;
+            tasks.push(Task::perform(
+                async move { std::thread::sleep(Duration::from_millis(ms)) },
+                move |()| {
+                    req.respond(reply.clone());
+                    wrap(ControlMsg::Done)
                 },
             ));
         }

@@ -18,7 +18,10 @@ pub mod cli;
 pub mod client;
 pub mod mcp;
 pub mod probe;
+pub mod reported;
 pub mod server;
+
+pub use reported::{reported, reported_choice};
 pub mod session;
 
 use std::path::PathBuf;
@@ -65,6 +68,8 @@ pub enum Effect {
     },
     /// Scroll the main column (0 = top, 1 = bottom). Windowed only.
     Scroll(f32),
+    /// Let time pass (timers, the timed quiz's reveal and countdown).
+    Wait(u64),
     /// Close the app (after the reply is sent).
     Quit,
 }
@@ -114,13 +119,14 @@ pub const COMMANDS: &[(&str, &str)] = &[
     ("state", "Current screen: route, visible texts, clickable controls (stable ids), inputs, progress, settings, toasts. Args: texts (bool, default true)."),
     ("navigate", "Go to a route: to = \"map\" | \"calendar[:today|month|settings|YYYY-MM-DD]\" | \"section:<id>\" | \"lesson:<id>\" | \"cards:<lessonId>\" | \"deck:<sectionId>\" | \"cards:review\" | \"exam[:<sectionId>]\" | \"examrun:section:<id>[:n]\" | \"examrun:general[:n]\" | \"examrun:beitdin[:n]\" | \"timed\" | \"timedrun\" | \"progress\" | \"settings\" | \"sources\" | \"level\" | \"welcome\", or a sidebar label («Календарь»)."),
     ("back", "«Назад»: previous screen."),
-    ("press", "Press a control from `state`: id (exact), or label (exact, case-insensitive), or contains (substring); nth picks among several matches (0-based)."),
-    ("answer", "Answer the current question: choice (0-based option), tf (true/false), text (typed answer, submitted), knew (flashcard: flips if needed, then grades), self_grade (0..1, open answers); next=true then presses «Далее»."),
+    ("press", "Press a control from `state`: id (exact), or label (exact, case-insensitive), or contains (substring); nth picks among several matches (0-based). Links and file dialogs (OpenUrl, Export, ImportPick) need allow_external=true and work only in the windowed app."),
+    ("answer", "Answer the current question: choice (0-based, in the order shown), tf (true/false), text (typed answer, submitted), knew (flashcard: flips if needed, then grades), self_grade (0..1, open answers), auto=true (any answer, for smoke tests); next=true then presses «Далее»."),
     ("type", "Type into an input field: text, input (index from `state`, default 0), append (keep current text), submit (press Enter)."),
-    ("select", "Pick from a drop-down: target (text of the closed pick list), option (text of the option)."),
+    ("select", "Pick from a drop-down listed under `choices` in `state`: choice (index) or target (shown text, substring; nth for several), option (option text, exact or substring)."),
     ("set", "Change a setting: key = theme (dark|parchment) | font_step (0..3) | translit | unlock_all | timed_sound | timed_auto (bool) | timed_seconds (20|30) | daily_goal (10|20|30|50), value."),
     ("screenshot", "Save a WebP screenshot: path (.webp). Windowed: the real window. Headless: the page; full_page=true for the whole page, width/height optional."),
     ("scroll", "Windowed only: to = \"top\" | \"bottom\" | 0..1."),
+    ("wait", "Let time pass: ms (default 1000, max 60000). Timers run (the timed quiz reveals options after a pause)."),
     ("quit", "Close the app (headless: end the session)."),
 ];
 
@@ -285,6 +291,7 @@ pub struct Control {
 pub struct View {
     pub texts: Vec<probe::TextItem>,
     pub inputs: Vec<probe::InputItem>,
+    pub choices: Vec<probe::ChoiceItem>,
     pub controls: Vec<Control>,
     pub content_height: Option<f32>,
 }
@@ -314,10 +321,7 @@ fn control_id(msgs: &[screens::Msg]) -> String {
 
 pub fn inspect(host: &dyn Host) -> View {
     let (screen, ctx) = (host.screen(), host.ctx());
-    let scan = probe::scan(
-        &|| page(screen, ctx),
-        Size::new(PROBE_WIDTH, PROBE_HEIGHT),
-    );
+    let scan = probe::scan(&|| page(screen, ctx), Size::new(PROBE_WIDTH, PROBE_HEIGHT));
     let mut controls: Vec<Control> = Vec::new();
     for (t, msgs) in scan.texts.iter().zip(scan.clicks) {
         if msgs.is_empty() {
@@ -336,6 +340,7 @@ pub fn inspect(host: &dyn Host) -> View {
     View {
         texts: scan.texts,
         inputs: scan.inputs,
+        choices: scan.choices,
         controls,
         content_height: scan.content_height,
     }
@@ -396,7 +401,11 @@ fn state_json(host: &dyn Host, with_texts: bool) -> Value {
     if with_texts {
         o.insert(
             "texts".into(),
-            json!(view.texts.iter().map(|t| t.text.clone()).collect::<Vec<_>>()),
+            json!(view
+                .texts
+                .iter()
+                .map(|t| t.text.clone())
+                .collect::<Vec<_>>()),
         );
     }
     o.insert(
@@ -416,9 +425,32 @@ fn state_json(host: &dyn Host, with_texts: bool) -> Value {
             .map(|(i, f)| json!({"index": i, "kind": f.kind, "text": f.text}))
             .collect::<Vec<_>>()),
     );
+    o.insert(
+        "choices".into(),
+        json!(view
+            .choices
+            .iter()
+            .enumerate()
+            .map(|(i, c)| json!({"index": i, "shown": c.shown, "options": c.options}))
+            .collect::<Vec<_>>()),
+    );
     o.insert("progress".into(), progress_json(ctx));
     o.insert("settings".into(), settings_json(ctx));
     v
+}
+
+/// Open drop-down `choice` and click option `option`; returns the messages.
+fn pick(host: &dyn Host, choice: &probe::ChoiceItem, option: usize) -> Vec<screens::Msg> {
+    let steps = [
+        probe::Step::Click(choice.bounds.center()),
+        probe::Step::Click(choice.option_point(option)),
+    ];
+    let (screen, ctx) = (host.screen(), host.ctx());
+    probe::interact(
+        page(screen, ctx),
+        Size::new(PROBE_WIDTH, PROBE_HEIGHT),
+        &steps,
+    )
 }
 
 fn screens_json(ctx: &Ctx) -> Value {
@@ -505,17 +537,21 @@ fn find_control<'v>(view: &'v View, a: &Map<String, Value>) -> Result<&'v Contro
         return Err("press needs id, label or contains".into());
     };
     matches.get(nth).copied().ok_or_else(|| {
-        let avail: Vec<String> = view
-            .controls
-            .iter()
-            .map(|c| c.label.join(" · "))
-            .collect();
+        let avail: Vec<String> = view.controls.iter().map(|c| c.label.join(" · ")).collect();
         format!(
             "no such control (found {} matches); available: {}",
             matches.len(),
             avail.join(" | ")
         )
     })
+}
+
+/// Controls that leave the app (browser, native file dialogs). A native
+/// dialog blocks the UI thread until a person closes it.
+fn opens_outside(id: &str) -> bool {
+    ["(OpenUrl(", "(Export)", "(ImportPick)"]
+        .iter()
+        .any(|p| id.contains(p))
 }
 
 fn has_control(view: &View, id: &str) -> bool {
@@ -527,12 +563,27 @@ fn answer(host: &mut dyn Host, a: &Map<String, Value>) -> Result<(), String> {
     let screen = screen_name(host.screen());
     let mut msgs: Vec<S> = Vec::new();
     if let Some(c) = arg_num(a, "choice") {
+        // `choice` counts options as shown (1st on screen = 0); the message
+        // carries the option's own index, so take it from the controls.
         let i = c as usize;
-        msgs.push(match screen {
-            "exam" => S::Exam(screens::exam::Msg::PickMc(i)),
-            "timed" => S::Timed(screens::timed::Msg::Pick(i)),
+        let prefixes: &[&str] = match screen {
+            "exam" => &["Exam(PickMc(", "Exam(PickTf("],
+            "timed" => &["Timed(Pick("],
             _ => return Err(format!("choice: no question on screen «{screen}»")),
-        });
+        };
+        let view = inspect(host);
+        let options: Vec<&Control> = view
+            .controls
+            .iter()
+            .filter(|c| prefixes.iter().any(|p| c.id.starts_with(p)))
+            .collect();
+        let opt = options.get(i).ok_or_else(|| {
+            format!(
+                "choice {i}: {} options can be picked now (answered already, or the options are not shown yet — try wait)",
+                options.len()
+            )
+        })?;
+        msgs.extend(opt.msgs.iter().cloned());
     } else if let Some(b) = arg_bool(a, "tf") {
         if screen != "exam" {
             return Err(format!("tf: no true/false question on screen «{screen}»"));
@@ -551,7 +602,11 @@ fn answer(host: &mut dyn Host, a: &Map<String, Value>) -> Result<(), String> {
         // Grade buttons only work on a flipped card; flip first if needed.
         let view = inspect(host);
         let grade_id = control_id(&[S::Cards(screens::cards::Msg::Grade(knew))]);
+        let flip_id = control_id(&[S::Cards(screens::cards::Msg::Flip)]);
         if !has_control(&view, &grade_id) {
+            if !has_control(&view, &flip_id) {
+                return Err("knew: no card to grade (help shown, or the deck is done)".into());
+            }
             msgs.push(S::Cards(screens::cards::Msg::Flip));
         }
         msgs.push(S::Cards(screens::cards::Msg::Grade(knew)));
@@ -561,8 +616,10 @@ fn answer(host: &mut dyn Host, a: &Map<String, Value>) -> Result<(), String> {
         }
         msgs.push(S::Exam(screens::exam::Msg::OpenReveal));
         msgs.push(S::Exam(screens::exam::Msg::SelfGrade(g.clamp(0.0, 1.0))));
+    } else if arg_bool(a, "auto").unwrap_or(false) {
+        auto_answer(host, screen)?;
     } else if !arg_bool(a, "next").unwrap_or(false) {
-        return Err("answer needs choice, tf, text, knew or self_grade".into());
+        return Err("answer needs choice, tf, text, knew, self_grade or auto".into());
     }
     if arg_bool(a, "next").unwrap_or(false) {
         msgs.push(match screen {
@@ -575,6 +632,65 @@ fn answer(host: &mut dyn Host, a: &Map<String, Value>) -> Result<(), String> {
         host.dispatch(m);
     }
     Ok(())
+}
+
+/// Give *some* answer to whatever question is shown (smoke tests): the
+/// first option, a placeholder typed answer, the first option of every
+/// match row, or a middle self-grade for open questions.
+fn auto_answer(host: &mut dyn Host, screen: &str) -> Result<(), String> {
+    use screens::Msg as S;
+    if screen == "cards" {
+        let mut knew = Map::new();
+        knew.insert("knew".into(), Value::Bool(true));
+        return answer(host, &knew);
+    }
+    let view = inspect(host);
+    let first = view.controls.iter().find(|c| {
+        ["Exam(PickMc(", "Exam(PickTf(", "Timed(Pick("]
+            .iter()
+            .any(|p| c.id.starts_with(p))
+    });
+    if let Some(c) = first {
+        let msgs = c.msgs.clone();
+        for m in msgs {
+            host.dispatch(m);
+        }
+        return Ok(());
+    }
+    if screen != "exam" {
+        return Err(format!("auto: nothing to answer on «{screen}»"));
+    }
+    if has_control(&view, "Exam(OpenReveal)") {
+        host.dispatch(S::Exam(screens::exam::Msg::OpenReveal));
+        host.dispatch(S::Exam(screens::exam::Msg::SelfGrade(0.5)));
+        return Ok(());
+    }
+    if view.inputs.iter().any(|i| i.kind == "text_input") {
+        host.dispatch(S::Exam(screens::exam::Msg::Typed("—".into())));
+        host.dispatch(S::Exam(screens::exam::Msg::TypedSubmit));
+        return Ok(());
+    }
+    // Match rows: open each empty drop-down and take its first option.
+    let mut picked = 0;
+    for _ in 0..12 {
+        let view = inspect(host);
+        let Some(c) = view.choices.iter().find(|c| c.shown == "— выберите —") else {
+            break;
+        };
+        let msgs = pick(host, c, 0);
+        if msgs.is_empty() {
+            break;
+        }
+        for m in msgs {
+            host.dispatch(m);
+        }
+        picked += 1;
+    }
+    if picked > 0 {
+        host.dispatch(S::Exam(screens::exam::Msg::MatchSubmit));
+        return Ok(());
+    }
+    Err("auto: no answerable question shown (answered already? try next=true)".into())
 }
 
 fn set_setting(host: &mut dyn Host, a: &Map<String, Value>) -> Result<(), String> {
@@ -671,6 +787,20 @@ pub fn execute(host: &mut dyn Host, req: &Value) -> Outcome {
         "press" | "click" => {
             let view = inspect(host);
             match find_control(&view, a) {
+                Ok(c)
+                    if opens_outside(&c.id)
+                        && !(host.windowed() && arg_bool(a, "allow_external").unwrap_or(false)) =>
+                {
+                    Outcome::err(format!(
+                        "«{}» opens a browser or a system file dialog; {}",
+                        c.id,
+                        if host.windowed() {
+                            "pass allow_external=true to press it anyway"
+                        } else {
+                            "not available headless"
+                        }
+                    ))
+                }
                 Ok(c) => {
                     let (id, msgs) = (c.id.clone(), c.msgs.clone());
                     for m in msgs {
@@ -713,39 +843,51 @@ pub fn execute(host: &mut dyn Host, req: &Value) -> Outcome {
             o
         }
         "select" => {
-            let (Some(target), Some(option)) = (arg_str(a, "target"), arg_str(a, "option")) else {
-                return Outcome::err("select needs target and option");
+            let Some(option) = arg_str(a, "option") else {
+                return Outcome::err("select needs option (and target or choice)");
             };
             let view = inspect(host);
-            let want = target.to_lowercase();
-            let Some(t) = view
-                .texts
+            let nth = arg_num(a, "nth").unwrap_or(0.0) as usize;
+            let choice = if let Some(i) = arg_num(a, "choice") {
+                view.choices.get(i as usize)
+            } else {
+                let want = arg_str(a, "target").unwrap_or_default().to_lowercase();
+                let hits: Vec<&probe::ChoiceItem> = view
+                    .choices
+                    .iter()
+                    .filter(|c| c.shown.to_lowercase().contains(&want))
+                    .collect();
+                hits.get(nth).copied()
+            };
+            let Some(choice) = choice else {
+                let shown: Vec<&str> = view.choices.iter().map(|c| c.shown.as_str()).collect();
+                return Outcome::err(format!("no such drop-down; on screen: {shown:?}"));
+            };
+            let want = option.to_lowercase();
+            let ix = choice
+                .options
                 .iter()
-                .find(|t| t.text.to_lowercase() == want)
-                .or_else(|| view.texts.iter().find(|t| t.text.to_lowercase().contains(&want)))
-            else {
-                return Outcome::err(format!("no text «{target}» on this screen"));
+                .position(|o| o.to_lowercase() == want)
+                .or_else(|| {
+                    choice
+                        .options
+                        .iter()
+                        .position(|o| o.to_lowercase().contains(&want))
+                });
+            let Some(ix) = ix else {
+                return Outcome::err(format!(
+                    "no option «{option}»; options: {:?}",
+                    choice.options
+                ));
             };
-            let at = t.bounds.center();
-            let res = {
-                let (screen, ctx) = (host.screen(), host.ctx());
-                probe::click_then_pick(
-                    page(screen, ctx),
-                    Size::new(PROBE_WIDTH, PROBE_HEIGHT),
-                    at,
-                    option,
-                )
-            };
-            match res {
-                Ok(msgs) if !msgs.is_empty() => {
-                    for m in msgs {
-                        host.dispatch(m);
-                    }
-                    after(host)
-                }
-                Ok(_) => Outcome::err("picking the option published nothing"),
-                Err(e) => Outcome::err(e),
+            let msgs = pick(host, choice, ix);
+            if msgs.is_empty() {
+                return Outcome::err("picking the option published nothing");
             }
+            for m in msgs {
+                host.dispatch(m);
+            }
+            after(host)
         }
         "set" => match set_setting(host, a) {
             Ok(()) => {
@@ -756,14 +898,12 @@ pub fn execute(host: &mut dyn Host, req: &Value) -> Outcome {
             Err(e) => Outcome::err(e),
         },
         "screenshot" => {
-            let path = arg_str(a, "path")
-                .map(PathBuf::from)
-                .unwrap_or_else(|| {
-                    std::env::temp_dir().join(format!(
-                        "shorashim-{}.webp",
-                        chrono::Local::now().format("%Y%m%d-%H%M%S%.3f")
-                    ))
-                });
+            let path = arg_str(a, "path").map(PathBuf::from).unwrap_or_else(|| {
+                std::env::temp_dir().join(format!(
+                    "shorashim-{}.webp",
+                    chrono::Local::now().format("%Y%m%d-%H%M%S%.3f")
+                ))
+            });
             let path = if path.extension().and_then(|e| e.to_str()) == Some("webp") {
                 path
             } else {
@@ -788,7 +928,10 @@ pub fn execute(host: &mut dyn Host, req: &Value) -> Outcome {
             let to = match a.get("to") {
                 Some(Value::String(s)) if s == "top" => 0.0,
                 Some(Value::String(s)) if s == "bottom" => 1.0,
-                Some(v) => match v.as_f64().or_else(|| v.as_str().and_then(|s| s.parse().ok())) {
+                Some(v) => match v
+                    .as_f64()
+                    .or_else(|| v.as_str().and_then(|s| s.parse().ok()))
+                {
                     Some(f) => f.clamp(0.0, 1.0) as f32,
                     None => return Outcome::err("scroll: to = top | bottom | 0..1"),
                 },
@@ -798,12 +941,20 @@ pub fn execute(host: &mut dyn Host, req: &Value) -> Outcome {
             o.effect = Some(Effect::Scroll(to));
             o
         }
+        "wait" | "sleep" => {
+            let ms = arg_num(a, "ms").unwrap_or(1000.0).clamp(0.0, 60_000.0) as u64;
+            let mut o = Outcome::ok(json!({"waited_ms": ms}));
+            o.effect = Some(Effect::Wait(ms));
+            o
+        }
         "quit" | "exit" => {
             let mut o = Outcome::ok(json!({"bye": true}));
             o.effect = Some(Effect::Quit);
             o
         }
-        other => Outcome::err(format!("unknown command «{other}»; try {{\"cmd\":\"help\"}}")),
+        other => Outcome::err(format!(
+            "unknown command «{other}»; try {{\"cmd\":\"help\"}}"
+        )),
     }
 }
 
