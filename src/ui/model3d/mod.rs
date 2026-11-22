@@ -61,6 +61,7 @@ pub enum Model {
     Menorah,
     TorahScroll,
     Shofar,
+    Temple,
 }
 
 /// Card texts and view limits of one model.
@@ -80,12 +81,13 @@ pub struct Info {
 }
 
 /// Bit per model for the per-model GPU-ready flags.
-pub(crate) const ALL: [Model; 5] = [
+pub(crate) const ALL: [Model; 6] = [
     Model::KiddushCup,
     Model::ShabbatCandles,
     Model::Menorah,
     Model::TorahScroll,
     Model::Shofar,
+    Model::Temple,
 ];
 
 enum Load {
@@ -102,12 +104,13 @@ fn slots() -> &'static std::sync::Mutex<HashMap<Model, Load>> {
 
 impl Model {
     /// Objects that rotate as «Предмет дня» on «Уроки», one per day.
-    pub const OF_THE_DAY: [Model; 5] = [
+    pub const OF_THE_DAY: [Model; 6] = [
         Model::KiddushCup,
         Model::Menorah,
         Model::ShabbatCandles,
         Model::Shofar,
         Model::TorahScroll,
+        Model::Temple,
     ];
 
     pub fn of_the_day(day: chrono::NaiveDate) -> Model {
@@ -121,7 +124,7 @@ impl Model {
     /// Models shown on a section page, in order.
     pub fn for_section(id: &str) -> &'static [Model] {
         match id {
-            "osnovy" => &[Model::TorahScroll],
+            "osnovy" => &[Model::TorahScroll, Model::Temple],
             "shabbat" => &[Model::ShabbatCandles, Model::KiddushCup],
             "prazdniki" => &[Model::Shofar, Model::Menorah],
             _ => &[],
@@ -139,6 +142,7 @@ impl Model {
             Model::Menorah => asset!("menorah.glb"),
             Model::TorahScroll => asset!("torah-scroll.glb"),
             Model::Shofar => asset!("shofar.glb"),
+            Model::Temple => asset!("temple-complex.glb"),
         }
     }
 
@@ -149,6 +153,7 @@ impl Model {
             Model::Menorah => asset!("menorah.webp"),
             Model::TorahScroll => asset!("torah-scroll.webp"),
             Model::Shofar => asset!("shofar.webp"),
+            Model::Temple => asset!("temple-complex.webp"),
         }
     }
 
@@ -199,6 +204,24 @@ impl Model {
                 section_title: "Праздники",
                 zoom_max: 2.0,
             },
+            Model::Temple => Info {
+                kicker: "Основы · История",
+                title: "Второй Храм",
+                lead: "Храм в Иерусалиме на Храмовой горе. Его перестроил царь Ирод, а римляне разрушили в 70 году (3830 год по еврейскому счёту), 9 ава — в Тиша бе-Ав.",
+                caption: "В центре — Святилище (Эйхаль), где находилась Святая Святых. Перед ним — Двор священников с жертвенником, за ним Двор Израиля и Двор женщин. Всё это стояло на Храмовой горе, окружённой стенами. Это художественная реконструкция: детали приблизительные.",
+                section: "osnovy",
+                section_title: "Основы",
+                zoom_max: 2.0,
+            },
+        }
+    }
+
+    /// Start view (yaw, pitch): the buildings from a 3/4 aerial view, the
+    /// objects from slightly above.
+    fn view0(self) -> (f32, f32) {
+        match self {
+            Model::Temple => (YAW0, 0.62),
+            _ => (YAW0, PITCH0),
         }
     }
 
@@ -389,6 +412,8 @@ pub struct State {
     resetting: bool,
     last: Option<Instant>,
     announced: bool,
+    /// The model's start view was applied (State::default cannot know it).
+    placed: bool,
     redraws: u32,
     // fps stats
     frames: u32,
@@ -413,6 +438,7 @@ impl Default for State {
             resetting: false,
             last: None,
             announced: false,
+            placed: false,
             redraws: 0,
             frames: 0,
             since: None,
@@ -433,6 +459,12 @@ impl<M: Clone> shader::Program<M> for Viewer<M> {
         bounds: Rectangle,
         cursor: mouse::Cursor,
     ) -> Option<Action<M>> {
+        let (yaw0, pitch0) = self.model.view0();
+        if !st.placed {
+            st.placed = true;
+            st.yaw = fixed_yaw().unwrap_or(yaw0);
+            st.pitch = pitch0;
+        }
         let k = 3.2 / bounds.width.max(1.0) / st.zoom.sqrt();
         match event {
             iced::Event::Mouse(mouse::Event::ButtonPressed(mouse::Button::Left)) => {
@@ -530,13 +562,13 @@ impl<M: Clone> shader::Program<M> for Viewer<M> {
                     if st.resetting {
                         // Glide to the start view along the shortest turn.
                         let tau = std::f32::consts::TAU;
-                        let dy = ((YAW0 - st.yaw) % tau + tau + tau / 2.0) % tau - tau / 2.0;
+                        let dy = ((yaw0 - st.yaw) % tau + tau + tau / 2.0) % tau - tau / 2.0;
                         let a = 1.0 - (-8.0 * dt).exp();
                         st.yaw += dy * a;
-                        st.pitch += (PITCH0 - st.pitch) * a;
-                        if dy.abs() < 0.003 && (PITCH0 - st.pitch).abs() < 0.003 {
-                            st.yaw = YAW0;
-                            st.pitch = PITCH0;
+                        st.pitch += (pitch0 - st.pitch) * a;
+                        if dy.abs() < 0.003 && (pitch0 - st.pitch).abs() < 0.003 {
+                            st.yaw = yaw0;
+                            st.pitch = pitch0;
                             st.resetting = false;
                         }
                     } else {

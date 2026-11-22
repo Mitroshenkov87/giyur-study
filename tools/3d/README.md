@@ -12,6 +12,16 @@ camera the app uses:
 
     blender -b --factory-startup --python tools/3d/still.py -- assets/3d/out.glb assets/3d/out.webp 512 0.7
 
+still.py takes an optional 5th argument: camera pitch in radians (default 0.28; the Second Temple
+uses 0.62 for a 3/4 aerial start view):
+
+    blender -b --factory-startup --python tools/3d/still.py -- assets/3d/temple-complex.glb assets/3d/temple-complex.webp 512 0.7 0.62
+
+The Second Temple complex (assets/3d/temple-complex.glb, ~293k triangles, 2048 px maps, ~12 MB) was
+optimized with optimize.py at 300000 2048 2048, then the ragged base was trimmed with two Blender
+bisect planes (x <= 0.40 and y >= -0.45 in Blender Z-up coordinates) so the base ends evenly beside
+the walls (`tools/3d/trim_base.py -- in.glb out.glb`).
+
 Runtime: `src/ui/model3d` (GLB reader, wgpu shader widget). Debug hooks: `SHORASHIM_3D_STATS=1` (fps and 3D-pass
 time to stderr), `SHORASHIM_3D_YAW=<rad>` (fixed angle, no idle spin), `SHORASHIM_3D_MSAA=1` (no MSAA),
 `SHORASHIM_3D_SIZE=<px>` (fixed model size on all cards; by default 190–280 px, scaled with the reading column).

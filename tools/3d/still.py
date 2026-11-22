@@ -1,6 +1,9 @@
 import bpy, sys, math, mathutils
-src, dst, res, yaw = sys.argv[sys.argv.index('--')+1:]
+args = sys.argv[sys.argv.index('--')+1:]
+src, dst, res, yaw = args[:4]
 res=int(res); yaw=float(yaw)
+# optional 5th arg: camera pitch (the app's start view; default 0.28)
+pitch = float(args[4]) if len(args) > 4 else 0.28
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=src)
 obs=[o for o in bpy.context.scene.objects if o.type=='MESH']
@@ -15,7 +18,7 @@ piv.rotation_euler=(0,0,yaw)
 sc=bpy.context.scene
 cam=bpy.data.cameras.new('c'); cam.lens_unit='FOV'; cam.angle=2*math.atan(1/3.6)
 co=bpy.data.objects.new('c',cam); sc.collection.objects.link(co); sc.camera=co
-d=4.2*r; pitch=0.28
+d=4.2*r
 co.location=(0,-d*math.cos(pitch),d*math.sin(pitch)); co.rotation_euler=(math.pi/2-pitch,0,0)
 def area(name,loc,energy,color,size):
     l=bpy.data.lights.new(name,'AREA'); l.energy=energy; l.color=color; l.size=size
