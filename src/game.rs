@@ -304,9 +304,9 @@ pub fn badge_list(lib: &Library) -> Vec<Badge> {
         },
         Badge {
             id: "millionaire".into(),
-            icon: "⏱️".into(),
-            title: "20 из 20".into(),
-            text: "Экзамен на время: 20 верных из 20".into(),
+            icon: "🪜".into(),
+            title: "Пятнадцать ступеней".into(),
+            text: "Маалот: подняться на все 15 ступеней".into(),
             section: false,
         },
         Badge {
@@ -376,7 +376,12 @@ pub fn badge_ok(b: &Badge, lib: &Library, state: &State, today: NaiveDate) -> bo
         "streak-7" => best_streak(state, today) >= 7,
         "streak-30" => best_streak(state, today) >= 30,
         "cards-100" => mastered_count(state) >= 100,
-        "millionaire" => cnt.get("perfectTimed").copied().unwrap_or(0) > 0,
+        // Earned by the whole «Маалот» ladder; the old «20 из 20» timed exam
+        // counter still counts for those who earned it before.
+        "millionaire" => {
+            cnt.get(crate::ladder::TOP_KEY).copied().unwrap_or(0) > 0
+                || cnt.get("perfectTimed").copied().unwrap_or(0) > 0
+        }
         "beit-din-mock" => cnt.get("beitdin").copied().unwrap_or(0) > 0,
         "all-lessons" => all_lessons_read(lib, state),
         _ => {
