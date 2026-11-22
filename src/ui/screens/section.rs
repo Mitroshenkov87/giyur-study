@@ -162,9 +162,7 @@ fn action_card<'a>(
         row![
             icons::icon(kind, 24.0, if gold { p.gold } else { p.gold2 }),
             column![
-                txt(title)
-                    .size(theme::text::BODY)
-                    .font(fonts::SANS_BOLD),
+                txt(title).size(theme::text::BODY).font(fonts::SANS_BOLD),
                 txt(sub).size(theme::text::SMALL).color(p.muted),
             ]
             .spacing(2),
@@ -178,7 +176,11 @@ fn action_card<'a>(
         let hovered = matches!(status, button::Status::Hovered | button::Status::Pressed);
         let (bg, border) = if gold {
             (
-                if hovered { alpha(p.gold, 0.22) } else { p.gold_soft },
+                if hovered {
+                    alpha(p.gold, 0.22)
+                } else {
+                    p.gold_soft
+                },
                 p.gold,
             )
         } else {
@@ -266,7 +268,9 @@ fn lesson_row<'a>(
             .style(move |_| theme::progress_bar(&theme::current())),
     );
 
-    let mut content = row![circle, text_col].spacing(12).align_y(Alignment::Center);
+    let mut content = row![circle, text_col]
+        .spacing(12)
+        .align_y(Alignment::Center);
     if let Some(min_level) = lesson.min_level {
         if min_level != crate::storage::Level::Reform {
             content = content.push(widgets::tag(content::level_info(min_level).short));
@@ -303,7 +307,14 @@ fn lesson_row<'a>(
 fn not_found<'a>(message: &'a str, locked: bool, p: theme::Palette) -> Element<'a, Msg> {
     column![
         back_button("Карта", Msg::Go(Route::Map)),
-        widgets::heading(if locked { "Раздел закрыт" } else { "Не найдено" }, 1),
+        widgets::heading(
+            if locked {
+                "Раздел закрыт"
+            } else {
+                "Не найдено"
+            },
+            1
+        ),
         widgets::card(
             column![
                 icons::icon(icons::Kind::StarDavid, 56.0, p.gold),

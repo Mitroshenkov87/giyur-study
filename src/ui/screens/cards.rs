@@ -5,9 +5,7 @@ use std::collections::HashSet;
 
 use iced::widget::canvas::{self, Canvas, Frame, Path, Stroke};
 use iced::widget::text::{Shaping, Text};
-use iced::widget::{
-    button, column, container, progress_bar, row, text, Column, Row, Space,
-};
+use iced::widget::{button, column, container, progress_bar, row, text, Column, Row, Space};
 use iced::{
     keyboard, Alignment, Background, Border, Element, Length, Point, Rectangle, Renderer,
     Subscription, Theme,
@@ -247,10 +245,7 @@ impl Screen {
                 if !entry.repeat {
                     let today = ctx.today();
                     let c = srs::grade(&mut ctx.state, &entry.id, knew, today);
-                    self.note = Some((
-                        srs::grade_message(&c, knew, self.word, today),
-                        knew,
-                    ));
+                    self.note = Some((srs::grade_message(&c, knew, self.word, today), knew));
                     if knew {
                         self.knew += 1;
                     } else {
@@ -346,10 +341,7 @@ impl Screen {
             }
         };
 
-        column![header, body]
-            .spacing(16)
-            .width(Length::Fill)
-            .into()
+        column![header, body].spacing(16).width(Length::Fill).into()
     }
 
     /// The current card with counter, step bar, flip card and grade buttons.
@@ -376,12 +368,7 @@ impl Screen {
         let marker: Element<Msg> = if entry.repeat {
             widgets::tag("повтор")
         } else {
-            let level = ctx
-                .state
-                .cards
-                .get(&entry.id)
-                .map(|c| c.l)
-                .unwrap_or(0);
+            let level = ctx.state.cards.get(&entry.id).map(|c| c.l).unwrap_or(0);
             level_dots(level)
         };
         let help = button(
@@ -415,9 +402,7 @@ impl Screen {
                     .color(p.text),
             );
             let mut group = 1000u32; // card-back differs group ids
-            if let Some(el) =
-                differs_view(&card.differs, ctx, &mut group, &self.open_others)
-            {
+            if let Some(el) = differs_view(&card.differs, ctx, &mut group, &self.open_others) {
                 back = back.push(el);
             }
             flip_container(back.into(), true)
@@ -557,9 +542,7 @@ impl Screen {
                 keyboard::Key::Named(keyboard::key::Named::Space)
                 | keyboard::Key::Named(keyboard::key::Named::Enter) => Some(Msg::Flip),
                 keyboard::Key::Named(keyboard::key::Named::ArrowLeft) => Some(Msg::Grade(true)),
-                keyboard::Key::Named(keyboard::key::Named::ArrowRight) => {
-                    Some(Msg::Grade(false))
-                }
+                keyboard::Key::Named(keyboard::key::Named::ArrowRight) => Some(Msg::Grade(false)),
                 keyboard::Key::Character(c) if c.as_str() == "1" => Some(Msg::Grade(true)),
                 keyboard::Key::Character(c) if c.as_str() == "2" => Some(Msg::Grade(false)),
                 _ => None,
@@ -599,7 +582,11 @@ enum BtnStyle {
 }
 
 /// Large button (§T.5 lg); disabled when `on_press` is `None`.
-fn lg_button<'a>(label: Element<'a, Msg>, style: BtnStyle, on_press: Option<Msg>) -> Element<'a, Msg> {
+fn lg_button<'a>(
+    label: Element<'a, Msg>,
+    style: BtnStyle,
+    on_press: Option<Msg>,
+) -> Element<'a, Msg> {
     let p = palette();
     let b = button(container(label).center_x(Length::Fill))
         .padding([14.0, 22.0])
@@ -619,9 +606,7 @@ fn lg_button<'a>(label: Element<'a, Msg>, style: BtnStyle, on_press: Option<Msg>
 fn grade_label(text_: &'static str, key: &'static str) -> Element<'static, Msg> {
     let p = palette();
     row![
-        txt(text_)
-            .size(theme::text::BODY)
-            .font(SANS_BOLD),
+        txt(text_).size(theme::text::BODY).font(SANS_BOLD),
         container(txt(key).size(theme::text::SMALL - 2.0).font(SANS_BOLD))
             .padding([1.0, 6.0])
             .style(move |_| container::Style {
@@ -695,7 +680,11 @@ fn level_dots<'a>(level: i64) -> Element<'a, Msg> {
 /// Feedback note above the card («Следующий показ…», «Принято», …).
 fn grade_note<'a>(note: &'a str, ok: bool) -> Element<'a, Msg> {
     let p = palette();
-    let (fg, bg) = if ok { (p.ok, p.ok_soft) } else { (p.bad, p.bad_soft) };
+    let (fg, bg) = if ok {
+        (p.ok, p.ok_soft)
+    } else {
+        (p.bad, p.bad_soft)
+    };
     container(
         txt(note)
             .size(theme::text::BODY)

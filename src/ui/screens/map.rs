@@ -78,9 +78,7 @@ pub(crate) mod icons {
             let pt = |x: f32, y: f32| Point::new(ox + x * s, oy + y * s);
             let st = stroke(self.color, 1.8 * s);
 
-            let path = |build: &dyn Fn(&mut canvas::path::Builder)| {
-                Path::new(|b| build(b))
-            };
+            let path = |build: &dyn Fn(&mut canvas::path::Builder)| Path::new(|b| build(b));
             let line = |b: &mut canvas::path::Builder, x1: f32, y1: f32, x2: f32, y2: f32| {
                 b.move_to(pt(x1, y1));
                 b.line_to(pt(x2, y2));
@@ -760,9 +758,13 @@ fn stats<'a>(ctx: &'a Ctx, p: theme::Palette) -> Element<'a, Msg> {
                 txt(format!("{} / {} XP", xp.min(goal), goal))
                     .size(theme::text::SMALL + 1.0)
                     .font(fonts::SANS_BOLD),
-                txt(if done { "цель дня выполнена" } else { "цель дня" })
-                    .size(theme::text::SMALL)
-                    .color(p.muted),
+                txt(if done {
+                    "цель дня выполнена"
+                } else {
+                    "цель дня"
+                })
+                .size(theme::text::SMALL)
+                .color(p.muted),
             ]
             .spacing(2),
         ]
@@ -773,14 +775,12 @@ fn stats<'a>(ctx: &'a Ctx, p: theme::Palette) -> Element<'a, Msg> {
     );
 
     // Streak (→ Прогресс).
-    let mut streak_small = row![
-        txt(format!(
-            "{} подряд",
-            util::plural(streak, &["день", "дня", "дней"])
-        ))
-        .size(theme::text::SMALL)
-        .color(p.muted),
-    ]
+    let mut streak_small = row![txt(format!(
+        "{} подряд",
+        util::plural(streak, &["день", "дня", "дней"])
+    ))
+    .size(theme::text::SMALL)
+    .color(p.muted),]
     .spacing(4)
     .align_y(Alignment::Center);
     if state.freezes > 0 {
@@ -885,20 +885,21 @@ fn reminders<'a>(ctx: &'a Ctx, p: theme::Palette) -> Element<'a, Msg> {
         .align_y(Alignment::Center);
         if r.href.is_some() {
             content = content.push(space::horizontal()).push(
-                container(txt("Повторить").size(theme::text::SMALL).font(fonts::SANS_BOLD))
-                    .padding([0.0, 14.0])
-                    .height(28.0)
-                    .style(move |_| theme::chip(&theme::current())),
+                container(
+                    txt("Повторить")
+                        .size(theme::text::SMALL)
+                        .font(fonts::SANS_BOLD),
+                )
+                .padding([0.0, 14.0])
+                .height(28.0)
+                .style(move |_| theme::chip(&theme::current())),
             );
         }
         let boxed = button(content.width(Length::Fill))
             .width(Length::Fill)
             .padding([10.0, 14.0])
             .style(move |_, status| {
-                let hovered = matches!(
-                    status,
-                    button::Status::Hovered | button::Status::Pressed
-                );
+                let hovered = matches!(status, button::Status::Hovered | button::Status::Pressed);
                 button::Style {
                     background: Some(Background::Color(if hovered {
                         alpha(color, 0.20)
@@ -1072,9 +1073,7 @@ fn path_item<'a>(
     );
     match state {
         ItemState::Soon => {
-            text_col = text_col.push(
-                row![widgets::tag("Скоро")].align_y(Alignment::Center),
-            );
+            text_col = text_col.push(row![widgets::tag("Скоро")].align_y(Alignment::Center));
         }
         ItemState::Locked => {
             text_col = text_col.push(
@@ -1095,22 +1094,25 @@ fn path_item<'a>(
         ItemState::Open | ItemState::Done => {
             let s = stats.expect("open/done sections have stats");
             let best = s.best.map(fmt_pct).unwrap_or_else(|| "—".to_string());
-            let mut status = row![txt(format!(
-                "{}/{} уроков · тест {}",
-                s.read, s.lessons, best
-            ))
-            .size(theme::text::SMALL)
-            .color(muted_color)]
+            let mut status = row![
+                txt(format!("{}/{} уроков · тест {}", s.read, s.lessons, best))
+                    .size(theme::text::SMALL)
+                    .color(muted_color)
+            ]
             .spacing(10)
             .align_y(Alignment::Center);
             if is_cur {
                 let started = s.read > 0 || s.best.is_some();
                 status = status.push(
                     container(
-                        txt(if started { "Продолжить" } else { "Начать" })
-                            .size(theme::text::SMALL)
-                            .font(fonts::SANS_BOLD)
-                            .color(p.gold2),
+                        txt(if started {
+                            "Продолжить"
+                        } else {
+                            "Начать"
+                        })
+                        .size(theme::text::SMALL)
+                        .font(fonts::SANS_BOLD)
+                        .color(p.gold2),
                     )
                     .padding([0.0, 14.0])
                     .height(28.0)
@@ -1187,7 +1189,12 @@ fn path_item<'a>(
         .into()
 }
 
-fn node_circle<'a>(state: ItemState, is_cur: bool, number: usize, p: theme::Palette) -> Element<'a, Msg> {
+fn node_circle<'a>(
+    state: ItemState,
+    is_cur: bool,
+    number: usize,
+    p: theme::Palette,
+) -> Element<'a, Msg> {
     let size = if is_cur { 60.0 } else { 52.0 };
     let (bg, border, inner): (Color, Color, Element<'a, Msg>) = match state {
         ItemState::Done => (

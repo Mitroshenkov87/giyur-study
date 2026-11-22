@@ -13,8 +13,8 @@ use iced::widget::{
     Text,
 };
 use iced::{
-    Alignment, Background, Border, Color, Element, Length, Point, Radians, Rectangle, Renderer,
-    Shadow, Theme,
+    Alignment, Background, Border, Color, Element, Length, Point, Rectangle, Renderer, Shadow,
+    Theme,
 };
 
 use crate::content::Library;
@@ -247,10 +247,7 @@ impl<Message> canvas::Program<Message> for GoalRing {
             // Check mark in the centre.
             let s = min;
             let check = Path::new(|b| {
-                b.move_to(Point::new(
-                    center.x - s * 0.16,
-                    center.y + s * 0.01,
-                ));
+                b.move_to(Point::new(center.x - s * 0.16, center.y + s * 0.01));
                 b.line_to(Point::new(center.x - s * 0.03, center.y + s * 0.13));
                 b.line_to(Point::new(center.x + s * 0.18, center.y - s * 0.13));
             });
@@ -334,7 +331,7 @@ impl<Message> canvas::Program<Message> for Chart {
         frame.fill(
             &area,
             canvas::Gradient::Linear(
-                canvas::gradient::Linear::new(Radians(std::f32::consts::FRAC_PI_2))
+                canvas::gradient::Linear::new(Point::new(0.0, 0.0), Point::new(0.0, h))
                     .add_stop(0.0, alpha(p.gold, 0.35))
                     .add_stop(1.0, alpha(p.gold, 0.0)),
             ),
@@ -434,6 +431,7 @@ pub struct Screen {
     chart: Vec<f64>,
     weak: Vec<WeakItem>,
     explain_open: bool,
+    explain_items: Vec<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -615,8 +613,24 @@ impl Screen {
                 })
             })
             .collect();
-        weak.sort_by(|a, b| b.pct.cmp(&a.pct));
+        weak.sort_by_key(|w| std::cmp::Reverse(w.pct));
         weak.truncate(5);
+
+        // Collapsible «Как работают цель, серия и заморозки» (§11.2).
+        let goal_title = game::GOALS
+            .iter()
+            .find(|g| g.xp == goal)
+            .map(|g| g.title)
+            .unwrap_or("");
+        let explain_items = vec![
+            "**XP** начисляются за учёбу: урок прочитан — 10, каждая оценённая карточка — 1 («Не вспомнил» тоже: важна работа), колода пройдена — 5, тест раздела сдан — 20 (+10 за 100%), экзамен — 2 за каждый верный ответ, пробный бейт-дин — 15.".to_string(),
+            format!(
+                "**Цель дня** — {} XP ({}). Её можно изменить в настройках: 10, 20, 30 или 50 XP. Сегодня набрано {} XP.",
+                goal, goal_title, today_xp
+            ),
+            "**Серия** — сколько дней подряд выполнена цель дня. Если сегодня цель ещё не выполнена, серия не сгорает до конца дня.".to_string(),
+            "**Заморозка серии** — за каждые 7 дней серии вы получаете одну (хранится не больше двух). Если вы пропустите день, заморозка спишется автоматически и серия сохранится.".to_string(),
+        ];
 
         Screen {
             streak,
@@ -638,6 +652,7 @@ impl Screen {
             chart,
             weak,
             explain_open: false,
+            explain_items,
         }
     }
 
@@ -658,11 +673,7 @@ impl Screen {
     pub fn view<'a>(&'a self, _ctx: &'a Ctx) -> Element<'a, Msg> {
         let p = palette();
         column![
-            column![
-                widgets::kicker("Ваш путь"),
-                widgets::heading("Прогресс", 1),
-            ]
-            .spacing(6),
+            column![widgets::kicker("Ваш путь"), widgets::heading("Прогресс", 1),].spacing(6),
             self.kpis(p),
             self.game_card(p),
             self.badges_card(p),
@@ -705,7 +716,10 @@ impl Screen {
         row![
             tile(
                 self.streak.to_string(),
-                format!("{} подряд", util::plural(self.streak, &["день", "дня", "дней"])),
+                format!(
+                    "{} подряд",
+                    util::plural(self.streak, &["день", "дня", "дней"])
+                ),
             ),
             tile(
                 format!("{}/{}", self.kpi_read, self.kpi_lessons),
@@ -840,11 +854,7 @@ impl Screen {
             } else {
                 0.0
             };
-            let fill_color = if d.kept {
-                p.gold
-            } else {
-                alpha(p.gold, 0.45)
-            };
+            let fill_color = if d.kept { p.gold } else { alpha(p.gold, 0.45) };
             let track = container(space::horizontal())
                 .width(Length::Fill)
                 .height(H)
@@ -930,26 +940,12 @@ impl Screen {
             .on_press(Msg::ToggleExplain),
         );
         if self.explain_open {
-            let goal_title = game::GOALS
-                .iter()
-                .find(|g| g.xp == self.goal)
-                .map(|g| g.title)
-                .unwrap_or("");
-            let items = [
-                "**XP** начисляются за учёбу: урок прочитан — 10, каждая оценённая карточка — 1 («Не вспомнил» тоже: важна работа), колода пройдена — 5, тест раздела сдан — 20 (+10 за 100%), экзамен — 2 за каждый верный ответ, пробный бейт-дин — 15.".to_string(),
-                format!(
-                    "**Цель дня** — {} XP ({}). Её можно изменить в настройках: 10, 20, 30 или 50 XP. Сегодня набрано {} XP.",
-                    self.goal, goal_title, self.today_xp
-                ),
-                "**Серия** — сколько дней подряд выполнена цель дня. Если сегодня цель ещё не выполнена, серия не сгорает до конца дня.".to_string(),
-                "**Заморозка серии** — за каждые 7 дней серии вы получаете одну (хранится не больше двух). Если вы пропустите день, заморозка спишется автоматически и серия сохранится.".to_string(),
-            ];
             let mut list = Column::new().spacing(8).width(Length::Fill);
-            for item in items {
+            for item in &self.explain_items {
                 list = list.push(
                     row![
                         txt("•").size(theme::text::BODY).color(p.gold),
-                        widgets::rich_paragraph(&item),
+                        widgets::rich_paragraph(item),
                     ]
                     .spacing(8),
                 );
@@ -1012,15 +1008,17 @@ impl Screen {
                     .height(Length::Fixed(14.0))
                     .style(move |_| rounded_box(color, 3.5));
                 r = r.push(
-                    tooltip(square, tip(format!("{day}: {v}"), p), tooltip::Position::Top)
-                        .style(move |_| tip_style(&p)),
+                    tooltip(
+                        square,
+                        tip(format!("{day}: {v}"), p),
+                        tooltip::Position::Top,
+                    )
+                    .style(move |_| tip_style(&p)),
                 );
             }
             rows = rows.push(r);
         }
-        widgets::card(
-            column![widgets::heading("Активность за 4 недели", 3), rows,].spacing(14),
-        )
+        widgets::card(column![widgets::heading("Активность за 4 недели", 3), rows,].spacing(14))
     }
 
     fn sections_card<'a>(&'a self, p: Palette) -> Element<'a, Msg> {
@@ -1102,9 +1100,7 @@ impl Screen {
             column![
                 row![
                     widgets::heading("По разделам", 3),
-                    txt("· лучший тест")
-                        .size(theme::text::SMALL)
-                        .color(p.muted),
+                    txt("· лучший тест").size(theme::text::SMALL).color(p.muted),
                 ]
                 .spacing(8)
                 .align_y(Alignment::End),
@@ -1319,10 +1315,14 @@ fn badge_cell<'a>(b: &'a BadgeItem, p: Palette) -> Element<'a, Msg> {
     } else {
         stack![
             body,
-            container(Canvas::new(LockIcon).width(Length::Fixed(14.0)).height(Length::Fixed(14.0)))
-                .width(Length::Fill)
-                .align_x(Alignment::End)
-                .padding(iced::Padding::default().top(8.0).right(8.0)),
+            container(
+                Canvas::new(LockIcon)
+                    .width(Length::Fixed(14.0))
+                    .height(Length::Fixed(14.0))
+            )
+            .width(Length::Fill)
+            .align_x(Alignment::End)
+            .padding(iced::Padding::default().top(8.0).right(8.0)),
         ]
         .width(Length::FillPortion(1))
         .into()

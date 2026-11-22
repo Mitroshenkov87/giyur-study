@@ -58,7 +58,10 @@ impl Screen {
             }
             any = true;
             let mut list = Column::new().spacing(10).width(Length::Fill);
-            list = list.push(heading_owned(format!("{}. {}", sec.index + 1, sec.title), 3));
+            list = list.push(heading_owned(
+                format!("{}. {}", sec.index + 1, sec.title),
+                3,
+            ));
             for src in sources {
                 list = list.push(source_row(src, p));
             }

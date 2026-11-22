@@ -98,9 +98,7 @@ impl Screen {
                     )),
                     ..iced::widget::container::Style::default()
                 }),
-            container(overlay)
-                .width(Length::Fill)
-                .height(Length::Fill),
+            container(overlay).width(Length::Fill).height(Length::Fill),
         ])
         .width(Length::Fill)
         .height(hero_height)
@@ -181,11 +179,8 @@ impl Screen {
         Column::new()
             .push(stack![
                 hero,
-                column![
-                    space::vertical().height(hero_height - overlap),
-                    body_card,
-                ]
-                .width(Length::Fill),
+                column![space::vertical().height(hero_height - overlap), body_card,]
+                    .width(Length::Fill),
             ])
             .width(Length::Fill)
             .into()

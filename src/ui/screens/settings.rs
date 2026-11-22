@@ -5,20 +5,17 @@
 use iced::alignment::Horizontal;
 use iced::widget::text::{IntoFragment, Shaping};
 use iced::widget::{
-    button, column, container, mouse_area, opaque, row, rule, space, stack, text, Column, Row,
-    Text,
+    button, column, container, mouse_area, opaque, row, rule, space, stack, text, Column, Row, Text,
 };
-use iced::{
-    Alignment, Background, Border, Color, Element, Length, Shadow, Theme,
-};
+use iced::{Alignment, Background, Border, Color, Element, Length, Shadow, Theme};
 
 use crate::content;
 use crate::game;
 use crate::storage::{Level, State};
 use crate::ui::app::{Action, Ctx, Route};
-use crate::ui::fonts::{SANS, SANS_BOLD, HEBREW};
+use crate::ui::fonts::{HEBREW, SANS, SANS_BOLD};
 use crate::ui::theme::{self, Palette};
-use crate::ui::{widgets};
+use crate::ui::widgets;
 
 fn palette() -> Palette {
     theme::current()
@@ -161,20 +158,18 @@ impl Screen {
                 Action::None
             }
             Msg::ConfirmOk => match self.confirm.take() {
-                Some(Confirm::Import(text)) => {
-                    match State::import_json(&text, &ctx.today_key()) {
-                        Ok(state) => {
-                            ctx.state = state;
-                            ctx.save();
-                            ctx.toast("Прогресс импортирован", "", "");
-                            Action::SettingsChanged
-                        }
-                        Err(e) => {
-                            ctx.toast(&e, "", "");
-                            Action::None
-                        }
+                Some(Confirm::Import(text)) => match State::import_json(&text, &ctx.today_key()) {
+                    Ok(state) => {
+                        ctx.state = state;
+                        ctx.save();
+                        ctx.toast("Прогресс импортирован", "", "");
+                        Action::SettingsChanged
                     }
-                }
+                    Err(e) => {
+                        ctx.toast(&e, "", "");
+                        Action::None
+                    }
+                },
                 Some(Confirm::Reset) => {
                     ctx.state.reset();
                     ctx.save();
@@ -210,10 +205,10 @@ impl Screen {
         let p = palette();
         let base: Element<'a, Msg> = column![
             widgets::page_header("Настройки", None),
-            self.general_card(ctx, &p),
-            self.goal_card(ctx, &p),
-            self.data_card(&p),
-            self.about_card(ctx, &p),
+            self.general_card(ctx, p),
+            self.goal_card(ctx, p),
+            self.data_card(p),
+            self.about_card(ctx, p),
         ]
         .spacing(16)
         .width(Length::Fill)
@@ -241,7 +236,7 @@ impl Screen {
 
     // ---- Cards -------------------------------------------------------------
 
-    fn general_card<'a>(&'a self, ctx: &'a Ctx, p: &Palette) -> Element<'a, Msg> {
+    fn general_card<'a>(&'a self, ctx: &'a Ctx, p: Palette) -> Element<'a, Msg> {
         let s = &ctx.state.settings;
         let level = s.level.unwrap_or(Level::Orthodox);
         let level_title = content::level_info(level).title;
@@ -250,69 +245,64 @@ impl Screen {
             set_row(
                 "Течение",
                 format!("{level_title} · прогресс сохранится при смене"),
-                secondary_button("Сменить течение", Msg::ChangeLevel, p),
+                secondary_button("Сменить течение", Msg::ChangeLevel),
             ),
             divider(p),
             set_row(
                 "Тема",
                 "Тёмная — основная".to_string(),
-                seg_row(
-                    &[
-                        ("Тёмная", s.theme != "parchment", Msg::SetTheme("dark")),
-                        ("Пергамент", s.theme == "parchment", Msg::SetTheme("parchment")),
-                    ],
-                    p,
-                ),
+                seg_row(&[
+                    ("Тёмная", s.theme != "parchment", Msg::SetTheme("dark")),
+                    (
+                        "Пергамент",
+                        s.theme == "parchment",
+                        Msg::SetTheme("parchment")
+                    ),
+                ],),
             ),
             divider(p),
             set_row(
                 "Размер шрифта",
                 "Иврит масштабируется тоже".to_string(),
-                seg_row(
-                    &[
-                        ("A−", s.font_step == 0, Msg::SetFont(0)),
-                        ("A", s.font_step == 1, Msg::SetFont(1)),
-                        ("A+", s.font_step == 2, Msg::SetFont(2)),
-                        ("A++", s.font_step == 3, Msg::SetFont(3)),
-                    ],
-                    p,
-                ),
+                seg_row(&[
+                    ("A−", s.font_step == 0, Msg::SetFont(0)),
+                    ("A", s.font_step == 1, Msg::SetFont(1)),
+                    ("A+", s.font_step == 2, Msg::SetFont(2)),
+                    ("A++", s.font_step == 3, Msg::SetFont(3)),
+                ],),
             ),
             divider(p),
             set_row(
                 "Открыть все разделы",
                 "Свободное изучение без последовательной разблокировки".to_string(),
-                switch(s.unlock_all, Msg::ToggleUnlockAll, *p),
+                switch(s.unlock_all, Msg::ToggleUnlockAll, p),
             ),
             divider(p),
             set_row(
                 "Показывать транслитерацию",
                 "Русская транскрипция под текстом на иврите".to_string(),
-                switch(s.translit, Msg::ToggleTranslit, *p),
+                switch(s.translit, Msg::ToggleTranslit, p),
             ),
             divider(p),
             set_row(
                 "Экзамен на время",
                 "Секунд на вопрос".to_string(),
-                seg_row(
-                    &[
-                        ("20 с", s.timed_seconds == 20, Msg::SetSeconds(20)),
-                        ("30 с", s.timed_seconds != 20, Msg::SetSeconds(30)),
-                    ],
-                    p,
-                ),
+                seg_row(&[
+                    ("20 с", s.timed_seconds == 20, Msg::SetSeconds(20)),
+                    ("30 с", s.timed_seconds != 20, Msg::SetSeconds(30)),
+                ],),
             ),
             divider(p),
             set_row(
                 "Звук в экзамене на время",
                 "Короткие сигналы: таймер, верно/неверно".to_string(),
-                switch(s.timed_sound, Msg::ToggleTimedSound, *p),
+                switch(s.timed_sound, Msg::ToggleTimedSound, p),
             ),
             divider(p),
             set_row(
                 "Автопереход в экзамене на время",
                 "Следующий вопрос через 2 секунды (можно поставить на паузу)".to_string(),
-                switch(s.timed_auto, Msg::ToggleTimedAuto, *p),
+                switch(s.timed_auto, Msg::ToggleTimedAuto, p),
             ),
             container(
                 txt("שְׁמַע יִשְׂרָאֵל")
@@ -332,7 +322,7 @@ impl Screen {
         widgets::card(rows)
     }
 
-    fn goal_card<'a>(&'a self, ctx: &'a Ctx, p: &Palette) -> Element<'a, Msg> {
+    fn goal_card<'a>(&'a self, ctx: &'a Ctx, p: Palette) -> Element<'a, Msg> {
         let current = game::goal(&ctx.state);
         let mut segs = Column::new().spacing(6).width(Length::Fill);
         for g in game::GOALS {
@@ -374,7 +364,7 @@ impl Screen {
         )
     }
 
-    fn data_card<'a>(&'a self, p: &Palette) -> Element<'a, Msg> {
+    fn data_card<'a>(&'a self, p: Palette) -> Element<'a, Msg> {
         let export = button(
             txt("Экспорт прогресса")
                 .size(theme::text::SMALL + 0.5)
@@ -412,7 +402,7 @@ impl Screen {
         )
     }
 
-    fn about_card<'a>(&'a self, ctx: &'a Ctx, p: &Palette) -> Element<'a, Msg> {
+    fn about_card<'a>(&'a self, ctx: &'a Ctx, p: Palette) -> Element<'a, Msg> {
         let m = &ctx.lib.manifest;
         let available = ctx.lib.sections.iter().filter(|s| s.available).count();
         let src_count: usize = ctx
@@ -428,7 +418,9 @@ impl Screen {
                     .size(theme::text::SMALL + 0.5)
                     .color(p.muted)
                     .width(Length::Fixed(170.0)),
-                txt(value).size(theme::text::SMALL + 0.5).width(Length::Fill),
+                txt(value)
+                    .size(theme::text::SMALL + 0.5)
+                    .width(Length::Fill),
             ]
             .spacing(10)
             .into()
@@ -462,12 +454,11 @@ impl Screen {
             ..plain_container(Some(p.gold_soft))
         });
 
-        let sources_btn = button(
-            txt(format!("Источники ({src_count})")).size(theme::text::SMALL + 0.5),
-        )
-        .padding([10.0, 18.0])
-        .style(move |_, s| theme::button_secondary(&palette(), s))
-        .on_press(Msg::GoSources);
+        let sources_btn =
+            button(txt(format!("Источники ({src_count})")).size(theme::text::SMALL + 0.5))
+                .padding([10.0, 18.0])
+                .style(move |_, s| theme::button_secondary(&palette(), s))
+                .on_press(Msg::GoSources);
 
         widgets::card(
             column![
@@ -569,6 +560,18 @@ impl Screen {
 // Controls
 // ---------------------------------------------------------------------------
 
+/// Hairline separator between settings rows.
+fn divider<'a>(p: Palette) -> Element<'a, Msg> {
+    rule::horizontal(1)
+        .style(move |_theme: &Theme| iced::widget::rule::Style {
+            color: p.line,
+            radius: 0.0.into(),
+            fill_mode: iced::widget::rule::FillMode::Full,
+            snap: true,
+        })
+        .into()
+}
+
 /// Bold label + small muted sub on the left, control on the right (§12).
 fn set_row<'a>(label: &'static str, sub: String, control: Element<'a, Msg>) -> Element<'a, Msg> {
     row![
@@ -585,7 +588,7 @@ fn set_row<'a>(label: &'static str, sub: String, control: Element<'a, Msg>) -> E
     .into()
 }
 
-fn secondary_button<'a>(label: &'static str, msg: Msg, _p: &Palette) -> Element<'a, Msg> {
+fn secondary_button<'a>(label: &'static str, msg: Msg) -> Element<'a, Msg> {
     button(txt(label).size(theme::text::SMALL + 0.5))
         .padding([10.0, 18.0])
         .style(move |_, s| theme::button_secondary(&palette(), s))
@@ -594,7 +597,7 @@ fn secondary_button<'a>(label: &'static str, msg: Msg, _p: &Palette) -> Element<
 }
 
 /// A row of segmented buttons (§T.6: selected = gold-soft, gold2, gold border).
-fn seg_row<'a>(items: &[(&'static str, bool, Msg)], p: &Palette) -> Element<'a, Msg> {
+fn seg_row<'a>(items: &[(&'static str, bool, Msg)]) -> Element<'a, Msg> {
     let mut r = Row::new().spacing(4);
     for (label, selected, msg) in items {
         let selected = *selected;
@@ -610,7 +613,6 @@ fn seg_row<'a>(items: &[(&'static str, bool, Msg)], p: &Palette) -> Element<'a, 
             .on_press(msg.clone()),
         );
     }
-    let _ = p;
     r.into()
 }
 
@@ -640,12 +642,7 @@ fn seg_style(p: &Palette, selected: bool, status: button::Status) -> button::Sty
 }
 
 /// Daily-goal segment: full-width row «{title} … {xp} XP» (§12 card 2).
-fn goal_segment<'a>(
-    title: &'static str,
-    xp: i64,
-    selected: bool,
-    p: &Palette,
-) -> Element<'a, Msg> {
+fn goal_segment<'a>(title: &'static str, xp: i64, selected: bool, p: Palette) -> Element<'a, Msg> {
     button(
         row![
             txt(title)
@@ -690,11 +687,7 @@ fn switch<'a>(on: bool, msg: Msg, p: Palette) -> Element<'a, Msg> {
             .width(Length::Fixed(50.0))
             .height(Length::Fixed(28.0))
             .style(move |_| container::Style {
-                background: Some(Background::Color(if on {
-                    p.gold_soft
-                } else {
-                    p.surface3
-                })),
+                background: Some(Background::Color(if on { p.gold_soft } else { p.surface3 })),
                 border: Border {
                     color: if on { p.gold } else { Color::TRANSPARENT },
                     width: 1.0,

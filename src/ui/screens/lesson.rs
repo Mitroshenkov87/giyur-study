@@ -166,7 +166,8 @@ impl Screen {
             if let Some(el) = block_view(block, translit) {
                 article = article.push(el);
             }
-            if let Some(el) = differs_view(block_differs(block), user, &mut group, &self.open_others)
+            if let Some(el) =
+                differs_view(block_differs(block), user, &mut group, &self.open_others)
             {
                 article = article.push(el);
             }
@@ -190,7 +191,7 @@ impl Screen {
                     .font(SANS_BOLD)
                     .color(p.ok),
                 lg_button(
-                    txt("К карточкам урока").into(),
+                    txt("К карточкам урока"),
                     BtnKind::Primary,
                     Some(Msg::Go(Route::Cards(Deck::Lesson(lesson.id.clone())))),
                 ),
@@ -200,7 +201,7 @@ impl Screen {
             .into()
         } else {
             row![lg_button(
-                txt("Отметить прочитанным").into(),
+                txt("Отметить прочитанным"),
                 BtnKind::Primary,
                 Some(Msg::MarkRead),
             )]
@@ -357,9 +358,7 @@ fn block_view<'a>(block: &'a Block, translit: bool) -> Option<Element<'a, Msg>> 
         )),
         Block::Quote { text, ref_, .. } => Some(widgets::quote_block(text, ref_.as_deref())),
         Block::Note { text, .. } => Some(widgets::note_block("Совет", text)),
-        Block::Term {
-            term, he, text, ..
-        } => Some(widgets::term_block(
+        Block::Term { term, he, text, .. } => Some(widgets::term_block(
             term,
             he.as_deref(),
             text.as_deref().unwrap_or(""),
@@ -491,13 +490,16 @@ fn not_found_view(guard: &Guard) -> Element<'static, Msg> {
         widgets::heading(title, 1),
         widgets::card(
             column![
-                txt("✡").size(40.0).color(p.gold).align_x(Horizontal::Center),
+                txt("✡")
+                    .size(40.0)
+                    .color(p.gold)
+                    .align_x(Horizontal::Center),
                 txt(message)
                     .size(theme::text::BODY)
                     .color(p.muted)
                     .align_x(Horizontal::Center),
                 lg_button(
-                    txt("На карту").into(),
+                    txt("На карту"),
                     BtnKind::Primary,
                     Some(Msg::Go(Route::Map)),
                 ),
