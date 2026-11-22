@@ -31,7 +31,15 @@ rfd = { version = "0.15", default-features = false, features = ["xdg-portal", "t
 image = { version = "0.25", default-features = false, features = ["webp", "ico", "png"] }
 
 [target.'cfg(windows)'.dependencies]
-windows = { version = "0.62.2", features = ["Devices_Geolocation", "Foundation"] }
+windows = { version = "0.62.2", features = [
+    "Devices_Geolocation",
+    "Foundation",
+    "Win32_Foundation",
+    "Win32_System_Com",
+    "Win32_Security",
+    "Win32_System_Registry",
+    "Win32_UI_Shell",
+] }
 
 [target.'cfg(windows)'.build-dependencies]
 winresource = "0.1"

@@ -38,6 +38,15 @@ fn theme_kind(ctx: &Ctx) -> ThemeKind {
 impl App {
     fn new() -> (App, Task<Message>) {
         let mut ctx = Ctx::load();
+        // A newer portable exe than the installed copy: point to Settings.
+        if let shorashim::install::Offer::Update { from, to } = shorashim::install::status().offer()
+        {
+            ctx.toast(
+                &format!("Установлена версия {from}"),
+                &format!("Эта копия новее ({to}). Обновить установленную можно в «Настройках»."),
+                "",
+            );
+        }
         theme::set_current(theme_kind(&ctx));
         let route = if ctx.state.onboarded {
             shorashim::util::env_hook("START_ROUTE")
@@ -99,6 +108,7 @@ impl App {
                 Action::SettingsChanged => {
                     theme::set_current(theme_kind(&self.ctx));
                 }
+                Action::Quit => return iced::exit(),
             },
             Message::Nav(r) => return self.go(r),
             Message::Tick(now) => self.ctx.toasts.retain(|t| t.until > now),
@@ -428,6 +438,12 @@ fn nav_group(r: &Route) -> Option<usize> {
 }
 
 fn main() -> iced::Result {
+    // «Приложения и возможности» runs `shorashim.exe --uninstall`.
+    let args: Vec<String> = std::env::args().collect();
+    if shorashim::install::handle_cli(&args) {
+        return Ok(());
+    }
+    shorashim::install::cleanup_after_update();
     // Screenshot hook: `SHORASHIM_WINDOW_SIZE=1440x900`.
     let size = shorashim::util::env_hook("WINDOW_SIZE")
         .and_then(|v| {

@@ -101,6 +101,8 @@ pub enum Action {
     Back,
     /// Theme or level changed: rebuild everything that depends on settings.
     SettingsChanged,
+    /// Close the app (after «Удалить из системы» from the installed copy).
+    Quit,
 }
 
 #[derive(Debug, Clone)]
