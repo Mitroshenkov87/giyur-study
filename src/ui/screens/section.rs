@@ -272,16 +272,13 @@ impl Screen {
             icons::Kind::StarDavid,
             false,
             "Репетиция бейт-дина",
-            format!(
-                "Ответы своими словами · {} из {}",
-                rd.interview_known, rd.interview
-            ),
+            format!("Отработано {} из {}", rd.interview_known, rd.interview),
             Msg::Rehearse,
             p,
         );
         let test_sub = match rd.best {
             None => "Ещё не сдавали · порог 80%".to_string(),
-            Some(best) => format!("Лучший результат: {} · порог 80%", fmt_pct(best)),
+            Some(best) => format!("Лучший: {} · порог 80%", fmt_pct(best)),
         };
         let test_action = action_card(
             icons::Kind::Exam,
@@ -520,7 +517,7 @@ fn readiness_card<'a>(
         row![
             widgets::kicker("Готовность к экзамену"),
             iced::widget::Space::new().width(Length::Fill),
-            widgets::chip(rd.band.title()),
+            band_pill(rd.band.title(), p),
         ]
         .align_y(Alignment::Center),
     );
@@ -550,6 +547,28 @@ fn readiness_card<'a>(
     right = right.push(next_row);
 
     widgets::card(row![ring, right].spacing(24).align_y(Alignment::Center))
+}
+
+/// Readiness band pill (gold-soft, vertically centred label).
+fn band_pill<'a>(label: &'a str, p: theme::Palette) -> Element<'a, Msg> {
+    container(
+        txt(label)
+            .size(theme::text::SMALL)
+            .font(fonts::SANS_BOLD)
+            .color(p.gold2),
+    )
+    .padding([5.0, 14.0])
+    .align_y(iced::alignment::Vertical::Center)
+    .style(move |_| iced::widget::container::Style {
+        background: Some(Background::Color(p.gold_soft)),
+        border: Border {
+            color: p.gold,
+            width: 1.0,
+            radius: theme::radius::PILL.into(),
+        },
+        ..iced::widget::container::Style::default()
+    })
+    .into()
 }
 
 /// Text, button label and action for the next step.
