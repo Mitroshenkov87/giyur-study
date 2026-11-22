@@ -450,6 +450,7 @@ fn mode_title(mode: &str) -> &str {
         "beitdin" => "Пробный бейт-дин",
         "retry" => "Работа над ошибками",
         "timed" => "Викторина",
+        "ladder" => "Маалот",
         "selfcheck" => "Самопроверка",
         "rehearsal" => "Репетиция бейт-дина",
         other => other,
