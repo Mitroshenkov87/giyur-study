@@ -493,8 +493,13 @@ fn main() -> iced::Result {
         .default_font(Font::with_name("Noto Sans"));
     // Register the embedded fonts up front, so the very first frame already
     // uses them (no font-load race on the first paint).
-    fonts::all()
+    let result = fonts::all()
         .into_iter()
         .fold(app, |app, font| app.font(font))
-        .run()
+        .run();
+    // The control channel's token file is only valid while the app runs.
+    if let Some(file) = control::active_file() {
+        control::cleanup(file);
+    }
+    result
 }

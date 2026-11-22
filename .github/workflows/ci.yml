@@ -27,6 +27,13 @@ jobs:
         run: cargo test --all-targets
       - name: Build release
         run: cargo build --release
+      - name: Automation smoke (release exe, headless script)
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath target/release/shorashim.exe -ArgumentList '--headless','--script','tests/scripts/01-navigate.jsonl','--today','2026-11-22' -Wait -NoNewWindow -PassThru -RedirectStandardOutput smoke.jsonl -RedirectStandardError smoke.err
+          Get-Content smoke.jsonl
+          if ($p.ExitCode -ne 0) { Get-Content smoke.err; exit 1 }
+          if ((Get-Content smoke.jsonl).Count -lt 10) { Write-Error "too few replies"; exit 1 }
       - name: Package
         shell: pwsh
         run: |
@@ -60,3 +67,5 @@ jobs:
         run: cargo test --all-targets
       - name: Build
         run: cargo build --release
+      - name: Automation smoke (release binary, headless script)
+        run: target/release/shorashim --headless --script tests/scripts/01-navigate.jsonl --today 2026-11-22
