@@ -651,3 +651,153 @@ fn not_found_view(guard: &Guard) -> Element<'static, Msg> {
     .width(Length::Fill)
     .into()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use iced::advanced::renderer::Headless;
+    use iced::advanced::widget::operation::Scrollable;
+    use iced::advanced::widget::{Id, Operation};
+    use iced::{Font, Pixels, Rectangle, Size, Vector};
+    use iced_runtime::user_interface::{Cache, UserInterface};
+
+    /// Collects the page scrollable's content size and every text's bounds.
+    #[derive(Default)]
+    struct Probe {
+        content: Option<Rectangle>,
+        texts: Vec<(String, Rectangle)>,
+        boxes: Vec<Rectangle>,
+    }
+
+    impl Operation for Probe {
+        fn traverse(&mut self, operate: &mut dyn FnMut(&mut dyn Operation)) {
+            operate(self);
+        }
+        fn scrollable(
+            &mut self,
+            _id: Option<&Id>,
+            _bounds: Rectangle,
+            content_bounds: Rectangle,
+            _translation: Vector,
+            _state: &mut dyn Scrollable,
+        ) {
+            self.content.get_or_insert(content_bounds);
+        }
+        fn text(&mut self, _id: Option<&Id>, bounds: Rectangle, text: &str) {
+            self.texts.push((text.to_owned(), bounds));
+        }
+        fn container(&mut self, _id: Option<&Id>, bounds: Rectangle) {
+            self.boxes.push(bounds);
+        }
+    }
+
+    fn test_ctx(level: Level) -> Ctx {
+        let mut state = crate::storage::State::default();
+        state.settings.level = Some(level);
+        state.settings.unlock_all = true;
+        Ctx {
+            lib: content::Library::embedded(),
+            state,
+            path: std::env::temp_dir().join("shorashim-lesson-test.json"),
+            toasts: Vec::new(),
+            today_override: None,
+            test_timer: None,
+            writable: false,
+        }
+    }
+
+    /// Every lesson in every section, at every level and with all «у других
+    /// течений» notes expanded, must lay out as a real page inside the
+    /// shell's vertical scrollable: no Fill-height block may collapse it
+    /// (shabbat-1 used to open blank: its quote's accent bar is Fill-height,
+    /// and the shell clipped such a page to 0 px — see `layout::page`).
+    #[test]
+    fn every_lesson_lays_out_non_empty() {
+        {
+            let mut fs = iced::advanced::graphics::text::font_system()
+                .write()
+                .expect("font system lock");
+            for f in crate::ui::fonts::all() {
+                fs.load_font(std::borrow::Cow::Borrowed(f));
+            }
+        }
+        let mut renderer = iced::futures::executor::block_on(<iced::Renderer as Headless>::new(
+            Font::with_name("Noto Sans"),
+            Pixels(16.0),
+            Some("tiny-skia"),
+        ))
+        .expect("headless tiny-skia renderer");
+        let viewport = Size::new(1100.0, 500.0);
+        let mut checked = 0;
+        for level in [Level::Reform, Level::Conservative, Level::Orthodox] {
+            let mut ctx = test_ctx(level);
+            let ids: Vec<String> = ctx
+                .lib
+                .sections
+                .iter()
+                .filter_map(|s| s.data.as_ref())
+                .flat_map(|d| d.lessons.iter())
+                .filter(|l| content::Library::visible(l.min_level, None, level))
+                .map(|l| l.id.clone())
+                .collect();
+            assert!(!ids.is_empty());
+            for id in ids {
+                let mut screen = Screen::new(&mut ctx, &Route::Lesson(id.clone()));
+                assert_eq!(screen.guard, None, "{id}: guarded at {level:?}");
+                screen.open_others = (0..256).collect();
+                // The shell's reading column (src/main.rs `grid`).
+                let g = crate::ui::layout::compute(1600.0, true);
+                let page = crate::ui::layout::page(screen.view(&ctx), g.content, g.right);
+                let page: Element<Msg> = iced::widget::scrollable(page)
+                    .width(Length::Fill)
+                    .height(Length::Fill)
+                    .into();
+                let mut ui = UserInterface::build(page, viewport, Cache::default(), &mut renderer);
+                let mut probe = Probe::default();
+                ui.operate(&renderer, &mut probe);
+
+                let content = probe.content.expect("page scrollable");
+                let finite =
+                    |r: &Rectangle| [r.x, r.y, r.width, r.height].iter().all(|v| v.is_finite());
+                assert!(
+                    finite(&content)
+                        && probe.texts.iter().all(|(_, b)| finite(b))
+                        && probe.boxes.iter().all(finite),
+                    "{id} at {level:?}: non-finite layout"
+                );
+                assert!(
+                    content.height > viewport.height,
+                    "{id} at {level:?}: page is {}px tall — layout collapsed",
+                    content.height
+                );
+                if let Some((t, b)) = probe
+                    .texts
+                    .iter()
+                    .find(|(t, b)| !t.trim().is_empty() && b.height <= 0.0)
+                {
+                    panic!("{id} at {level:?}: text {t:?} squashed to {b:?}");
+                }
+                let title = ctx.lib.lesson(&id).and_then(|(l, _)| l.title.clone());
+                let title = title.unwrap_or_default();
+                assert!(
+                    probe
+                        .texts
+                        .iter()
+                        .any(|(t, b)| *t == title && b.width > 0.0 && b.height > 0.0),
+                    "{id} at {level:?}: title not laid out"
+                );
+                let bottom = probe
+                    .texts
+                    .iter()
+                    .map(|(_, b)| b.y + b.height)
+                    .fold(0.0, f32::max);
+                assert!(
+                    bottom > viewport.height,
+                    "{id} at {level:?}: text ends at {bottom}px"
+                );
+                checked += 1;
+            }
+        }
+        assert!(checked > 30, "only {checked} lessons checked");
+    }
+}
