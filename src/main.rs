@@ -149,7 +149,7 @@ impl App {
         ];
         let active = nav_group(&self.route);
         let mut col = Column::new()
-            .spacing(4)
+            .spacing(2)
             .padding([28, 12])
             .width(layout::NAV);
         let brand = button(
@@ -173,7 +173,7 @@ impl App {
         )
         .width(Length::Fill)
         .padding([8, 10])
-        .style(move |_, s| theme::button_ghost(&p, s))
+        .style(move |_, s| theme::button_nav(&p, s))
         .on_press(Message::Nav(Route::Map));
         col = col.push(brand).push(iced::widget::space().height(14));
         for (i, (label, route)) in items.into_iter().enumerate() {
@@ -205,7 +205,7 @@ impl App {
                 if is_active {
                     theme::button_nav_active(&p, s)
                 } else {
-                    theme::button_ghost(&p, s)
+                    theme::button_nav(&p, s)
                 }
             })
             .on_press(Message::Nav(route));

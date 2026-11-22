@@ -562,6 +562,100 @@ pub fn button_ghost(p: &Palette, status: button::Status) -> button::Style {
     }
 }
 
+/// Sidebar item: no box at rest, a soft wash on hover.
+pub fn button_nav(p: &Palette, status: button::Status) -> button::Style {
+    let style = button_style(None, p.text);
+    match status {
+        button::Status::Hovered | button::Status::Pressed => button::Style {
+            background: Some(Background::Color(alpha(p.gold, 0.08))),
+            border: Border {
+                radius: radius::BUTTON.into(),
+                ..Border::default()
+            },
+            ..style
+        },
+        _ => style,
+    }
+}
+
+/// Pick list in the theme's materials (iced's default uses the iced
+/// palette's primary colour, a solid dark block on parchment).
+pub fn pick_list(
+    p: &Palette,
+    status: iced::widget::pick_list::Status,
+) -> iced::widget::pick_list::Style {
+    use iced::widget::pick_list::Status;
+    let open = !matches!(status, Status::Active);
+    iced::widget::pick_list::Style {
+        text_color: p.text,
+        placeholder_color: p.muted,
+        handle_color: p.gold2,
+        background: Background::Color(p.input_bg),
+        border: Border {
+            color: if open { p.gold } else { p.line2 },
+            width: 1.0,
+            radius: radius::SEGMENT.into(),
+        },
+    }
+}
+
+/// The drop-down menu of [`pick_list`].
+pub fn pick_menu(p: &Palette) -> iced::overlay::menu::Style {
+    iced::overlay::menu::Style {
+        background: Background::Color(p.surface),
+        border: Border {
+            color: p.line2,
+            width: 1.0,
+            radius: radius::SEGMENT.into(),
+        },
+        text_color: p.text,
+        selected_text_color: p.gold2,
+        selected_background: Background::Color(p.gold_soft),
+        shadow: Shadow::default(),
+    }
+}
+
+/// Outer frame of a segmented control: one bordered rounded box.
+pub fn segmented_frame(p: &Palette) -> container::Style {
+    container::Style {
+        background: Some(Background::Color(p.surface2)),
+        border: Border {
+            color: p.line2,
+            width: 1.0,
+            radius: radius::SEGMENT.into(),
+        },
+        ..container::Style::default()
+    }
+}
+
+/// One segment inside [`segmented_frame`]: flat; the selected one is a
+/// brass-tinted inset with a brass edge.
+pub fn segment(p: &Palette, selected: bool, status: button::Status) -> button::Style {
+    let hovered = matches!(status, button::Status::Hovered | button::Status::Pressed);
+    let (bg, text_color, border_color) = if selected {
+        (Some(Background::Color(p.gold_soft)), p.gold2, p.gold)
+    } else if hovered {
+        (
+            Some(Background::Color(alpha(p.gold, 0.07))),
+            p.text,
+            Color::TRANSPARENT,
+        )
+    } else {
+        (None, p.text, Color::TRANSPARENT)
+    };
+    button::Style {
+        background: bg,
+        text_color,
+        border: Border {
+            color: border_color,
+            width: if selected { 1.0 } else { 0.0 },
+            radius: (radius::SEGMENT - 3.0).into(),
+        },
+        shadow: Shadow::default(),
+        snap: true,
+    }
+}
+
 /// Selectable chip / segment (count chips, «20 с / 30 с», settings segments).
 /// `round` gives a pill radius, otherwise the segment radius.
 pub fn choice(p: &Palette, selected: bool, round: bool, status: button::Status) -> button::Style {
@@ -1059,7 +1153,7 @@ pub fn fillet(p: &Palette) -> container::Style {
 /// added by the layout in `main.rs`).
 pub fn button_nav_active(p: &Palette, _status: button::Status) -> button::Style {
     button::Style {
-        background: Some(Background::Color(p.gold_soft)),
+        background: Some(Background::Color(alpha(p.gold, 0.12))),
         text_color: p.gold2,
         border: Border {
             color: p.gold,

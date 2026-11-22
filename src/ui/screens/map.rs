@@ -41,6 +41,10 @@ pub(crate) mod icons {
         External,
         Snow,
         Timer,
+        /// Crossing arrows: mixed questions (general exam).
+        Shuffle,
+        /// Balance scales: the beit din.
+        Scales,
     }
 
     struct Icon {
@@ -310,6 +314,44 @@ pub(crate) mod icons {
                             b.line_to(pt(19.0, 3.0));
                             b.quadratic_curve_to(pt(21.0, 3.0), pt(21.0, 5.0));
                             b.line_to(pt(21.0, 17.0));
+                        }),
+                        st,
+                    );
+                }
+                Kind::Shuffle => {
+                    frame.stroke(
+                        &path(&|b| {
+                            b.move_to(pt(4.0, 7.0));
+                            b.line_to(pt(8.0, 7.0));
+                            b.line_to(pt(16.0, 17.0));
+                            b.line_to(pt(20.0, 17.0));
+                            b.move_to(pt(4.0, 17.0));
+                            b.line_to(pt(8.0, 17.0));
+                            b.line_to(pt(16.0, 7.0));
+                            b.line_to(pt(20.0, 7.0));
+                            line(b, 17.0, 4.0, 20.0, 7.0);
+                            line(b, 20.0, 7.0, 17.0, 10.0);
+                            line(b, 17.0, 14.0, 20.0, 17.0);
+                            line(b, 20.0, 17.0, 17.0, 20.0);
+                        }),
+                        st,
+                    );
+                }
+                Kind::Scales => {
+                    frame.stroke(
+                        &path(&|b| {
+                            line(b, 12.0, 4.0, 12.0, 20.0);
+                            line(b, 8.0, 20.0, 16.0, 20.0);
+                            line(b, 5.0, 7.0, 19.0, 7.0);
+                            for cx in [5.0_f32, 19.0] {
+                                b.move_to(pt(cx, 7.0));
+                                b.line_to(pt(cx - 2.5, 13.0));
+                                b.move_to(pt(cx, 7.0));
+                                b.line_to(pt(cx + 2.5, 13.0));
+                                b.move_to(pt(cx - 3.0, 13.0));
+                                b.quadratic_curve_to(pt(cx, 17.0), pt(cx + 3.0, 13.0));
+                                b.line_to(pt(cx - 3.0, 13.0));
+                            }
                         }),
                         st,
                     );

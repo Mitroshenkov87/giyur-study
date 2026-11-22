@@ -18,7 +18,7 @@ name = "shorashim"
 path = "src/main.rs"
 
 [dependencies]
-iced = { version = "0.14", features = ["image", "tiny-skia", "wgpu", "tokio", "canvas"] }
+iced = { version = "0.14", features = ["image", "tiny-skia", "wgpu", "tokio", "canvas", "advanced"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 image = { version = "0.25", default-features = false, features = ["webp"] }
