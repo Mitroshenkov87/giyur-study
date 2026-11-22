@@ -32,6 +32,8 @@ pub enum Route {
         reopened: bool,
     },
     Map,
+    /// «Еврейский календарь» (Сегодня / Месяц / Настройки).
+    Calendar,
     Section(String),
     Lesson(String),
     Cards(Deck),

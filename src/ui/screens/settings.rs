@@ -14,6 +14,7 @@ use crate::game;
 use crate::storage::{Level, State};
 use crate::ui::app::{Action, Ctx, Route};
 use crate::ui::fonts::{HEBREW, SANS, SANS_BOLD};
+use crate::ui::screens::calendar;
 use crate::ui::theme::{self, Palette};
 use crate::ui::widgets;
 
@@ -70,6 +71,7 @@ pub enum Msg {
     ConfirmCancel,
     GoProgress,
     GoSources,
+    GoCalendar,
     Esc,
 }
 
@@ -192,6 +194,10 @@ impl Screen {
             }
             Msg::GoProgress => Action::Go(Route::Progress),
             Msg::GoSources => Action::Go(Route::Sources),
+            Msg::GoCalendar => {
+                calendar::open_tab(calendar::Tab::Settings);
+                Action::Go(Route::Calendar)
+            }
         }
     }
 
@@ -216,6 +222,7 @@ impl Screen {
             self.general_card(ctx, p),
             self.goal_card(ctx, p),
             self.data_card(p),
+            self.calendar_card(p),
             self.about_card(ctx, p),
         ]
         .spacing(16)
@@ -417,6 +424,19 @@ impl Screen {
                     .size(theme::text::SMALL)
                     .color(p.muted),
                 row![export, import, reset].spacing(10).wrap(),
+            ]
+            .spacing(12),
+        )
+    }
+
+    fn calendar_card<'a>(&'a self, p: Palette) -> Element<'a, Msg> {
+        widgets::card(
+            column![
+                widgets::heading("Еврейский календарь", 3),
+                txt("Израиль или диаспора, местоположение для времени свечей и постов")
+                    .size(theme::text::SMALL)
+                    .color(p.muted),
+                secondary_button("Настройки календаря", Msg::GoCalendar),
             ]
             .spacing(12),
         )
