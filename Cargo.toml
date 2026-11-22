@@ -1,6 +1,6 @@
 [package]
 name = "shorashim"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 rust-version = "1.88"
 description = "Shorashim (Шорашим): foundations of Judaism and preparation for giyur, a Russian-language offline study app (native Rust desktop app)"
