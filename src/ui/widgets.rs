@@ -192,7 +192,10 @@ fn rich_in<'a, Message: 'a>(
 /// are wrapped in the Hebrew font with the theme Hebrew colour, inline.
 pub fn rich_paragraph<'a, Message: 'a>(input: &'a str) -> Element<'a, Message> {
     let p = palette();
-    rich_in(input, SANS, SANS_BOLD, theme::text::BODY, p.text, p.hebrew).into()
+    crate::automation::reported(
+        rich_in(input, SANS, SANS_BOLD, theme::text::BODY, p.text, p.hebrew),
+        input,
+    )
 }
 
 /// A serif rich paragraph (quotes, term definitions).
@@ -203,7 +206,10 @@ fn rich_serif<'a, Message: 'a>(input: &'a str, size: f32, italics: bool) -> Elem
     } else {
         SERIF_BOLD
     };
-    rich_in(input, serif, SERIF_BOLD, size, p.text, p.hebrew).into()
+    crate::automation::reported(
+        rich_in(input, serif, SERIF_BOLD, size, p.text, p.hebrew),
+        input,
+    )
 }
 
 // ---------------------------------------------------------------------------
@@ -288,11 +294,12 @@ pub fn term_block<'a, Message: 'a>(
             p.text,
             p.hebrew,
         );
-        title = title.push(
+        title = title.push(crate::automation::reported(
             rich_text::<(), Message, Theme, Renderer>(spans)
                 .size(theme::text::H3)
                 .line_height(1.25),
-        );
+            term,
+        ));
         if let Some(hebrew) = hebrew {
             title = title.push(
                 txt(hebrew)

@@ -1,0 +1,13 @@
+# Jewish calendar on a fixed day (headless --today 2026-11-22 = 12 Kislev 5787).
+{"cmd":"press","label":"Начать"}
+{"cmd":"press","contains":"Ортодоксальный"}
+{"cmd":"navigate","to":"calendar","expect":{"screen":"calendar","text":"12 кислева 5787"}}
+{"cmd":"press","id":"Calendar(NextDay)","expect":{"text":"13 кислева 5787"}}
+{"cmd":"press","id":"Calendar(Today)","expect":{"text":"22 ноября 2026"}}
+{"cmd":"navigate","to":"calendar:month","expect":{"control":"Calendar(NextMonth)"}}
+{"cmd":"press","id":"Calendar(NextMonth)"}
+{"cmd":"navigate","to":"calendar:2026-12-05","expect":{"text":"Ханука"}}
+{"cmd":"navigate","to":"calendar:settings","expect":{"control":"Calendar(SetDiaspora(true))"}}
+{"cmd":"type","text":"Иерус","input":0,"expect":{"control":"Calendar(PickCity(0))"}}
+{"cmd":"press","id":"Calendar(PickCity(0))"}
+{"cmd":"press","id":"Calendar(Tab(Today))","expect":{"text":"Иерусалим"}}

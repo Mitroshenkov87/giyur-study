@@ -841,7 +841,7 @@ fn switch<'a>(on: bool, msg: Msg, p: Palette) -> Element<'a, Msg> {
     } else {
         row![knob, space::horizontal().width(Length::Fixed(22.0))].into()
     };
-    button(
+    let button = button(
         container(inner)
             .padding(4.0)
             .width(Length::Fixed(50.0))
@@ -860,6 +860,8 @@ fn switch<'a>(on: bool, msg: Msg, p: Palette) -> Element<'a, Msg> {
     )
     .padding(0)
     .style(|_, _| iced::widget::button::Style::default())
-    .on_press(msg)
-    .into()
+    .on_press(msg);
+    // The switch has no text of its own: report its state so the automation
+    // probe lists it as a control (id = its message, e.g. Settings(ToggleTranslit)).
+    crate::automation::reported(button, if on { "вкл" } else { "выкл" })
 }
