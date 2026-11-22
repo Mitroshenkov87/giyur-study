@@ -22,3 +22,6 @@ pub mod prefs;
 pub mod texts;
 pub mod times;
 pub mod zmanim;
+
+#[cfg(test)]
+mod tests;

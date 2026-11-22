@@ -151,7 +151,10 @@ pub fn next_shabbat(d: NaiveDate) -> NaiveDate {
 /// «Parasha of the week» for `date`: the reading of the coming Shabbat (or
 /// today's, on Shabbat). When that Shabbat has a festival reading, the next
 /// weekly portion is returned too.
-pub fn weekly(date: NaiveDate, diaspora: bool) -> (NaiveDate, Reading, Option<(NaiveDate, Reading)>) {
+pub fn weekly(
+    date: NaiveDate,
+    diaspora: bool,
+) -> (NaiveDate, Reading, Option<(NaiveDate, Reading)>) {
     let sat = next_shabbat(date);
     let r = reading_on(sat, diaspora);
     let next = if r == Reading::Festival {

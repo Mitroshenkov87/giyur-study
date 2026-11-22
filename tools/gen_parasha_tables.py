@@ -38,7 +38,9 @@ def main():
     print("// Key: (weekday of 1 Tishrei, 1=Sunday..7=Shabbat; year length in days).")
     print("// Value: the reading for each Shabbat of the year, in order: -1 = festival")
     print("// reading (no weekly portion), n = portion n (0 = Bereshit), 100+n = n and n+1 together.")
-    print("pub(crate) const TABLES: [((u8, u16), [&[i16]; 2]); 14] = [")
+    print("/// (year type, [diaspora, Israel]).")
+    print("pub(crate) type YearRow = ((u8, u16), [&'static [i16]; 2]);")
+    print("pub(crate) const TABLES: [YearRow; 14] = [")
     for k in sorted(types):
         y = types[k]
         a, b = table(y, False), table(y, True)

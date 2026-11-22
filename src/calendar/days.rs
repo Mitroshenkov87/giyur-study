@@ -246,11 +246,7 @@ pub fn day_info(date: NaiveDate, diaspora: bool) -> DayInfo {
                 "Ошана Раба (7-й день Суккота)",
             ),
             22 if diaspora => push("shmini-atzeret", Kind::YomTov, "Шмини Ацерет"),
-            22 => push(
-                "shmini-atzeret",
-                Kind::YomTov,
-                "Шмини Ацерет и Симхат Тора",
-            ),
+            22 => push("shmini-atzeret", Kind::YomTov, "Шмини Ацерет и Симхат Тора"),
             23 if diaspora => push("simchat-tora", Kind::YomTov, "Симхат Тора"),
             _ => {}
         }
@@ -273,14 +269,22 @@ pub fn day_info(date: NaiveDate, diaspora: bool) -> DayInfo {
             "chanuka",
             Kind::Minor,
             &if since < 7 {
-                format!("Ханука, {}: вечером зажигают {} свечей", nth(since as u32 + 1), since + 2)
+                format!(
+                    "Ханука, {}: вечером зажигают {} свечей",
+                    nth(since as u32 + 1),
+                    since + 2
+                )
             } else {
                 "Ханука, 8-й день".to_string()
             },
         );
     }
     if date == chanuka_start - Duration::days(1) {
-        push("erev-chanuka", Kind::Erev, "Канун Хануки: вечером первая свеча");
+        push(
+            "erev-chanuka",
+            Kind::Erev,
+            "Канун Хануки: вечером первая свеча",
+        );
     }
     if m == TEVET && d == 10 {
         push("asara-betevet", Kind::MinorFast, "Пост 10 тевета");
@@ -300,7 +304,11 @@ pub fn day_info(date: NaiveDate, diaspora: bool) -> DayInfo {
         push("purim", Kind::Minor, "Пурим");
     }
     if m == pm && d == 15 {
-        push("shushan-purim", Kind::Minor, "Шушан Пурим (Пурим в Иерусалиме)");
+        push(
+            "shushan-purim",
+            Kind::Minor,
+            "Шушан Пурим (Пурим в Иерусалиме)",
+        );
     }
     // --- Nisan ---
     if m == NISAN {
@@ -339,16 +347,32 @@ pub fn day_info(date: NaiveDate, diaspora: bool) -> DayInfo {
         push("lag-baomer", Kind::Minor, "Лаг ба-Омер");
     }
     if Some(date) == yom_hashoah(y) {
-        push("yom-hashoah", Kind::Modern, "Йом а-Шоа — День памяти Катастрофы");
+        push(
+            "yom-hashoah",
+            Kind::Modern,
+            "Йом а-Шоа — День памяти Катастрофы",
+        );
     }
     if Some(date) == yom_hazikaron(y) {
-        push("yom-hazikaron", Kind::Modern, "Йом а-Зикарон — День памяти павших");
+        push(
+            "yom-hazikaron",
+            Kind::Modern,
+            "Йом а-Зикарон — День памяти павших",
+        );
     }
     if Some(date) == yom_haatzmaut(y) {
-        push("yom-haatzmaut", Kind::Modern, "Йом а-Ацмаут — День независимости Израиля");
+        push(
+            "yom-haatzmaut",
+            Kind::Modern,
+            "Йом а-Ацмаут — День независимости Израиля",
+        );
     }
     if Some(date) == yom_yerushalayim(y) {
-        push("yom-yerushalayim", Kind::Modern, "Йом Иерушалаим — День Иерусалима");
+        push(
+            "yom-yerushalayim",
+            Kind::Modern,
+            "Йом Иерушалаим — День Иерусалима",
+        );
     }
     // --- Sivan ---
     if m == SIVAN {
@@ -392,11 +416,7 @@ pub fn day_info(date: NaiveDate, diaspora: bool) -> DayInfo {
     }
     // --- Rosh Chodesh: day 30 of the previous month and/or day 1 ---
     if (d == 1 && m != TISHREI) || d == 30 {
-        let (ry, rm) = if d == 30 {
-            next_month(y, m)
-        } else {
-            (y, m)
-        };
+        let (ry, rm) = if d == 30 { next_month(y, m) } else { (y, m) };
         push(
             "rosh-chodesh",
             Kind::RoshChodesh,
@@ -411,7 +431,11 @@ pub fn day_info(date: NaiveDate, diaspora: bool) -> DayInfo {
         }
     }
     if w == Weekday::Fri {
-        push("erev-shabbat", Kind::Erev, "Канун Шаббата: вечером зажигают свечи");
+        push(
+            "erev-shabbat",
+            Kind::Erev,
+            "Канун Шаббата: вечером зажигают свечи",
+        );
     }
 
     ev.sort_by_key(|e| rank(e.kind));
@@ -535,4 +559,3 @@ pub fn havdalah_tonight(date: NaiveDate, diaspora: bool) -> bool {
     let tomorrow = day_info(date + Duration::days(1), diaspora);
     (today.is_rest_day() || today.has("yom-kippur")) && !tomorrow.is_rest_day()
 }
-

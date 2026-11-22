@@ -128,12 +128,11 @@ pub fn fixed_from_hebrew(d: HebrewDate) -> i64 {
 pub fn hebrew_from_fixed(date: i64) -> HebrewDate {
     // 35975351/98496 = average Hebrew year length in days.
     let approx = ((date - EPOCH) * 98496).div_euclid(35_975_351) + 1;
-    let approx = approx as i32;
-    let year = if new_year(approx) > date {
-        approx - 1
-    } else {
-        approx
-    };
+    // The largest year from approx − 1 on whose new year is ≤ date.
+    let mut year = approx as i32 - 1;
+    while new_year(year + 1) <= date {
+        year += 1;
+    }
     let start = if date
         < fixed_from_hebrew(HebrewDate {
             year,
@@ -333,8 +332,18 @@ pub fn weekday_ru(d: NaiveDate) -> &'static str {
 /// «22 ноября 2026».
 pub fn format_gregorian_ru(d: NaiveDate) -> String {
     const M: [&str; 12] = [
-        "января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября",
-        "октября", "ноября", "декабря",
+        "января",
+        "февраля",
+        "марта",
+        "апреля",
+        "мая",
+        "июня",
+        "июля",
+        "августа",
+        "сентября",
+        "октября",
+        "ноября",
+        "декабря",
     ];
     format!("{} {} {}", d.day(), M[d.month0() as usize], d.year())
 }
