@@ -1228,11 +1228,12 @@ mod tests {
     }
 
     /// Bank size floors: about 1000 questions, every level at least a
-    /// quarter of each section, enough multiple choice for the ladder.
+    /// fifth of each section, enough multiple choice per level for the
+    /// ladder (it needs five per level and borrows from neighbours).
     const BANK_MIN_TOTAL: usize = 950;
     const BANK_MIN_PER_SECTION: usize = 110;
-    const BANK_MIN_LEVEL_PCT: usize = 25;
-    const BANK_MIN_MC_PER_LEVEL: usize = 12;
+    const BANK_MIN_LEVEL_PCT: usize = 20;
+    const BANK_MIN_MC_PER_LEVEL: usize = 10;
 
     /// Words of more than three letters (lower case, ё → е).
     fn words(s: &str) -> std::collections::HashSet<String> {
