@@ -12,8 +12,12 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import common
 import emblemkit
 
-SIDES = 22
-N_BODY = 56
+SIDES = 32
+N_BODY = 140
+# Growth ridges: shallow, regular rings (a few % of the width), not bulges.
+RIDGES = 16
+RIDGE_W = 0.035
+RIDGE_D = 0.030
 # Smooth crescent in the face of the coin. t = 0 is the mouthpiece,
 # t = 1 is the bell. The arc is wide enough that a thick tube does not
 # fold through itself. The last part of the path turns toward the camera
@@ -67,7 +71,7 @@ def _halfwidth(t, ridges=True):
         w = shank + (bell - shank) * u
     if ridges and 0.18 < t < 0.76:
         fade = math.sin((t - 0.18) / 0.58 * math.pi)
-        w *= 1.0 + 0.20 * math.sin(t * math.pi * 10.0) * fade
+        w *= 1.0 + RIDGE_W * math.sin(t * math.pi * 2.0 * RIDGES) * fade
     return w
 
 
@@ -83,7 +87,7 @@ def _halfdepth(t, ridges=True):
     d = 0.150 + (w * 0.62 - 0.150) * u
     if ridges and 0.18 < t < 0.76:
         fade = math.sin((t - 0.18) / 0.58 * math.pi)
-        d *= 1.0 + 0.14 * math.sin(t * math.pi * 10.0) * fade
+        d *= 1.0 + RIDGE_D * math.sin(t * math.pi * 2.0 * RIDGES) * fade
     return d
 
 
@@ -236,6 +240,9 @@ def _build_horn(metal, bore):
     bpy.context.collection.objects.link(ob)
     ob.data.materials.append(metal)
     ob.data.materials.append(bore)
+    sub = ob.modifiers.new("smooth", "SUBSURF")
+    sub.levels = 1
+    sub.render_levels = 2
     common.smooth(ob)
     bpy.context.view_layer.objects.active = ob
     ob.select_set(True)
@@ -263,19 +270,6 @@ def build():
     # Long side of the horn ~70% of the inner-field diameter.
     emblemkit.fit_xz(syms, emblemkit.DISC_R * 0.70)
     bpy.context.view_layer.update()
-    mw = horn.matrix_world
-    # One ring per station, in world XZ, to see which axis is the silhouette.
-    ts = [i / (N_BODY - 1) for i in range(N_BODY)]
-    arcs = [_arc(t) for t in ts]
-    pts = [c for c, _o in arcs]
-    tang, normals, binorms = _frames(pts)
-    for t in (0.0, 0.12, 0.28, 0.5, 0.75, 1.0):
-        i = int(round(t * (N_BODY - 1)))
-        c = pts[i] + arcs[i][1] * _flare_shift(t)
-        ring = _ring(c, normals[i], binorms[i], _halfdepth(t, False), _halfwidth(t, False))
-        world = [mw @ p for p in ring]
-        xs = [p.x for p in world]; zs = [p.z for p in world]; ys = [p.y for p in world]
-        print(f"t={t:.2f} XZ {max(xs)-min(xs):.3f}x{max(zs)-min(zs):.3f} Y {min(ys):.3f}..{max(ys):.3f} ny={normals[i].y:.2f} by={binorms[i].y:.2f}")
     objs.extend(syms)
     emblemkit.finish(objs, "prazdniki")
 
