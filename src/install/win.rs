@@ -109,10 +109,8 @@ pub fn install(opts: Options) -> Result<PathBuf, String> {
         }
         let _ = std::fs::remove_file(&old);
     }
-    for f in ["LICENSE", "NOTICE"] {
-        if let Some(src) = me.parent().map(|p| p.join(f)).filter(|p| p.exists()) {
-            let _ = std::fs::copy(src, dir.join(f));
-        }
+    if let Some(parent) = me.parent() {
+        crate::install::copy_sidecars(parent, &dir);
     }
 
     let mut links = Vec::new();

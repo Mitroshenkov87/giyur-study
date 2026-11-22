@@ -20,6 +20,7 @@ struct App {
     route: Route,
     history: Vec<Route>,
     screen: Current,
+    music: shorashim::music::Controller,
 }
 
 #[derive(Debug, Clone)]
@@ -61,13 +62,17 @@ impl App {
             Route::Welcome
         };
         let screen = Current::open(&mut ctx, &route);
+        let mut app = App {
+            ctx,
+            route,
+            history: Vec::new(),
+            screen,
+            music: shorashim::music::Controller::start(),
+        };
+        app.maybe_music_hint();
+        app.sync_music();
         (
-            App {
-                ctx,
-                route,
-                history: Vec::new(),
-                screen,
-            },
+            app,
             // Screenshot hook: scroll once the first frame is laid out.
             match shorashim::util::env_hook("SCROLL_Y").and_then(|v| v.parse::<f32>().ok()) {
                 Some(y) => Task::perform(
@@ -110,7 +115,7 @@ impl App {
     fn update(&mut self, message: Message) -> Task<Message> {
         match message {
             Message::Screen(m) => match self.screen.update(&mut self.ctx, m) {
-                Action::None => {}
+                Action::None => self.sync_music(),
                 Action::Go(r) => return self.go(r),
                 Action::Back => {
                     let r = self.history.pop().unwrap_or(Route::Map);
@@ -119,11 +124,22 @@ impl App {
                 }
                 Action::SettingsChanged => {
                     theme::set_current(theme_kind(&self.ctx));
+                    self.sync_music();
                 }
-                Action::Quit => return iced::exit(),
+                Action::Quit => {
+                    self.music.set_enabled(false);
+                    return iced::exit();
+                }
+                Action::MusicNext => {
+                    self.music.next();
+                    self.sync_music();
+                }
             },
             Message::Nav(r) => return self.go(r),
-            Message::Tick(now) => self.ctx.toasts.retain(|t| t.until > now),
+            Message::Tick(now) => {
+                self.ctx.toasts.retain(|t| t.until > now);
+                self.sync_music();
+            }
             Message::ScrollTo(y) => {
                 return iced::widget::operation::scroll_to(
                     MAIN_SCROLL,
@@ -135,6 +151,34 @@ impl App {
             }
         }
         Task::none()
+    }
+
+    fn maybe_music_hint(&mut self) {
+        if self.ctx.state.onboarded
+            && !self.ctx.state.settings.music_hint_seen
+            && self.ctx.music_available
+        {
+            self.ctx.toast(
+                "Фоновая музыка",
+                "В «Настройках» можно включить тихие инструментальные мелодии. По умолчанию она выключена.",
+                "",
+            );
+            self.ctx.state.settings.music_hint_seen = true;
+            self.ctx.save();
+        }
+    }
+
+    fn sync_music(&mut self) {
+        self.music
+            .set_enabled(self.ctx.state.settings.music_enabled);
+        self.music.set_volume(self.ctx.state.settings.music_volume);
+        let st = self.music.status();
+        self.ctx.music_title = st.title;
+        self.ctx.music_error = st.error;
+        if st.track_count > 0 {
+            self.ctx.music_available = st.available;
+            self.ctx.music_track_count = st.track_count;
+        }
     }
 
     fn sidebar(&self) -> Element<'_, Message> {
@@ -418,13 +462,16 @@ impl App {
 
     fn subscription(&self) -> Subscription<Message> {
         let screen = self.screen.subscription().map(Message::Screen);
-        if self.ctx.toasts.is_empty() {
-            screen
-        } else {
+        let tick = !self.ctx.toasts.is_empty()
+            || matches!(self.route, Route::Settings)
+            || self.ctx.state.settings.music_enabled;
+        if tick {
             Subscription::batch([
                 screen,
                 iced::time::every(Duration::from_millis(250)).map(Message::Tick),
             ])
+        } else {
+            screen
         }
     }
 

@@ -3,6 +3,7 @@ pub mod content;
 pub mod exam;
 pub mod game;
 pub mod install;
+pub mod music;
 pub mod quotes;
 pub mod srs;
 pub mod storage;
