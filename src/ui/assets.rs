@@ -92,8 +92,8 @@ const IMAGES: &[(&str, &[u8])] = &[
     ),
     ("bg-dark", include_bytes!("../../assets/img/bg-dark.webp")),
     (
-        "bg-parchment",
-        include_bytes!("../../assets/img/bg-parchment.webp"),
+        "bg-leather",
+        include_bytes!("../../assets/img/bg-leather.webp"),
     ),
     (
         "level-conservative",
@@ -144,8 +144,8 @@ const IMAGES: &[(&str, &[u8])] = &[
         include_bytes!("../../assets/img/side-dark.webp"),
     ),
     (
-        "side-parchment",
-        include_bytes!("../../assets/img/side-parchment.webp"),
+        "side-leather",
+        include_bytes!("../../assets/img/side-leather.webp"),
     ),
     ("welcome", include_bytes!("../../assets/img/welcome.webp")),
 ];

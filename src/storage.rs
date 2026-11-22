@@ -41,7 +41,8 @@ pub struct Settings {
     /// unknown strings fall back to None → orthodox (js/content.js userLevel)
     #[serde(default, deserialize_with = "de_level_opt")]
     pub level: Option<Level>,
-    /// 'dark' | 'parchment'
+    /// 'dark' | 'leather' (the light theme «Кожа»; the old value
+    /// 'parchment' is mapped to 'leather' on load)
     #[serde(default = "default_theme")]
     pub theme: String,
     /// 0..3
@@ -85,6 +86,11 @@ where
         _ => None,
     }))
 }
+
+/// Stored value of the light theme «Кожа».
+pub const LIGHT_THEME: &str = "leather";
+/// Pre-0.5 (and PWA) value of the same theme, then called «Пергамент».
+pub const LEGACY_LIGHT_THEME: &str = "parchment";
 
 fn default_theme() -> String {
     "dark".to_string()
@@ -278,6 +284,10 @@ fn looks_valid(v: &serde_json::Value) -> bool {
 
 /// Repair/clamp fields after loading, mirroring js/storage.js fill().
 fn fill(s: &mut State) {
+    // «Пергамент» was renamed «Кожа» (v0.5); keep old files and PWA exports.
+    if s.settings.theme == LEGACY_LIGHT_THEME {
+        s.settings.theme = LIGHT_THEME.to_string();
+    }
     s.settings.font_step = util::clamp(s.settings.font_step, 0, 3);
     if ![10, 20, 30, 50].contains(&s.settings.daily_goal) {
         s.settings.daily_goal = 20;
@@ -655,7 +665,8 @@ mod tests {
         }"#;
         let s = State::import_json(sample, TODAY).unwrap();
         assert_eq!(s.settings.level, Some(Level::Conservative));
-        assert_eq!(s.settings.theme, "parchment");
+        // The old «Пергамент» value opens as «Кожа».
+        assert_eq!(s.settings.theme, "leather");
         assert_eq!(s.settings.font_step, 2);
         assert_eq!(s.settings.daily_goal, 30);
         assert_eq!(s.settings.timed_seconds, 20);
@@ -718,11 +729,11 @@ mod tests {
     #[test]
     fn reset_keeps_theme_and_font() {
         let mut s = State::default();
-        s.settings.theme = "parchment".into();
+        s.settings.theme = "leather".into();
         s.settings.font_step = 3;
         s.xp_total = 500;
         s.reset();
-        assert_eq!(s.settings.theme, "parchment");
+        assert_eq!(s.settings.theme, "leather");
         assert_eq!(s.settings.font_step, 3);
         assert_eq!(s.xp_total, 0);
     }

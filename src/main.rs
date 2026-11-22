@@ -6,6 +6,7 @@ use std::time::{Duration, Instant};
 use iced::widget::{button, column, container, image, row, scrollable, stack, text, Column};
 use iced::{Alignment, Element, Font, Length, Subscription, Task, Theme};
 
+use shorashim::storage;
 use shorashim::ui::app::{Action, Ctx, Deck, Route};
 use shorashim::ui::screens::{self, Current};
 use shorashim::ui::theme::{self, ThemeKind};
@@ -31,8 +32,9 @@ enum Message {
 }
 
 fn theme_kind(ctx: &Ctx) -> ThemeKind {
-    if ctx.state.settings.theme == "parchment" {
-        ThemeKind::Parchment
+    let t = ctx.state.settings.theme.as_str();
+    if t == storage::LIGHT_THEME || t == storage::LEGACY_LIGHT_THEME {
+        ThemeKind::Leather
     } else {
         ThemeKind::Dark
     }
@@ -215,7 +217,7 @@ impl App {
             .width(layout::NAV)
             .height(Length::Fill)
             .style(move |_| theme::sidebar(&p));
-        // Leather (dark) / darker klaf (parchment) under the side veil: the
+        // Leather (dark) / dark goatskin («Кожа») under the side veil: the
         // sidebar reads as a different material than the window.
         match assets::img(p.side_texture) {
             Some(handle) => stack![
@@ -240,15 +242,16 @@ impl App {
                 .height(Length::Fill)
                 .style(move |_| theme::divider_v(&p))
         };
-        let body = container(self.screen.view(&self.ctx).map(Message::Screen))
-            .padding([28.0, layout::CONTENT_PAD])
-            .width(g.content)
-            .clip(true);
         // The scrollable spans everything right of the nav, so the wheel
         // works over the margins and the scrollbar sits at the window edge;
         // the aside is drawn on top, fixed, in the reserved space.
         let reserved = if g.aside { layout::ASIDE } else { 0.0 } + g.right;
-        let scroll = scrollable(row![body, iced::widget::space().width(reserved)])
+        let page = layout::page(
+            self.screen.view(&self.ctx).map(Message::Screen),
+            g.content,
+            reserved,
+        );
+        let scroll = scrollable(page)
             .id(MAIN_SCROLL)
             .width(Length::Fill)
             .height(Length::Fill);

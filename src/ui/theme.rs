@@ -1,5 +1,5 @@
 //! Palette and widget styles: the dark «Библиотека» default (walnut, oxblood
-//! leather, brass, lamp-light), the matte klaf «Пергамент», and the
+//! leather, brass, lamp-light), the light calf-hide «Кожа», and the
 //! timed-studio palette scoped to quiz-show screens (§T.3).
 //!
 //! Style functions take a [`Palette`]; the active palette is also mirrored in a
@@ -33,7 +33,7 @@ pub struct Palette {
     pub gold2: Color,
     pub gold_soft: Color,
     pub on_gold: Color,
-    /// Hebrew block text (gold2 in dark, `#4a2e06` in parchment).
+    /// Hebrew block text (gold2 in dark, `#4a2e06` in «Кожа»).
     pub hebrew: Color,
     pub ok: Color,
     pub ok_soft: Color,
@@ -149,12 +149,12 @@ pub const DARK: Palette = Palette {
     brass_edge: rgb(0x7a5a26),
 };
 
-/// The light «Пергамент» palette, v0.5: smoothed calf hide. A warm
+/// The light «Кожа» palette, v0.5: smoothed calf hide. A warm
 /// tan/caramel ground (relative luminance ≈ 0.25, darker than paper so it
 /// does not glare), lighter tooled-hide cards (≈ 0.40) with a darker
 /// pressed edge, and a dark leather sidebar with cream ink
 /// ([`side_palette`]). Body text is ≥ 7.5:1 on cards; `muted` ≈ 6.5:1.
-pub const PARCHMENT: Palette = Palette {
+pub const LEATHER: Palette = Palette {
     bg0: rgb(0x9c7650),
     bg1: rgb(0xa8825a),
     surface: rgb(0xcaa67d),
@@ -181,8 +181,8 @@ pub const PARCHMENT: Palette = Palette {
     flame_soft: hexa(0x6a3c08, 0.12),
     input_bg: rgb(0xd3b189),
     // Veil, tint, lamp and vignette are baked into the WebP backgrounds.
-    texture: "bg-parchment",
-    side_texture: "side-parchment",
+    texture: "bg-leather",
+    side_texture: "side-leather",
     veil: hexa(0xe8d6b0, 0.0),
     side_veil: hexa(0xe8d6b0, 0.0),
     side_tint: hexa(0x6b4712, 0.0),
@@ -263,8 +263,8 @@ pub enum ThemeKind {
     /// Тёмная — основная (§T.1).
     #[default]
     Dark,
-    /// Пергамент (§T.2).
-    Parchment,
+    /// Кожа — the light hide theme (§T.2; «Пергамент» before v0.5).
+    Leather,
 }
 
 impl ThemeKind {
@@ -272,7 +272,7 @@ impl ThemeKind {
     pub fn palette(self) -> Palette {
         match self {
             ThemeKind::Dark => DARK,
-            ThemeKind::Parchment => PARCHMENT,
+            ThemeKind::Leather => LEATHER,
         }
     }
 
@@ -280,15 +280,15 @@ impl ThemeKind {
     pub fn title(self) -> &'static str {
         match self {
             ThemeKind::Dark => "Тёмная",
-            ThemeKind::Parchment => "Пергамент",
+            ThemeKind::Leather => "Кожа",
         }
     }
 
     /// The other theme (for a toggle).
     pub fn other(self) -> Self {
         match self {
-            ThemeKind::Dark => ThemeKind::Parchment,
-            ThemeKind::Parchment => ThemeKind::Dark,
+            ThemeKind::Dark => ThemeKind::Leather,
+            ThemeKind::Leather => ThemeKind::Dark,
         }
     }
 }
@@ -315,7 +315,7 @@ pub fn iced_theme(kind: ThemeKind) -> Theme {
     Theme::custom(
         match kind {
             ThemeKind::Dark => "Shorashim Dark",
-            ThemeKind::Parchment => "Shorashim Parchment",
+            ThemeKind::Leather => "Shorashim Leather",
         },
         IcedPalette {
             background: p.bg0,
@@ -521,7 +521,7 @@ pub fn button_primary(p: &Palette, status: button::Status) -> button::Style {
     }
 }
 
-/// Secondary button: leather (dark) / darker klaf (parchment) gradient with
+/// Secondary button: leather (dark) / darker hide («Кожа») gradient with
 /// a brass border.
 pub fn button_secondary(p: &Palette, status: button::Status) -> button::Style {
     let border = Border {
@@ -602,7 +602,7 @@ pub fn button_nav(p: &Palette, status: button::Status) -> button::Style {
 }
 
 /// Pick list in the theme's materials (iced's default uses the iced
-/// palette's primary colour, a solid dark block on parchment).
+/// palette's primary colour, a solid dark block on «Кожа»).
 pub fn pick_list(
     p: &Palette,
     status: iced::widget::pick_list::Status,
@@ -1116,7 +1116,7 @@ pub fn lamp_h(p: &Palette) -> container::Style {
     )
 }
 
-/// Parchment edge vignette: the uneven, aged tone at the top and bottom.
+/// Light-theme («Кожа») edge vignette: the uneven, aged tone at the top and bottom.
 pub fn vignette(p: &Palette) -> container::Style {
     container_style(
         p,

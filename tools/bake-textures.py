@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bake the theme backgrounds (assets/img/{bg,side}-{dark,parchment}.webp)
+"""Bake the theme backgrounds (assets/img/{bg,side}-{dark,leather}.webp)
 from the raw, text-free material textures in assets/textures/.
 
 The veil, lamp light and vignette used to be drawn at runtime as stacked
@@ -70,10 +70,10 @@ if __name__ == "__main__":
         # v0.5 hide theme: smoothed calf hide for the window (a light brown
         # veil darkens it a little so it never glares) and a darker
         # goatskin strip for the sidebar.
-        "bg-parchment": bake("tex-hide", BG, 0x4A2E18, 0.16, lamp=0xE6C89A, vignette=0x2A180A),
-        "side-parchment": bake("tex-hide-side", SIDE, 0x7A4E2E, 0.10),
+        "bg-leather": bake("tex-hide", BG, 0x4A2E18, 0.16, lamp=0xE6C89A, vignette=0x2A180A),
+        "side-leather": bake("tex-hide-side", SIDE, 0x7A4E2E, 0.10),
     }
-    only = set(sys.argv[1:])  # e.g. `bg-parchment side-parchment`
+    only = set(sys.argv[1:])  # e.g. `bg-leather side-leather`
     for name, im in out.items():
         if only and name not in only:
             continue

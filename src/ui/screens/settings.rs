@@ -366,15 +366,15 @@ impl Screen {
                 row![
                     widgets::choice(
                         "Тёмная",
-                        s.theme != "parchment",
+                        s.theme != crate::storage::LIGHT_THEME,
                         false,
                         Msg::SetTheme("dark")
                     ),
                     widgets::choice(
-                        "Пергамент",
-                        s.theme == "parchment",
+                        "Кожа",
+                        s.theme == crate::storage::LIGHT_THEME,
                         false,
-                        Msg::SetTheme("parchment")
+                        Msg::SetTheme(crate::storage::LIGHT_THEME)
                     ),
                 ]
                 .spacing(4)
