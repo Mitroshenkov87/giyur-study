@@ -416,7 +416,7 @@ impl Screen {
             container(space::horizontal())
                 .width(Length::Fill)
                 .height(Length::Fill)
-                .style(move |_| plain_container(Some(Color::from_rgba8(3, 5, 12, 0.66)))),
+                .style(move |_| plain_container(Some(Color { a: 0.66, ..p.bg0 }))),
         )
         .on_press(Msg::GeoNotNow);
 
