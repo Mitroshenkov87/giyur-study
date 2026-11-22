@@ -125,12 +125,13 @@ pub struct CardState {
 }
 
 /// Per-question stats (js/storage.js questions: {n, miss, streak, last}).
+/// `miss` is fractional: a partially correct match answer adds 0.5.
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct QuestionStat {
     #[serde(default)]
     pub n: i64,
     #[serde(default)]
-    pub miss: i64,
+    pub miss: f64,
     #[serde(default)]
     pub streak: i64,
     #[serde(default)]
@@ -309,8 +310,8 @@ pub fn import_value(v: &mut serde_json::Value, today: &str) -> Result<(), String
 impl State {
     /// Parse an exported/imported JSON string (js/storage.js importJSON).
     pub fn import_json(text: &str, today: &str) -> Result<State, String> {
-        let mut v: serde_json::Value =
-            serde_json::from_str(text).map_err(|_| "Файл не является корректным JSON.".to_string())?;
+        let mut v: serde_json::Value = serde_json::from_str(text)
+            .map_err(|_| "Файл не является корректным JSON.".to_string())?;
         import_value(&mut v, today)?;
         let mut s: State = serde_json::from_value(v)
             .map_err(|_| "Это не файл прогресса Giyur Study.".to_string())?;
@@ -418,7 +419,14 @@ mod tests {
         s.xp_total = 123;
         s.cards.insert(
             "c1".to_string(),
-            CardState { l: 3, due: "2026-11-25".into(), n: 4, miss: 1, m: false, last: TODAY.into() },
+            CardState {
+                l: 3,
+                due: "2026-11-25".into(),
+                n: 4,
+                miss: 1,
+                m: false,
+                last: TODAY.into(),
+            },
         );
         s.goal_days.insert("2026-11-21".to_string(), true);
         s.badges.insert("first-steps".to_string(), TODAY.into());

@@ -1,0 +1,122 @@
+//! All screens and the dispatch enum used by the shell.
+pub mod cards;
+pub mod exam;
+pub mod lesson;
+pub mod level;
+pub mod map;
+pub mod progress;
+pub mod section;
+pub mod settings;
+pub mod sources;
+pub mod timed;
+pub mod welcome;
+
+use iced::{Element, Subscription};
+
+use crate::ui::app::{Action, Ctx, Route};
+
+/// The live screen for the current route.
+pub enum Current {
+    Welcome(welcome::Screen),
+    Level(level::Screen),
+    Map(map::Screen),
+    Section(section::Screen),
+    Sources(sources::Screen),
+    Lesson(lesson::Screen),
+    Cards(cards::Screen),
+    Exam(exam::Screen),
+    Timed(timed::Screen),
+    Progress(progress::Screen),
+    Settings(settings::Screen),
+}
+
+#[derive(Debug, Clone)]
+pub enum Msg {
+    Welcome(welcome::Msg),
+    Level(level::Msg),
+    Map(map::Msg),
+    Section(section::Msg),
+    Sources(sources::Msg),
+    Lesson(lesson::Msg),
+    Cards(cards::Msg),
+    Exam(exam::Msg),
+    Timed(timed::Msg),
+    Progress(progress::Msg),
+    Settings(settings::Msg),
+}
+
+impl Current {
+    pub fn open(ctx: &mut Ctx, route: &Route) -> Current {
+        match route {
+            Route::Welcome => Current::Welcome(welcome::Screen::new(ctx, route)),
+            Route::Level { .. } => Current::Level(level::Screen::new(ctx, route)),
+            Route::Map => Current::Map(map::Screen::new(ctx, route)),
+            Route::Section(_) => Current::Section(section::Screen::new(ctx, route)),
+            Route::Sources => Current::Sources(sources::Screen::new(ctx, route)),
+            Route::Lesson(_) => Current::Lesson(lesson::Screen::new(ctx, route)),
+            Route::Cards(_) => Current::Cards(cards::Screen::new(ctx, route)),
+            Route::Exam(_) | Route::ExamRun(_) => Current::Exam(exam::Screen::new(ctx, route)),
+            Route::Timed | Route::TimedRun { .. } => Current::Timed(timed::Screen::new(ctx, route)),
+            Route::Progress => Current::Progress(progress::Screen::new(ctx, route)),
+            Route::Settings => Current::Settings(settings::Screen::new(ctx, route)),
+        }
+    }
+
+    pub fn update(&mut self, ctx: &mut Ctx, msg: Msg) -> Action {
+        match (self, msg) {
+            (Current::Welcome(s), Msg::Welcome(m)) => s.update(ctx, m),
+            (Current::Level(s), Msg::Level(m)) => s.update(ctx, m),
+            (Current::Map(s), Msg::Map(m)) => s.update(ctx, m),
+            (Current::Section(s), Msg::Section(m)) => s.update(ctx, m),
+            (Current::Sources(s), Msg::Sources(m)) => s.update(ctx, m),
+            (Current::Lesson(s), Msg::Lesson(m)) => s.update(ctx, m),
+            (Current::Cards(s), Msg::Cards(m)) => s.update(ctx, m),
+            (Current::Exam(s), Msg::Exam(m)) => s.update(ctx, m),
+            (Current::Timed(s), Msg::Timed(m)) => s.update(ctx, m),
+            (Current::Progress(s), Msg::Progress(m)) => s.update(ctx, m),
+            (Current::Settings(s), Msg::Settings(m)) => s.update(ctx, m),
+            _ => Action::None, // stale message from a previous screen
+        }
+    }
+
+    pub fn view<'a>(&'a self, ctx: &'a Ctx) -> Element<'a, Msg> {
+        match self {
+            Current::Welcome(s) => s.view(ctx).map(Msg::Welcome),
+            Current::Level(s) => s.view(ctx).map(Msg::Level),
+            Current::Map(s) => s.view(ctx).map(Msg::Map),
+            Current::Section(s) => s.view(ctx).map(Msg::Section),
+            Current::Sources(s) => s.view(ctx).map(Msg::Sources),
+            Current::Lesson(s) => s.view(ctx).map(Msg::Lesson),
+            Current::Cards(s) => s.view(ctx).map(Msg::Cards),
+            Current::Exam(s) => s.view(ctx).map(Msg::Exam),
+            Current::Timed(s) => s.view(ctx).map(Msg::Timed),
+            Current::Progress(s) => s.view(ctx).map(Msg::Progress),
+            Current::Settings(s) => s.view(ctx).map(Msg::Settings),
+        }
+    }
+
+    pub fn subscription(&self) -> Subscription<Msg> {
+        match self {
+            Current::Welcome(s) => s.subscription().map(Msg::Welcome),
+            Current::Level(s) => s.subscription().map(Msg::Level),
+            Current::Map(s) => s.subscription().map(Msg::Map),
+            Current::Section(s) => s.subscription().map(Msg::Section),
+            Current::Sources(s) => s.subscription().map(Msg::Sources),
+            Current::Lesson(s) => s.subscription().map(Msg::Lesson),
+            Current::Cards(s) => s.subscription().map(Msg::Cards),
+            Current::Exam(s) => s.subscription().map(Msg::Exam),
+            Current::Timed(s) => s.subscription().map(Msg::Timed),
+            Current::Progress(s) => s.subscription().map(Msg::Progress),
+            Current::Settings(s) => s.subscription().map(Msg::Settings),
+        }
+    }
+
+    /// Screens where the sidebar is hidden (first-run welcome / level choice).
+    pub fn bare(&self, ctx: &Ctx) -> bool {
+        match self {
+            Current::Welcome(_) => true,
+            Current::Level(_) => !ctx.state.onboarded,
+            _ => false,
+        }
+    }
+}

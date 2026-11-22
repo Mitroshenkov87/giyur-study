@@ -13,10 +13,22 @@ pub struct Goal {
 }
 
 pub const GOALS: &[Goal] = &[
-    Goal { xp: 10, title: "Лёгкая" },
-    Goal { xp: 20, title: "Обычная" },
-    Goal { xp: 30, title: "Серьёзная" },
-    Goal { xp: 50, title: "Интенсив" },
+    Goal {
+        xp: 10,
+        title: "Лёгкая",
+    },
+    Goal {
+        xp: 20,
+        title: "Обычная",
+    },
+    Goal {
+        xp: 30,
+        title: "Серьёзная",
+    },
+    Goal {
+        xp: 50,
+        title: "Интенсив",
+    },
 ];
 
 pub const MAX_FREEZES: i64 = 2;
@@ -57,7 +69,11 @@ pub fn goal(state: &State) -> i64 {
 
 pub fn goal_title(xp: Option<i64>, state: &State) -> &'static str {
     let x = xp.unwrap_or_else(|| goal(state));
-    GOALS.iter().find(|g| g.xp == x).map(|g| g.title).unwrap_or("")
+    GOALS
+        .iter()
+        .find(|g| g.xp == x)
+        .map(|g| g.title)
+        .unwrap_or("")
 }
 
 pub fn today_xp(state: &State, today: NaiveDate) -> i64 {
@@ -139,12 +155,7 @@ pub struct AwardOutcome {
 }
 
 /// award(amount) adds XP for today, records goal / streak / freezes, checks badges.
-pub fn award(
-    lib: &Library,
-    state: &mut State,
-    amount: i64,
-    today: NaiveDate,
-) -> AwardOutcome {
+pub fn award(lib: &Library, state: &mut State, amount: i64, today: NaiveDate) -> AwardOutcome {
     let today_key = util::day_key(today);
     let amount = amount.max(0);
     if amount > 0 {
@@ -178,14 +189,24 @@ pub fn award(
                 today_xp(state, today),
                 n,
                 util::plural(n, &["день", "дня", "дней"]),
-                if freeze_earned { " · получена заморозка серии ❄" } else { "" }
+                if freeze_earned {
+                    " · получена заморозка серии ❄"
+                } else {
+                    ""
+                }
             ),
             icon: "🔥".to_string(),
             is_badge: false,
         });
     }
     let new_badges = check_badges(lib, state, today);
-    AwardOutcome { amount, goal_reached: reached, freeze_earned, celebration, new_badges }
+    AwardOutcome {
+        amount,
+        goal_reached: reached,
+        freeze_earned,
+        celebration,
+        new_badges,
+    }
 }
 
 /// js/game.js G.count.
@@ -218,18 +239,90 @@ impl Badge {
 /// The 20 badges of js/game.js G.badgeList: 12 base + one per section.
 pub fn badge_list(lib: &Library) -> Vec<Badge> {
     let mut list = vec![
-        Badge { id: "first-lesson".into(), icon: "📖".into(), title: "Первый урок".into(), text: "Прочитать первый урок".into(), section: false },
-        Badge { id: "first-deck".into(), icon: "🃏".into(), title: "Первая колода".into(), text: "Пройти колоду карточек до конца".into(), section: false },
-        Badge { id: "goal-first".into(), icon: "🎯".into(), title: "Цель дня".into(), text: "Впервые выполнить дневную цель".into(), section: false },
-        Badge { id: "first-test".into(), icon: "✅".into(), title: "Тест сдан".into(), text: "Сдать тест раздела на 80% и выше".into(), section: false },
-        Badge { id: "perfect".into(), icon: "💯".into(), title: "Без ошибок".into(), text: "Сдать тест раздела на 100%".into(), section: false },
-        Badge { id: "streak-3".into(), icon: "🔥".into(), title: "Три дня подряд".into(), text: "Серия 3 дня".into(), section: false },
-        Badge { id: "streak-7".into(), icon: "🔥".into(), title: "Неделя".into(), text: "Серия 7 дней".into(), section: false },
-        Badge { id: "streak-30".into(), icon: "🏆".into(), title: "Месяц".into(), text: "Серия 30 дней".into(), section: false },
-        Badge { id: "cards-100".into(), icon: "🧠".into(), title: "100 карточек".into(), text: "Выучить 100 карточек (интервал 30 дней)".into(), section: false },
-        Badge { id: "millionaire".into(), icon: "⏱️".into(), title: "20 из 20".into(), text: "Экзамен на время: 20 верных из 20".into(), section: false },
-        Badge { id: "beit-din-mock".into(), icon: "🏛️".into(), title: "Пробный бейт-дин".into(), text: "Пройти пробное собеседование".into(), section: false },
-        Badge { id: "all-lessons".into(), icon: "📚".into(), title: "Все уроки".into(), text: "Прочитать все уроки всех разделов".into(), section: false },
+        Badge {
+            id: "first-lesson".into(),
+            icon: "📖".into(),
+            title: "Первый урок".into(),
+            text: "Прочитать первый урок".into(),
+            section: false,
+        },
+        Badge {
+            id: "first-deck".into(),
+            icon: "🃏".into(),
+            title: "Первая колода".into(),
+            text: "Пройти колоду карточек до конца".into(),
+            section: false,
+        },
+        Badge {
+            id: "goal-first".into(),
+            icon: "🎯".into(),
+            title: "Цель дня".into(),
+            text: "Впервые выполнить дневную цель".into(),
+            section: false,
+        },
+        Badge {
+            id: "first-test".into(),
+            icon: "✅".into(),
+            title: "Тест сдан".into(),
+            text: "Сдать тест раздела на 80% и выше".into(),
+            section: false,
+        },
+        Badge {
+            id: "perfect".into(),
+            icon: "💯".into(),
+            title: "Без ошибок".into(),
+            text: "Сдать тест раздела на 100%".into(),
+            section: false,
+        },
+        Badge {
+            id: "streak-3".into(),
+            icon: "🔥".into(),
+            title: "Три дня подряд".into(),
+            text: "Серия 3 дня".into(),
+            section: false,
+        },
+        Badge {
+            id: "streak-7".into(),
+            icon: "🔥".into(),
+            title: "Неделя".into(),
+            text: "Серия 7 дней".into(),
+            section: false,
+        },
+        Badge {
+            id: "streak-30".into(),
+            icon: "🏆".into(),
+            title: "Месяц".into(),
+            text: "Серия 30 дней".into(),
+            section: false,
+        },
+        Badge {
+            id: "cards-100".into(),
+            icon: "🧠".into(),
+            title: "100 карточек".into(),
+            text: "Выучить 100 карточек (интервал 30 дней)".into(),
+            section: false,
+        },
+        Badge {
+            id: "millionaire".into(),
+            icon: "⏱️".into(),
+            title: "20 из 20".into(),
+            text: "Экзамен на время: 20 верных из 20".into(),
+            section: false,
+        },
+        Badge {
+            id: "beit-din-mock".into(),
+            icon: "🏛️".into(),
+            title: "Пробный бейт-дин".into(),
+            text: "Пройти пробное собеседование".into(),
+            section: false,
+        },
+        Badge {
+            id: "all-lessons".into(),
+            icon: "📚".into(),
+            title: "Все уроки".into(),
+            text: "Прочитать все уроки всех разделов".into(),
+            section: false,
+        },
     ];
     for sec in &lib.sections {
         list.push(Badge {
@@ -508,7 +601,9 @@ mod tests {
         assert!(fresh.iter().any(|b| b.id == "first-lesson"));
         assert_eq!(s.badges["first-lesson"], "2026-11-22");
         // Already unlocked → not returned again.
-        assert!(!check_badges(&lib, &mut s, t).iter().any(|b| b.id == "first-lesson"));
+        assert!(!check_badges(&lib, &mut s, t)
+            .iter()
+            .any(|b| b.id == "first-lesson"));
         // first-test (80%) and perfect (100%).
         s.best.insert("osnovy".to_string(), 85.0);
         let fresh = check_badges(&lib, &mut s, t);
@@ -538,11 +633,26 @@ mod tests {
         assert_eq!(list.len(), 20);
         let ids: Vec<&str> = list.iter().map(|b| b.id.as_str()).collect();
         for want in [
-            "first-lesson", "first-deck", "goal-first", "first-test", "perfect",
-            "streak-3", "streak-7", "streak-30", "cards-100", "millionaire",
-            "beit-din-mock", "all-lessons",
-            "section-osnovy", "section-ivrit", "section-shabbat", "section-kashrut",
-            "section-prazdniki", "section-semya", "section-etika", "section-beit-din",
+            "first-lesson",
+            "first-deck",
+            "goal-first",
+            "first-test",
+            "perfect",
+            "streak-3",
+            "streak-7",
+            "streak-30",
+            "cards-100",
+            "millionaire",
+            "beit-din-mock",
+            "all-lessons",
+            "section-osnovy",
+            "section-ivrit",
+            "section-shabbat",
+            "section-kashrut",
+            "section-prazdniki",
+            "section-semya",
+            "section-etika",
+            "section-beit-din",
         ] {
             assert!(ids.contains(&want), "missing badge {want}");
         }
@@ -605,7 +715,10 @@ mod tests {
         goal_day(&mut s, day(21));
         let r = reminders(&lib, &s, t);
         assert_eq!(r[0].kind, "streak");
-        assert_eq!(r[0].text, "Серия 1 день под угрозой — наберите ещё 20 XP сегодня");
+        assert_eq!(
+            r[0].text,
+            "Серия 1 день под угрозой — наберите ещё 20 XP сегодня"
+        );
         // Goal reached → no goal/streak reminder.
         goal_day(&mut s, t);
         assert!(reminders(&lib, &s, t).is_empty());

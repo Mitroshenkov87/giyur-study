@@ -1,8 +1,7 @@
 //! Live gallery of the `ui` module: every widget with real Russian and Hebrew
 //! samples, plus a theme toggle. Run with `cargo run --example ui_gallery`.
 
-#[path = "../src/ui/mod.rs"]
-mod ui;
+use giyur_study::ui;
 
 use iced::widget::{
     button, column, container, image, progress_bar, row, scrollable, space, stack, text,

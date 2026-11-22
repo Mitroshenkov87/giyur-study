@@ -755,3 +755,38 @@ pub fn text_input(p: &Palette, status: ti::Status) -> ti::Style {
         },
     }
 }
+
+// ---------------------------------------------------------------------------
+// Shell (sidebar, window background)
+// ---------------------------------------------------------------------------
+
+/// Window background: bg1 → bg0 vertical gradient (body background).
+pub fn app_background(p: &Palette) -> container::Style {
+    container_style(p, Some(v_gradient(p.bg1, p.bg0)))
+}
+
+/// Sidebar: slightly translucent bg0 with a right hairline.
+pub fn sidebar(p: &Palette) -> container::Style {
+    container::Style {
+        border: Border {
+            color: p.line,
+            width: 1.0,
+            radius: 0.0.into(),
+        },
+        ..container_style(p, Some(Background::Color(alpha(p.bg0, 0.88))))
+    }
+}
+
+/// Active sidebar item: gold2 text on gold-soft.
+pub fn button_nav_active(p: &Palette, _status: button::Status) -> button::Style {
+    button::Style {
+        background: Some(Background::Color(p.gold_soft)),
+        text_color: p.gold2,
+        border: Border {
+            color: p.gold,
+            width: 0.0,
+            radius: radius::BUTTON.into(),
+        },
+        ..button_style(None, p.gold2)
+    }
+}
