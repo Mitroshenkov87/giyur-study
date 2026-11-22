@@ -661,6 +661,20 @@ fn build_run(ctx: &Ctx, spec: &ExamSpec) -> Option<Run> {
             None,
             Some(ids.clone()),
         ),
+        ExamSpec::SelfCheck { section_id, ids } => (
+            Mode::SelfCheck,
+            Some(section_id.clone()),
+            None,
+            None,
+            Some(ids.clone()),
+        ),
+        ExamSpec::Rehearsal { section_id, ids } => (
+            Mode::Rehearsal,
+            Some(section_id.clone()),
+            None,
+            None,
+            Some(ids.clone()),
+        ),
     };
     let mut rng = rand::thread_rng();
     let s = exam::build(
@@ -864,7 +878,16 @@ impl Screen {
                 }
                 Action::None
             }
-            Msg::QuitConfirm => Action::Go(Route::Exam(None)),
+            Msg::QuitConfirm => match &self.phase {
+                // Self-check and rehearsal start from a section: go back there.
+                Phase::Run(run) if matches!(run.mode, Mode::SelfCheck | Mode::Rehearsal) => {
+                    match &run.section_id {
+                        Some(id) => Action::Go(Route::Section(id.clone())),
+                        None => Action::Go(Route::Exam(None)),
+                    }
+                }
+                _ => Action::Go(Route::Exam(None)),
+            },
             Msg::QuitCancel => {
                 if let Phase::Run(run) = &mut self.phase {
                     run.confirm_quit = false;
@@ -1170,7 +1193,7 @@ fn container_button_style(
 impl Screen {
     fn view_run<'a>(&'a self, ctx: &'a Ctx, run: &'a Run) -> Element<'a, Msg> {
         let p = tp();
-        let interview = run.mode == Mode::Beitdin;
+        let interview = matches!(run.mode, Mode::Beitdin | Mode::Rehearsal);
         let it = &run.items[run.idx];
         let q = &it.q;
         let total = run.items.len();

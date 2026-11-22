@@ -4,5 +4,6 @@ pub mod exam;
 pub mod game;
 pub mod srs;
 pub mod storage;
+pub mod study;
 pub mod ui;
 pub mod util;

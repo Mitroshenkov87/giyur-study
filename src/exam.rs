@@ -18,6 +18,10 @@ pub enum Mode {
     Beitdin,
     Retry,
     Timed,
+    /// «Самопроверка» after a lesson (docs/STRUCTURE.md), built from ids.
+    SelfCheck,
+    /// «Репетиция бейт-дина» of one section: its open questions, from ids.
+    Rehearsal,
 }
 
 impl Mode {
@@ -28,6 +32,8 @@ impl Mode {
             Mode::Beitdin => "beitdin",
             Mode::Retry => "retry",
             Mode::Timed => "timed",
+            Mode::SelfCheck => "selfcheck",
+            Mode::Rehearsal => "rehearsal",
         }
     }
 }
@@ -40,6 +46,8 @@ pub fn mode_title(mode: Mode) -> &'static str {
         Mode::Beitdin => "Пробный бейт-дин",
         Mode::Retry => "Работа над ошибками",
         Mode::Timed => "Экзамен (на время)",
+        Mode::SelfCheck => "Самопроверка",
+        Mode::Rehearsal => "Репетиция бейт-дина",
     }
 }
 
@@ -385,7 +393,7 @@ pub fn build<'a>(
             }
             util::shuffle(&picked, rng)
         }
-        Mode::Retry => {
+        Mode::Retry | Mode::SelfCheck | Mode::Rehearsal => {
             let ids = opts.ids.clone().unwrap_or_default();
             let pool: Vec<&Question> = ids
                 .iter()

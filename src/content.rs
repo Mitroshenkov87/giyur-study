@@ -171,6 +171,37 @@ pub struct Lesson {
     /// Lesson-level differences by movement (js/ui/lesson.js renders L.differs).
     #[serde(default)]
     pub differs: Vec<Differs>,
+    /// «Главное»: 3–5 key ideas that restate the lesson (docs/STRUCTURE.md).
+    #[serde(default)]
+    pub key_ideas: Vec<String>,
+}
+
+/// Section overview shown at the top of the «Читать» mode (docs/STRUCTURE.md).
+#[derive(Debug, Clone, Default, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Overview {
+    /// Why this section matters for understanding Judaism.
+    #[serde(default)]
+    pub why: String,
+    /// What the beit din usually checks on this topic.
+    #[serde(default)]
+    pub exam_focus: String,
+    /// «После раздела вы сможете …»
+    #[serde(default)]
+    pub goals: Vec<String>,
+}
+
+/// «Углубиться»: further reading that points at one of the section sources.
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Deeper {
+    pub title: String,
+    #[serde(default)]
+    pub source_ref: Option<String>,
+    #[serde(default)]
+    pub text: String,
+    #[serde(default)]
+    pub min_level: Option<Level>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Deserialize)]
@@ -262,6 +293,11 @@ impl Question {
         &self.common().id
     }
 
+    /// Open (beit-din interview) question with a model answer.
+    pub fn is_open(&self) -> bool {
+        matches!(self, Question::Open { .. })
+    }
+
     pub fn format(&self) -> &'static str {
         match self {
             Question::Mc { .. } => "mc",
@@ -292,6 +328,10 @@ pub struct Section {
     pub lessons: Vec<Lesson>,
     #[serde(default)]
     pub questions: Vec<Question>,
+    #[serde(default)]
+    pub overview: Option<Overview>,
+    #[serde(default)]
+    pub deeper: Vec<Deeper>,
 }
 
 // ---- Level info (exact strings from js/content.js) ----
@@ -637,6 +677,56 @@ impl Library {
                     })
             })
             .collect()
+    }
+
+    /// Questions of one lesson visible at the user level, in bank order.
+    pub fn lesson_questions<'a>(
+        &self,
+        sec: &'a SectionMeta,
+        lesson_id: &str,
+        user: Level,
+    ) -> Vec<&'a Question> {
+        self.questions(sec, user)
+            .into_iter()
+            .filter(|q| q.common().lesson_id.as_deref() == Some(lesson_id))
+            .collect()
+    }
+
+    /// «Что спрашивают на бейт-дине»: the lesson's open (interview) questions.
+    pub fn lesson_interview<'a>(
+        &self,
+        sec: &'a SectionMeta,
+        lesson_id: &str,
+        user: Level,
+    ) -> Vec<&'a Question> {
+        self.lesson_questions(sec, lesson_id, user)
+            .into_iter()
+            .filter(|q| q.is_open())
+            .collect()
+    }
+
+    /// The section's open (interview) questions.
+    pub fn section_interview<'a>(&self, sec: &'a SectionMeta, user: Level) -> Vec<&'a Question> {
+        self.questions(sec, user)
+            .into_iter()
+            .filter(|q| q.is_open())
+            .collect()
+    }
+
+    /// «Углубиться» items visible at the user level.
+    pub fn deeper<'a>(&self, sec: &'a SectionMeta, user: Level) -> Vec<&'a Deeper> {
+        match &sec.data {
+            None => Vec::new(),
+            Some(d) => d
+                .deeper
+                .iter()
+                .filter(|x| Self::visible(x.min_level, None, user))
+                .collect(),
+        }
+    }
+
+    pub fn overview<'a>(&self, sec: &'a SectionMeta) -> Option<&'a Overview> {
+        sec.data.as_ref().and_then(|d| d.overview.as_ref())
     }
 
     pub fn sources<'a>(&self, sec: &'a SectionMeta, ids: Option<&[String]>) -> Vec<&'a Source> {
