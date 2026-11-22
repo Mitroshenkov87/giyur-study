@@ -1,4 +1,4 @@
-# Content schema (Giyur Study)
+# Content schema (Шорашим)
 
 All content lives in `content/` as JSON (UTF-8, no comments). The app loads `content/manifest.json`, then each section file. Code never hardcodes lesson text.
 
@@ -19,7 +19,15 @@ Where Reform (or Conservative) differs IN KIND (not just "less"), add `"differs"
   "subtitle": "Святость седьмого дня",
   "icon": "🕯️",
   "intro": "1–2 предложения о разделе",
+  "overview": {                        // «О чём раздел» in the «Читать» mode (docs/STRUCTURE.md)
+    "why": "2–3 предложения: зачем раздел для понимания иудаизма",
+    "examFocus": "2–3 предложения: что по теме проверяет бейт-дин",
+    "goals": ["После раздела вы сможете …"]   // 3–5
+  },
   "sources": [ {"id":"ksa","title":"Кицур Шульхан Арух, пер. А. Кутукова (КЕРООР, 1999)","url":"https://...","movement":"orthodox"} ],
+  "deeper": [                          // «Углубиться», 3–6 items
+    {"title":"Кицур Шульхан Арух о Шаббате","sourceRef":"ksa","text":"что там почитать и зачем","minLevel":"orthodox"}
+  ],
   "lessons": [ LESSON, ... ],          // 4–8 lessons
   "questions": [ QUESTION, ... ]       // section exam bank, 40–60 questions
 }
@@ -34,6 +42,7 @@ Where Reform (or Conservative) differs IN KIND (not just "less"), add `"differs"
   "minutes": 7,                      // 5–10 min reading = ~700–1300 Russian words
   "sourceRefs": ["ksa","tanakh"],    // ids from section.sources (at least one)
   "citations": ["Шмот 20:8–11", "Кицур Шульхан Арух 72:1"],   // precise references
+  "keyIdeas": ["3–5 главных мыслей урока (≤ 160 символов), только пересказ текста"],
   "blocks": [ BLOCK, ... ],
   "cards": [ CARD, ... ]             // 10–20 per lesson
 }
@@ -61,7 +70,7 @@ Common fields: `difficulty` ("easy"|"medium"|"hard", used by the timed exam ramp
 - `"format":"tf"` — `"answer": true|false`
 - `"format":"match"` — `"pairs":[["Левая","Правая"], ...]` (3–5 pairs)
 - `"format":"typed"` — `"answer":"Кидуш"`, `"accept":["кидуш","киддуш"]` (lower-case variants; app compares case-insensitively, ignores ё/е and punctuation)
-- `"format":"open"` — beit-din style; `"modelAnswer":"..."` (3–6 sentences), `"keyPoints":["...","..."]` for self-check
+- `"format":"open"` — beit-din style; `"modelAnswer":"..."` (3–6 sentences), `"keyPoints":["...","..."]` for self-check. Open questions with a `lessonId` form the lesson's «Что спрашивают на бейт-дине» box and the section's «Репетиция бейт-дина»: at least 2 per lesson (3 in the «Бейт-дин» section). Closed formats (mc, tf, match, typed) of a lesson form its «Самопроверка».
 Per section mix target: ~45% mc, 20% tf, 10% match, 10% typed, 15% open. At least 40 questions per section.
 
 ## manifest.json
