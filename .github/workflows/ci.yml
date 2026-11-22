@@ -46,6 +46,8 @@ jobs:
           # PR refs look like "1/merge"; keep the file name path-safe.
           $ref = "${{ github.ref_name }}" -replace '[\\/]', '-'
           Copy-Item target/release/shorashim.exe "dist/Shorashim-$ref-windows-x64.exe"
+          # Console companion for command control (docs/AUTOMATION.md); keeps
+          # its plain name, which `shorashim-ctl launch` relies on.
           Copy-Item target/release/shorashim-ctl.exe dist/
           Copy-Item LICENSE, NOTICE dist/
       - uses: actions/upload-artifact@v4
@@ -58,6 +60,7 @@ jobs:
         with:
           files: |
             dist/Shorashim-${{ github.ref_name }}-windows-x64.exe
+            dist/shorashim-ctl.exe
             dist/LICENSE
             dist/NOTICE
 
