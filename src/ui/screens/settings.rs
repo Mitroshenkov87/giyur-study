@@ -11,6 +11,7 @@ use iced::{Alignment, Background, Border, Color, Element, Length, Shadow, Theme}
 
 use crate::content;
 use crate::game;
+use crate::install;
 use crate::storage::{Level, State};
 use crate::ui::app::{Action, Ctx, Route};
 use crate::ui::fonts::{HEBREW, SANS, SANS_BOLD};
@@ -47,10 +48,15 @@ enum Confirm {
     /// Holds the file contents chosen via the open dialog.
     Import(String),
     Reset,
+    Uninstall,
 }
 
 pub struct Screen {
     confirm: Option<Confirm>,
+    /// Install state, read when the screen opens and after each change.
+    install: install::Status,
+    /// «Ярлык на рабочем столе» for the next install / update.
+    desktop_shortcut: bool,
 }
 
 #[derive(Debug, Clone)]
@@ -72,12 +78,23 @@ pub enum Msg {
     GoProgress,
     GoSources,
     GoCalendar,
+    ToggleQuotePanel,
+    ToggleDesktopShortcut,
+    Install,
+    AskUninstall,
     Esc,
 }
 
 impl Screen {
     pub fn new(_ctx: &mut Ctx, _route: &Route) -> Self {
-        Screen { confirm: None }
+        let install = install::status();
+        // New install: desktop shortcut on; update: keep what is there.
+        let desktop_shortcut = install.installed.is_none() || install.desktop_link;
+        Screen {
+            confirm: None,
+            install,
+            desktop_shortcut,
+        }
     }
 
     pub fn update(&mut self, ctx: &mut Ctx, msg: Msg) -> Action {
@@ -186,6 +203,25 @@ impl Screen {
                     ctx.toast("Прогресс сброшен", "", "");
                     Action::Go(Route::Welcome)
                 }
+                Some(Confirm::Uninstall) => {
+                    let res = install::uninstall();
+                    self.install = install::status();
+                    match res {
+                        Ok(install::Uninstalled::QuitToFinish) => Action::Quit,
+                        Ok(install::Uninstalled::Done) => {
+                            ctx.toast(
+                                "Удалено из системы",
+                                "Ярлыки и запись в «Приложениях» удалены. Прогресс сохранён.",
+                                "",
+                            );
+                            Action::None
+                        }
+                        Err(e) => {
+                            ctx.toast("Не удалось удалить", &e, "⚠");
+                            Action::None
+                        }
+                    }
+                }
                 None => Action::None,
             },
             Msg::ConfirmCancel | Msg::Esc => {
@@ -197,6 +233,50 @@ impl Screen {
             Msg::GoCalendar => {
                 calendar::open_tab(calendar::Tab::Settings);
                 Action::Go(Route::Calendar)
+            }
+            Msg::ToggleQuotePanel => {
+                let on = !crate::ui::aside::enabled(ctx);
+                crate::ui::aside::set_enabled(ctx, on);
+                ctx.save();
+                ctx.toast("Сохранено", "", "");
+                Action::None
+            }
+            Msg::ToggleDesktopShortcut => {
+                self.desktop_shortcut = !self.desktop_shortcut;
+                Action::None
+            }
+            Msg::Install => {
+                let updating = matches!(self.install.offer(), install::Offer::Update { .. });
+                let res = install::install(install::Options {
+                    desktop_shortcut: self.desktop_shortcut,
+                });
+                self.install = install::status();
+                match res {
+                    Ok(_) => {
+                        let where_ = if self.desktop_shortcut {
+                            "в меню «Пуск» и на рабочем столе"
+                        } else {
+                            "в меню «Пуск»"
+                        };
+                        ctx.toast(
+                            if updating {
+                                "Установленная копия обновлена"
+                            } else {
+                                "Установлено в систему"
+                            },
+                            &format!(
+                                "«Шорашим» теперь есть {where_}. Прогресс общий для всех копий."
+                            ),
+                            "",
+                        );
+                    }
+                    Err(e) => ctx.toast("Не удалось установить", &e, "⚠"),
+                }
+                Action::None
+            }
+            Msg::AskUninstall => {
+                self.confirm = Some(Confirm::Uninstall);
+                Action::None
             }
         }
     }
@@ -220,6 +300,7 @@ impl Screen {
         column![
             widgets::page_header("Настройки", None),
             self.general_card(ctx, p),
+            self.install_card(p),
             self.goal_card(ctx, p),
             self.data_card(p),
             self.calendar_card(p),
@@ -239,6 +320,16 @@ impl Screen {
                 "Текущий прогресс на этом устройстве будет заменён данными из файла.",
                 "Импортировать",
                 false,
+            )),
+            Some(Confirm::Uninstall) => Some(self.dialog_view(
+                "Удалить «Шорашим» из системы?",
+                if self.install.running_installed {
+                    "Будут удалены установленная программа, ярлыки и запись в «Приложениях». Программа закроется. Прогресс останется на этом компьютере."
+                } else {
+                    "Будут удалены установленная копия, ярлыки и запись в «Приложениях». Эта портативная копия и прогресс останутся."
+                },
+                "Удалить",
+                true,
             )),
             Some(Confirm::Reset) => Some(self.dialog_view(
                 "Сбросить весь прогресс?",
@@ -275,15 +366,15 @@ impl Screen {
                 row![
                     widgets::choice(
                         "Тёмная",
-                        s.theme != "parchment",
+                        s.theme != crate::storage::LIGHT_THEME,
                         false,
                         Msg::SetTheme("dark")
                     ),
                     widgets::choice(
-                        "Пергамент",
-                        s.theme == "parchment",
+                        "Кожа",
+                        s.theme == crate::storage::LIGHT_THEME,
                         false,
-                        Msg::SetTheme("parchment")
+                        Msg::SetTheme(crate::storage::LIGHT_THEME)
                     ),
                 ]
                 .spacing(4)
@@ -316,7 +407,13 @@ impl Screen {
             ),
             divider(p),
             set_row(
-                "Экзамен на время",
+                "Цитата дня",
+                "Панель справа на широком окне: цитата и сегодняшняя дата".to_string(),
+                switch(crate::ui::aside::enabled(ctx), Msg::ToggleQuotePanel, p),
+            ),
+            divider(p),
+            set_row(
+                "Викторина",
                 "Секунд на вопрос".to_string(),
                 row![
                     widgets::choice("20 с", s.timed_seconds == 20, false, Msg::SetSeconds(20)),
@@ -327,13 +424,13 @@ impl Screen {
             ),
             divider(p),
             set_row(
-                "Звук в экзамене на время",
+                "Звук в викторине",
                 "Короткие сигналы: таймер, верно/неверно".to_string(),
                 switch(s.timed_sound, Msg::ToggleTimedSound, p),
             ),
             divider(p),
             set_row(
-                "Автопереход в экзамене на время",
+                "Автопереход в викторине",
                 "Следующий вопрос через 2 секунды (можно поставить на паузу)".to_string(),
                 switch(s.timed_auto, Msg::ToggleTimedAuto, p),
             ),
@@ -363,7 +460,7 @@ impl Screen {
         }
 
         let note = row![
-            txt("XP даются за уроки, карточки, тесты и экзамены. За каждые 7 дней серии — заморозка (до двух), она сохранит серию, если вы пропустите день.")
+            txt("XP даются за уроки, карточки, тесты и викторину. За каждые 7 дней серии — заморозка (до двух), она сохранит серию, если вы пропустите день.")
                 .size(theme::text::SMALL)
                 .color(p.muted)
                 .width(Length::Fill),
@@ -371,7 +468,7 @@ impl Screen {
         .width(Length::Fill);
 
         let link = button(
-            txt("Подробнее в разделе «Прогресс»")
+            txt("Подробнее в разделе «Успехи»")
                 .size(theme::text::SMALL)
                 .color(p.gold2),
         )
@@ -427,6 +524,97 @@ impl Screen {
             ]
             .spacing(12),
         )
+    }
+
+    fn install_card<'a>(&'a self, p: Palette) -> Element<'a, Msg> {
+        let note = |s: String| -> Element<'a, Msg> {
+            txt(s)
+                .size(theme::text::SMALL)
+                .color(p.muted)
+                .width(Length::Fill)
+                .into()
+        };
+        let mut col = Column::new()
+            .spacing(12)
+            .width(Length::Fill)
+            .push(widgets::heading("Установка на компьютер", 3));
+        let uninstall = || {
+            widgets::btn(
+                "Удалить из системы",
+                widgets::Btn::Danger,
+                widgets::BtnSize::Sm,
+                Some(Msg::AskUninstall),
+            )
+        };
+        let desktop = || {
+            set_row(
+                "Ярлык на рабочем столе",
+                "Ярлык в меню «Пуск» создаётся всегда".to_string(),
+                switch(self.desktop_shortcut, Msg::ToggleDesktopShortcut, p),
+            )
+        };
+        match self.install.offer() {
+            install::Offer::Install => {
+                col = col
+                    .push(note(
+                        "Сейчас программа работает как портативная — прямо из этого файла. Её можно установить для вашей учётной записи (права администратора не нужны): ярлык в меню «Пуск», запись в «Приложениях», удаление в один клик. Прогресс хранится отдельно и не пропадёт."
+                            .into(),
+                    ))
+                    .push(desktop())
+                    .push(widgets::btn(
+                        "Установить в систему",
+                        widgets::Btn::Primary,
+                        widgets::BtnSize::Md,
+                        Some(Msg::Install),
+                    ));
+            }
+            install::Offer::Update { from, to } => {
+                col = col
+                    .push(note(format!(
+                        "В системе установлена версия {from}, а сейчас запущена более новая — {to}. Можно обновить установленную копию; прогресс сохранится."
+                    )))
+                    .push(desktop())
+                    .push(
+                        row![
+                            widgets::btn(
+                                "Обновить установленную копию",
+                                widgets::Btn::Primary,
+                                widgets::BtnSize::Md,
+                                Some(Msg::Install),
+                            ),
+                            uninstall(),
+                        ]
+                        .spacing(10)
+                        .align_y(Alignment::Center)
+                        .wrap(),
+                    );
+            }
+            install::Offer::UpToDate {
+                version,
+                running_installed,
+            } => {
+                let place = self
+                    .install
+                    .installed
+                    .as_ref()
+                    .map(|i| i.dir.display().to_string())
+                    .unwrap_or_default();
+                let tail = if running_installed {
+                    "Запущена установленная копия."
+                } else {
+                    "Сейчас запущена портативная копия; установленная открывается из меню «Пуск»."
+                };
+                col = col
+                    .push(note(format!(
+                        "Установлено в систему, версия {version}: {place}. {tail}"
+                    )))
+                    .push(uninstall());
+            }
+            install::Offer::Unsupported(why) => {
+                col = col.push(note(why.to_string()));
+            }
+        }
+        widgets::card(col)
     }
 
     fn calendar_card<'a>(&'a self, p: Palette) -> Element<'a, Msg> {
@@ -510,7 +698,10 @@ impl Screen {
             column![
                 widgets::heading("О приложении", 3),
                 column![
-                    kv("Версия приложения", "1.2.0".to_string()),
+                    kv(
+                        "Версия приложения",
+                        install::current_version().to_string(),
+                    ),
                     kv("Версия содержания", content_version),
                     kv("Статус материалов", review_status),
                     kv(
@@ -520,7 +711,7 @@ impl Screen {
                 ]
                 .spacing(8),
                 notice,
-                txt("Документация в папке приложения: docs/ROADMAP.md, docs/CONTENT-SCHEMA.md, docs/SOURCES.md, docs/IMAGE-SLOTS.md.")
+                txt("Открытый исходный код (Apache-2.0) и документация: github.com/Mitroshenkov87/shorashim")
                     .size(theme::text::SMALL)
                     .color(p.muted),
                 sources_btn,

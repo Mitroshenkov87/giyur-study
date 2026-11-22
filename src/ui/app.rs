@@ -41,7 +41,7 @@ pub enum Route {
     Exam(Option<String>),
     /// Test runner for a prepared session (section, general, beit-din, retry).
     ExamRun(ExamSpec),
-    /// Timed quiz-show intro «Экзамен».
+    /// Timed quiz-show intro «Викторина».
     Timed,
     /// Timed run; `retry_ids` = «Повторить ошибки (n)» from the results screen.
     TimedRun {
@@ -57,7 +57,7 @@ pub enum Route {
 pub enum Deck {
     Lesson(String),
     Section(String),
-    /// All due cards («Повторение»).
+    /// All due cards («Карточки»).
     Review,
 }
 
@@ -101,6 +101,8 @@ pub enum Action {
     Back,
     /// Theme or level changed: rebuild everything that depends on settings.
     SettingsChanged,
+    /// Close the app (after «Удалить из системы» from the installed copy).
+    Quit,
 }
 
 #[derive(Debug, Clone)]
@@ -130,6 +132,7 @@ pub struct Ctx {
 impl Ctx {
     pub fn load() -> Ctx {
         let path = std::env::var_os("SHORASHIM_DATA")
+            // GIYUR_STUDY_DATA: the pre-rename spelling.
             .or_else(|| std::env::var_os("GIYUR_STUDY_DATA"))
             .map(PathBuf::from)
             .unwrap_or_else(storage::default_path);
@@ -141,9 +144,7 @@ impl Ctx {
             path,
             toasts: Vec::new(),
             today_override: None,
-            test_timer: std::env::var("GIYUR_TEST_TIMER")
-                .ok()
-                .and_then(|v| v.parse().ok()),
+            test_timer: crate::util::env_hook("TEST_TIMER").and_then(|v| v.parse().ok()),
             writable,
         };
         if !writable {

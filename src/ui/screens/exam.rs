@@ -26,6 +26,7 @@ use crate::exam::{self, CheckResult, Mode, Response};
 use crate::game::{self, AwardOutcome};
 use crate::ui::app::{Action, Ctx, ExamSpec, Route, Toast};
 use crate::ui::fonts::{SANS, SANS_BOLD, SERIF_BOLD};
+use crate::ui::screens::map::icons;
 use crate::ui::theme::{self, Palette};
 use crate::ui::widgets;
 
@@ -979,7 +980,7 @@ impl Screen {
     pub fn dialog<'a>(&'a self, _ctx: &'a Ctx) -> Option<Element<'a, Msg>> {
         match &self.phase {
             Phase::Run(run) if run.confirm_quit => Some(confirm_dialog(
-                "Прервать экзамен?",
+                "Прервать тест?",
                 "Ответы на текущие вопросы сохранятся в статистике, но результат не будет засчитан.",
             )),
             _ => None,
@@ -1026,74 +1027,149 @@ impl Screen {
         let p = tp();
         let mut col = Column::new().spacing(18).width(Length::Fill);
         col = col.push(widgets::kicker("Проверка знаний"));
-        col = col.push(widgets::heading("Экзамен", 1));
+        col = col.push(widgets::heading("Тесты", 1));
         col = col.push(
             muted("Набор вопросов каждый раз новый; чаще попадаются те, в которых были ошибки.")
                 .size(theme::text::BODY),
         );
 
-        // Mode cards (radio group).
-        let modes: [(SetupMode, &str, &str, &str); 3] = [
+        // Mode tiles (radio group): an engraved emblem, title and one line
+        // of description; the selected tile gets a brass edge, a brass wash
+        // and a check mark in the corner.
+        let modes: [(SetupMode, icons::Kind, &str, &str); 3] = [
             (
                 SetupMode::Section,
-                "Т",
+                icons::Kind::Book,
                 "По разделу",
                 "Проверочный тест: 80% и выше открывает следующий раздел.",
             ),
             (
                 SetupMode::General,
-                "Э",
+                icons::Kind::Shuffle,
                 "Общий экзамен",
                 "Вопросы из всех разделов вперемешку.",
             ),
             (
                 SetupMode::Beitdin,
-                "Б",
+                icons::Kind::Scales,
                 "Пробный бейт-дин",
                 "Открытые вопросы как на собеседовании; оцениваете себя сами.",
             ),
         ];
-        let mut cards = Row::new()
-            .spacing(12)
-            .width(Length::Fill)
-            .height(Length::Shrink);
-        for (mode, glyph, title, desc) in modes {
-            let selected = setup.mode == mode;
-            let content = column![
-                txt(glyph).size(26.0).font(SERIF_BOLD).color(p.gold2),
+        // Equal-height tiles inside the page scrollable: a `Fill` height
+        // collapses to zero there, so an invisible copy of the tiles at
+        // their natural height (the stack's base layer) sets the row height
+        // and the real tiles fill it.
+        let tile = move |kind: icons::Kind, title: &'a str, desc: &'a str, selected: bool| {
+            let emblem = widgets::disc(
+                icons::icon(kind, 22.0, p.gold2),
+                44.0,
+                if selected { p.gold_soft } else { p.surface2 },
+                if selected { p.gold } else { p.line2 },
+            );
+            let mark: Element<'a, Msg> = if selected {
+                widgets::disc(
+                    icons::icon(icons::Kind::Check, 13.0, p.on_gold),
+                    22.0,
+                    p.brass_mid,
+                    p.brass_edge,
+                )
+            } else {
+                iced::widget::space().width(22).height(22).into()
+            };
+            column![
+                row![emblem, space::horizontal(), mark].align_y(Alignment::Start),
                 txt(title)
                     .font(SANS_BOLD)
                     .size(theme::text::BODY)
-                    .color(p.text),
+                    .color(if selected { p.gold2 } else { p.text }),
                 txt(desc).size(theme::text::SMALL).color(p.muted),
             ]
-            .spacing(8)
-            .width(Length::Fill);
-            let b = button(content)
+            .spacing(10)
+            .width(Length::Fill)
+        };
+        let mut sizer = Row::new().spacing(GAP).width(Length::Fill);
+        let mut cards = Row::new()
+            .spacing(GAP)
+            .width(Length::Fill)
+            .height(Length::Fill);
+        for (mode, kind, title, desc) in modes {
+            let selected = setup.mode == mode;
+            // Same padding and 1 px border as the button, so the ghost
+            // measures exactly the real tile.
+            sizer = sizer.push(
+                container(tile(kind, title, desc, selected))
+                    .width(Length::FillPortion(1))
+                    .padding(TILE_PAD)
+                    .style(|_| iced::widget::container::Style {
+                        border: Border {
+                            width: 1.0,
+                            color: Color::TRANSPARENT,
+                            ..Border::default()
+                        },
+                        ..Default::default()
+                    }),
+            );
+            let b = button(tile(kind, title, desc, selected))
                 .width(Length::FillPortion(1))
                 .height(Length::Fill)
-                .padding(16)
+                .padding(TILE_PAD)
                 .style(move |_, status| {
                     let hovered =
                         matches!(status, button::Status::Hovered | button::Status::Pressed);
                     container_button_style(
                         &p,
-                        if selected {
+                        if selected && hovered {
+                            Some(Background::Color(crate::ui::screens::map::alpha(
+                                p.gold, 0.22,
+                            )))
+                        } else if selected {
                             Some(Background::Color(p.gold_soft))
                         } else if hovered {
                             Some(Background::Color(p.surface3))
                         } else {
                             Some(Background::Color(p.surface))
                         },
-                        if selected { p.gold } else { p.line },
+                        if selected {
+                            p.gold
+                        } else if hovered {
+                            crate::ui::screens::map::alpha(p.gold, 0.5)
+                        } else {
+                            p.line2
+                        },
                     )
                 })
                 .on_press(Msg::Mode(mode));
             cards = cards.push(b);
         }
-        col = col.push(cards);
+        col = col.push(
+            iced::widget::stack![widgets::ghost(sizer), cards]
+                .width(Length::Fill)
+                .height(Length::Shrink),
+        );
 
-        // Setup card.
+        // Options card: a two-column form (label + hint on the left, the
+        // control on the right, every control starting at the same x), then
+        // a footer with the available count and the start button.
+        let form_row = |label: &'a str, hint: Option<&'a str>, control: Element<'a, Msg>| {
+            let mut l = column![txt(label).size(theme::text::BODY).color(p.text)].spacing(2);
+            if let Some(h) = hint {
+                l = l.push(txt(h).size(theme::text::SMALL).color(p.muted));
+            }
+            row![
+                container(l).width(Length::Fixed(LABEL_W)),
+                container(control).width(Length::Fill),
+            ]
+            .spacing(GAP)
+            .align_y(Alignment::Center)
+            .width(Length::Fill)
+        };
+        let divider = move || {
+            container(iced::widget::space())
+                .width(Length::Fill)
+                .height(1)
+                .style(move |_| theme::divider_v(&p))
+        };
         let mut card_col = Column::new().spacing(16).width(Length::Fill);
         match setup.mode {
             SetupMode::Section => {
@@ -1105,77 +1181,113 @@ impl Screen {
                         .position(|s| s.id == id)
                         .map(|i| labels[i].clone())
                 });
-                card_col = card_col.push(
-                    column![
-                        txt("Раздел").size(theme::text::SMALL).color(p.muted),
-                        pick_list(labels, selected, Msg::SectionLabel)
-                            .placeholder("— выберите —")
-                            .text_shaping(Shaping::Advanced)
-                            .width(Length::Fill),
-                    ]
-                    .spacing(6),
-                );
+                let control: Element<'a, Msg> = if labels.is_empty() {
+                    muted("Нет открытых разделов")
+                        .size(theme::text::SMALL)
+                        .into()
+                } else {
+                    pick_list(labels, selected, Msg::SectionLabel)
+                        .placeholder("— выберите —")
+                        .text_shaping(Shaping::Advanced)
+                        .padding([8, 12])
+                        .width(Length::Fill)
+                        .style(move |_, st| theme::pick_list(&p, st))
+                        .menu_style(move |_| theme::pick_menu(&p))
+                        .into()
+                };
+                card_col = card_col.push(form_row(
+                    "Раздел",
+                    Some("Доступны открытые разделы"),
+                    control,
+                ));
             }
             SetupMode::General => {
+                // The whole row toggles, not only the small switch.
                 card_col = card_col.push(
-                    iced::widget::toggler(setup.only_unlocked)
-                        .label("Только открытые разделы")
-                        .on_toggle(Msg::OnlyUnlocked)
-                        .text_shaping(Shaping::Advanced)
-                        .text_size(theme::text::BODY),
+                    button(form_row(
+                        "Только открытые разделы",
+                        Some("Иначе — из всех разделов"),
+                        container(
+                            iced::widget::toggler(setup.only_unlocked).on_toggle(Msg::OnlyUnlocked),
+                        )
+                        .align_right(Length::Fill)
+                        .into(),
+                    ))
+                    .padding(0)
+                    .width(Length::Fill)
+                    .style(|_, _| button::Style {
+                        background: None,
+                        ..button::Style::default()
+                    })
+                    .on_press(Msg::OnlyUnlocked(!setup.only_unlocked)),
                 );
             }
             SetupMode::Beitdin => {
                 card_col = card_col.push(
-                    muted(
-                        "Вопросы задаются по одному, как на настоящем собеседовании. \
-                         Подумайте или ответьте вслух, затем сравните с эталоном.",
-                    )
-                    .size(theme::text::BODY),
+                    column![
+                        txt("Как это проходит")
+                            .size(theme::text::BODY)
+                            .color(p.text),
+                        muted(
+                            "Вопросы задаются по одному, как на настоящем собеседовании. \
+                             Подумайте или ответьте вслух, затем сравните с эталоном.",
+                        )
+                        .size(theme::text::SMALL),
+                    ]
+                    .spacing(4)
+                    .width(Length::Fill),
                 );
             }
         }
+        card_col = card_col.push(divider());
 
-        // Count chips.
-        let mut chips = Row::new().spacing(8);
-        for n in [10usize, 20, 30, 50] {
-            let selected = setup.count == n;
-            chips = chips.push(widgets::choice(
-                format!("{n}"),
-                selected,
-                true,
-                Msg::Count(n),
-            ));
-        }
-        card_col = card_col.push(
-            column![
-                txt("Количество вопросов")
-                    .size(theme::text::SMALL)
-                    .color(p.muted),
-                chips,
-            ]
-            .spacing(6),
+        let counts = [10usize, 20, 30, 50];
+        let seg = widgets::segmented(
+            counts
+                .iter()
+                .map(|&n| (n.to_string(), Msg::Count(n)))
+                .collect(),
+            counts.iter().position(|&n| n == setup.count),
         );
+        card_col = card_col.push(form_row("Количество вопросов", None, seg));
+        card_col = card_col.push(divider());
 
         let avail = setup.available(ctx);
         let mut avail_line = format!("Доступно вопросов: {avail}");
         if avail < setup.count && avail > 0 {
             avail_line.push_str(&format!(" — будет задано {avail}"));
         }
-        card_col = card_col.push(muted(avail_line).size(theme::text::SMALL));
-
         let start = widgets::btn(
             "Начать",
             widgets::Btn::Primary,
             widgets::BtnSize::Lg,
             (avail > 0).then_some(Msg::Start),
         );
-        card_col = card_col.push(widgets::centered(start));
+        card_col = card_col.push(
+            row![
+                muted(avail_line)
+                    .size(theme::text::SMALL)
+                    .width(Length::Fill),
+                start,
+            ]
+            .spacing(GAP)
+            .align_y(Alignment::Center)
+            .width(Length::Fill),
+        );
 
         col = col.push(widgets::card(card_col));
         col.into()
     }
 }
+
+/// Gap between the mode tiles and between form columns (the page grid).
+const GAP: f32 = 16.0;
+/// Width of the label column in the options card.
+/// (224 px fits «Только открытые разделы» on one line and leaves the
+/// controls ≈ 145 px at the 720 px minimum window.)
+const LABEL_W: f32 = 224.0;
+/// Inner padding of a mode tile (shared by the ghost sizer and the button).
+const TILE_PAD: f32 = 18.0;
 
 fn container_button_style(
     p: &Palette,
@@ -1434,7 +1546,9 @@ impl Screen {
                         let pl = pick_list(rights.clone(), chosen, move |v| Msg::MatchPick(i, v))
                             .placeholder("— выберите —")
                             .text_shaping(Shaping::Advanced)
-                            .width(Length::FillPortion(1));
+                            .width(Length::FillPortion(1))
+                            .style(move |_, st| theme::pick_list(&p, st))
+                            .menu_style(move |_| theme::pick_menu(&p));
                         row_content = row_content.push(pl);
                     }
                     list = list.push(row_content.width(Length::Fill));
@@ -1682,7 +1796,7 @@ impl Screen {
         let practice = matches!(res.mode, Mode::SelfCheck | Mode::Rehearsal);
         let (back_label, back_msg) = match (practice, sec) {
             (true, Some(s)) => (s.title.as_str(), Msg::ToSection(s.id.clone())),
-            _ => ("Экзамен", Msg::NewExam),
+            _ => ("Тесты", Msg::NewExam),
         };
         let mut col = Column::new().spacing(18).width(Length::Fill);
         col = col.push(widgets::back_button(back_label, back_msg));
@@ -1762,7 +1876,7 @@ impl Screen {
         }
         if !practice {
             buttons = buttons.push(widgets::btn(
-                "Новый экзамен",
+                "Новый тест",
                 widgets::Btn::Secondary,
                 widgets::BtnSize::Md,
                 Some(Msg::NewExam),
@@ -1776,7 +1890,7 @@ impl Screen {
                 Some(Msg::ToSection(s.id.clone())),
             ),
             None => widgets::btn(
-                "На карту",
+                "К урокам",
                 widgets::Btn::Ghost,
                 widgets::BtnSize::Md,
                 Some(Msg::ToMap),

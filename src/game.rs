@@ -306,7 +306,7 @@ pub fn badge_list(lib: &Library) -> Vec<Badge> {
             id: "millionaire".into(),
             icon: "⏱️".into(),
             title: "20 из 20".into(),
-            text: "Экзамен на время: 20 верных из 20".into(),
+            text: "Викторина: 20 верных из 20".into(),
             section: false,
         },
         Badge {

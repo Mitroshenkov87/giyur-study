@@ -109,7 +109,7 @@ impl Screen {
 
         let mut page = Column::new().spacing(18).width(Length::Fill);
 
-        page = page.push(widgets::back_button("Карта", Msg::Go(Route::Map)));
+        page = page.push(widgets::back_button("Уроки", Msg::Go(Route::Map)));
         let rd = study::readiness(&ctx.lib, sec, &ctx.state);
         let read_pct = study::read_pct(&rd);
 
@@ -789,9 +789,13 @@ fn lesson_row<'a>(
         .align_x(iced::alignment::Horizontal::Center)
         .align_y(iced::alignment::Vertical::Center)
         .style(move |_| iced::widget::container::Style {
-            background: Some(Background::Color(if read { p.gold } else { p.surface3 })),
+            background: Some(Background::Color(if read {
+                p.brass_mid
+            } else {
+                p.surface3
+            })),
             border: Border {
-                color: if read { p.gold } else { p.line2 },
+                color: if read { p.brass_edge } else { p.line2 },
                 width: 1.0,
                 radius: theme::radius::PILL.into(),
             },
@@ -867,7 +871,7 @@ fn lesson_row<'a>(
 /// «Не найдено» / «Раздел закрыт» view (§0.3, §4).
 fn not_found<'a>(message: &'a str, locked: bool, p: theme::Palette) -> Element<'a, Msg> {
     column![
-        widgets::back_button("Карта", Msg::Go(Route::Map)),
+        widgets::back_button("Уроки", Msg::Go(Route::Map)),
         widgets::heading(
             if locked {
                 "Раздел закрыт"
@@ -881,7 +885,7 @@ fn not_found<'a>(message: &'a str, locked: bool, p: theme::Palette) -> Element<'
                 icons::icon(icons::Kind::StarDavid, 56.0, p.gold),
                 txt(message).size(theme::text::BODY).color(p.text),
                 widgets::btn(
-                    "На карту",
+                    "К урокам",
                     widgets::Btn::Primary,
                     widgets::BtnSize::Lg,
                     Some(Msg::Go(Route::Map)),

@@ -18,7 +18,7 @@ name = "shorashim"
 path = "src/main.rs"
 
 [dependencies]
-iced = { version = "0.14", features = ["image", "tiny-skia", "wgpu", "tokio", "canvas"] }
+iced = { version = "0.14", features = ["image", "tiny-skia", "wgpu", "tokio", "canvas", "advanced"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 image = { version = "0.25", default-features = false, features = ["webp"] }
@@ -27,11 +27,23 @@ chrono = { version = "0.4", default-features = false, features = ["clock", "std"
 dirs = "6"
 rfd = { version = "0.15", default-features = false, features = ["xdg-portal", "tokio"] }
 
+[dev-dependencies]
+# Headless layout of real screens in tests (same version as iced).
+iced_runtime = "0.14"
+
 [build-dependencies]
 image = { version = "0.25", default-features = false, features = ["webp", "ico", "png"] }
 
 [target.'cfg(windows)'.dependencies]
-windows = { version = "0.62.2", features = ["Devices_Geolocation", "Foundation"] }
+windows = { version = "0.62.2", features = [
+    "Devices_Geolocation",
+    "Foundation",
+    "Win32_Foundation",
+    "Win32_System_Com",
+    "Win32_Security",
+    "Win32_System_Registry",
+    "Win32_UI_Shell",
+] }
 
 [target.'cfg(windows)'.build-dependencies]
 winresource = "0.1"

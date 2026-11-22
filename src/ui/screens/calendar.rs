@@ -113,17 +113,16 @@ pub enum Msg {
 impl Screen {
     pub fn new(ctx: &mut Ctx, _route: &Route) -> Self {
         let prefs = prefs::CalendarPrefs::load(&ctx.state.settings);
-        // Screenshot hooks: GIYUR_CALENDAR_TAB=today|month|settings and
-        // GIYUR_CALENDAR_DATE=YYYY-MM-DD (set by main::parse_route).
-        let env_tab = match std::env::var("GIYUR_CALENDAR_TAB").as_deref() {
-            Ok("month") => Some(Tab::Month),
-            Ok("settings") => Some(Tab::Settings),
-            Ok("today") => Some(Tab::Today),
+        // Screenshot hooks: SHORASHIM_CALENDAR_TAB=today|month|settings and
+        // SHORASHIM_CALENDAR_DATE=YYYY-MM-DD (set by main::parse_route).
+        let env_tab = match crate::util::env_hook("CALENDAR_TAB").as_deref() {
+            Some("month") => Some(Tab::Month),
+            Some("settings") => Some(Tab::Settings),
+            Some("today") => Some(Tab::Today),
             _ => None,
         };
         let tab = take_open_tab().or(env_tab).unwrap_or_default();
-        let date = std::env::var("GIYUR_CALENDAR_DATE")
-            .ok()
+        let date = crate::util::env_hook("CALENDAR_DATE")
             .and_then(|v| NaiveDate::parse_from_str(&v, "%Y-%m-%d").ok())
             .unwrap_or_else(|| ctx.today());
         let h = hebrew::HebrewDate::from_gregorian(date);
@@ -994,6 +993,10 @@ impl Screen {
                         .size(theme::text::H3)
                         .font(HEBREW)
                         .color(p.hebrew),
+                    txt(gregorian_span(y, m))
+                        .size(theme::text::BODY)
+                        .font(SANS_BOLD)
+                        .color(p.text),
                 ]
                 .spacing(4)
                 .align_x(Horizontal::Center)
@@ -1019,6 +1022,12 @@ impl Screen {
                     .align_x(Horizontal::Center),
             );
         }
+        col = col.push(
+            txt("В клетке слева — еврейская дата (буквами и цифрой), справа — обычная дата.")
+                .size(theme::text::SMALL)
+                .color(p.muted)
+                .width(Length::Fill),
+        );
         col = col.push(head);
 
         let blanks = leading_blanks(y, m);
@@ -1093,11 +1102,7 @@ impl Screen {
         let is_selected = date == self.date;
 
         let num_color = if is_today { p.gold2 } else { p.text };
-        let greg = if date.day() == 1 {
-            format!("1 {}", GREG_MONTHS_ABBR[date.month0() as usize])
-        } else {
-            date.day().to_string()
-        };
+        let greg_month = GREG_MONTHS_ABBR[date.month0() as usize];
 
         let mut dots = Row::new().spacing(3).height(Length::Fixed(6.0));
         let mut seen: Vec<Color> = Vec::new();
@@ -1111,13 +1116,24 @@ impl Screen {
 
         button(
             column![
+                // Left: the Hebrew day (letters, then digits); right: the
+                // Gregorian day in Arabic numerals with its month.
                 row![
                     txt(hebrew::gematria(info.hebrew.day as u32))
                         .size(16.0)
-                        .font(SANS_BOLD)
+                        .font(HEBREW)
                         .color(num_color),
                     space::horizontal().width(Length::Fill),
-                    txt(greg).size(11.0).color(p.muted),
+                    txt(date.day().to_string())
+                        .size(16.0)
+                        .font(SANS_BOLD)
+                        .color(num_color),
+                ]
+                .align_y(Alignment::Center),
+                row![
+                    txt(info.hebrew.day.to_string()).size(11.0).color(p.muted),
+                    space::horizontal().width(Length::Fill),
+                    txt(greg_month).size(11.0).color(p.muted),
                 ],
                 space::vertical().height(Length::Fill),
                 dots,
@@ -1148,6 +1164,11 @@ impl Screen {
             ),
             3,
         ));
+        col = col.push(
+            txt(info.hebrew.format_ru())
+                .size(theme::text::SMALL + 0.5)
+                .color(p.gold2),
+        );
         for ev in &info.events {
             let (accent, _) = kind_tint(&p, ev.kind);
             col = col.push(
@@ -1720,6 +1741,42 @@ fn leading_blanks(year: i32, month: u8) -> usize {
         .num_days_from_sunday() as usize
 }
 
+/// «ноябрь — декабрь 2026» / «декабрь 2026 — январь 2027»: the Gregorian
+/// months a Hebrew month spans (Arabic numerals next to the Hebrew title).
+fn gregorian_span(y: i32, m: u8) -> String {
+    let first = hebrew::HebrewDate::new(y, m, 1).to_gregorian();
+    let last = hebrew::HebrewDate::new(y, m, hebrew::days_in_month(y, m)).to_gregorian();
+    let name = |d: NaiveDate| GREG_MONTHS_NOM[d.month0() as usize];
+    if first.year() != last.year() {
+        format!(
+            "{} {} — {} {}",
+            name(first),
+            first.year(),
+            name(last),
+            last.year()
+        )
+    } else if first.month() != last.month() {
+        format!("{} — {} {}", name(first), name(last), last.year())
+    } else {
+        format!("{} {}", name(first), first.year())
+    }
+}
+
+const GREG_MONTHS_NOM: [&str; 12] = [
+    "январь",
+    "февраль",
+    "март",
+    "апрель",
+    "май",
+    "июнь",
+    "июль",
+    "август",
+    "сентябрь",
+    "октябрь",
+    "ноябрь",
+    "декабрь",
+];
+
 const GREG_MONTHS_ABBR: [&str; 12] = [
     "янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек",
 ];
@@ -1731,6 +1788,14 @@ const GREG_MONTHS_ABBR: [&str; 12] = [
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn gregorian_span_of_hebrew_months() {
+        // Кислев 5787 ≈ 11 ноября — 10 декабря 2026.
+        assert_eq!(gregorian_span(5787, 9), "ноябрь — декабрь 2026");
+        // Тевет 5787 crosses the civil new year.
+        assert_eq!(gregorian_span(5787, 10), "декабрь 2026 — январь 2027");
+    }
     use crate::calendar::hebrew::{self, HebrewDate};
 
     #[test]
