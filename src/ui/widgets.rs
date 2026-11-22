@@ -599,3 +599,14 @@ pub fn stat_tile<'a, Message: 'a>(value: &'a str, label: &'a str) -> Element<'a,
     .width(Length::Fill)
     .into()
 }
+
+/// Open an external link in the system browser.
+pub fn open_url(url: &str) {
+    #[cfg(target_os = "windows")]
+    let (prog, args): (&str, [&str; 2]) = ("rundll32", ["url.dll,FileProtocolHandler", url]);
+    #[cfg(target_os = "macos")]
+    let (prog, args): (&str, [&str; 1]) = ("open", [url]);
+    #[cfg(all(unix, not(target_os = "macos")))]
+    let (prog, args): (&str, [&str; 1]) = ("xdg-open", [url]);
+    let _ = std::process::Command::new(prog).args(args).spawn();
+}

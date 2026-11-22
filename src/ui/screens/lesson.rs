@@ -120,7 +120,7 @@ impl Screen {
                 Action::None
             }
             Msg::OpenUrl(url) => {
-                open_url(&url);
+                widgets::open_url(&url);
                 Action::None
             }
         }
@@ -508,15 +508,4 @@ fn not_found_view(guard: &Guard) -> Element<'static, Msg> {
     .spacing(14)
     .width(Length::Fill)
     .into()
-}
-
-/// Open an external link in the system browser.
-fn open_url(url: &str) {
-    #[cfg(target_os = "windows")]
-    let (prog, args): (&str, [&str; 2]) = ("rundll32", ["url.dll,FileProtocolHandler", url]);
-    #[cfg(target_os = "macos")]
-    let (prog, args): (&str, [&str; 1]) = ("open", [url]);
-    #[cfg(all(unix, not(target_os = "macos")))]
-    let (prog, args): (&str, [&str; 1]) = ("xdg-open", [url]);
-    let _ = std::process::Command::new(prog).args(args).spawn();
 }

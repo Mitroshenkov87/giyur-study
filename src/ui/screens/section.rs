@@ -65,7 +65,9 @@ impl Screen {
                     .font(fonts::SANS_BOLD)
             )
             .width(76.0)
-            .height(76.0),
+            .height(76.0)
+            .center_x(76.0)
+            .center_y(76.0),
         ];
         let head_text = column![
             back_button("Карта", Msg::Go(Route::Map)),

@@ -15,6 +15,7 @@ pub struct Screen;
 #[derive(Debug, Clone)]
 pub enum Msg {
     Back,
+    OpenUrl(String),
 }
 
 impl Screen {
@@ -25,6 +26,10 @@ impl Screen {
     pub fn update(&mut self, _ctx: &mut Ctx, msg: Msg) -> Action {
         match msg {
             Msg::Back => Action::Go(Route::Settings),
+            Msg::OpenUrl(url) => {
+                widgets::open_url(&url);
+                Action::None
+            }
         }
     }
 
@@ -110,5 +115,14 @@ fn source_row<'a>(src: &'a Source, p: theme::Palette) -> Element<'a, Msg> {
     if let Some(short) = src.movement.as_deref().and_then(movement_tag) {
         line = line.push(widgets::tag(short));
     }
-    line.into()
+    // http(s) sources open in the system browser (§13).
+    match src.url.as_deref().filter(|_| is_link) {
+        Some(url) => button(line.width(Length::Fill))
+            .width(Length::Fill)
+            .padding([4.0, 6.0])
+            .style(move |_, s| theme::button_ghost(&theme::current(), s))
+            .on_press(Msg::OpenUrl(url.to_string()))
+            .into(),
+        None => line.into(),
+    }
 }

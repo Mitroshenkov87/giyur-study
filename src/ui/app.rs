@@ -62,10 +62,22 @@ pub enum Deck {
 /// What exam to start in the runner.
 #[derive(Debug, Clone, PartialEq)]
 pub enum ExamSpec {
-    Section(String),
-    General { count: usize },
-    BeitDin { count: usize },
-    Retry { ids: Vec<String> },
+    Section {
+        id: String,
+        count: usize,
+    },
+    General {
+        count: usize,
+    },
+    BeitDin {
+        count: usize,
+    },
+    /// «Повторить ошибки»; `section_id` keeps the retry tied to its section
+    /// (kicker, «К разделу» button, history entry).
+    Retry {
+        ids: Vec<String>,
+        section_id: Option<String>,
+    },
 }
 
 /// What a screen asks the shell to do after an update.

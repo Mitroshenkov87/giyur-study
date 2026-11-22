@@ -341,7 +341,13 @@ fn button_style(background: Option<Background>, text_color: Color) -> button::St
 
 /// Primary gold button: `linear-gradient(180deg, gold2, gold)`, on-gold text.
 pub fn button_primary(p: &Palette, status: button::Status) -> button::Style {
-    let style = button_style(Some(gold_background(p)), p.on_gold);
+    let style = button::Style {
+        border: Border {
+            radius: radius::BUTTON.into(),
+            ..Border::default()
+        },
+        ..button_style(Some(gold_background(p)), p.on_gold)
+    };
     match status {
         button::Status::Active => button::Style {
             shadow: Shadow {
@@ -441,7 +447,13 @@ pub fn button_danger(p: &Palette, status: button::Status) -> button::Style {
 
 /// Timed «Начать игру» gold button (§T.3 `tq-go`); min-width applied by caller.
 pub fn button_tq_go(p: &Palette, status: button::Status) -> button::Style {
-    let style = button_style(Some(v_gradient(rgb(0xf6dc86), p.gold)), p.on_gold);
+    let style = button::Style {
+        border: Border {
+            radius: radius::BUTTON.into(),
+            ..Border::default()
+        },
+        ..button_style(Some(v_gradient(rgb(0xf6dc86), p.gold)), p.on_gold)
+    };
     match status {
         button::Status::Hovered => button::Style {
             background: Some(v_gradient(rgb(0xf9e6a8), rgb(0xe6c36a))),

@@ -269,7 +269,7 @@ fn parse_route(r: &str) -> Option<Route> {
         "cards" => Route::Cards(Deck::Lesson(v)),
         "deck" => Route::Cards(Deck::Section(v)),
         "exam" => Route::Exam(if v.is_empty() { None } else { Some(v) }),
-        "examrun" => Route::ExamRun(giyur_study::ui::app::ExamSpec::Section(v)),
+        "examrun" => Route::ExamRun(giyur_study::ui::app::ExamSpec::Section { id: v, count: 20 }),
         "timed" => Route::Timed,
         "timedrun" => Route::TimedRun { retry_ids: None },
         "progress" => Route::Progress,

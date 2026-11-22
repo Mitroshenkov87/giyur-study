@@ -408,6 +408,8 @@ struct WeakItem {
     lesson_id: String,
     lesson: String,
     section: String,
+    /// Raw error rate (miss / n) — the sort key; `pct` is only for display.
+    rate: f64,
     pct: i64,
 }
 
@@ -609,11 +611,19 @@ impl Screen {
                     lesson_id: id,
                     lesson: lesson.title.clone().unwrap_or_else(|| sec.title.clone()),
                     section: sec.title.clone(),
+                    rate: miss / n as f64,
                     pct: util::pct(miss / n as f64),
                 })
             })
             .collect();
-        weak.sort_by_key(|w| std::cmp::Reverse(w.pct));
+        // Raw rate first (rounded pct would tie randomly: `agg` is a
+        // HashMap), lesson id as a stable tiebreaker.
+        weak.sort_by(|a, b| {
+            b.rate
+                .partial_cmp(&a.rate)
+                .unwrap_or(std::cmp::Ordering::Equal)
+                .then_with(|| a.lesson_id.cmp(&b.lesson_id))
+        });
         weak.truncate(5);
 
         // Collapsible «Как работают цель, серия и заморозки» (§11.2).

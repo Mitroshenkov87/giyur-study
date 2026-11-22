@@ -73,7 +73,17 @@ impl Screen {
     }
 
     pub fn subscription(&self) -> iced::Subscription<Msg> {
-        iced::Subscription::none()
+        if self.confirm.is_some() {
+            iced::keyboard::listen().filter_map(|event| match event {
+                iced::keyboard::Event::KeyPressed {
+                    key: iced::keyboard::Key::Named(iced::keyboard::key::Named::Escape),
+                    ..
+                } => Some(Msg::ConfirmNo),
+                _ => None,
+            })
+        } else {
+            iced::Subscription::none()
+        }
     }
 
     pub fn view<'a>(&'a self, ctx: &'a Ctx) -> Element<'a, Msg> {

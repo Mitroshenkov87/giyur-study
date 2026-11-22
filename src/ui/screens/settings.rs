@@ -146,8 +146,13 @@ impl Screen {
                     .add_filter("JSON", &["json"])
                     .pick_file();
                 if let Some(path) = picked {
-                    match std::fs::read_to_string(&path) {
-                        Ok(text) => self.confirm = Some(Confirm::Import(text)),
+                    match std::fs::read(&path) {
+                        // A non-UTF-8 file fails like invalid JSON (PWA's
+                        // FileReader → JSON.parse path), not like a read error.
+                        Ok(bytes) => match String::from_utf8(bytes) {
+                            Ok(text) => self.confirm = Some(Confirm::Import(text)),
+                            Err(_) => ctx.toast("Файл не является корректным JSON.", "", ""),
+                        },
                         Err(_) => ctx.toast("Не удалось прочитать файл", "", ""),
                     }
                 }

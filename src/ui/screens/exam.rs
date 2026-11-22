@@ -379,7 +379,10 @@ impl Setup {
 
     fn spec(&self) -> ExamSpec {
         match self.mode {
-            SetupMode::Section => ExamSpec::Section(self.section.clone().unwrap_or_default()),
+            SetupMode::Section => ExamSpec::Section {
+                id: self.section.clone().unwrap_or_default(),
+                count: self.count,
+            },
             SetupMode::General => ExamSpec::General { count: self.count },
             SetupMode::Beitdin => ExamSpec::BeitDin { count: self.count },
         }
@@ -641,7 +644,9 @@ fn normalize_setup(setup: &mut Setup, ctx: &Ctx, preset: Option<&String>) {
 /// Build an owned session from a spec (js/ui/exam.js start action).
 fn build_run(ctx: &Ctx, spec: &ExamSpec) -> Option<Run> {
     let (mode, section_id, count, only_unlocked, ids) = match spec {
-        ExamSpec::Section(id) => (Mode::Section, Some(id.clone()), None, None, None),
+        ExamSpec::Section { id, count } => {
+            (Mode::Section, Some(id.clone()), Some(*count), None, None)
+        }
         ExamSpec::General { count } => (
             Mode::General,
             None,
@@ -650,7 +655,13 @@ fn build_run(ctx: &Ctx, spec: &ExamSpec) -> Option<Run> {
             None,
         ),
         ExamSpec::BeitDin { count } => (Mode::Beitdin, None, Some(*count), None, None),
-        ExamSpec::Retry { ids } => (Mode::Retry, None, None, None, Some(ids.clone())),
+        ExamSpec::Retry { ids, section_id } => (
+            Mode::Retry,
+            section_id.clone(),
+            None,
+            None,
+            Some(ids.clone()),
+        ),
     };
     let mut rng = rand::thread_rng();
     let s = exam::build(
@@ -867,6 +878,7 @@ impl Screen {
                     if !r.mistake_ids.is_empty() {
                         return Action::Go(Route::ExamRun(ExamSpec::Retry {
                             ids: r.mistake_ids.clone(),
+                            section_id: r.res.section_id.clone(),
                         }));
                     }
                 }
@@ -1715,9 +1727,16 @@ impl Screen {
         };
         let mut right_col = Column::new().spacing(8).width(Length::Fill);
         right_col = right_col.push(serif(headline.0, theme::text::H2).color(headline.1));
+        // «15» / «14.5», never «15.0» (PWA drops the trailing zero).
+        let s = (res.score * 10.0).round() / 10.0;
+        let score_text = if s.fract() == 0.0 {
+            format!("{}", s as i64)
+        } else {
+            format!("{s}")
+        };
         let mut score_parts = vec![
             ("Набрано ".to_string(), false),
-            (format!("{:.1}", res.score), true),
+            (score_text, true),
             (" из ".to_string(), false),
             (format!("{}", res.total), true),
         ];

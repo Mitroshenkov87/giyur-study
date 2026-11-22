@@ -344,6 +344,8 @@ struct TimedRun {
     auto_paused: bool,
     auto_frac: f32,
     confirm_quit: bool,
+    /// When the quit dialog was opened (the clock is paused while it shows).
+    quit_at: Option<Instant>,
 }
 
 impl TimedRun {
@@ -378,6 +380,7 @@ impl TimedRun {
             auto_paused: false,
             auto_frac: 0.0,
             confirm_quit: false,
+            quit_at: None,
         }
         .with_fresh_remaining()
     }
@@ -583,7 +586,7 @@ pub enum Msg {
     ToMap,
     // Subscriptions.
     Tick(Instant),
-    Key(keyboard::Key, keyboard::Modifiers),
+    Key(keyboard::Key, key::Physical, keyboard::Modifiers),
 }
 
 /// Build an owned timed run (js/ui/timed.js T.build).
@@ -662,7 +665,10 @@ impl Screen {
             // ---- Runner ----
             Msg::Quit => {
                 if let Phase::Run(run) = &mut self.phase {
-                    run.confirm_quit = true;
+                    if !run.confirm_quit {
+                        run.confirm_quit = true;
+                        run.quit_at = Some(Instant::now());
+                    }
                 }
                 Action::None
             }
@@ -670,6 +676,12 @@ impl Screen {
             Msg::QuitCancel => {
                 if let Phase::Run(run) = &mut self.phase {
                     run.confirm_quit = false;
+                    // Give back the time spent in the dialog.
+                    if let Some(at) = run.quit_at.take() {
+                        let paused = at.elapsed();
+                        run.timer_end += paused;
+                        run.phase_deadline += paused;
+                    }
                 }
                 Action::None
             }
@@ -735,6 +747,11 @@ impl Screen {
                 let Phase::Run(run) = &mut self.phase else {
                     return Action::None;
                 };
+                // The countdown, lock and auto-advance pause while the quit
+                // dialog is open (its text promises the run won't count yet).
+                if run.confirm_quit {
+                    return Action::None;
+                }
                 match run.phase {
                     QPhase::Intro => {
                         if now >= run.phase_deadline {
@@ -768,7 +785,7 @@ impl Screen {
                 }
                 Action::None
             }
-            Msg::Key(k, modifiers) => {
+            Msg::Key(k, physical, modifiers) => {
                 if modifiers.command() || modifiers.alt() {
                     return Action::None;
                 }
@@ -777,7 +794,7 @@ impl Screen {
                 };
                 if run.confirm_quit {
                     if matches!(k, keyboard::Key::Named(key::Named::Escape)) {
-                        run.confirm_quit = false;
+                        return self.update(ctx, Msg::QuitCancel);
                     }
                     return Action::None;
                 }
@@ -792,22 +809,35 @@ impl Screen {
                         }
                     }
                     QPhase::Active => {
-                        if let keyboard::Key::Character(c) = &k {
-                            let idx = match c.to_ascii_lowercase().as_str() {
-                                "a" => Some(0),
-                                "b" => Some(1),
-                                "c" => Some(2),
-                                "d" => Some(3),
-                                "1" => Some(0),
-                                "2" => Some(1),
-                                "3" => Some(2),
-                                "4" => Some(3),
+                        // Physical codes first: on a non-Latin layout the A
+                        // key sends «ф», so Key::Character alone misses A–D
+                        // (the PWA uses e.code).
+                        let idx = match physical {
+                            key::Physical::Code(code) => match code {
+                                key::Code::KeyA | key::Code::Digit1 | key::Code::Numpad1 => Some(0),
+                                key::Code::KeyB | key::Code::Digit2 | key::Code::Numpad2 => Some(1),
+                                key::Code::KeyC | key::Code::Digit3 | key::Code::Numpad3 => Some(2),
+                                key::Code::KeyD | key::Code::Digit4 | key::Code::Numpad4 => Some(3),
                                 _ => None,
-                            };
-                            if let Some(i) = idx {
-                                if i < run.items[run.idx].opts.len() {
-                                    return self.update(ctx, Msg::Pick(i));
+                            },
+                            key::Physical::Unidentified(_) => None,
+                        };
+                        let idx = idx.or_else(|| {
+                            if let keyboard::Key::Character(c) = &k {
+                                match c.to_ascii_lowercase().as_str() {
+                                    "a" | "1" => Some(0),
+                                    "b" | "2" => Some(1),
+                                    "c" | "3" => Some(2),
+                                    "d" | "4" => Some(3),
+                                    _ => None,
                                 }
+                            } else {
+                                None
+                            }
+                        });
+                        if let Some(i) = idx {
+                            if i < run.items[run.idx].opts.len() {
+                                return self.update(ctx, Msg::Pick(i));
                             }
                         }
                     }
@@ -842,9 +872,12 @@ impl Screen {
             Phase::Run(_) => Subscription::batch([
                 iced::time::every(Duration::from_millis(100)).map(Msg::Tick),
                 keyboard::listen().filter_map(|ev| match ev {
-                    keyboard::Event::KeyPressed { key, modifiers, .. } => {
-                        Some(Msg::Key(key, modifiers))
-                    }
+                    keyboard::Event::KeyPressed {
+                        key,
+                        physical_key,
+                        modifiers,
+                        ..
+                    } => Some(Msg::Key(key, physical_key, modifiers)),
                     _ => None,
                 }),
             ]),
@@ -1136,7 +1169,7 @@ impl Screen {
         // Main area (ladder on wide screens, §10.2 «Ladder»).
         let area = responsive(move |size| {
             let main: Element<'a, Msg> = self.view_play(run, it);
-            if size.width >= 860.0 {
+            if size.width >= 800.0 {
                 row![main, self.view_ladder(run)]
                     .spacing(20)
                     .width(Length::Fill)

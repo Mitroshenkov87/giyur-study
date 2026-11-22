@@ -497,6 +497,8 @@ pub(crate) fn emblem<'a, Message: 'a>(
     container(inner)
         .width(Length::Fixed(size))
         .height(Length::Fixed(size))
+        .center_x(Length::Fixed(size))
+        .center_y(Length::Fixed(size))
         .style(move |_| iced::widget::container::Style {
             background: Some(v_gradient(
                 Color::from_rgb8(0x26, 0x30, 0x5a),
@@ -728,7 +730,11 @@ fn stats<'a>(ctx: &'a Ctx, p: theme::Palette) -> Element<'a, Msg> {
             48.0,
             if done { p.ok } else { p.gold }
         ),
-        container(ring_center).width(48.0).height(48.0),
+        container(ring_center)
+            .width(48.0)
+            .height(48.0)
+            .center_x(48.0)
+            .center_y(48.0),
     ];
     let goal_stat = stat_button(
         row![
@@ -1114,7 +1120,9 @@ fn path_item<'a>(
                         .color(text_color)
                 )
                 .width(54.0)
-                .height(54.0),
+                .height(54.0)
+                .center_x(54.0)
+                .center_y(54.0),
             ]
             .into()
         }
@@ -1208,6 +1216,8 @@ fn node_circle<'a>(
     container(inner)
         .width(Length::Fixed(size))
         .height(Length::Fixed(size))
+        .center_x(Length::Fixed(size))
+        .center_y(Length::Fixed(size))
         .style(move |_| iced::widget::container::Style {
             background: Some(Background::Color(bg)),
             border: Border {
