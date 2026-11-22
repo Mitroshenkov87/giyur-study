@@ -580,9 +580,9 @@ mod tests {
         assert_eq!(utc_offset_minutes(&au, ymd(2026, 1, 15)), 660);
         assert_eq!(utc_offset_minutes(&au, ymd(2026, 7, 15)), 600);
 
-        let fixed = place("fixed", 55.76, 37.62, "none", 180);
-        assert_eq!(utc_offset_minutes(&fixed, ymd(2026, 6, 21)), 180);
-        assert_eq!(utc_offset_minutes(&fixed, ymd(2026, 1, 15)), 180);
+        let fixed = place("fixed", -34.6, -58.4, "none", -180);
+        assert_eq!(utc_offset_minutes(&fixed, ymd(2026, 6, 21)), -180);
+        assert_eq!(utc_offset_minutes(&fixed, ymd(2026, 1, 15)), -180);
     }
 
     #[test]

@@ -315,8 +315,10 @@ impl Screen {
                 let parse = |s: &str| s.trim().replace(',', ".").parse::<f64>().ok();
                 let (Some(lat), Some(lon)) = (parse(&self.lat_input), parse(&self.lon_input))
                 else {
-                    self.coord_error =
-                        Some("Введите широту и долготу числами, например 55,75.".into());
+                    self.coord_error = Some(
+                        "Введите широту и долготу числами, например 31,78 и 35,23 (Иерусалим)."
+                            .into(),
+                    );
                     return Action::None;
                 };
                 if !(-90.0..=90.0).contains(&lat) {
@@ -1343,12 +1345,12 @@ impl Screen {
         );
         col = col.push(
             row![
-                text_input("Широта, например 55,75", &self.lat_input)
+                text_input("Широта, например 31,78", &self.lat_input)
                     .on_input(Msg::LatEdit)
                     .padding(12)
                     .width(Length::Fill)
                     .style(move |_t, s| theme::text_input(&palette(), s)),
-                text_input("Долгота, например 37,62", &self.lon_input)
+                text_input("Долгота, например 35,23", &self.lon_input)
                     .on_input(Msg::LonEdit)
                     .padding(12)
                     .width(Length::Fill)
