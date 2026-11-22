@@ -8,6 +8,8 @@ use std::path::{Path, PathBuf};
 
 use crate::util;
 
+/// Progress-file format id. Kept from the Giyur Study days on purpose:
+/// files exported by every earlier version (PWA and native) stay importable.
 pub const APP_ID: &str = "giyur-study";
 pub const SCHEMA: i64 = 1;
 

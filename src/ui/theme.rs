@@ -291,8 +291,8 @@ pub fn iced_theme(kind: ThemeKind) -> Theme {
     let p = kind.palette();
     Theme::custom(
         match kind {
-            ThemeKind::Dark => "Giyur Dark",
-            ThemeKind::Parchment => "Giyur Parchment",
+            ThemeKind::Dark => "Shorashim Dark",
+            ThemeKind::Parchment => "Shorashim Parchment",
         },
         IcedPalette {
             background: p.bg0,

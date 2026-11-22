@@ -113,17 +113,16 @@ pub enum Msg {
 impl Screen {
     pub fn new(ctx: &mut Ctx, _route: &Route) -> Self {
         let prefs = prefs::CalendarPrefs::load(&ctx.state.settings);
-        // Screenshot hooks: GIYUR_CALENDAR_TAB=today|month|settings and
-        // GIYUR_CALENDAR_DATE=YYYY-MM-DD (set by main::parse_route).
-        let env_tab = match std::env::var("GIYUR_CALENDAR_TAB").as_deref() {
-            Ok("month") => Some(Tab::Month),
-            Ok("settings") => Some(Tab::Settings),
-            Ok("today") => Some(Tab::Today),
+        // Screenshot hooks: SHORASHIM_CALENDAR_TAB=today|month|settings and
+        // SHORASHIM_CALENDAR_DATE=YYYY-MM-DD (set by main::parse_route).
+        let env_tab = match crate::util::env_hook("CALENDAR_TAB").as_deref() {
+            Some("month") => Some(Tab::Month),
+            Some("settings") => Some(Tab::Settings),
+            Some("today") => Some(Tab::Today),
             _ => None,
         };
         let tab = take_open_tab().or(env_tab).unwrap_or_default();
-        let date = std::env::var("GIYUR_CALENDAR_DATE")
-            .ok()
+        let date = crate::util::env_hook("CALENDAR_DATE")
             .and_then(|v| NaiveDate::parse_from_str(&v, "%Y-%m-%d").ok())
             .unwrap_or_else(|| ctx.today());
         let h = hebrew::HebrewDate::from_gregorian(date);

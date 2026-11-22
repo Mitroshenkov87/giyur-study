@@ -40,8 +40,7 @@ impl App {
         let mut ctx = Ctx::load();
         theme::set_current(theme_kind(&ctx));
         let route = if ctx.state.onboarded {
-            std::env::var("GIYUR_START_ROUTE")
-                .ok()
+            shorashim::util::env_hook("START_ROUTE")
                 .and_then(|r| parse_route(&r))
                 .unwrap_or(Route::Map)
         } else {
@@ -377,7 +376,7 @@ impl App {
     }
 }
 
-/// Debug/screenshot hook: `GIYUR_START_ROUTE=section:shabbat` etc.
+/// Debug/screenshot hook: `SHORASHIM_START_ROUTE=section:shabbat` etc.
 fn parse_route(r: &str) -> Option<Route> {
     let (k, v) = r.split_once(':').unwrap_or((r, ""));
     let v = v.to_string();
@@ -387,9 +386,9 @@ fn parse_route(r: &str) -> Option<Route> {
             // Screenshot hook: «calendar», «calendar:month», «calendar:settings»
             // or «calendar:YYYY-MM-DD»; the screen reads the env vars below.
             match v.as_str() {
-                "today" | "month" | "settings" => std::env::set_var("GIYUR_CALENDAR_TAB", &v),
+                "today" | "month" | "settings" => std::env::set_var("SHORASHIM_CALENDAR_TAB", &v),
                 d if chrono::NaiveDate::parse_from_str(d, "%Y-%m-%d").is_ok() => {
-                    std::env::set_var("GIYUR_CALENDAR_DATE", d)
+                    std::env::set_var("SHORASHIM_CALENDAR_DATE", d)
                 }
                 _ => {}
             }
@@ -429,9 +428,8 @@ fn nav_group(r: &Route) -> Option<usize> {
 }
 
 fn main() -> iced::Result {
-    // Screenshot hook: `GIYUR_WINDOW_SIZE=1440x900`.
-    let size = std::env::var("GIYUR_WINDOW_SIZE")
-        .ok()
+    // Screenshot hook: `SHORASHIM_WINDOW_SIZE=1440x900`.
+    let size = shorashim::util::env_hook("WINDOW_SIZE")
         .and_then(|v| {
             let (w, h) = v.split_once('x')?;
             Some(iced::Size::new(w.parse().ok()?, h.parse().ok()?))

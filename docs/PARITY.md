@@ -1,6 +1,8 @@
-# PARITY.md — Giyur Study PWA → iced 0.14 feature inventory
+# PARITY.md — PWA → iced 0.14 feature inventory
 
-Source of truth: `/workspace/giyur-study` (index.html, css/app.css, js/*.js, js/ui/*.js, docs/APP.md), app version `1.2.0`.
+> Written against the earlier PWA, then called Giyur Study. The app is now «Шорашим» (Shorashim); product-name strings below are given with the new name. The progress-file id `giyur-study` is kept for import compatibility.
+
+Source of truth: the earlier PWA (`/workspace/giyur-study`) (index.html, css/app.css, js/*.js, js/ui/*.js, docs/APP.md), app version `1.2.0`.
 All strings below are quoted exactly from the source. `{x}` = interpolated value; `plural(n, a|b|c)` = Russian plural (`U.plural`: 11–14 → c; ends 1 → a; ends 2–4 → b; else c).
 Markup in content strings: `**bold**`, `*italic*`; Hebrew runs (U+0590–05FF, FB1D–FB4F) are auto-wrapped as inline RTL Hebrew (`he-inline`).
 
@@ -32,14 +34,14 @@ Markup in content strings: `**bold**`, `*italic*`; Hebrew runs (U+0590–05FF, F
 - First launch guard: if `!state.onboarded` and route ∉ {welcome, level} → force `welcome`.
 - "Bare" mode (no sidebar, no tab bar): `welcome`, and `level` while not onboarded.
 - "No tab bar" mode: `timed`, `timed-run`, `timed-results`, `exam-run` (sidebar stays on desktop).
-- On each navigation: teardown of key handler + timers/listeners; scroll to top (except `exam-run`, `timed-run`); window title = `{h1 text} — Giyur Study` or `Giyur Study`.
+- On each navigation: teardown of key handler + timers/listeners; scroll to top (except `exam-run`, `timed-run`); window title = «Шорашим — основы иудаизма и подготовка к гиюру» (fixed).
 
 ### 0.2 Navigation items (icon name → label)
 Order: `map` «Карта» · `review` «Повторение» · `timer` «Экзамен» (→ `#/timed`) · `exam` «Тесты» (→ `#/exam`) · `progress` «Прогресс» · `settings` «Настройки»; sidebar adds `sources` «Источники».
 - Bottom tab bar (< 900 px): first 6 items. Sidebar (≥ 900 px, 230 px wide, sticky): brand + 7 items.
-- Brand: `assets/icon/giyur-study-192.webp` (36×36, radius 10) + «Giyur Study» (serif bold) / «подготовка к гиюру» (small muted); links to map.
+- Brand: `assets/img/app-icon.webp` (36×36) + «Шорашим» (serif bold) / «основы иудаизма» (small muted); links to map.
 - Active item: gold2 text (+ gold-soft bg and inset 2px gold left bar in sidebar).
-- Skip link: «К содержимому». App title: «Giyur Study — подготовка к гиюру». (Desktop app: skip link optional.)
+- Skip link: «К содержимому». App title: «Шорашим — основы иудаизма и подготовка к гиюру». (Desktop app: skip link optional.)
 
 ### 0.3 Global toasts / dialogs / overlays
 - **Toast** (`UI.toast(text, kind)`): bottom-centre, above tab bar (desktop 1.5rem from bottom); visible 2.6 s, fade out 0.5 s; kinds: default, `ok` (ok border), `bad` (bad border).
@@ -62,7 +64,7 @@ Optional back link (chevron + label, default «Назад»; muted, hover surfac
 ## 1. Welcome (`#/welcome`)
 **Layout:** hero (16:9, radius 24, overlapping body by 3rem) with `assets/img/welcome.webp` (fallback: gold Star-of-David SVG on `linear-gradient(160deg,#1b2547,#0b1020)` + gold radial glow) and a bottom dark gradient `rgba(8,11,22,.92)`; text over hero; then a card.
 **Strings:**
-- Kicker «Добро пожаловать»; h1 «Giyur Study»; lead «Спокойная, последовательная подготовка к гиюру и собеседованию в бейт-дине.»
+- Kicker «Добро пожаловать»; h1 «Шорашим»; lead «Спокойная, последовательная подготовка к гиюру и собеседованию в бейт-дине.»
 - Feature list (gold icons book / cards / exam):
   - «**8 разделов** — от основ веры до бейт-дина, уроки по 5–10 минут.»
   - «**Карточки** с интервальным повторением: 1 → 3 → 7 → 14 → 30 дней.»
@@ -298,8 +300,8 @@ h1 «Настройки». Rows: bold label + small muted sub, control right (wr
 - Each switch change → save + toast «Сохранено».
 **Card 2 «Цель и серия»:** «Цель дня» / «Сколько XP набирать в день. Серия растёт, когда цель выполнена.» — 4 stacked segment buttons «Лёгкая / 10 XP», «Обычная / 20 XP», «Серьёзная / 30 XP», «Интенсив / 50 XP» (default 20). Change → save, `award(0)` (may complete today's goal and celebrate), toast «Цель дня: {n} XP». (Reminder time row «Время напоминания» / «Ежедневное уведомление на телефоне» only exists with native notifications — skip on desktop or implement as optional; toast «Напоминание: {HH:MM}».) Small muted: «XP даются за уроки, карточки, тесты и экзамены. За каждые 7 дней серии — заморозка ❄ (до двух), она сохранит серию, если вы пропустите день. Подробнее в разделе «Прогресс».» (last sentence part is a link → `#/progress`).
 **Card 3 «Данные»:** small «Прогресс хранится только в этом браузере.» (+ « (хранилище недоступно — прогресс не сохранится после закрытия)» if storage failed). Desktop wording may say «на этом устройстве». Buttons:
-- secondary «Экспорт прогресса» → write pretty JSON of state + `exportedAt` ISO, file name `giyur-study-progress-YYYY-MM-DD.json`; toast «Файл прогресса сохранён».
-- secondary «Импорт прогресса» (file picker, .json) → confirm «Импортировать прогресс?» / «Текущий прогресс на этом устройстве будет заменён данными из файла.» / «Импортировать» → success: apply settings, toast «Прогресс импортирован» (ok), re-render; errors (toast bad): «Файл не является корректным JSON.», «Это не файл прогресса Giyur Study.», «Файл создан более новой версией приложения.», read failure «Не удалось прочитать файл».
+- secondary «Экспорт прогресса» → write pretty JSON of state + `exportedAt` ISO, file name `shorashim-progress-YYYY-MM-DD.json`; toast «Файл прогресса сохранён».
+- secondary «Импорт прогресса» (file picker, .json) → confirm «Импортировать прогресс?» / «Текущий прогресс на этом устройстве будет заменён данными из файла.» / «Импортировать» → success: apply settings, toast «Прогресс импортирован» (ok), re-render; errors (toast bad): «Файл не является корректным JSON.», «Это не файл прогресса «Шорашим».», «Файл создан более новой версией приложения.», read failure «Не удалось прочитать файл».
 - danger «Сбросить прогресс» → confirm (danger) «Сбросить весь прогресс?» / «Будут удалены прочитанные уроки, карточки, результаты экзаменов и серия дней. Это действие нельзя отменить (кроме импорта ранее сохранённого файла).» / «Сбросить» → defaults kept only theme + fontStep (level and onboarded reset), toast «Прогресс сброшен», go `#/welcome`.
 **Card 4 «О приложении»:** key/values «Версия приложения» `1.2.0`; «Версия содержания» `{contentVersion|—}` + « ({version})»; «Статус материалов» `{reviewStatus|требует проверки раввином}`; «Разделов готово» «{available} из {total}». Notice «Материалы требуют проверки раввином вашей общины. Окончательные решения о гиюре принимает бейт-дин.» Small «Документация в папке приложения: docs/ROADMAP.md, docs/CONTENT-SCHEMA.md, docs/SOURCES.md, docs/IMAGE-SLOTS.md.» Secondary button «Источники ({count})» → `#/sources`.
 
@@ -434,7 +436,7 @@ Right-to-left direction, Hebrew font, gold2 colour (parchment `#5a400a`). Lesson
 55. [ ] Weak topics (≥ 3 attempts, top 5) linking to lessons; empty text.
 56. [ ] Settings: change movement, theme dark/parchment, font size 4 steps, unlockAll, translit, timed seconds, timed sound, timed auto, Hebrew sample, «Сохранено» toast.
 57. [ ] Daily goal 10/20/30/50 with titles; award(0) re-check; toast «Цель дня: N XP».
-58. [ ] Export JSON file `giyur-study-progress-YYYY-MM-DD.json`; toast.
+58. [ ] Export JSON file `shorashim-progress-YYYY-MM-DD.json`; toast.
 59. [ ] Import with confirm and the 3 validation errors + read error; success toast; re-render.
 60. [ ] Reset with danger confirm; keeps theme + font; toast; → welcome.
 61. [ ] About card (versions, status, sections ready, notice, docs line, «Источники (n)»).

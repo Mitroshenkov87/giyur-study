@@ -1,6 +1,6 @@
 # Core review: Rust vs PWA (util, storage, srs, content, game, exam, timed)
 
-Read-only review against `/workspace/giyur-study/js/{util,storage,srs,content,game,exam}.js` and `js/ui/timed.js`.
+Read-only review against the earlier PWA (then Giyur Study, now «Шорашим»): `/workspace/giyur-study/js/{util,storage,srs,content,game,exam}.js` and `js/ui/timed.js`.
 
 ## Findings
 

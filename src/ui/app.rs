@@ -130,6 +130,7 @@ pub struct Ctx {
 impl Ctx {
     pub fn load() -> Ctx {
         let path = std::env::var_os("SHORASHIM_DATA")
+            // GIYUR_STUDY_DATA: the pre-rename spelling.
             .or_else(|| std::env::var_os("GIYUR_STUDY_DATA"))
             .map(PathBuf::from)
             .unwrap_or_else(storage::default_path);
@@ -141,9 +142,7 @@ impl Ctx {
             path,
             toasts: Vec::new(),
             today_override: None,
-            test_timer: std::env::var("GIYUR_TEST_TIMER")
-                .ok()
-                .and_then(|v| v.parse().ok()),
+            test_timer: crate::util::env_hook("TEST_TIMER").and_then(|v| v.parse().ok()),
             writable,
         };
         if !writable {
