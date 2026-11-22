@@ -503,6 +503,8 @@ pub fn mask_options(text: &str, right: &str, wrong: &[&str], prompt: &str) -> Op
             i += 1;
         }
     }
+    // «… .» reads as a typo: the ellipsis already ends the sentence.
+    let out = out.replace("….", "…");
     let r = squash(right);
     let leaks = if r.chars().count() < 3 {
         // A letter or a short number: only a whole word gives it away.
@@ -1130,7 +1132,7 @@ mod tests {
                 "Какие псалмы читают?",
             )
             .as_deref(),
-            Some("Читают псалмы … и ….")
+            Some("Читают псалмы … и …")
         );
         // A one-letter answer is hidden too; if it cannot be, None.
         assert_eq!(
