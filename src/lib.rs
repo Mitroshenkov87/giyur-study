@@ -1,3 +1,4 @@
+pub mod calendar;
 pub mod content;
 pub mod exam;
 pub mod game;

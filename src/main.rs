@@ -109,8 +109,9 @@ impl App {
 
     fn sidebar(&self) -> Element<'_, Message> {
         let p = theme::current();
-        let items: [(&str, Route); 7] = [
+        let items: [(&str, Route); 8] = [
             ("Карта", Route::Map),
+            ("Календарь", Route::Calendar),
             ("Повторение", Route::Cards(Deck::Review)),
             ("Экзамен", Route::Timed),
             ("Тесты", Route::Exam(None)),
@@ -355,6 +356,18 @@ fn parse_route(r: &str) -> Option<Route> {
     let v = v.to_string();
     Some(match k {
         "map" => Route::Map,
+        "calendar" => {
+            // Screenshot hook: «calendar», «calendar:month», «calendar:settings»
+            // or «calendar:YYYY-MM-DD»; the screen reads the env vars below.
+            match v.as_str() {
+                "today" | "month" | "settings" => std::env::set_var("GIYUR_CALENDAR_TAB", &v),
+                d if chrono::NaiveDate::parse_from_str(d, "%Y-%m-%d").is_ok() => {
+                    std::env::set_var("GIYUR_CALENDAR_DATE", d)
+                }
+                _ => {}
+            }
+            Route::Calendar
+        }
         "level" => Route::Level { reopened: true },
         "section" => Route::Section(v),
         "lesson" => Route::Lesson(v),
@@ -376,13 +389,14 @@ fn parse_route(r: &str) -> Option<Route> {
 fn nav_group(r: &Route) -> Option<usize> {
     Some(match r {
         Route::Map | Route::Section(_) | Route::Lesson(_) => 0,
-        Route::Cards(Deck::Review) => 1,
+        Route::Calendar => 1,
+        Route::Cards(Deck::Review) => 2,
         Route::Cards(_) => 0,
-        Route::Timed | Route::TimedRun { .. } => 2,
-        Route::Exam(_) | Route::ExamRun(_) => 3,
-        Route::Progress => 4,
-        Route::Settings | Route::Level { .. } => 5,
-        Route::Sources => 6,
+        Route::Timed | Route::TimedRun { .. } => 3,
+        Route::Exam(_) | Route::ExamRun(_) => 4,
+        Route::Progress => 5,
+        Route::Settings | Route::Level { .. } => 6,
+        Route::Sources => 7,
         Route::Welcome => return None,
     })
 }

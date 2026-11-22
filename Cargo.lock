@@ -3554,7 +3554,7 @@ checksum = "f8fadd59c855ef2080decdef8ff161eb6661b86933c9d82e5ba29dc602a55aba"
 
 [[package]]
 name = "shorashim"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "chrono",
  "dirs",
@@ -3564,6 +3564,7 @@ dependencies = [
  "rfd",
  "serde",
  "serde_json",
+ "windows 0.62.2",
  "winresource",
 ]
 
