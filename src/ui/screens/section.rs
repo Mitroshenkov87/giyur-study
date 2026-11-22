@@ -157,12 +157,17 @@ impl Screen {
         page.into()
     }
 
-    fn object_card<'a>(&'a self, ctx: &'a Ctx, m: crate::ui::model3d::Model) -> Element<'a, Msg> {
+    fn object_card<'a>(
+        &'a self,
+        ctx: &'a Ctx,
+        m: crate::ui::model3d::Model,
+        section: &str,
+    ) -> Element<'a, Msg> {
         use crate::ui::model3d::card;
         card::card(
             ctx,
             m,
-            None,
+            m.kicker_in(section),
             self.captions.contains(&m),
             card::Msgs {
                 ready: Msg::Model3dReady,
@@ -200,7 +205,7 @@ impl Screen {
 
         // ---- Ritual objects of the section (live 3D) ----
         for &m in crate::ui::model3d::Model::for_section(&sec.id) {
-            page = page.push(self.object_card(ctx, m));
+            page = page.push(self.object_card(ctx, m, &sec.id));
         }
 
         // ---- Lessons ----

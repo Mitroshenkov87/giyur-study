@@ -156,7 +156,8 @@ fn fs_model(i: VOut, @builtin(front_facing) front: bool) -> @location(0) vec4<f3
     // Hover: a warm candle-gold rim and a touch more light.
     let rim = pow(1.0 - nov, 3.0);
     col = col * (1.0 + 0.12 * u.fx.y) + vec3<f32>(1.0, 0.72, 0.32) * rim * 0.9 * u.fx.y;
-    var out = aces(col * 1.1);
+    // Per-model exposure cut on the dark themes (fx.z, 0 = none).
+    var out = aces(col * 1.1 * (1.0 - u.fx.z));
     if (u.view.w < 0.5) { out = pow(out, vec3<f32>(1.0 / 2.2)); }
     return vec4<f32>(out, 1.0);
 }

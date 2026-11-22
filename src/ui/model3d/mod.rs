@@ -126,7 +126,7 @@ impl Model {
         match id {
             "osnovy" => &[Model::TorahScroll, Model::Temple],
             "shabbat" => &[Model::ShabbatCandles, Model::KiddushCup],
-            "prazdniki" => &[Model::Shofar, Model::Menorah],
+            "prazdniki" => &[Model::Shofar, Model::Menorah, Model::Temple],
             _ => &[],
         }
     }
@@ -213,6 +213,23 @@ impl Model {
                 section_title: "Основы",
                 zoom_max: 2.0,
             },
+        }
+    }
+
+    /// Kicker when the model is shown outside its home section.
+    pub fn kicker_in(self, section: &str) -> Option<&'static str> {
+        match (self, section) {
+            (Model::Temple, "prazdniki") => Some("Праздники · Тиша бе-Ав"),
+            _ => None,
+        }
+    }
+
+    /// Exposure cut on the dark themes: the pale stone Temple glares on
+    /// the dark background; the other models keep their light.
+    fn dark_dim(self) -> f32 {
+        match self {
+            Model::Temple => 0.28,
+            _ => 0.0,
         }
     }
 
@@ -694,7 +711,7 @@ struct Uniforms {
     fit: [f32; 4],
     base: [f32; 4],
     mat: [f32; 4],
-    /// zoom, hover glow, 0, 0
+    /// zoom, hover glow, exposure cut (dark themes), 0
     fx: [f32; 4],
 }
 
@@ -1184,7 +1201,16 @@ impl shader::Primitive for Primitive {
                 if mesh.has_normal_map { 1.0 } else { 0.0 },
                 if self.warm { 1.0 } else { 0.0 },
             ],
-            fx: [self.zoom, self.glow, 0.0, 0.0],
+            fx: [
+                self.zoom,
+                self.glow,
+                if self.warm {
+                    self.model.dark_dim()
+                } else {
+                    0.0
+                },
+                0.0,
+            ],
         };
         queue.write_buffer(&ubuf, 0, bytemuck::bytes_of(&u));
         // Contact shadow under the model's lowest point (projected roughly).

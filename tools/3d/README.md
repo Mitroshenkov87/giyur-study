@@ -22,6 +22,13 @@ optimized with optimize.py at 300000 2048 2048, then the ragged base was trimmed
 bisect planes (x <= 0.40 and y >= -0.45 in Blender Z-up coordinates) so the base ends evenly beside
 the walls (`tools/3d/trim_base.py -- in.glb out.glb`).
 
+The altar (mizbeach) in the Court of the Priests was then rebuilt larger so it reads at card size
+(`tools/3d/temple_altar.py -- in.glb out.glb`): the small Tripo altar is removed, the floor under it is
+patched with a planar-UV quad, and a stylized stone altar (base, top step, four corner horns, ramp on
+the south side) is added with UVs taken from the courtyard wall texture. Result: ~292k triangles,
+same 2048 px maps. In the app the Temple is dimmed slightly (exposure −28%) on the dark themes only,
+via a per-model uniform (`Model::dark_dim`); other models are unchanged.
+
 Runtime: `src/ui/model3d` (GLB reader, wgpu shader widget). Debug hooks: `SHORASHIM_3D_STATS=1` (fps and 3D-pass
 time to stderr), `SHORASHIM_3D_YAW=<rad>` (fixed angle, no idle spin), `SHORASHIM_3D_MSAA=1` (no MSAA),
 `SHORASHIM_3D_SIZE=<px>` (fixed model size on all cards; by default 190–280 px, scaled with the reading column).
