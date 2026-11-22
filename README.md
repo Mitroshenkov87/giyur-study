@@ -6,7 +6,7 @@ Foundations of Judaism and preparation for giyur. A Russian-language study app.
 
 **Скачать / Download:** [Releases](../../releases)
 
-**Лицензия / License:** Apache License 2.0 — [`LICENSE`](LICENSE), [`NOTICE`](NOTICE).
+**Лицензия / License:** Copyright 2026 Aleksandr Mitroshenkov. Apache License 2.0 — [`LICENSE`](LICENSE), [`NOTICE`](NOTICE).
 
 ---
 

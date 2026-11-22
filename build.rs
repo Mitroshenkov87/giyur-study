@@ -30,6 +30,10 @@ fn embed(ico: &std::path::Path) {
         "FileDescription",
         "Шорашим — основы иудаизма и подготовка к гиюру",
     );
+    res.set(
+        "LegalCopyright",
+        "Copyright 2026 Aleksandr Mitroshenkov. Apache-2.0",
+    );
     res.set("OriginalFilename", "shorashim.exe");
     res.set("InternalName", "shorashim");
     res.compile().expect("winresource");
@@ -50,7 +54,7 @@ VALUE \"FileDescription\", \"Шорашим — основы иудаизма и
 VALUE \"OriginalFilename\", \"shorashim.exe\"\n\
 VALUE \"InternalName\", \"shorashim\"\n\
 VALUE \"FileVersion\", \"{ver}\"\nVALUE \"ProductVersion\", \"{ver}\"\n\
-VALUE \"LegalCopyright\", \"Apache-2.0\"\nEND\nEND\n\
+VALUE \"LegalCopyright\", \"Copyright 2026 Aleksandr Mitroshenkov. Apache-2.0\"\nEND\nEND\n\
 BLOCK \"VarFileInfo\"\nBEGIN\nVALUE \"Translation\", 0x409, 1200\nEND\nEND\n",
             ico = ico.display().to_string().replace('\\', "/"),
             ver = env!("CARGO_PKG_VERSION"),
