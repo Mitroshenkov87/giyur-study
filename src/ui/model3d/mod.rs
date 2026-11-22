@@ -156,7 +156,12 @@ impl Model {
         match id {
             "osnovy" => &[Model::TorahScroll, Model::Temple, Model::MagenDavid],
             "shabbat" => &[Model::ShabbatCandles, Model::KiddushCup],
-            "ivrit" => &[Model::Siddur, Model::Tallit, Model::Tefillin, Model::Mezuzah],
+            "ivrit" => &[
+                Model::Siddur,
+                Model::Tallit,
+                Model::Tefillin,
+                Model::Mezuzah,
+            ],
             "prazdniki" => &[
                 Model::Shofar,
                 Model::LulavEtrog,
