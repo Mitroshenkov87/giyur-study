@@ -413,8 +413,10 @@ mod tests {
 
     #[test]
     fn roundtrip() {
-        let mut s = State::default();
-        s.onboarded = true;
+        let mut s = State {
+            onboarded: true,
+            ..State::default()
+        };
         s.settings.level = Some(Level::Orthodox);
         s.xp_total = 123;
         s.cards.insert(
@@ -578,8 +580,10 @@ mod tests {
         let bak = path.with_extension("json.bak");
         assert!(bak.exists());
         // Now save and reload.
-        let mut s2 = State::default();
-        s2.xp_total = 42;
+        let s2 = State {
+            xp_total: 42,
+            ..State::default()
+        };
         save(&path, &s2).unwrap();
         let s3 = load(&path, TODAY);
         assert_eq!(s3.xp_total, 42);

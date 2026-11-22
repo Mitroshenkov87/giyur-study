@@ -690,8 +690,10 @@ mod tests {
         for (i, id) in ids.iter().enumerate() {
             for j in 0..90 {
                 let fake = format!("x-{}-{}", i, j);
-                let mut c = crate::storage::CardState::default();
-                c.m = true;
+                let c = crate::storage::CardState {
+                    m: true,
+                    ..Default::default()
+                };
                 s.cards.insert(fake, c);
             }
             let _ = id;

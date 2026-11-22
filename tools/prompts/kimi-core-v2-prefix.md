@@ -1,0 +1,2 @@
+WORKING STYLE (strict): do NOT draft modules in your reasoning. Read only the JS file you are porting right now, then immediately write the Rust file, compile (`cargo check --lib`), fix, and move on. Order: src/util.rs → src/storage.rs → src/srs.rs → src/content.rs → src/game.rs → src/exam.rs (incl. the timed exam). Update src/lib.rs with `pub mod` as each file appears. Keep each file focused; tests go in the same file under #[cfg(test)]. After each module compiles and its tests pass, append one line to .logs/core-progress.txt ("<module> done, N tests").
+

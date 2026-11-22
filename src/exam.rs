@@ -1468,7 +1468,7 @@ mod tests {
         assert_eq!(state.exam_history[0].len(), 20);
         assert_eq!(state.exams[0]["mode"], "timed");
         // perfectTimed only for 20/20.
-        assert!(state.counters.get("perfectTimed").is_none());
+        assert!(!state.counters.contains_key("perfectTimed"));
         // Status messages are the JS verdict texts.
         assert_eq!(TimedStatus::Right.message(), "Верно!");
         assert_eq!(TimedStatus::Timeout.message(), "Время вышло");

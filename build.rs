@@ -36,7 +36,10 @@ fn embed_cross(ico: &std::path::Path, out: &std::path::Path) {
     let rc = out.join("app.rc");
     std::fs::write(
         &rc,
-        format!("1 ICON \"{}\"\n", ico.display().to_string().replace('\\', "/")),
+        format!(
+            "1 ICON \"{}\"\n",
+            ico.display().to_string().replace('\\', "/")
+        ),
     )
     .unwrap();
     let windres = std::env::var("WINDRES").unwrap_or_else(|_| "x86_64-w64-mingw32-windres".into());
