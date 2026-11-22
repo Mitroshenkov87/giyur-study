@@ -621,6 +621,9 @@ pub struct Screen;
 #[derive(Debug, Clone)]
 pub enum Msg {
     Go(Route),
+    /// The live 3D model has been drawn by the GPU: rebuild the view
+    /// without its static placeholder.
+    Model3dReady,
 }
 
 impl Screen {
@@ -631,6 +634,7 @@ impl Screen {
     pub fn update(&mut self, _ctx: &mut Ctx, msg: Msg) -> Action {
         match msg {
             Msg::Go(route) => Action::Go(route),
+            Msg::Model3dReady => Action::None,
         }
     }
 
@@ -647,6 +651,7 @@ impl Screen {
         page = page.push(header(ctx, p));
         page = page.push(reminders(ctx, p));
         page = page.push(timed_cta(p));
+        page = page.push(kiddush_hero(ctx, p));
 
         if !ctx.lib.sections.iter().any(|s| s.available) {
             page = page.push(notice(
@@ -1199,4 +1204,45 @@ pub(crate) fn fmt_pct(v: f64) -> String {
     } else {
         format!("{v:.1}%")
     }
+}
+
+/// «Бокал для кидуша»: a live, rotatable 3D model (wgpu) with a static render
+/// as the fallback (tiny-skia, or «Объёмные модели» switched off).
+fn kiddush_hero<'a>(ctx: &'a Ctx, p: theme::Palette) -> Element<'a, Msg> {
+    use crate::ui::model3d::{self, Model};
+    // Screenshot hook `SHORASHIM_3D_SIZE=<px>` (default 190).
+    let size = util::env_hook("3D_SIZE")
+        .and_then(|v| v.parse::<f32>().ok())
+        .unwrap_or(190.0);
+    let model = if model3d::enabled(ctx) {
+        model3d::view(
+            Model::KiddushCup,
+            size,
+            p.texture == "bg-dark",
+            Msg::Model3dReady,
+        )
+    } else {
+        model3d::still(Model::KiddushCup, size)
+    };
+    let hint = if model3d::enabled(ctx) {
+        "Потяните бокал мышью, чтобы рассмотреть его со всех сторон."
+    } else {
+        "Объёмные модели выключены в настройках."
+    };
+    let body = column![
+        widgets::kicker("Шаббат"),
+        widgets::heading("Бокал для кидуша", 3),
+        txt("Кидуш — освящение субботы и праздников: благословение произносят над бокалом вина в начале трапезы.")
+            .size(theme::text::BODY)
+            .color(p.text)
+            .width(Length::Fill),
+        txt(hint).size(theme::text::SMALL).color(p.muted),
+        button(txt("Раздел «Шаббат»").size(theme::text::SMALL).font(fonts::SANS_BOLD))
+            .padding([8.0, 16.0])
+            .style(move |_, s| theme::button_secondary(&p, s))
+            .on_press(Msg::Go(Route::Section("shabbat".to_string()))),
+    ]
+    .spacing(8)
+    .width(Length::Fill);
+    widgets::card(row![model, body].spacing(20).align_y(Alignment::Center))
 }
