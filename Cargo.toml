@@ -1,0 +1,38 @@
+[package]
+name = "giyur-study"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.88"
+description = "Giyur Study: a Russian-language offline study app for preparing for giyur and the beit din (native Rust desktop app)"
+license = "Apache-2.0"
+readme = "README.md"
+build = "build.rs"
+
+[lib]
+name = "giyur_study"
+path = "src/lib.rs"
+
+[[bin]]
+name = "giyur-study"
+path = "src/main.rs"
+
+[dependencies]
+iced = { version = "0.14", features = ["image", "tiny-skia", "wgpu", "tokio"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+image = { version = "0.25", default-features = false, features = ["webp"] }
+rand = "0.8"
+chrono = { version = "0.4", default-features = false, features = ["clock", "std", "serde"] }
+dirs = "6"
+
+[build-dependencies]
+image = { version = "0.25", default-features = false, features = ["webp", "ico", "png"] }
+
+[target.'cfg(windows)'.build-dependencies]
+winresource = "0.1"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 4
+strip = true
