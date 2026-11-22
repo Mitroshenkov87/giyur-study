@@ -13,10 +13,10 @@
 | Карта разделов | Урок |
 |---|---|
 | ![Карта](docs/screenshots/map.webp) | ![Урок](docs/screenshots/lesson.webp) |
-| **Экзамен на время** | **Прогресс** |
-| ![Экзамен](docs/screenshots/timedrun.webp) | ![Прогресс](docs/screenshots/progress.webp) |
-| **Карточки** | |
-| ![Карточки](docs/screenshots/deck.webp) | |
+| **Тема «Пергамент»: карта** | **Тема «Пергамент»: урок** |
+| ![Пергамент, карта](docs/screenshots/map-parchment.webp) | ![Пергамент, урок](docs/screenshots/lesson-parchment.webp) |
+| **Прогресс** | **Настройки** |
+| ![Прогресс](docs/screenshots/progress.webp) | ![Настройки](docs/screenshots/settings.webp) |
 
 ## Скачать
 Готовый `.exe` для Windows (x64) — на странице [Releases](../../releases). Установка не нужна: скачайте и запустите. Прогресс хранится в `%APPDATA%\Shorashim\progress.json` (прогресс из прежней версии `GiyurStudy` переносится автоматически).

@@ -90,6 +90,11 @@ const IMAGES: &[(&str, &[u8])] = &[
         "badge-streak-7",
         include_bytes!("../../assets/img/badge-streak-7.webp"),
     ),
+    ("bg-dark", include_bytes!("../../assets/img/bg-dark.webp")),
+    (
+        "bg-parchment",
+        include_bytes!("../../assets/img/bg-parchment.webp"),
+    ),
     (
         "level-conservative",
         include_bytes!("../../assets/img/level-conservative.webp"),
@@ -134,14 +139,13 @@ const IMAGES: &[(&str, &[u8])] = &[
         "section-shabbat",
         include_bytes!("../../assets/img/section-shabbat.webp"),
     ),
-    ("tex-klaf", include_bytes!("../../assets/img/tex-klaf.webp")),
     (
-        "tex-leather",
-        include_bytes!("../../assets/img/tex-leather.webp"),
+        "side-dark",
+        include_bytes!("../../assets/img/side-dark.webp"),
     ),
     (
-        "tex-walnut",
-        include_bytes!("../../assets/img/tex-walnut.webp"),
+        "side-parchment",
+        include_bytes!("../../assets/img/side-parchment.webp"),
     ),
     ("welcome", include_bytes!("../../assets/img/welcome.webp")),
 ];

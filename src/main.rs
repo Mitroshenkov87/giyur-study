@@ -286,25 +286,29 @@ impl App {
                     .filter_method(image::FilterMethod::Linear),
             );
         }
-        bg = bg
-            .push(
+        if p.veil.a > 0.0 {
+            bg = bg.push(
                 container(iced::widget::space())
                     .width(Length::Fill)
                     .height(Length::Fill)
                     .style(move |_| theme::veil(&p)),
-            )
-            .push(
-                container(iced::widget::space())
-                    .width(Length::Fill)
-                    .height(Length::Fill)
-                    .style(move |_| theme::lamp_v(&p)),
-            )
-            .push(
-                container(iced::widget::space())
-                    .width(Length::Fill)
-                    .height(Length::Fill)
-                    .style(move |_| theme::lamp_h(&p)),
             );
+        }
+        if p.lamp.a > 0.0 {
+            bg = bg
+                .push(
+                    container(iced::widget::space())
+                        .width(Length::Fill)
+                        .height(Length::Fill)
+                        .style(move |_| theme::lamp_v(&p)),
+                )
+                .push(
+                    container(iced::widget::space())
+                        .width(Length::Fill)
+                        .height(Length::Fill)
+                        .style(move |_| theme::lamp_h(&p)),
+                );
+        }
         if p.vignette.a > 0.0 {
             bg = bg.push(
                 container(iced::widget::space())
