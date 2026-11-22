@@ -299,12 +299,16 @@ pub fn readiness(lib: &Library, sec: &SectionMeta, state: &State) -> Readiness {
             .sum::<f64>()
             / cards.len() as f64
     };
+    // Only questions a lesson self-check can reach (linked to a visible
+    // lesson), so the per-lesson rows add up to the section total.
     let (mut checks, mut checks_known) = (0, 0);
-    for q in lib
-        .questions(sec, user)
-        .into_iter()
-        .filter(|q| !q.is_open())
-    {
+    for q in lib.questions(sec, user).into_iter().filter(|q| {
+        !q.is_open()
+            && q.common()
+                .lesson_id
+                .as_deref()
+                .is_some_and(|l| lessons.iter().any(|x| x.id == l))
+    }) {
         checks += 1;
         checks_known += is_known(state, q.id()) as usize;
     }
@@ -331,7 +335,7 @@ pub fn readiness(lib: &Library, sec: &SectionMeta, state: &State) -> Readiness {
             .iter()
             .any(|q| is_practiced(state, q.id()));
 
-    let band = if !started || pct == 0 {
+    let band = if !started {
         Band::NotStarted
     } else if pct < 35 {
         Band::FirstSteps
@@ -769,5 +773,42 @@ mod tests {
         let s = State::import_json(text, "2026-11-22").unwrap();
         assert_eq!(s.xp_total, 42);
         assert!(s.study_mode.is_empty());
+    }
+
+    #[test]
+    fn reading_alone_is_first_steps_not_not_started() {
+        let lib = lib();
+        let mut state = State::default();
+        let sec = lib.section("kashrut").unwrap();
+        for l in lib.lessons(sec, Library::user_level(&state)) {
+            state.lessons_read.insert(l.id.clone(), "2026-11-22".into());
+        }
+        let r = readiness(&lib, sec, &state);
+        assert_eq!(r.pct, 0);
+        assert_eq!(r.band, Band::FirstSteps);
+    }
+
+    #[test]
+    fn practice_does_not_push_exams_out_of_history() {
+        let mut state = State::default();
+        crate::exam::log_exam(
+            &mut state,
+            serde_json::json!({"mode": "section", "pct": 90}),
+        );
+        for _ in 0..(crate::exam::PRACTICE_LOG_CAP + 30) {
+            crate::exam::log_exam(&mut state, serde_json::json!({"mode": "selfcheck"}));
+        }
+        assert_eq!(state.exams[0]["mode"], "section");
+        assert_eq!(state.exams.len(), crate::exam::PRACTICE_LOG_CAP + 1);
+        for _ in 0..(crate::exam::EXAM_LOG_CAP + 5) {
+            crate::exam::log_exam(&mut state, serde_json::json!({"mode": "general"}));
+        }
+        let exams = state
+            .exams
+            .iter()
+            .filter(|e| e["mode"] != "selfcheck")
+            .count();
+        assert_eq!(exams, crate::exam::EXAM_LOG_CAP);
+        assert!(state.exams.iter().all(|e| e["mode"] != "section"));
     }
 }

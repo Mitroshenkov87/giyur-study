@@ -554,11 +554,37 @@ pub fn record(state: &mut State, qid: &str, r: &CheckResult, today: NaiveDate) {
 
 /// Append a finished run to the exam history, keeping the last 100
 /// (js/exam.js E.logExam).
+/// History cap: real exams and practice runs (self-check, rehearsal) are
+/// capped separately, so frequent practice never pushes exams out.
+pub const EXAM_LOG_CAP: usize = 100;
+pub const PRACTICE_LOG_CAP: usize = 50;
+
+fn is_practice_entry(e: &serde_json::Value) -> bool {
+    matches!(e["mode"].as_str(), Some("selfcheck" | "rehearsal"))
+}
+
 pub fn log_exam(state: &mut State, entry: serde_json::Value) {
     state.exams.push(entry);
-    if state.exams.len() > 100 {
-        let keep = state.exams.split_off(state.exams.len() - 100);
-        state.exams = keep;
+    for practice in [false, true] {
+        let cap = if practice {
+            PRACTICE_LOG_CAP
+        } else {
+            EXAM_LOG_CAP
+        };
+        let n = state
+            .exams
+            .iter()
+            .filter(|e| is_practice_entry(e) == practice)
+            .count();
+        let mut drop = n.saturating_sub(cap);
+        state.exams.retain(|e| {
+            if drop > 0 && is_practice_entry(e) == practice {
+                drop -= 1;
+                false
+            } else {
+                true
+            }
+        });
     }
 }
 

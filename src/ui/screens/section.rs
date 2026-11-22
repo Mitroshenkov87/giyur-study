@@ -265,15 +265,19 @@ impl Screen {
             false,
             "Карточки раздела",
             format!("{} из {} выучено", rd.cards_mastered, rd.cards),
-            Msg::Go(Route::Cards(Deck::Section(sec.id.clone()))),
+            Some(Msg::Go(Route::Cards(Deck::Section(sec.id.clone())))),
             p,
         );
         let rehearse_action = action_card(
             icons::Kind::StarDavid,
             false,
             "Репетиция бейт-дина",
-            format!("Верно {} из {}", rd.interview_known, rd.interview),
-            Msg::Rehearse,
+            if rd.interview > 0 {
+                format!("Верно {} из {}", rd.interview_known, rd.interview)
+            } else {
+                "Для вашего уровня вопросов пока нет".to_string()
+            },
+            (rd.interview > 0).then_some(Msg::Rehearse),
             p,
         );
         let test_sub = match rd.best {
@@ -285,7 +289,7 @@ impl Screen {
             true,
             "Тест раздела",
             test_sub,
-            Msg::Go(Route::Exam(Some(sec.id.clone()))),
+            Some(Msg::Go(Route::Exam(Some(sec.id.clone())))),
             p,
         );
         page = page.push(
@@ -482,8 +486,11 @@ fn readiness_card<'a>(
         None => "не сдавали".to_string(),
         Some(b) => format!("{} · порог 80%", fmt_pct(b)),
     };
-    let parts = column![
-        bar_line(
+    // A part with nothing at this level counts as done in the score
+    // (study::part), so it is not shown as an empty bar either.
+    let mut parts = Column::new();
+    if rd.cards > 0 {
+        parts = parts.push(bar_line(
             "Карточки",
             format!(
                 "{} из {} выучено · прогресс {}%",
@@ -492,29 +499,34 @@ fn readiness_card<'a>(
                 (rd.cards_score * 100.0).round() as i64
             ),
             rd.cards_score,
-            p
-        ),
-        bar_line(
+            p,
+        ));
+    }
+    if rd.checks > 0 {
+        parts = parts.push(bar_line(
             "Самопроверка по урокам",
             format!("{} из {} верно", rd.checks_known, rd.checks),
             frac(rd.checks_known, rd.checks),
-            p
-        ),
-        bar_line(
+            p,
+        ));
+    }
+    if rd.interview > 0 {
+        parts = parts.push(bar_line(
             "Ответы для бейт-дина",
             format!("{} из {} верно", rd.interview_known, rd.interview),
             frac(rd.interview_known, rd.interview),
-            p
-        ),
-        bar_line(
+            p,
+        ));
+    }
+    let parts = parts
+        .push(bar_line(
             "Тест раздела",
             test_value,
             rd.best.unwrap_or(0.0) / 100.0,
-            p
-        ),
-    ]
-    .spacing(10)
-    .width(Length::Fill);
+            p,
+        ))
+        .spacing(10)
+        .width(Length::Fill);
 
     let (next_text, next_label, next_msg) = next_step(ctx, sec, &rd.next);
     let mut right = Column::new().spacing(12).width(Length::Fill);
@@ -715,10 +727,10 @@ fn action_card<'a>(
     gold: bool,
     title: &'a str,
     sub: String,
-    msg: Msg,
+    msg: Option<Msg>,
     p: theme::Palette,
 ) -> Element<'a, Msg> {
-    button(
+    let b = button(
         row![
             icons::icon(kind, 24.0, if gold { p.gold } else { p.gold2 }),
             column![
@@ -748,7 +760,11 @@ fn action_card<'a>(
         };
         button::Style {
             background: Some(Background::Color(bg)),
-            text_color: p.text,
+            text_color: if matches!(status, button::Status::Disabled) {
+                p.muted
+            } else {
+                p.text
+            },
             border: Border {
                 color: border,
                 width: 1.0,
@@ -758,8 +774,8 @@ fn action_card<'a>(
             snap: true,
         }
     })
-    .on_press(msg)
-    .into()
+    .on_press_maybe(msg);
+    b.into()
 }
 
 fn lesson_row<'a>(
