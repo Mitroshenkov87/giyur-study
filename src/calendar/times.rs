@@ -1,7 +1,7 @@
 //! The times worth showing for a day (candle lighting, havdalah, fast start
 //! and end, sunrise/sunset), combining [`days`] with [`zmanim`].
 
-use chrono::{Duration, NaiveDate, NaiveTime};
+use chrono::{Datelike, Duration, NaiveDate, NaiveTime, Weekday};
 
 use crate::calendar::days::{self, Kind};
 use crate::calendar::prefs::CalendarPrefs;
@@ -54,7 +54,7 @@ pub fn for_day(date: NaiveDate, prefs: &CalendarPrefs) -> Vec<TimeItem> {
         }
     }
     if days::candles_tonight(date, diaspora) {
-        if info.is_rest_day() {
+        if info.is_rest_day() && date.weekday() != Weekday::Fri {
             // Second festival day or yom tov after Shabbat: light only after
             // nightfall, from an existing flame.
             add("Зажигание свечей (не раньше выхода звёзд)", t.tzeit, false);
