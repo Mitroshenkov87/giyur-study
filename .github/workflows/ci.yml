@@ -34,6 +34,11 @@ jobs:
           Get-Content smoke.jsonl
           if ($p.ExitCode -ne 0) { Get-Content smoke.err; exit 1 }
           if ((Get-Content smoke.jsonl).Count -lt 10) { Write-Error "too few replies"; exit 1 }
+      - name: Automation smoke (console companion shorashim-ctl.exe)
+        shell: pwsh
+        run: |
+          target/release/shorashim-ctl.exe --headless --script tests/scripts/02-lesson.jsonl --today 2026-11-22
+          if ($LASTEXITCODE -ne 0) { exit 1 }
       - name: Package
         shell: pwsh
         run: |
@@ -41,6 +46,7 @@ jobs:
           # PR refs look like "1/merge"; keep the file name path-safe.
           $ref = "${{ github.ref_name }}" -replace '[\\/]', '-'
           Copy-Item target/release/shorashim.exe "dist/Shorashim-$ref-windows-x64.exe"
+          Copy-Item target/release/shorashim-ctl.exe dist/
           Copy-Item LICENSE, NOTICE dist/
       - uses: actions/upload-artifact@v4
         with:

@@ -909,6 +909,8 @@ pub fn execute(host: &mut dyn Host, req: &Value) -> Outcome {
             } else {
                 path.with_extension("webp")
             };
+            // Absolute, so a client in another folder finds the file.
+            let path = std::path::absolute(&path).unwrap_or(path);
             let size = match (arg_num(a, "width"), arg_num(a, "height")) {
                 (Some(w), Some(h)) => Some(Size::new(w as f32, h as f32)),
                 _ => None,

@@ -25,7 +25,24 @@ Options for ctl/mcp: --file PATH (control.json location)
 
 /// Handle an automation subcommand; `None` = start the normal app.
 pub fn main_hook() -> Option<i32> {
-    let args: Vec<String> = std::env::args().skip(1).collect();
+    main_hook_with(std::env::args().skip(1).collect())
+}
+
+/// Entry point of the console companion `shorashim-ctl`: the same commands,
+/// and a bare `shorashim-ctl state` means `shorashim ctl state`.
+pub fn companion_main() -> i32 {
+    let mut args: Vec<String> = std::env::args().skip(1).collect();
+    let known = matches!(
+        args.first().map(String::as_str),
+        Some("ctl" | "mcp" | "--headless" | "headless" | "--automation-help")
+    );
+    if !known {
+        args.insert(0, "ctl".into());
+    }
+    main_hook_with(args).unwrap_or(0)
+}
+
+fn main_hook_with(args: Vec<String>) -> Option<i32> {
     let first = args.first().map(String::as_str)?;
     let code = match first {
         "ctl" => {

@@ -136,7 +136,7 @@ a mock beit-din, the calendar, settings) and checks the MCP server.
 ```jsonc
 // e.g. an MCP client config
 { "mcpServers": {
-    "shorashim":          { "command": "shorashim", "args": ["mcp"] },
+    "shorashim":          { "command": "shorashim", "args": ["mcp"] },   // Windows: "shorashim-ctl.exe"
     "shorashim-headless": { "command": "shorashim", "args": ["mcp", "--headless", "--today", "2026-11-22"] }
 } }
 ```
@@ -170,11 +170,24 @@ Attached mode reconnects when the app restarts; `launch` starts it.
 
 ## Windows notes
 
-The release `.exe` is a GUI program. For `ctl`, `mcp` and `--headless` it
-attaches to the console of the shell that started it, or uses the pipes it
-was given (MCP clients). In `cmd.exe` the prompt may come back before the
-output; `shorashim.exe ctl state | more` or PowerShell
-`& .\shorashim.exe ctl state | Out-String` waits for it.
+The release `.exe` is a GUI program, so shells don't wait for it. Use the
+console companion **`shorashim-ctl.exe`** (built next to it, shipped in the CI
+artifact) for commands: it waits, prints normally and sets `%ERRORLEVEL%` /
+`$LASTEXITCODE`. A bare command means `ctl`:
+
+```powershell
+.\shorashim-ctl.exe launch                 # starts the app found next to it
+.\shorashim-ctl.exe state
+.\shorashim-ctl.exe press label=Начать
+.\shorashim-ctl.exe mcp                    # MCP server
+.\shorashim-ctl.exe --headless --script s.jsonl
+```
+
+The main `.exe` also accepts `ctl`, `mcp` and `--headless`: it attaches to the
+console of the shell that started it, or uses the pipes it was given (MCP
+clients work fine). In an interactive `cmd.exe` the prompt may come back
+before the output and the exit code is lost; pipe it (`| more`, `| Out-String`)
+or use `shorashim-ctl.exe`.
 
 ## How it works (for developers)
 

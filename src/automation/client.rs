@@ -76,6 +76,10 @@ impl Client {
             .read_line(&mut line)
             .map_err(|e| e.to_string())?;
         if line.trim().is_empty() {
+            // The app may exit before the reply to `quit` reaches us.
+            if matches!(req["cmd"].as_str(), Some("quit" | "exit")) {
+                return Ok(json!({"ok": true, "quit": true}));
+            }
             return Err("the app closed the connection".into());
         }
         serde_json::from_str(line.trim()).map_err(|e| e.to_string())
@@ -94,7 +98,13 @@ pub fn launch(file: &std::path::Path, args: &[String]) -> Result<Value, String> 
             } else {
                 "shorashim"
             };
-            exe.with_file_name(name)
+            let sibling = exe.with_file_name(name);
+            if sibling.exists() {
+                sibling
+            } else {
+                // Release downloads are renamed (Shorashim-v0.5.0-windows-x64.exe).
+                find_main_exe(&exe).unwrap_or(sibling)
+            }
         }
         _ => exe,
     };
@@ -123,4 +133,22 @@ pub fn launch(file: &std::path::Path, args: &[String]) -> Result<Value, String> 
         }
     }
     Err("the app did not open its control channel within 30 s".into())
+}
+
+fn find_main_exe(ctl: &std::path::Path) -> Option<std::path::PathBuf> {
+    let dir = ctl.parent()?;
+    std::fs::read_dir(dir)
+        .ok()?
+        .filter_map(|e| e.ok().map(|e| e.path()))
+        .find(|p| {
+            let n = p
+                .file_name()
+                .and_then(|n| n.to_str())
+                .unwrap_or("")
+                .to_lowercase();
+            n.starts_with("shorashim")
+                && !n.starts_with("shorashim-ctl")
+                && (n.ends_with(".exe") || !cfg!(windows))
+                && p.is_file()
+        })
 }

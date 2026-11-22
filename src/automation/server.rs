@@ -272,19 +272,19 @@ pub fn handle<M: Send + 'static>(
         }
         Some(Effect::Wait(ms)) => {
             let reply = out.reply;
-            tasks.push(Task::perform(
-                async move { std::thread::sleep(Duration::from_millis(ms)) },
-                move |()| {
-                    req.respond(reply.clone());
-                    wrap(ControlMsg::Done)
-                },
-            ));
+            tasks.push(Task::perform(sleep(Duration::from_millis(ms)), move |()| {
+                req.respond(reply.clone());
+                wrap(ControlMsg::Done)
+            }));
         }
         Some(Effect::Quit) => {
             req.respond(out.reply);
             if let Some(f) = active_file() {
                 cleanup(f);
             }
+            // Give the connection thread a moment to write the reply
+            // before the process ends.
+            tasks.push(Task::perform(sleep(Duration::from_millis(300)), |()| ()).discard());
             tasks.push(iced::exit());
         }
         Some(Effect::Screenshot { path, .. }) => {
@@ -324,4 +324,17 @@ pub fn handle<M: Send + 'static>(
         }
     }
     (Task::batch(tasks), effect)
+}
+
+/// Sleep without holding an executor worker: a plain thread does the
+/// waiting and wakes the task through a oneshot channel.
+fn sleep(d: Duration) -> impl std::future::Future<Output = ()> + Send + 'static {
+    let (tx, rx) = iced::futures::channel::oneshot::channel::<()>();
+    std::thread::spawn(move || {
+        std::thread::sleep(d);
+        let _ = tx.send(());
+    });
+    async move {
+        let _ = rx.await;
+    }
 }
