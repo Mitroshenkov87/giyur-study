@@ -1,5 +1,5 @@
-"""Emblem: a ram's horn. Crescent body, flared bell with a dark mouth,
-thin mouthpiece, growth ridges. Not a curved arrow."""
+"""Emblem: a ram's horn. Thick crescent, flared bell with a dark oval
+mouth, blunt mouthpiece, growth ridges. Not a curved arrow."""
 
 import math
 import os
@@ -13,58 +13,88 @@ import common
 import emblemkit
 
 SIDES = 22
-N_BODY = 48
-# Mouthpiece -> bell. The crescent stays in the face of the coin. The last
-# step also comes toward the camera, so the flared mouth is an oval on the
-# end of the horn rather than a ring floating beside it.
-WAY = [
-    Vector((0.28, 0.02, -0.52)),   # thin mouthpiece, low
-    Vector((0.55, 0.03, -0.12)),   # sweep out to the right
-    Vector((0.22, 0.04, 0.28)),    # up and back toward the left
-    Vector((-0.18, 0.04, 0.36)),   # top of the crescent
-    Vector((-0.42, 0.02, 0.10)),   # wide end, still on the face
-    Vector((-0.56, -0.20, -0.06)), # bell mouth: onward, and toward the camera
-]
+N_BODY = 56
+# Smooth crescent in the face of the coin. t = 0 is the mouthpiece,
+# t = 1 is the bell. The arc is wide enough that a thick tube does not
+# fold through itself. The last part of the path turns toward the camera
+# so the flared mouth is an oval on the end of the horn.
+_CX, _CZ = -0.02, -0.02
+_RX, _RZ = 0.56, 0.50
+_A0 = math.radians(-68.0)
+_A1 = math.radians(168.0)
+
+
+def _arc(t):
+    """Arc progress, angle, and centre. Progress eases off at the bell."""
+    t = min(max(t, 0.0), 1.0)
+    s = t * (2.0 - t)
+    ang = _A0 + (_A1 - _A0) * s
+    # The centreline opens slightly toward the bell, like a horn, not a circle.
+    grow = 1.0 + 0.20 * s
+    y = 0.040
+    if t > 0.68:
+        u = (t - 0.68) / 0.32
+        u = u * u * (3.0 - 2.0 * u)
+        y = 0.040 + (-0.22 - 0.040) * (u ** 0.80)
+    c = Vector((
+        _CX + _RX * grow * math.cos(ang),
+        y,
+        _CZ + _RZ * grow * math.sin(ang),
+    ))
+    outward = Vector((math.cos(ang), 0.0, math.sin(ang)))
+    return c, outward
 
 
 def _center(t):
-    """Catmull-Rom through WAY. t = 0 at the mouthpiece, 1 at the bell."""
-    n = len(WAY)
-    seg = min(max(t, 0.0), 1.0) * (n - 1)
-    i = min(int(seg), n - 2)
-    u = seg - i
-    p0 = WAY[max(i - 1, 0)]
-    p1 = WAY[i]
-    p2 = WAY[min(i + 1, n - 1)]
-    p3 = WAY[min(i + 2, n - 1)]
-    u2 = u * u
-    u3 = u2 * u
-    return 0.5 * (
-        (2.0 * p1)
-        + (-p0 + p2) * u
-        + (2.0 * p0 - 5.0 * p1 + 4.0 * p2 - p3) * u2
-        + (-p0 + 3.0 * p1 - 3.0 * p2 + p3) * u3
-    )
+    c, _out = _arc(t)
+    return c
 
 
-def _radius(t, ridges=True):
-    """Pointed mouthpiece, thick body, then a wide cup. Not a linear arrow taper."""
-    if t < 0.12:
-        u = t / 0.12
-        r = 0.022 + 0.040 * (u ** 0.85)
+def _halfwidth(t, ridges=True):
+    """In-plane half-width. Blunt mouthpiece, thick shank, wide bell.
+
+    Model units, before fit_xz. The tip stays a large fraction of the shank
+    so it reads as a mouthpiece. The bell is sized so that, after
+    fit_xz(0.70 * disc), its opening is about 35% of the inner field.
+    """
+    mouth, shank, bell = 0.195, 0.305, 0.460
+    flare = 0.55
+    if t < flare:
+        u = (t / flare) ** 0.65
+        w = mouth + (shank - mouth) * u
     else:
-        u = (t - 0.12) / 0.88
-        # Body stays thick; the flare is only the last quarter.
-        # Hold a thick body, then open into the cup.
-        r = 0.080 + 0.030 * (u ** 0.75)
-        if u > 0.55:
-            f = (u - 0.55) / 0.45
-            r += 0.155 * (f ** 1.1)
-    # Coarse growth rings. Few, deep, so they survive the medallion's small size.
-    if ridges and 0.20 < t < 0.70:
-        fade = math.sin((t - 0.20) / 0.50 * math.pi)
-        r *= 1.0 + 0.26 * math.sin(t * math.pi * 13.0) * fade
-    return r
+        u = ((t - flare) / (1.0 - flare)) ** 1.08
+        w = shank + (bell - shank) * u
+    if ridges and 0.18 < t < 0.76:
+        fade = math.sin((t - 0.18) / 0.58 * math.pi)
+        w *= 1.0 + 0.20 * math.sin(t * math.pi * 10.0) * fade
+    return w
+
+
+def _halfdepth(t, ridges=True):
+    """Roundness of the tube. Close to the in-plane width on the shank,
+    a bit smaller at the bell so the mouth stays oval.
+
+    Kept in check so the horn stands proud of the field without a spike.
+    """
+    w = _halfwidth(t, ridges=False)
+    u = max(0.0, min(1.0, (t - 0.62) / 0.38))
+    u = u * u * (3.0 - 2.0 * u)
+    d = 0.150 + (w * 0.62 - 0.150) * u
+    if ridges and 0.18 < t < 0.76:
+        fade = math.sin((t - 0.18) / 0.58 * math.pi)
+        d *= 1.0 + 0.14 * math.sin(t * math.pi * 10.0) * fade
+    return d
+
+
+def _flare_shift(t):
+    """How far the section centre moves outward as the bell opens.
+
+    The extra width grows away from the crescent, so the mouth stays wide
+    without swallowing the inner curve.
+    """
+    extra = max(0.0, _halfwidth(t, ridges=False) - 0.305)
+    return extra * 0.75
 
 
 def _rot(v, axis, ang):
@@ -108,11 +138,16 @@ def _ring(c, nrm, bn, rx, ry):
 
 def _build_horn(metal, bore):
     ts = [i / (N_BODY - 1) for i in range(N_BODY)]
-    pts = [_center(t) for t in ts]
+    arcs = [_arc(t) for t in ts]
+    pts = [c for c, _o in arcs]
+    outwards = [o for _c, o in arcs]
     tang, normals, binorms = _frames(pts)
 
     verts, faces, fmats = [], [], []
     rings = []
+
+    def place(i, t):
+        return pts[i] + outwards[i] * _flare_shift(t)
 
     def add_ring(samples):
         idx = len(verts)
@@ -130,15 +165,17 @@ def _build_horn(metal, bore):
                 faces.append((a + j, a + j2, b + j2, b + j))
             fmats.append(mat)
 
-    # Rounded point, not a triangular arrowhead. A short dome on the thin end.
-    r0 = _radius(0.0)
+    # Shallow dome. Radius stays near the full mouthpiece so the end is
+    # a rounded nub, not a point.
+    rd0 = _halfdepth(0.0)
+    rw0 = _halfwidth(0.0)
     for k in range(1, 5):
-        f = k / 5.0
-        c = pts[0] - tang[0] * (r0 * 0.95 * (1.0 - f))
-        add_ring(_ring(c, normals[0], binorms[0], r0 * f, r0 * f * 0.92))
+        f = 0.88 + 0.12 * (k / 5.0)
+        c = place(0, 0.0) - tang[0] * (min(rd0, rw0) * 0.28 * (1.0 - k / 5.0))
+        add_ring(_ring(c, normals[0], binorms[0], rd0 * f, rw0 * f))
         if len(rings) > 1:
             stitch(rings[-2], rings[-1], 0)
-    tip_c = pts[0] - tang[0] * (r0 * 1.05)
+    tip_c = place(0, 0.0) - tang[0] * (min(rd0, rw0) * 0.32)
     ci = len(verts)
     verts.append(tuple(tip_c))
     a0 = rings[0]
@@ -148,35 +185,40 @@ def _build_horn(metal, bore):
         fmats.append(0)
 
     for i, t in enumerate(ts):
-        r = _radius(t)
-        # Slightly oval so the tube has a horn section, still round in the round.
-        add_ring(_ring(pts[i], normals[i], binorms[i], r, r * 0.90))
+        c = place(i, t)
+        add_ring(_ring(c, normals[i], binorms[i], _halfdepth(t), _halfwidth(t)))
         stitch(rings[-2], rings[-1], 0)
 
     # Lip curls from the flare into the bore. The inner half is the dark mouth.
     bi = N_BODY - 1
-    r_out = _radius(1.0, ridges=False)
-    r_in = r_out * 0.76
+    rd_out = _halfdepth(1.0, ridges=False)
+    rw_out = _halfwidth(1.0, ridges=False)
+    rd_in = rd_out * 0.70
+    rw_in = rw_out * 0.70
     for k in range(1, 7):
         ang = math.pi * k / 6.0
-        r = (r_out + r_in) * 0.5 + (r_out - r_in) * 0.5 * math.cos(ang)
-        c = pts[bi] + tang[bi] * (0.028 * math.sin(ang))
-        add_ring(_ring(c, normals[bi], binorms[bi], r, r * 0.90))
+        rd = (rd_out + rd_in) * 0.5 + (rd_out - rd_in) * 0.5 * math.cos(ang)
+        rw = (rw_out + rw_in) * 0.5 + (rw_out - rw_in) * 0.5 * math.cos(ang)
+        c = place(bi, 1.0) + tang[bi] * (0.050 * math.sin(ang))
+        add_ring(_ring(c, normals[bi], binorms[bi], rd, rw))
         mat = 0 if ang < math.pi * 0.55 else 1
         stitch(rings[-2], rings[-1], mat)
 
     # Short bore so the bell reads as a hollow oval, not a solid cap.
     last_t = 1.0
     for k in range(1, 9):
-        t = 1.0 - 0.20 * k / 8.0
+        t = 1.0 - 0.18 * k / 8.0
         fi = max(0, min(N_BODY - 1, int(round(t * (N_BODY - 1)))))
-        r = _radius(t, ridges=False) * 0.74
-        c = _center(t)
-        add_ring(_ring(c, normals[fi], binorms[fi], r, r * 0.90))
+        c = place(fi, t)
+        add_ring(_ring(
+            c, normals[fi], binorms[fi],
+            _halfdepth(t, ridges=False) * 0.68,
+            _halfwidth(t, ridges=False) * 0.68,
+        ))
         stitch(rings[-2], rings[-1], 1)
         last_t = t
     fi = max(0, min(N_BODY - 1, int(round(last_t * (N_BODY - 1)))))
-    end_c = _center(last_t) - tang[fi] * 0.04
+    end_c = place(fi, last_t) - tang[fi] * 0.05
     ci = len(verts)
     verts.append(tuple(end_c))
     a1 = rings[-1]
@@ -218,7 +260,22 @@ def build():
     objs, metal, _accent = emblemkit.medallion()
     horn = _build_horn(metal, _bore_mat())
     syms = [horn]
-    emblemkit.fit_xz(syms, 0.58)
+    # Long side of the horn ~70% of the inner-field diameter.
+    emblemkit.fit_xz(syms, emblemkit.DISC_R * 0.70)
+    bpy.context.view_layer.update()
+    mw = horn.matrix_world
+    # One ring per station, in world XZ, to see which axis is the silhouette.
+    ts = [i / (N_BODY - 1) for i in range(N_BODY)]
+    arcs = [_arc(t) for t in ts]
+    pts = [c for c, _o in arcs]
+    tang, normals, binorms = _frames(pts)
+    for t in (0.0, 0.12, 0.28, 0.5, 0.75, 1.0):
+        i = int(round(t * (N_BODY - 1)))
+        c = pts[i] + arcs[i][1] * _flare_shift(t)
+        ring = _ring(c, normals[i], binorms[i], _halfdepth(t, False), _halfwidth(t, False))
+        world = [mw @ p for p in ring]
+        xs = [p.x for p in world]; zs = [p.z for p in world]; ys = [p.y for p in world]
+        print(f"t={t:.2f} XZ {max(xs)-min(xs):.3f}x{max(zs)-min(zs):.3f} Y {min(ys):.3f}..{max(ys):.3f} ny={normals[i].y:.2f} by={binorms[i].y:.2f}")
     objs.extend(syms)
     emblemkit.finish(objs, "prazdniki")
 

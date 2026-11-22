@@ -13,7 +13,7 @@ python3 tools/contact_sheet.py ../img /tmp/sheet.webp
 
 | Folder | Files | Variants |
 |---|---|---|
-| `assets/img/objects/` | 20 ritual objects | one look (works on both themes) |
+| `assets/img/objects/` | 21 procedural objects | one look (works on both themes) |
 | `assets/img/icons/` | 8 sidebar icons | `-wood`, `-leather`, each `-hover` |
 | `assets/img/emblems/` | 8 section medallions | `-wood`, `-leather` |
 | `assets/img/decor/` | divider, corner, seal, bookmark | `-wood`, `-leather` |
