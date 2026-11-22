@@ -155,7 +155,7 @@ fn view(state: &Gallery) -> Element<'_, Message> {
                 text(format!("Тема: {}", state.kind.title())).size(15),
                 button(
                     text(if state.kind == theme::ThemeKind::Dark {
-                        "Пергамент"
+                        "Кожа"
                     } else {
                         "Тёмная"
                     })

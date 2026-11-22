@@ -983,7 +983,7 @@ impl Screen {
     pub fn dialog<'a>(&'a self, _ctx: &'a Ctx) -> Option<Element<'a, Msg>> {
         match &self.phase {
             Phase::Run(run) if run.confirm_quit => Some(confirm_dialog(
-                "Прервать экзамен?",
+                "Прервать тест?",
                 "Ответы на текущие вопросы сохранятся в статистике, но результат не будет засчитан.",
             )),
             _ => None,
@@ -1030,7 +1030,7 @@ impl Screen {
         let p = tp();
         let mut col = Column::new().spacing(18).width(Length::Fill);
         col = col.push(widgets::kicker("Проверка знаний"));
-        col = col.push(widgets::heading("Экзамен", 1));
+        col = col.push(widgets::heading("Тесты", 1));
         col = col.push(
             muted("Набор вопросов каждый раз новый; чаще попадаются те, в которых были ошибки.")
                 .size(theme::text::BODY),
@@ -1809,7 +1809,7 @@ impl Screen {
         let practice = matches!(res.mode, Mode::SelfCheck | Mode::Rehearsal);
         let (back_label, back_msg) = match (practice, sec) {
             (true, Some(s)) => (s.title.as_str(), Msg::ToSection(s.id.clone())),
-            _ => ("Экзамен", Msg::NewExam),
+            _ => ("Тесты", Msg::NewExam),
         };
         let mut col = Column::new().spacing(18).width(Length::Fill);
         col = col.push(widgets::back_button(back_label, back_msg));
@@ -1889,7 +1889,7 @@ impl Screen {
         }
         if !practice {
             buttons = buttons.push(widgets::btn(
-                "Новый экзамен",
+                "Новый тест",
                 widgets::Btn::Secondary,
                 widgets::BtnSize::Md,
                 Some(Msg::NewExam),
@@ -1903,7 +1903,7 @@ impl Screen {
                 Some(Msg::ToSection(s.id.clone())),
             ),
             None => widgets::btn(
-                "На карту",
+                "К урокам",
                 widgets::Btn::Ghost,
                 widgets::BtnSize::Md,
                 Some(Msg::ToMap),

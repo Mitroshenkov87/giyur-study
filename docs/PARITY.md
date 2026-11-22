@@ -6,6 +6,8 @@ Source of truth: the earlier PWA (`/workspace/giyur-study`) (index.html, css/app
 All strings below are quoted exactly from the source. `{x}` = interpolated value; `plural(n, a|b|c)` = Russian plural (`U.plural`: 11–14 → c; ends 1 → a; ends 2–4 → b; else c).
 Markup in content strings: `**bold**`, `*italic*`; Hebrew runs (U+0590–05FF, FB1D–FB4F) are auto-wrapped as inline RTL Hebrew (`he-inline`).
 
+> Native renames (v0.5, owner's choice): sidebar and screen titles «Карта» → «Уроки», «Повторение» → «Карточки», «Экзамен» (timed quiz) → «Викторина», «Прогресс» → «Успехи»; the «Тесты» screen h1 is «Тесты»; «На карту» → «К урокам»; the light theme «Пергамент» → «Кожа». Strings below are the PWA originals.
+
 > Note: the PWA has **no** screen called «Кто хочет стать миллионером» and **no lifelines** (no 50/50, hint, etc.). The quiz-show timed mode is titled «Экзамен» / «Экзамен (на время)»; only the badge id `millionaire` (title «20 из 20») refers to it. The only "help" controls are «Не знаю — дальше» and «Пауза» of auto-advance.
 
 ---
@@ -289,7 +291,7 @@ Header kicker «Ваш путь», h1 «Прогресс».
 h1 «Настройки». Rows: bold label + small muted sub, control right (wrap).
 **Card 1:**
 - «Течение» / «{level title} · прогресс сохранится при смене» + secondary «Сменить течение» → `levelReturn='#/settings'`, `#/level`.
-- «Тема» / «Тёмная — основная»: segmented «Тёмная» | «Пергамент» → apply immediately.
+- «Тема» / «Тёмная — основная»: segmented «Тёмная» | «Кожа» (PWA: «Пергамент») → apply immediately.
 - «Размер шрифта» / «Иврит масштабируется тоже»: «A−» | «A» | «A+» | «A++» (root 15 / 17 / 19 / 21.5 px; default step 1).
 - Switch «Открыть все разделы» / «Свободное изучение без последовательной разблокировки» (`unlockAll`, default off).
 - Switch «Показывать транслитерацию» / «Русская транскрипция под текстом на иврите» (`translit`, default on).
@@ -338,7 +340,9 @@ Header back «Настройки» → `#/settings`, h1 «Источники», 
 - Emblem bg: `radial-gradient(circle at 30% 25%, #26305a, #0f1428 75%)`, border gold 40%; badge/level circles `radial-gradient(circle at 35% 30%, #27325c, #0e1327 75%)`.
 - Window theme colour: dark `#0b1020`, parchment `#f4ecd8`.
 
-### T.2 Light «Пергамент» — `[data-theme="parchment"]`
+### T.2 Light «Кожа» (PWA «Пергамент») — `[data-theme="parchment"]`
+
+The native app stores this theme as `"leather"` and reads the old `"parchment"` value as the same theme.
 bg0 `#f3ead6`, bg1 `#ebdfc4`, surface `#fbf6ea`, surface2 `#f4ecda`, surface3 `#ebdfc6`, line `rgba(70,50,15,.10)`, line2 `rgba(70,50,15,.20)`, text `#2b2316`, muted `#6d604a`, gold `#9c7514`, gold2 `#7f5f0d`, gold-soft `rgba(156,117,20,.13)`, on-gold `#fffaf0`, ok `#2f7d55` / `rgba(47,125,85,.12)`, bad `#a4402e` / `rgba(164,64,46,.10)`, info `#335f9e` / `rgba(51,95,158,.10)`, violet `#6449a8` / `rgba(100,73,168,.10)`; shadow `0 12px 28px rgba(80,55,15,.14), 0 2px 6px rgba(80,55,15,.10)`, sm `0 3px 10px rgba(80,55,15,.10)`; card grad `rgba(255,255,255,.6) → 0`; inputs bg `#fffdf7`; Hebrew block text `#5a400a`; badge emblem bg `radial-gradient(#fffaf0, #efe3c4)`. Timed `.tq` screens keep their own dark studio palette in both themes.
 
 ### T.3 Timed studio palette (`.tq` scope)
@@ -434,7 +438,7 @@ Right-to-left direction, Hebrew font, gold2 colour (parchment `#5a400a`). Lesson
 53. [ ] Per-section progress rows (lessons bar gold, cards bar blue, best %), «Скоро» rows.
 54. [ ] Exam history chart (80% line) + list with pills; empty text.
 55. [ ] Weak topics (≥ 3 attempts, top 5) linking to lessons; empty text.
-56. [ ] Settings: change movement, theme dark/parchment, font size 4 steps, unlockAll, translit, timed seconds, timed sound, timed auto, Hebrew sample, «Сохранено» toast.
+56. [ ] Settings: change movement, theme dark/«Кожа», font size 4 steps, unlockAll, translit, timed seconds, timed sound, timed auto, Hebrew sample, «Сохранено» toast.
 57. [ ] Daily goal 10/20/30/50 with titles; award(0) re-check; toast «Цель дня: N XP».
 58. [ ] Export JSON file `shorashim-progress-YYYY-MM-DD.json`; toast.
 59. [ ] Import with confirm and the 3 validation errors + read error; success toast; re-render.

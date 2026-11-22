@@ -819,7 +819,7 @@ fn header<'a>(ctx: &'a Ctx, p: theme::Palette) -> Element<'a, Msg> {
     })
     .on_press(Msg::Go(Route::Level { reopened: true }));
 
-    let left = column![chip, widgets::heading("Карта разделов", 1)]
+    let left = column![chip, widgets::heading("Уроки", 1)]
         .spacing(10)
         .align_x(Alignment::Start);
 

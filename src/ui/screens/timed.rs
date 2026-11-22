@@ -1,4 +1,4 @@
-//! «Маалот» — the ladder quiz (sidebar «Маалот», map CTA «Подняться»).
+//! «Маалот» — the ladder quiz (sidebar «Викторина», map CTA «Маалот — лестница знаний»).
 //!
 //! The meaning of a TV quiz ladder in the app's own library look: fifteen
 //! questions from easy to hard, safe steps 5 «Микра» and 10 «Мишна»

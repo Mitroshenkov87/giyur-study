@@ -352,15 +352,15 @@ impl Screen {
                 row![
                     widgets::choice(
                         "Тёмная",
-                        s.theme != "parchment",
+                        s.theme != crate::storage::LIGHT_THEME,
                         false,
                         Msg::SetTheme("dark")
                     ),
                     widgets::choice(
-                        "Пергамент",
-                        s.theme == "parchment",
+                        "Кожа",
+                        s.theme == crate::storage::LIGHT_THEME,
                         false,
-                        Msg::SetTheme("parchment")
+                        Msg::SetTheme(crate::storage::LIGHT_THEME)
                     ),
                 ]
                 .spacing(4)
@@ -436,7 +436,7 @@ impl Screen {
         }
 
         let note = row![
-            txt("XP даются за уроки, карточки, тесты и экзамены. За каждые 7 дней серии — заморозка (до двух), она сохранит серию, если вы пропустите день.")
+            txt("XP даются за уроки, карточки, тесты и викторину. За каждые 7 дней серии — заморозка (до двух), она сохранит серию, если вы пропустите день.")
                 .size(theme::text::SMALL)
                 .color(p.muted)
                 .width(Length::Fill),
@@ -444,7 +444,7 @@ impl Screen {
         .width(Length::Fill);
 
         let link = button(
-            txt("Подробнее в разделе «Прогресс»")
+            txt("Подробнее в разделе «Успехи»")
                 .size(theme::text::SMALL)
                 .color(p.gold2),
         )

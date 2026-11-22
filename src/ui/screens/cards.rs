@@ -108,7 +108,7 @@ impl Screen {
             title: String::new(),
             kicker: String::new(),
             back: Route::Map,
-            back_label: "Карта".into(),
+            back_label: "Уроки".into(),
             word: "уроке",
             done_label: "Готово".into(),
             done_text: "Колода пройдена!".into(),
@@ -193,12 +193,12 @@ impl Screen {
                 _ => s.guard = Some(Guard::SectionLocked),
             },
             Deck::Review => {
-                s.title = "Повторение дня".into();
+                s.title = "Карточки на сегодня".into();
                 s.kicker = util::fmt_date(ctx.today());
                 s.back = Route::Map;
-                s.back_label = "Карта".into();
+                s.back_label = "Уроки".into();
                 s.word = "повторении";
-                s.done_label = "На карту".into();
+                s.done_label = "К урокам".into();
                 s.done_text = "Повторение на сегодня завершено!".into();
                 s.empty_text = "На сегодня повторять нечего. Изучайте новые карточки \
                                 в разделах — они появятся здесь в нужный день."
@@ -505,7 +505,7 @@ impl Screen {
                 Some(Msg::Go(self.back.clone())),
             ),
             widgets::btn(
-                "На карту",
+                "К урокам",
                 widgets::Btn::Ghost,
                 widgets::BtnSize::Lg,
                 Some(Msg::Go(Route::Map)),
@@ -718,7 +718,7 @@ fn help_view<'a>() -> Element<'a, Msg> {
     )
 }
 
-/// Empty deck card (§6): star + text + «На карту».
+/// Empty deck card (§6): star + text + «К урокам».
 fn empty_view<'a>(empty_text: &'a str) -> Element<'a, Msg> {
     let p = palette();
     widgets::card(
@@ -733,7 +733,7 @@ fn empty_view<'a>(empty_text: &'a str) -> Element<'a, Msg> {
                 .align_x(iced::alignment::Horizontal::Center)
                 .width(Length::Fill),
             widgets::btn(
-                "На карту",
+                "К урокам",
                 widgets::Btn::Primary,
                 widgets::BtnSize::Lg,
                 Some(Msg::Go(Route::Map)),
@@ -753,7 +753,7 @@ fn not_found_view(guard: &Guard) -> Element<'static, Msg> {
         Guard::SectionLocked => ("Раздел закрыт", "Раздел закрыт или не найден."),
     };
     column![
-        widgets::back_button("Карта", Msg::Go(Route::Map)),
+        widgets::back_button("Уроки", Msg::Go(Route::Map)),
         widgets::heading(title, 1),
         widgets::card(
             column![
@@ -767,7 +767,7 @@ fn not_found_view(guard: &Guard) -> Element<'static, Msg> {
                     .align_x(iced::alignment::Horizontal::Center)
                     .width(Length::Fill),
                 widgets::btn(
-                    "На карту",
+                    "К урокам",
                     widgets::Btn::Primary,
                     widgets::BtnSize::Lg,
                     Some(Msg::Go(Route::Map)),
