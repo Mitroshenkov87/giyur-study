@@ -316,8 +316,17 @@ fn with_mips(img: image::RgbaImage) -> Texture {
 #[cfg(test)]
 mod tests {
     #[test]
-    fn embedded_kiddush_cup_parses() {
-        let m = super::parse(super::super::KIDDUSH_CUP_GLB).expect("parse");
+    fn embedded_models_parse() {
+        for model in super::super::ALL {
+            check(super::parse(model.glb()).unwrap_or_else(|e| panic!("{model:?}: {e}")));
+            assert!(
+                image::load_from_memory(model.still()).is_ok(),
+                "{model:?} still"
+            );
+        }
+    }
+
+    fn check(m: super::Mesh) {
         assert!(m.vertices.len() > 1000);
         assert_eq!(m.indices.len() % 3, 0);
         assert!(m.indices.iter().all(|&i| (i as usize) < m.vertices.len()));

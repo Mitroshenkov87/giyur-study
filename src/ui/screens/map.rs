@@ -617,8 +617,8 @@ pub(crate) fn heading_owned<'a, Message: 'a>(content: String, level: u8) -> Elem
 // ---------------------------------------------------------------------------
 
 pub struct Screen {
-    /// Caption about the 3D object, toggled by a click on it.
-    caption: bool,
+    /// 3D objects whose caption is open (toggled by a click on the model).
+    captions: Vec<crate::ui::model3d::Model>,
 }
 
 #[derive(Debug, Clone)]
@@ -628,20 +628,22 @@ pub enum Msg {
     /// without its static placeholder.
     Model3dReady,
     /// Click on the 3D object: show / hide its caption.
-    ToggleCaption,
+    ToggleCaption(crate::ui::model3d::Model),
 }
 
 impl Screen {
     pub fn new(_ctx: &mut Ctx, _route: &Route) -> Self {
-        Screen { caption: false }
+        Screen {
+            captions: Vec::new(),
+        }
     }
 
     pub fn update(&mut self, _ctx: &mut Ctx, msg: Msg) -> Action {
         match msg {
             Msg::Go(route) => Action::Go(route),
             Msg::Model3dReady => Action::None,
-            Msg::ToggleCaption => {
-                self.caption = !self.caption;
+            Msg::ToggleCaption(m) => {
+                toggle(&mut self.captions, m);
                 Action::None
             }
         }
@@ -660,7 +662,7 @@ impl Screen {
         page = page.push(header(ctx, p));
         page = page.push(reminders(ctx, p));
         page = page.push(timed_cta(p));
-        page = page.push(kiddush_hero(ctx, self.caption, p));
+        page = page.push(object_of_the_day(ctx, &self.captions));
 
         if !ctx.lib.sections.iter().any(|s| s.available) {
             page = page.push(notice(
@@ -1215,73 +1217,33 @@ pub(crate) fn fmt_pct(v: f64) -> String {
     }
 }
 
-/// «Бокал для кидуша»: a live, rotatable 3D model (wgpu) with a static render
-/// as the fallback (tiny-skia, or «Объёмные модели» switched off).
-fn kiddush_hero<'a>(ctx: &'a Ctx, caption: bool, p: theme::Palette) -> Element<'a, Msg> {
-    use crate::ui::model3d::{self, Model};
-    // Screenshot hook `SHORASHIM_3D_SIZE=<px>` (default 190).
-    let size = util::env_hook("3D_SIZE")
-        .and_then(|v| v.parse::<f32>().ok())
-        .unwrap_or(190.0);
-    let live = model3d::enabled(ctx);
-    let model = if live {
-        model3d::view(
-            Model::KiddushCup,
-            size,
-            p.texture == "bg-dark",
-            Msg::Model3dReady,
-            Some(Msg::ToggleCaption),
-        )
+/// Open / close a caption.
+pub(crate) fn toggle(open: &mut Vec<crate::ui::model3d::Model>, m: crate::ui::model3d::Model) {
+    if let Some(i) = open.iter().position(|x| *x == m) {
+        open.remove(i);
     } else {
-        model3d::still(Model::KiddushCup, size)
-    };
-    let hint = if live {
-        "Тяните — повернуть, колесо — приблизить, щелчок — подпись, двойной щелчок — исходный вид."
-    } else {
-        "Объёмные модели выключены в настройках."
-    };
-    let mut body = column![
-        widgets::kicker("Шаббат"),
-        widgets::heading("Бокал для кидуша", 3),
-        txt("Кидуш — освящение субботы и праздников: благословение произносят над бокалом вина в начале трапезы.")
-            .size(theme::text::BODY)
-            .color(p.text)
-            .width(Length::Fill),
-    ]
-    .spacing(8)
-    .width(Length::Fill);
-    if caption {
-        body = body.push(
-            container(
-                txt("Серебряный бокал с чеканным узором. Для кидуша его наполняют вином или виноградным соком; после благословения пьёт тот, кто произносил кидуш, и делится с сидящими за столом.")
-                    .size(theme::text::SMALL)
-                    .color(p.text)
-                    .width(Length::Fill),
-            )
-            .padding([10.0, 12.0])
-            .width(Length::Fill)
-            .style(move |_| iced::widget::container::Style {
-                background: Some(Background::Color(Color { a: 0.10, ..p.gold })),
-                border: Border {
-                    color: Color { a: 0.55, ..p.gold },
-                    width: 1.0,
-                    radius: theme::radius::PILL.min(10.0).into(),
-                },
-                ..iced::widget::container::Style::default()
-            }),
-        );
+        open.push(m);
     }
-    body = body
-        .push(txt(hint).size(theme::text::SMALL).color(p.muted))
-        .push(
-            button(
-                txt("Раздел «Шаббат»")
-                    .size(theme::text::SMALL)
-                    .font(fonts::SANS_BOLD),
-            )
-            .padding([8.0, 16.0])
-            .style(move |_, s| theme::button_secondary(&p, s))
-            .on_press(Msg::Go(Route::Section("shabbat".to_string()))),
-        );
-    widgets::card(row![model, body].spacing(20).align_y(Alignment::Center))
+}
+
+/// «Предмет дня»: one live 3D ritual object, a different one each day,
+/// linking to its section.
+fn object_of_the_day<'a>(ctx: &'a Ctx, captions: &[crate::ui::model3d::Model]) -> Element<'a, Msg> {
+    use crate::ui::model3d::{card, Model};
+    let model = Model::of_the_day(ctx.today());
+    let info = model.info();
+    card::card(
+        ctx,
+        model,
+        Some("Предмет дня"),
+        captions.contains(&model),
+        card::Msgs {
+            ready: Msg::Model3dReady,
+            toggle_caption: Msg::ToggleCaption(model),
+            link: Some((
+                format!("Раздел «{}»", info.section_title),
+                Msg::Go(Route::Section(info.section.to_string())),
+            )),
+        },
+    )
 }

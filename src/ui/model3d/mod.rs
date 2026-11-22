@@ -6,10 +6,11 @@
 //! renderer (no GPU) custom shaders are not drawn at all, so the caller keeps
 //! a static WebP render underneath until [`gpu_ready`] turns true.
 
+pub mod card;
 mod glb;
 
 use std::collections::HashMap;
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 use std::sync::{Arc, OnceLock};
 
 use iced::mouse;
@@ -22,8 +23,11 @@ use iced::{Element, Length, Point, Rectangle};
 
 pub use glb::Mesh;
 
-pub(crate) const KIDDUSH_CUP_GLB: &[u8] = include_bytes!("../../../assets/3d/kiddush-cup.glb");
-const KIDDUSH_CUP_STILL: &[u8] = include_bytes!("../../../assets/3d/kiddush-cup.webp");
+macro_rules! asset {
+    ($f:literal) => {
+        include_bytes!(concat!("../../../assets/3d/", $f))
+    };
+}
 
 /// Settings `extra` key «Объёмные модели» (absent = on).
 pub const SETTING_KEY: &str = "models3d";
@@ -44,50 +48,177 @@ pub fn set_enabled(ctx: &mut crate::ui::app::Ctx, on: bool) {
         .insert(SETTING_KEY.to_string(), serde_json::Value::Bool(on));
 }
 
-/// The embedded models.
+/// The embedded models (Tripo AI, decimated; see tools/3d).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Model {
     KiddushCup,
+    ShabbatCandles,
+    Menorah,
+    TorahScroll,
+}
+
+/// Card texts and view limits of one model.
+pub struct Info {
+    pub kicker: &'static str,
+    pub title: &'static str,
+    /// Always shown next to the model.
+    pub lead: &'static str,
+    /// Shown on a click on the model.
+    pub caption: &'static str,
+    /// Section the object belongs to (for the «object of the day» link).
+    pub section: &'static str,
+    pub section_title: &'static str,
+    /// Wheel zoom ceiling (the Torah scroll stays far: its letters are
+    /// decorative imitations and must not become readable).
+    pub zoom_max: f32,
+}
+
+/// Bit per model for the per-model GPU-ready flags.
+pub(crate) const ALL: [Model; 4] = [
+    Model::KiddushCup,
+    Model::ShabbatCandles,
+    Model::Menorah,
+    Model::TorahScroll,
+];
+
+enum Load {
+    Idle,
+    Loading,
+    Ready(Arc<Mesh>),
+    /// Failed to decode, or the forced software renderer (never drawn).
+    Off,
+}
+
+fn slots() -> &'static std::sync::Mutex<HashMap<Model, Load>> {
+    static S: OnceLock<std::sync::Mutex<HashMap<Model, Load>>> = OnceLock::new();
+    S.get_or_init(Default::default)
 }
 
 impl Model {
-    fn glb(self) -> &'static [u8] {
-        match self {
-            Model::KiddushCup => KIDDUSH_CUP_GLB,
+    /// Objects that rotate as «Предмет дня» on «Уроки», one per day.
+    pub const OF_THE_DAY: [Model; 4] = [
+        Model::KiddushCup,
+        Model::Menorah,
+        Model::ShabbatCandles,
+        Model::TorahScroll,
+    ];
+
+    pub fn of_the_day(day: chrono::NaiveDate) -> Model {
+        use chrono::Datelike;
+        let n = day
+            .num_days_from_ce()
+            .rem_euclid(Self::OF_THE_DAY.len() as i32);
+        Self::OF_THE_DAY[n as usize]
+    }
+
+    /// Models shown on a section page, in order.
+    pub fn for_section(id: &str) -> &'static [Model] {
+        match id {
+            "osnovy" => &[Model::TorahScroll],
+            "shabbat" => &[Model::ShabbatCandles, Model::KiddushCup],
+            "prazdniki" => &[Model::Menorah],
+            _ => &[],
         }
     }
+
+    fn bit(self) -> u32 {
+        1 << ALL.iter().position(|m| *m == self).unwrap_or(0)
+    }
+
+    pub(crate) fn glb(self) -> &'static [u8] {
+        match self {
+            Model::KiddushCup => asset!("kiddush-cup.glb"),
+            Model::ShabbatCandles => asset!("shabbat-candlesticks.glb"),
+            Model::Menorah => asset!("menorah.glb"),
+            Model::TorahScroll => asset!("torah-scroll.glb"),
+        }
+    }
+
     fn still(self) -> &'static [u8] {
         match self {
-            Model::KiddushCup => KIDDUSH_CUP_STILL,
+            Model::KiddushCup => asset!("kiddush-cup.webp"),
+            Model::ShabbatCandles => asset!("shabbat-candlesticks.webp"),
+            Model::Menorah => asset!("menorah.webp"),
+            Model::TorahScroll => asset!("torah-scroll.webp"),
         }
     }
-    fn slot(self) -> &'static OnceLock<Option<Arc<Mesh>>> {
-        static CUP: OnceLock<Option<Arc<Mesh>>> = OnceLock::new();
+
+    pub fn info(self) -> Info {
         match self {
-            Model::KiddushCup => &CUP,
+            Model::KiddushCup => Info {
+                kicker: "Шаббат",
+                title: "Бокал для кидуша",
+                lead: "Кидуш — освящение субботы и праздников: благословение произносят над бокалом вина в начале трапезы.",
+                caption: "Серебряный бокал с чеканным узором. Для кидуша его наполняют вином или виноградным соком; после благословения пьёт тот, кто произносил кидуш, и делится с сидящими за столом.",
+                section: "shabbat",
+                section_title: "Шаббат",
+                zoom_max: 2.0,
+            },
+            Model::ShabbatCandles => Info {
+                kicker: "Шаббат",
+                title: "Субботние свечи",
+                lead: "Перед наступлением Шаббата, до захода солнца, в доме зажигают свечи — не меньше двух.",
+                caption: "Две свечи напоминают о двух словах заповеди о субботе: «Помни» (захор) и «Храни» (шамор). Обычно свечи зажигает хозяйка дома; зажгла — и для неё уже наступил Шаббат.",
+                section: "shabbat",
+                section_title: "Шаббат",
+                zoom_max: 2.0,
+            },
+            Model::Menorah => Info {
+                kicker: "Праздники · Ханука",
+                title: "Менора Храма",
+                lead: "Семисвечник из чистого золота, который зажигали в Храме. С ним связано чудо Хануки.",
+                caption: "Это менора Храма — семь светильников, а не ханукия (у ханукии восемь светильников и шамаш). Когда Хасмонеи очистили Храм, нашёлся один кувшин чистого масла на день, а менора горела восемь дней. Поэтому Ханука длится восемь дней. Точную копию семисвечной меноры для дома по обычаю не делают.",
+                section: "prazdniki",
+                section_title: "Праздники",
+                zoom_max: 2.0,
+            },
+            Model::TorahScroll => Info {
+                kicker: "Основы",
+                title: "Свиток Торы",
+                lead: "Сефер Тора — Пятикнижие, написанное от руки писцом (сойфером) на пергаменте.",
+                caption: "Свиток пишут гусиным пером на пергаменте из кожи кошерного животного, без единой ошибки. Его читают в синагоге в Шаббат, по понедельникам и четвергам, в праздники и новомесячья. Буквы на этой модели условные — это не настоящий текст.",
+                section: "osnovy",
+                section_title: "Основы",
+                zoom_max: 1.15,
+            },
         }
     }
+
     /// Decoded mesh, or None while it is still loading / failed.
     fn mesh(self) -> Option<Arc<Mesh>> {
-        self.slot().get().cloned().flatten()
+        match slots().lock().ok()?.get(&self) {
+            Some(Load::Ready(m)) => Some(m.clone()),
+            _ => None,
+        }
     }
+
+    /// Not decided yet: idle or decoding.
+    fn loading(self) -> bool {
+        slots()
+            .lock()
+            .map(|s| matches!(s.get(&self), None | Some(Load::Idle) | Some(Load::Loading)))
+            .unwrap_or(false)
+    }
+
     /// Decode the GLB on a worker thread (textures + mips take ~0.2–0.5 s).
+    /// Called from the card's view, so a model is decoded only when a
+    /// screen that shows it is open.
     pub fn preload(self) {
-        if self.slot().get().is_some() {
+        let Ok(mut s) = slots().lock() else { return };
+        if !matches!(s.get(&self), None | Some(Load::Idle)) {
             return;
         }
         // Forced software renderer: custom shaders never draw, so do not
         // spend the decode time and memory.
-        if std::env::var("ICED_BACKEND")
-            .map(|b| b.contains("tiny"))
-            .unwrap_or(false)
-        {
-            let _ = self.slot().set(None);
+        if software_forced() {
+            s.insert(self, Load::Off);
             return;
         }
+        s.insert(self, Load::Loading);
+        drop(s);
         std::thread::spawn(move || {
             let t = Instant::now();
-            let _ = self.slot().get_or_init(|| match glb::parse(self.glb()) {
+            let load = match glb::parse(self.glb()) {
                 Ok(m) => {
                     if stats_enabled() {
                         eprintln!(
@@ -98,20 +229,37 @@ impl Model {
                             m.indices.len() / 3
                         );
                     }
-                    Some(Arc::new(m))
+                    Load::Ready(Arc::new(m))
                 }
                 Err(e) => {
                     eprintln!("model3d: {self:?}: {e}");
-                    None
+                    Load::Off
                 }
-            });
+            };
+            if let Ok(mut s) = slots().lock() {
+                s.insert(self, load);
+            }
         });
     }
+
+    /// Forget the decoded mesh (after its GPU copy was dropped): the next
+    /// view decodes it again.
+    fn unload(self) {
+        if let Ok(mut s) = slots().lock() {
+            if matches!(s.get(&self), Some(Load::Ready(_))) {
+                s.insert(self, Load::Idle);
+            }
+        }
+        GPU_READY.fetch_and(!self.bit(), Ordering::Relaxed);
+    }
+
     /// Static render (fallback for the tiny-skia renderer or when 3D is off).
     pub fn still_image(self) -> Handle {
-        static CACHE: OnceLock<Handle> = OnceLock::new();
-        CACHE
-            .get_or_init(|| match image::load_from_memory(self.still()) {
+        static CACHE: OnceLock<std::sync::Mutex<HashMap<Model, Handle>>> = OnceLock::new();
+        let cache = CACHE.get_or_init(Default::default);
+        let mut c = cache.lock().unwrap_or_else(|e| e.into_inner());
+        c.entry(self)
+            .or_insert_with(|| match image::load_from_memory(self.still()) {
                 Ok(i) => {
                     let i = i.to_rgba8();
                     Handle::from_rgba(i.width(), i.height(), i.into_raw())
@@ -120,9 +268,22 @@ impl Model {
             })
             .clone()
     }
+
+    /// True once this model has been uploaded and drawn by wgpu.
+    pub fn gpu_ready(self) -> bool {
+        GPU_READY.load(Ordering::Relaxed) & self.bit() != 0
+    }
 }
 
-static GPU_READY: AtomicBool = AtomicBool::new(false);
+/// Per-model bits: drawn by wgpu (see [`Model::gpu_ready`]).
+static GPU_READY: AtomicU32 = AtomicU32::new(0);
+/// `ICED_BACKEND` forces the tiny-skia renderer, where custom shaders never draw.
+pub(crate) fn software_forced() -> bool {
+    std::env::var("ICED_BACKEND")
+        .map(|b| b.contains("tiny"))
+        .unwrap_or(false)
+}
+
 /// Set by any `prepare` call: the wgpu renderer is active (tiny-skia never
 /// calls it), even if the mesh is still decoding.
 static WGPU_SEEN: AtomicBool = AtomicBool::new(false);
@@ -130,10 +291,8 @@ static WGPU_SEEN: AtomicBool = AtomicBool::new(false);
 static PREP_NS: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
 static PREP_N: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
 
-/// True once a model has actually been drawn by wgpu in this process.
-pub fn gpu_ready() -> bool {
-    GPU_READY.load(Ordering::Relaxed)
-}
+/// Free GPU and CPU copies of a model this long after it was last drawn.
+const UNLOAD_AFTER: Duration = Duration::from_secs(8);
 
 fn stats_enabled() -> bool {
     static ON: OnceLock<bool> = OnceLock::new();
@@ -170,7 +329,7 @@ pub fn view<'a, M: Clone + 'a>(
     // Same tree shape before and after the GPU is ready (only the bottom
     // layer changes), so the viewer keeps its angle and an ongoing drag
     // when the placeholder is dropped.
-    let under: Element<'a, M> = if gpu_ready() {
+    let under: Element<'a, M> = if model.gpu_ready() {
         iced::widget::space()
             .width(Length::Fixed(size))
             .height(Length::Fixed(size))
@@ -202,7 +361,6 @@ struct Viewer<M> {
 const YAW0: f32 = 0.7;
 const PITCH0: f32 = 0.28;
 const ZOOM_MIN: f32 = 0.8;
-const ZOOM_MAX: f32 = 2.0;
 const DOUBLE_CLICK: Duration = Duration::from_millis(350);
 
 pub struct State {
@@ -348,7 +506,8 @@ impl<M: Clone> shader::Program<M> for Viewer<M> {
                     mouse::ScrollDelta::Lines { y, .. } => *y,
                     mouse::ScrollDelta::Pixels { y, .. } => *y / 60.0,
                 };
-                let to = (st.zoom_to * 1.15f32.powf(steps)).clamp(ZOOM_MIN, ZOOM_MAX);
+                let to =
+                    (st.zoom_to * 1.15f32.powf(steps)).clamp(ZOOM_MIN, self.model.info().zoom_max);
                 if (to - st.zoom_to).abs() < 1e-4 {
                     // At a limit: let the page scroll on.
                     return None;
@@ -417,7 +576,7 @@ impl<M: Clone> shader::Program<M> for Viewer<M> {
                         st.since = Some(*now);
                     }
                 }
-                if gpu_ready() && !st.announced {
+                if self.model.gpu_ready() && !st.announced {
                     st.announced = true;
                     return Some(Action::publish(self.on_ready.clone()));
                 }
@@ -430,10 +589,10 @@ impl<M: Clone> shader::Program<M> for Viewer<M> {
                 // Keep animating only where it can be seen (wgpu); under
                 // tiny-skia the static picture stays and nothing redraws.
                 st.redraws = st.redraws.saturating_add(1);
-                let loading = self.model.slot().get().is_none();
+                let loading = self.model.loading();
                 let waiting_upload =
                     WGPU_SEEN.load(Ordering::Relaxed) && self.model.mesh().is_some();
-                if gpu_ready() || loading || waiting_upload || st.redraws < 10 {
+                if self.model.gpu_ready() || loading || waiting_upload || st.redraws < 10 {
                     // ~60 fps while touched, flung, zooming or gliding back;
                     // ~30 fps for the idle spin.
                     let busy = st.drag.is_some()
@@ -510,6 +669,7 @@ struct GpuModel {
     ubuf: wgpu::Buffer,
     bind: wgpu::BindGroup,
     mesh: Arc<Mesh>,
+    last_used: Instant,
 }
 
 struct Target {
@@ -708,6 +868,24 @@ impl shader::Pipeline for Pipeline {
     fn trim(&mut self) {
         let live = std::mem::take(&mut self.live);
         self.targets.retain(|m, _| live.contains(m));
+        // Models off screen for a while: drop the GPU buffers and textures
+        // and the decoded mesh, so memory stays low on screens without 3D.
+        let now = Instant::now();
+        for m in &live {
+            if let Some(g) = self.models.get_mut(m) {
+                g.last_used = now;
+            }
+        }
+        let stale: Vec<Model> = self
+            .models
+            .iter()
+            .filter(|(_, g)| now - g.last_used > UNLOAD_AFTER)
+            .map(|(m, _)| *m)
+            .collect();
+        for m in stale {
+            self.models.remove(&m);
+            m.unload();
+        }
     }
 }
 
@@ -851,6 +1029,7 @@ impl Pipeline {
                 ubuf,
                 bind,
                 mesh,
+                last_used: Instant::now(),
             },
         );
         true
@@ -1043,7 +1222,7 @@ impl shader::Primitive for Primitive {
         if let Some(t) = pipe.targets.get_mut(&self.model) {
             t.drawn = Some(key);
         }
-        GPU_READY.store(true, Ordering::Relaxed);
+        GPU_READY.fetch_or(self.model.bit(), Ordering::Relaxed);
         if stats_enabled() {
             // Stats mode waits for the GPU after every render, so the number
             // is the whole 3D pass (CPU + GPU), not just command recording.
