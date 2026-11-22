@@ -70,6 +70,12 @@ pub const ITEMS: [Item; 8] = [
     },
 ];
 
+/// Art name of each item's 3D icon (`assets/img/icons/<name>-<theme>.webp`),
+/// in [`ITEMS`] order.
+pub const ART: [&str; 8] = [
+    "lessons", "calendar", "cards", "quiz", "tests", "progress", "settings", "sources",
+];
+
 /// The route an item opens.
 pub fn route(index: usize) -> Route {
     match index {

@@ -55,7 +55,7 @@ def convert(out_dir):
         im = fit(Image.open(path).convert("RGBA"))
         base = os.path.join(out_dir, name)
         im.save(base + ".webp", "WEBP", quality=QUALITY, method=METHOD)
-        for s in (512, 256):
+        for s in (512, 256, 128):
             im.resize((s, s), Image.LANCZOS).save(f"{base}-{s}.webp", "WEBP",
                                                   quality=QUALITY, method=METHOD)
         os.remove(path)

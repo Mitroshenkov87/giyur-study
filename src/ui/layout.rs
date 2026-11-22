@@ -1,7 +1,7 @@
 //! The window grid shared by every screen (the calendar's proportions):
 //!
 //! ```text
-//! | margin | nav 230 | content 820 (+2×32 padding) | aside 300 | margin |
+//! | margin | nav 252 | content 820 (+2×32 padding) | aside 300 | margin |
 //! ```
 //!
 //! The whole group is centred in the window, so on a maximized window the
@@ -15,7 +15,7 @@ use iced::widget::{container, row, space};
 use iced::{Element, Length};
 
 /// Navigation column width.
-pub const NAV: f32 = 230.0;
+pub const NAV: f32 = 252.0;
 /// Reading width of the content column (cards, text).
 pub const CONTENT: f32 = 820.0;
 /// Horizontal padding on each side of the content column.

@@ -20,6 +20,8 @@ struct App {
     route: Route,
     history: Vec<Route>,
     screen: Current,
+    /// Sidebar item under the mouse (its 3D icon shows the hover frame).
+    nav_hover: Option<usize>,
 }
 
 #[derive(Debug, Clone)]
@@ -29,6 +31,8 @@ enum Message {
     Tick(Instant),
     /// Screenshot hook `SHORASHIM_SCROLL_Y=<px>`: scroll the main column.
     ScrollTo(f32),
+    /// Mouse entered (`true`) or left (`false`) a sidebar item.
+    NavHover(usize, bool),
 }
 
 fn theme_kind(ctx: &Ctx) -> ThemeKind {
@@ -67,6 +71,7 @@ impl App {
                 route,
                 history: Vec::new(),
                 screen,
+                nav_hover: None,
             },
             // Screenshot hook: scroll once the first frame is laid out.
             match shorashim::util::env_hook("SCROLL_Y").and_then(|v| v.parse::<f32>().ok()) {
@@ -109,6 +114,13 @@ impl App {
 
     fn update(&mut self, message: Message) -> Task<Message> {
         match message {
+            Message::NavHover(i, inside) => {
+                if inside {
+                    self.nav_hover = Some(i);
+                } else if self.nav_hover == Some(i) {
+                    self.nav_hover = None;
+                }
+            }
             Message::Screen(m) => match self.screen.update(&mut self.ctx, m) {
                 Action::None => {}
                 Action::Go(r) => return self.go(r),
@@ -195,6 +207,26 @@ impl App {
                     },
                     ..Default::default()
                 });
+            // Pre-rendered 3D icon for the theme; the hover frame is the same
+            // object turned 15° with a brighter key light (a cheap "tilt").
+            let hovered = self.nav_hover == Some(i);
+            let art_name = format!(
+                "icon-{}-{}{}",
+                nav::ART[i],
+                theme::art_variant(),
+                if hovered || is_active { "-hover" } else { "" }
+            );
+            let icon: Element<'_, Message> = match assets::art(&art_name) {
+                Some(h) => image(h)
+                    .width(theme::size::NAV_ICON)
+                    .height(theme::size::NAV_ICON)
+                    .filter_method(image::FilterMethod::Linear)
+                    .into(),
+                None => iced::widget::space()
+                    .width(theme::size::NAV_ICON)
+                    .height(theme::size::NAV_ICON)
+                    .into(),
+            };
             let label = column![
                 text(item.label).size(15).shaping(text::Shaping::Advanced),
                 text(item.subtitle)
@@ -204,7 +236,7 @@ impl App {
             ]
             .spacing(1);
             let b = button(
-                container(row![bar, label].spacing(10).align_y(Alignment::Center))
+                container(row![bar, icon, label].spacing(8).align_y(Alignment::Center))
                     .center_y(Length::Fill),
             )
             .width(Length::Fill)
@@ -226,6 +258,9 @@ impl App {
             )
             .padding([7, 11])
             .max_width(300);
+            let b = iced::widget::mouse_area(b)
+                .on_enter(Message::NavHover(i, true))
+                .on_exit(Message::NavHover(i, false));
             col = col.push(
                 iced::widget::tooltip(b, tip, iced::widget::tooltip::Position::Right)
                     .gap(6)
