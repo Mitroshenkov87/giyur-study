@@ -355,29 +355,92 @@ fn closest_idea(lesson_ideas: &[String], prompt: &str) -> Option<String> {
         .map(|(_, i)| i.clone())
 }
 
-/// Hide the right answer inside a text (case-insensitive), so the rabbi
-/// points the way without saying the option out loud.
-pub fn mask_answer(text: &str, answer: &str) -> String {
-    let a = answer.trim().trim_end_matches('.');
-    if a.chars().count() < 3 {
+/// Stem of a word for loose matching of Russian word forms: lower case,
+/// ё → е, the last two letters dropped from longer words (сом / сома,
+/// лосось / лосося), never shorter than three letters.
+fn stem(w: &str) -> String {
+    let w: Vec<char> = w.to_lowercase().replace('ё', "е").chars().collect();
+    let keep = if w.len() > 5 { w.len() - 2 } else { w.len() };
+    w[..keep].iter().collect()
+}
+
+/// Hide the options inside a text, so the rabbi points the way without
+/// saying an option out loud: every word of the text that has the stem of
+/// a content word (three letters or more) of an option becomes «…», except
+/// words the question itself already shows. Runs of hidden words collapse
+/// into one «…».
+pub fn mask_options(text: &str, options: &[&str], prompt: &str) -> String {
+    let is_word = |c: char| c.is_alphanumeric();
+    let shown: std::collections::HashSet<String> = prompt
+        .split(|c: char| !is_word(c))
+        .filter(|w| w.chars().count() >= 3)
+        .map(stem)
+        .collect();
+    const STOP: [&str; 16] = [
+        "над",
+        "для",
+        "при",
+        "без",
+        "под",
+        "что",
+        "как",
+        "это",
+        "или",
+        "его",
+        "она",
+        "они",
+        "все",
+        "был",
+        "только",
+        "после",
+    ];
+    let stems: Vec<String> = options
+        .iter()
+        .flat_map(|o| o.split(|c: char| !is_word(c)))
+        .filter(|w| w.chars().count() >= 3 && !STOP.contains(&w.to_lowercase().as_str()))
+        .map(stem)
+        .filter(|s| !shown.contains(s))
+        .collect();
+    if stems.is_empty() {
         return text.to_string();
     }
-    let lower = text.to_lowercase();
-    let al = a.to_lowercase();
+    // Split into word and non-word runs, keeping everything.
+    let mut parts: Vec<(bool, String)> = Vec::new();
+    for c in text.chars() {
+        let w = is_word(c);
+        match parts.last_mut() {
+            Some((pw, buf)) if *pw == w => buf.push(c),
+            _ => parts.push((w, c.to_string())),
+        }
+    }
+    let hidden: Vec<bool> = parts
+        .iter()
+        .map(|(w, t)| {
+            *w && t.chars().count() >= 3 && {
+                let st = stem(t);
+                let low = t.to_lowercase().replace('ё', "е");
+                stems
+                    .iter()
+                    .any(|s| st == *s || low.starts_with(s.as_str()))
+            }
+        })
+        .collect();
     let mut out = String::new();
     let mut i = 0;
-    while let Some(pos) = lower[i..].find(&al) {
-        let start = i + pos;
-        // Byte offsets from the lower-cased copy are only safe when lowering
-        // kept byte lengths; otherwise fall back to the text unmasked.
-        if !text.is_char_boundary(start) || !text.is_char_boundary(start + al.len()) {
-            return text.to_string();
+    while i < parts.len() {
+        if hidden[i] {
+            // Swallow following «word, space, word» runs of hidden words.
+            let mut j = i;
+            while j + 2 < parts.len() && hidden[j + 2] && parts[j + 1].1.trim().is_empty() {
+                j += 2;
+            }
+            out.push('…');
+            i = j + 1;
+        } else {
+            out.push_str(&parts[i].1);
+            i += 1;
         }
-        out.push_str(&text[i..start]);
-        out.push('…');
-        i = start + al.len();
     }
-    out.push_str(&text[i..]);
     out
 }
 
@@ -417,7 +480,10 @@ pub fn help(lib: &Library, step: &Step, line: Lifeline, rng: &mut impl Rng) -> H
                 .filter(|e| !e.trim().is_empty())
                 .unwrap_or_else(|| "Вспомните урок, из которого этот вопрос.".to_string());
             let masked = match &step.q {
-                Question::Mc { .. } => mask_answer(&base, step.right_text()),
+                Question::Mc { .. } => {
+                    let opts: Vec<&str> = step.opts.iter().map(|o| o.text.as_str()).collect();
+                    mask_options(&base, &opts, &c.prompt)
+                }
                 _ => base,
             };
             Help::Rabbi(masked)
@@ -936,11 +1002,33 @@ mod tests {
     }
 
     #[test]
-    fn mask_answer_hides_every_occurrence() {
+    fn mask_options_hides_option_words_in_any_form() {
         assert_eq!(
-            mask_answer("Кидуш говорят над вином. Кидуш — освящение.", "кидуш"),
-            "… говорят над вином. … — освящение."
+            mask_options(
+                "У сома нет чешуи, поэтому он запрещён; карп, лосось и сельдь — кошерны.",
+                &["Лосось", "Сельдь", "Карп", "Сом"],
+                "Какая из этих рыб некошерна?",
+            ),
+            "У … нет чешуи, поэтому он запрещён; …, … и … — кошерны."
         );
-        assert_eq!(mask_answer("Нет ответа", "ab"), "Нет ответа");
+        // Words the question already shows and small words stay; runs of
+        // hidden words collapse into one «…».
+        assert_eq!(
+            mask_options(
+                "Кидуш над вином освящает Шаббат.",
+                &["Кидуш над вином", "Авдала", "Хала", "Свечи"],
+                "Как освящают Шаббат?",
+            ),
+            "… над … освящает Шаббат."
+        );
+        assert_eq!(
+            mask_options(
+                "Сотворение мира за шесть дней.",
+                &["Сотворение мира", "Исход", "Синай", "Земля"],
+                "?"
+            ),
+            "… за шесть дней."
+        );
+        assert_eq!(mask_options("Нет ответа", &["ab"], ""), "Нет ответа");
     }
 }
