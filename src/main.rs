@@ -222,7 +222,7 @@ impl App {
                 image(handle)
                     .width(layout::NAV)
                     .height(Length::Fill)
-                    .content_fit(iced::ContentFit::Cover)
+                    .content_fit(iced::ContentFit::Fill)
                     .filter_method(image::FilterMethod::Linear),
                 panel,
             ]
@@ -348,7 +348,7 @@ impl App {
                 image(handle)
                     .width(Length::Fill)
                     .height(Length::Fill)
-                    .content_fit(iced::ContentFit::Cover)
+                    .content_fit(iced::ContentFit::Fill)
                     .filter_method(image::FilterMethod::Linear),
             );
         }
