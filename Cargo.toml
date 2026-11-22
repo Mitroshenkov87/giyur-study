@@ -34,6 +34,7 @@ rand = "0.8"
 chrono = { version = "0.4", default-features = false, features = ["clock", "std", "serde"] }
 dirs = "6"
 rfd = { version = "0.15", default-features = false, features = ["xdg-portal", "tokio"] }
+rodio = { version = "0.23.0", default-features = false, features = ["playback", "vorbis"] }
 
 [dev-dependencies]
 # Headless layout of real screens in tests (same version as iced).

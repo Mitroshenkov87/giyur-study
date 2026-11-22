@@ -67,6 +67,15 @@ pub struct Settings {
     /// daily local notification time
     #[serde(default = "default_reminder_time")]
     pub reminder_time: String,
+    /// Background playlist. Off by default; a one-time hint points here.
+    #[serde(default)]
+    pub music_enabled: bool,
+    /// 0..=100, default 30 (quiet background).
+    #[serde(default = "default_music_volume")]
+    pub music_volume: i64,
+    /// The first-run toast about music has already been shown.
+    #[serde(default)]
+    pub music_hint_seen: bool,
     /// Unknown keys kept so a PWA file → native → PWA round-trip loses nothing
     /// (js/storage.js fill keeps them).
     #[serde(flatten)]
@@ -110,6 +119,9 @@ fn default_daily_goal() -> i64 {
 fn default_reminder_time() -> String {
     "19:00".to_string()
 }
+fn default_music_volume() -> i64 {
+    30
+}
 
 impl Default for Settings {
     fn default() -> Self {
@@ -124,6 +136,9 @@ impl Default for Settings {
             timed_auto: true,
             daily_goal: default_daily_goal(),
             reminder_time: default_reminder_time(),
+            music_enabled: false,
+            music_volume: default_music_volume(),
+            music_hint_seen: false,
             extra: serde_json::Map::new(),
         }
     }
@@ -359,6 +374,9 @@ const SETTINGS_KINDS: &[(&str, Kind)] = &[
     ("timedAuto", Kind::Bool),
     ("dailyGoal", Kind::Int),
     ("reminderTime", Kind::Str),
+    ("musicEnabled", Kind::Bool),
+    ("musicVolume", Kind::Int),
+    ("musicHintSeen", Kind::Bool),
 ];
 
 /// Sanitise an imported JSON value like js/storage.js importJSON, then
@@ -466,13 +484,19 @@ impl State {
         *self.activity.entry(today.to_string()).or_insert(0) += 1;
     }
 
-    /// Reset progress, keeping theme and fontStep (js/storage.js reset).
+    /// Reset progress, keeping theme, font size and music preferences.
     pub fn reset(&mut self) {
         let theme = self.settings.theme.clone();
         let font_step = self.settings.font_step;
+        let music_enabled = self.settings.music_enabled;
+        let music_volume = self.settings.music_volume;
+        let music_hint_seen = self.settings.music_hint_seen;
         *self = State::default();
         self.settings.theme = theme;
         self.settings.font_step = font_step;
+        self.settings.music_enabled = music_enabled;
+        self.settings.music_volume = music_volume.clamp(0, 100);
+        self.settings.music_hint_seen = music_hint_seen;
     }
 }
 
@@ -731,11 +755,32 @@ mod tests {
         let mut s = State::default();
         s.settings.theme = "leather".into();
         s.settings.font_step = 3;
+        s.settings.music_enabled = true;
+        s.settings.music_volume = 45;
+        s.settings.music_hint_seen = true;
         s.xp_total = 500;
         s.reset();
         assert_eq!(s.settings.theme, "leather");
         assert_eq!(s.settings.font_step, 3);
+        assert!(s.settings.music_enabled);
+        assert_eq!(s.settings.music_volume, 45);
+        assert!(s.settings.music_hint_seen);
         assert_eq!(s.xp_total, 0);
+    }
+
+    #[test]
+    fn music_defaults_off_and_old_saves_load() {
+        let s = State::default();
+        assert!(!s.settings.music_enabled);
+        assert_eq!(s.settings.music_volume, 30);
+        assert!(!s.settings.music_hint_seen);
+        let sample = r#"{
+          "app": "giyur-study",
+          "settings": {"theme": "dark", "fontStep": 1}
+        }"#;
+        let s = State::import_json(sample, TODAY).unwrap();
+        assert!(!s.settings.music_enabled);
+        assert_eq!(s.settings.music_volume, 30);
     }
 
     #[test]

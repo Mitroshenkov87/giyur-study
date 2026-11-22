@@ -50,6 +50,15 @@ jobs:
           # its plain name, which `shorashim-ctl launch` relies on.
           Copy-Item target/release/shorashim-ctl.exe dist/
           Copy-Item LICENSE, NOTICE dist/
+          # Portable zip: exe + music playlist + licenses (the lone exe has no music).
+          $portable = "dist/Shorashim-$ref-windows-x64"
+          New-Item -ItemType Directory -Force $portable | Out-Null
+          Copy-Item target/release/shorashim.exe "$portable/Shorashim.exe"
+          Copy-Item LICENSE, NOTICE $portable/
+          if (Test-Path assets/music) {
+            Copy-Item assets/music $portable/music -Recurse
+          }
+          Compress-Archive -Path "$portable/*" -DestinationPath "$portable.zip" -Force
       - uses: actions/upload-artifact@v4
         with:
           name: Shorashim-windows-x64
@@ -61,6 +70,7 @@ jobs:
           files: |
             dist/Shorashim-${{ github.ref_name }}-windows-x64.exe
             dist/shorashim-ctl.exe
+            dist/Shorashim-${{ github.ref_name }}-windows-x64.zip
             dist/LICENSE
             dist/NOTICE
 
@@ -71,7 +81,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
       - name: System libraries
-        run: sudo apt-get update && sudo apt-get install -y libxkbcommon-dev libwayland-dev libx11-dev libxcursor-dev libxrandr-dev libxi-dev libvulkan-dev
+        run: sudo apt-get update && sudo apt-get install -y libxkbcommon-dev libwayland-dev libx11-dev libxcursor-dev libxrandr-dev libxi-dev libvulkan-dev libasound2-dev pkg-config
       - name: Test
         run: cargo test --all-targets
       - name: Build

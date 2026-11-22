@@ -69,6 +69,10 @@ impl Session {
             today_override: opts.today,
             test_timer: None,
             writable,
+            music_title: None,
+            music_available: false,
+            music_error: None,
+            music_track_count: 0,
         };
         game::apply_freezes(&mut ctx.state, today);
         let _ = game::check_badges(&ctx.lib, &mut ctx.state, today);
