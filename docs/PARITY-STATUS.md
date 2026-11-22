@@ -5,7 +5,7 @@ Totals: **DONE 36 · PARTIAL 33 · MISSING 2** (out of 71).
 
 | # | Item | Status | Note |
 |---|---|---|---|
-| 1 | Router, first-run guard, not-found | PARTIAL | Route enum and guard are in place (`main.rs:68-74`); not-found views exist for section, lesson and cards. Window title is the fixed «Шорашим — основы иудаизма и подготовка к гиюру»; scroll-to-top on navigation is done. |
+| 1 | Router, first-run guard, not-found | PARTIAL | Route enum and guard are in place (`main.rs:68-74`); not-found views exist for section, lesson and cards. Window title is the fixed «Шорашим — основы иудаизма и подготовка к гиюру»; the main `scrollable` now has an `Id` (`MAIN_SCROLL`), so scroll-to-top on navigation should work, but it is not yet verified (scrolling could not be checked in the Xvfb screenshot setup). |
 | 2 | Sidebar + tab bar, active group | PARTIAL | Sidebar has the brand, 7 items and active group (`main.rs:106-160,269-281`). Missing: the < 900 px bottom tab bar (sidebar always shown, min width 720) and the 2 px gold inset on the active item (`theme.rs:787`). |
 | 3 | Tab bar hidden on bare/timed/exam-run | DONE | Bare mode at `screens/mod.rs:115-121`. There is no tab bar, so nothing else to hide. |
 | 4 | Toasts 2.6 s + storage toast | PARTIAL | Toasts last 4.2 s, not 2.6 s; no ok/bad kinds; no fade (`app.rs:166-174`). The storage toast exists with desktop wording (`app.rs:124-130`). |

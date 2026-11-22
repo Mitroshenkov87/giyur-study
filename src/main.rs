@@ -25,6 +25,8 @@ enum Message {
     Screen(screens::Msg),
     Nav(Route),
     Tick(Instant),
+    /// Screenshot hook `SHORASHIM_SCROLL_Y=<px>`: scroll the main column.
+    ScrollTo(f32),
 }
 
 fn theme_kind(ctx: &Ctx) -> ThemeKind {
@@ -63,7 +65,14 @@ impl App {
                 history: Vec::new(),
                 screen,
             },
-            Task::none(),
+            // Screenshot hook: scroll once the first frame is laid out.
+            match shorashim::util::env_hook("SCROLL_Y").and_then(|v| v.parse::<f32>().ok()) {
+                Some(y) => Task::perform(
+                    async { std::thread::sleep(Duration::from_millis(1500)) },
+                    move |_| Message::ScrollTo(y),
+                ),
+                None => Task::none(),
+            },
         )
     }
 
@@ -112,6 +121,15 @@ impl App {
             },
             Message::Nav(r) => return self.go(r),
             Message::Tick(now) => self.ctx.toasts.retain(|t| t.until > now),
+            Message::ScrollTo(y) => {
+                return iced::widget::operation::scroll_to(
+                    MAIN_SCROLL,
+                    iced::widget::operation::AbsoluteOffset {
+                        x: None,
+                        y: Some(y),
+                    },
+                )
+            }
         }
         Task::none()
     }

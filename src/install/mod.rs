@@ -189,6 +189,27 @@ pub enum RegValue {
 
 /// Current install state.
 pub fn status() -> Status {
+    // Screenshot hook (debug builds only): SHORASHIM_FAKE_INSTALL=
+    // none | old | same — the Settings card as on Windows.
+    #[cfg(debug_assertions)]
+    if let Some(f) = crate::util::env_hook("FAKE_INSTALL") {
+        let dir = PathBuf::from(r"C:\Users\user\AppData\Local\Programs\Shorashim");
+        let installed = |v: &str| Installed {
+            exe: dir.join(EXE_NAME),
+            dir: dir.clone(),
+            version: v.into(),
+        };
+        return Status {
+            support: Support::Supported,
+            installed: match f.as_str() {
+                "old" => Some(installed("0.3.0")),
+                "same" => Some(installed(current_version())),
+                _ => None,
+            },
+            running_installed: false,
+            desktop_link: true,
+        };
+    }
     #[cfg(windows)]
     {
         win::status()

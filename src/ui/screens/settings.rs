@@ -300,9 +300,9 @@ impl Screen {
         column![
             widgets::page_header("Настройки", None),
             self.general_card(ctx, p),
+            self.install_card(p),
             self.goal_card(ctx, p),
             self.data_card(p),
-            self.install_card(p),
             self.calendar_card(p),
             self.about_card(ctx, p),
         ]
