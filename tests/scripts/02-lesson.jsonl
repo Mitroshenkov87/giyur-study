@@ -1,0 +1,8 @@
+# Read a lesson: texts are visible, «Отметить прочитанным» awards XP.
+{"cmd":"press","label":"Начать"}
+{"cmd":"press","contains":"Ортодоксальный"}
+{"cmd":"navigate","to":"section:osnovy"}
+{"cmd":"press","id":"Section(Go(Lesson(\"osnovy-1\")))","expect":{"screen":"lesson","text":"гиюр"}}
+{"cmd":"press","id":"Lesson(Reveal(\"osnovy-bd1\"))","expect":{"screen":"lesson"}}
+{"cmd":"press","id":"Lesson(MarkRead)","expect":{"min_xp":10}}
+{"cmd":"press","contains":"Следующий урок","expect":{"route":"lesson:osnovy-2"}}

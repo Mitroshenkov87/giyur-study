@@ -28,4 +28,6 @@ rustup target add x86_64-pc-windows-gnu
 cargo build --release --target x86_64-pc-windows-gnu
 ```
 
+**Автоматизация / Automation.** Управление командами для тестов и ботов: `shorashim --control`, `shorashim ctl …`, `shorashim mcp`, `shorashim --headless` — [`docs/AUTOMATION.md`](docs/AUTOMATION.md). / Command control for tests and agents (off by default, localhost only).
+
 Материалы требуют проверки раввином ([`docs/RABBI-REVIEW.md`](docs/RABBI-REVIEW.md)). / Content must be checked with your rabbi. Шрифты / Fonts: Noto (SIL OFL 1.1), DejaVu Sans (DejaVu Fonts license).

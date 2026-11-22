@@ -41,7 +41,7 @@ pub enum Route {
     Exam(Option<String>),
     /// Test runner for a prepared session (section, general, beit-din, retry).
     ExamRun(ExamSpec),
-    /// Timed quiz-show intro «Викторина».
+    /// «Викторина»: the «Маалот» ladder setup.
     Timed,
     /// Timed run; `retry_ids` = «Повторить ошибки (n)» from the results screen.
     TimedRun {

@@ -1,6 +1,5 @@
 //! Palette and widget styles: the dark «Библиотека» default (walnut, oxblood
-//! leather, brass, lamp-light), the light calf-hide «Кожа», and the
-//! timed-studio palette scoped to quiz-show screens (§T.3).
+//! leather, brass, lamp-light) and the light calf-hide «Кожа».
 //!
 //! Style functions take a [`Palette`]; the active palette is also mirrored in a
 //! process-global so view helpers that lack palette parameters (`widgets.rs`)
@@ -213,46 +212,6 @@ pub fn side_palette(p: Palette) -> Palette {
     }
 }
 
-/// The timed-studio palette scoped to quiz-show screens (§T.3).
-pub const TIMED: Palette = Palette {
-    bg0: rgb(0x05050f),
-    bg1: rgb(0x0a0a24),
-    surface: rgb(0x16184a),
-    surface2: rgb(0x1c1f55),
-    surface3: rgb(0x272b6a),
-    line: rgba(0xff, 0xff, 0xff, 0.07),
-    line2: rgba(0xf0, 0xcf, 0x6a, 0.22),
-    text: rgb(0xf4ecd4),
-    muted: rgb(0xb6aecb),
-    gold: rgb(0xd4af37),
-    gold2: rgb(0xf0cf6a),
-    gold_soft: rgba(0xd4, 0xaf, 0x37, 0.16),
-    on_gold: rgb(0x1d1402),
-    hebrew: rgb(0xf0cf6a),
-    ok: rgb(0x3fd17f),
-    ok_soft: rgba(0x3f, 0xd1, 0x7f, 0.16),
-    bad: rgb(0xff6a5c),
-    bad_soft: rgba(0xff, 0x6a, 0x5c, 0.16),
-    info: rgb(0x8fb1ea),
-    info_soft: rgba(0x8f, 0xb1, 0xea, 0.14),
-    violet: rgb(0xb9a3ec),
-    violet_soft: rgba(0xb9, 0xa3, 0xec, 0.14),
-    flame: rgb(0xf2a51f),
-    flame_soft: rgba(0xf2, 0xa5, 0x1f, 0.16),
-    input_bg: rgb(0x1c1f55),
-    texture: "bg-dark",
-    side_texture: "side-dark",
-    veil: hexa(0x05050f, 0.0),
-    side_veil: hexa(0x05050f, 0.0),
-    side_tint: hexa(0x000000, 0.0),
-    lamp: hexa(0xffbe6e, 0.0),
-    vignette: hexa(0x000000, 0.0),
-    brass_hi: rgb(0xf6dc86),
-    brass_mid: rgb(0xe6c36a),
-    brass_lo: rgb(0xd4af37),
-    brass_edge: rgb(0xa8821c),
-};
-
 // ---------------------------------------------------------------------------
 // Theme kinds and the active palette
 // ---------------------------------------------------------------------------
@@ -293,16 +252,33 @@ impl ThemeKind {
     }
 }
 
-static CURRENT: RwLock<Option<Palette>> = RwLock::new(None);
+static CURRENT: RwLock<Option<(Palette, ThemeKind)>> = RwLock::new(None);
 
 /// Sets the process-global active palette (call on theme switch).
 pub fn set_current(kind: ThemeKind) {
-    *CURRENT.write().expect("theme lock") = Some(kind.palette());
+    *CURRENT.write().expect("theme lock") = Some((kind.palette(), kind));
+}
+
+/// The active theme kind; [`ThemeKind::Dark`] before [`set_current`].
+pub fn current_kind() -> ThemeKind {
+    CURRENT
+        .read()
+        .expect("theme lock")
+        .map_or(ThemeKind::Dark, |(_, k)| k)
+}
+
+/// Suffix of the theme's rendered art variants (`assets/img/icons/*-wood.webp`
+/// for the dark wood library, `*-leather.webp` for «Кожа»).
+pub fn art_variant() -> &'static str {
+    match current_kind() {
+        ThemeKind::Dark => "wood",
+        ThemeKind::Leather => "leather",
+    }
 }
 
 /// The active palette; defaults to [`DARK`] before [`set_current`] is called.
 pub fn current() -> Palette {
-    CURRENT.read().expect("theme lock").unwrap_or(DARK)
+    CURRENT.read().expect("theme lock").map_or(DARK, |(p, _)| p)
 }
 
 // ---------------------------------------------------------------------------
@@ -354,8 +330,6 @@ pub mod radius {
     pub const EMBLEM_LG: f32 = 22.0;
     /// Welcome hero.
     pub const HERO: f32 = 24.0;
-    /// Timed quiz-show container.
-    pub const TIMED: f32 = 26.0;
 }
 
 /// Control heights: every fixed-height control uses one of these.
@@ -374,6 +348,10 @@ pub mod size {
     pub const NAV: f32 = 40.0;
     /// Sidebar items with a subtitle line (label + grey description).
     pub const NAV_ITEM: f32 = 50.0;
+    /// Rendered 3D icon in a sidebar item.
+    pub const NAV_ICON: f32 = 34.0;
+    /// The same icon under the mouse (also the icon's fixed box).
+    pub const NAV_ICON_HOVER: f32 = 40.0;
 }
 
 /// Spacing / layout constants.
@@ -740,32 +718,6 @@ pub fn button_danger(p: &Palette, status: button::Status) -> button::Style {
     }
 }
 
-/// Timed «Начать игру» gold button (§T.3 `tq-go`); min-width applied by caller.
-pub fn button_tq_go(p: &Palette, status: button::Status) -> button::Style {
-    let style = button::Style {
-        border: Border {
-            radius: radius::BUTTON.into(),
-            ..Border::default()
-        },
-        ..button_style(Some(v_gradient(rgb(0xf6dc86), p.gold)), p.on_gold)
-    };
-    match status {
-        button::Status::Hovered => button::Style {
-            background: Some(v_gradient(rgb(0xf9e6a8), rgb(0xe6c36a))),
-            ..style
-        },
-        button::Status::Pressed => button::Style {
-            background: Some(v_gradient(rgb(0xd4af37), rgb(0xa8821c))),
-            ..style
-        },
-        button::Status::Disabled => button::Style {
-            text_color: alpha(p.on_gold, 0.5),
-            ..style
-        },
-        button::Status::Active => style,
-    }
-}
-
 // ---------------------------------------------------------------------------
 // Quiz option buttons
 // ---------------------------------------------------------------------------
@@ -890,18 +842,6 @@ pub fn hero(p: &Palette) -> container::Style {
             radius: radius::HERO.into(),
         },
         ..container_style(p, Some(v_gradient(p.bg1, p.bg0)))
-    }
-}
-
-/// Timed quiz-show studio container (§T.3; radial gradient approximated).
-pub fn tq_container(p: &Palette) -> container::Style {
-    container::Style {
-        border: Border {
-            color: alpha(p.gold, 0.28),
-            width: 1.0,
-            radius: radius::TIMED.into(),
-        },
-        ..container_style(p, Some(v_gradient(rgb(0x1a1650), rgb(0x0a0a24))))
     }
 }
 

@@ -31,7 +31,7 @@ fn init() -> (Gallery, Task<Message>) {
     let load_fonts = Task::batch(fonts::all().into_iter().map(iced::font::load)).discard();
     let tokens = format!(
         "Радиусы (px): карточка {}, малый {}, кнопка {}, пилюля ∞, сегмент {}, модал {}, \
-         переворот {}, эмблема {} (большая {}), hero {}, таймер {}.\n\
+         переворот {}, эмблема {} (большая {}), hero {}.\n\
          Отступы: карточка {:.1}, ряд {:.1}, контент {:.0} px. \
          Минимальные высоты: кнопка {}, кнопка lg {}, чип {}, ввод {}, ссылка назад 40.\n\
          Изображений встроено: {}.",
@@ -44,7 +44,6 @@ fn init() -> (Gallery, Task<Message>) {
         theme::radius::EMBLEM,
         theme::radius::EMBLEM_LG,
         theme::radius::HERO,
-        theme::radius::TIMED,
         theme::spacing::CARD_PAD,
         theme::spacing::ROW,
         theme::spacing::CONTENT_MAX,
@@ -269,7 +268,6 @@ fn view(state: &Gallery) -> Element<'_, Message> {
                 styled_button("Вторичная", theme::button_secondary),
                 styled_button("Назад", theme::button_ghost),
                 styled_button("Сбросить прогресс", theme::button_danger),
-                styled_button("Начать игру", theme::button_tq_go),
             ]
             .spacing(10)
             .wrap(),
@@ -332,19 +330,6 @@ fn view(state: &Gallery) -> Element<'_, Message> {
         .wrap(),
     );
 
-    let timed = container(
-        column![
-            widgets::heading("Экзамен", 2),
-            widgets::rich_paragraph(
-                "Вопрос, четыре варианта и таймер — как в телевикторине. Звуковые сигналы отключены.",
-            ),
-            styled_button("Начать игру", theme::button_tq_go),
-        ]
-        .spacing(12),
-    )
-    .padding(24)
-    .style(|_| theme::tq_container(&theme::TIMED));
-
     let tokens = section(
         "Дизайн-токены (§T.5)",
         column![
@@ -360,7 +345,6 @@ fn view(state: &Gallery) -> Element<'_, Message> {
                 radius_sample(theme::radius::EMBLEM, "emb 16"),
                 radius_sample(theme::radius::EMBLEM_LG, "emb-lg 22"),
                 radius_sample(theme::radius::HERO, "hero 24"),
-                radius_sample(theme::radius::TIMED, "timed 26"),
             ]
             .spacing(10)
             .wrap(),
@@ -380,7 +364,6 @@ fn view(state: &Gallery) -> Element<'_, Message> {
         input,
         stats,
         images,
-        timed,
         tokens,
     ]
     .spacing(20)

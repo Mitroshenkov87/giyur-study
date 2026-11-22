@@ -17,8 +17,16 @@ path = "src/lib.rs"
 name = "shorashim"
 path = "src/main.rs"
 
+# Console companion for automation on Windows (the main exe is a GUI program,
+# so shells don't wait for it). See docs/AUTOMATION.md.
+[[bin]]
+name = "shorashim-ctl"
+path = "src/bin/shorashim-ctl.rs"
+
 [dependencies]
 iced = { version = "0.14", features = ["image", "tiny-skia", "wgpu", "tokio", "canvas", "advanced"] }
+# Headless widget tree for the automation probe (same version as iced).
+iced_runtime = "0.14"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 image = { version = "0.25", default-features = false, features = ["webp"] }

@@ -1,0 +1,10 @@
+# Flashcards of a lesson: help card, flip, grade.
+{"cmd":"press","label":"Начать"}
+{"cmd":"press","contains":"Ортодоксальный"}
+{"cmd":"navigate","to":"cards:osnovy-1","expect":{"screen":"cards","control":"Понятно, начнём"}}
+{"cmd":"press","label":"Понятно, начнём","expect":{"control":"Cards(Flip)"}}
+{"cmd":"press","id":"Cards(Flip)","expect":{"control":"Cards(Grade(true))"}}
+{"cmd":"press","label":"Вспомнил","expect":{"min_xp":1}}
+{"cmd":"answer","knew":false}
+{"cmd":"answer","knew":true}
+{"cmd":"answer","auto":true,"expect":{"screen":"cards"}}

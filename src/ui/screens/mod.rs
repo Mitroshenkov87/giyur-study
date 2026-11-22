@@ -130,6 +130,13 @@ impl Current {
         }
     }
 
+    /// Called before the screen is replaced by another route.
+    pub fn leave(&mut self, ctx: &mut Ctx) {
+        if let Current::Timed(s) = self {
+            s.leave(ctx);
+        }
+    }
+
     /// Screens where the sidebar is hidden (first-run welcome / level choice).
     pub fn bare(&self, ctx: &Ctx) -> bool {
         match self {
