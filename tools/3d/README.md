@@ -29,6 +29,14 @@ the south side) is added with UVs taken from the courtyard wall texture. Result:
 same 2048 px maps. In the app the Temple is dimmed slightly (exposure −28%) on the dark themes only,
 via a per-model uniform (`Model::dark_dim`); other models are unchanged.
 
+Five more object models were added the same way (`200000 2048 2048`): `magen-david`,
+`hanukkiah` (nine cups: eight lights plus the shamash), `seder-plate`, `lulav-etrog`
+and `megillat-esther`. The seder plate is a single fused mesh (~2M triangles before
+decimation, 560 loose islands). A napkin under the matzot is part of the mesh and
+is not a separate object, so it was left in; the caption does not describe the
+arrangement as exact. The still of the plate uses pitch 0.55 so the wells and the
+foods are visible (the app start view matches).
+
 Runtime: `src/ui/model3d` (GLB reader, wgpu shader widget). Debug hooks: `SHORASHIM_3D_STATS=1` (fps and 3D-pass
 time to stderr), `SHORASHIM_3D_YAW=<rad>` (fixed angle, no idle spin), `SHORASHIM_3D_MSAA=1` (no MSAA),
 `SHORASHIM_3D_SIZE=<px>` (fixed model size on all cards; by default 190–280 px, scaled with the reading column).

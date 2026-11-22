@@ -62,6 +62,11 @@ pub enum Model {
     TorahScroll,
     Shofar,
     Temple,
+    MagenDavid,
+    Hanukkiah,
+    SederPlate,
+    LulavEtrog,
+    MegillatEsther,
 }
 
 /// Card texts and view limits of one model.
@@ -81,13 +86,18 @@ pub struct Info {
 }
 
 /// Bit per model for the per-model GPU-ready flags.
-pub(crate) const ALL: [Model; 6] = [
+pub(crate) const ALL: [Model; 11] = [
     Model::KiddushCup,
     Model::ShabbatCandles,
     Model::Menorah,
     Model::TorahScroll,
     Model::Shofar,
     Model::Temple,
+    Model::MagenDavid,
+    Model::Hanukkiah,
+    Model::SederPlate,
+    Model::LulavEtrog,
+    Model::MegillatEsther,
 ];
 
 enum Load {
@@ -104,13 +114,18 @@ fn slots() -> &'static std::sync::Mutex<HashMap<Model, Load>> {
 
 impl Model {
     /// Objects that rotate as «Предмет дня» on «Уроки», one per day.
-    pub const OF_THE_DAY: [Model; 6] = [
+    pub const OF_THE_DAY: [Model; 11] = [
         Model::KiddushCup,
         Model::Menorah,
         Model::ShabbatCandles,
         Model::Shofar,
         Model::TorahScroll,
         Model::Temple,
+        Model::MagenDavid,
+        Model::Hanukkiah,
+        Model::SederPlate,
+        Model::LulavEtrog,
+        Model::MegillatEsther,
     ];
 
     pub fn of_the_day(day: chrono::NaiveDate) -> Model {
@@ -124,9 +139,17 @@ impl Model {
     /// Models shown on a section page, in order.
     pub fn for_section(id: &str) -> &'static [Model] {
         match id {
-            "osnovy" => &[Model::TorahScroll, Model::Temple],
+            "osnovy" => &[Model::TorahScroll, Model::Temple, Model::MagenDavid],
             "shabbat" => &[Model::ShabbatCandles, Model::KiddushCup],
-            "prazdniki" => &[Model::Shofar, Model::Menorah, Model::Temple],
+            "prazdniki" => &[
+                Model::Shofar,
+                Model::LulavEtrog,
+                Model::Menorah,
+                Model::Hanukkiah,
+                Model::MegillatEsther,
+                Model::SederPlate,
+                Model::Temple,
+            ],
             _ => &[],
         }
     }
@@ -143,6 +166,11 @@ impl Model {
             Model::TorahScroll => asset!("torah-scroll.glb"),
             Model::Shofar => asset!("shofar.glb"),
             Model::Temple => asset!("temple-complex.glb"),
+            Model::MagenDavid => asset!("magen-david.glb"),
+            Model::Hanukkiah => asset!("hanukkiah.glb"),
+            Model::SederPlate => asset!("seder-plate.glb"),
+            Model::LulavEtrog => asset!("lulav-etrog.glb"),
+            Model::MegillatEsther => asset!("megillat-esther.glb"),
         }
     }
 
@@ -154,6 +182,11 @@ impl Model {
             Model::TorahScroll => asset!("torah-scroll.webp"),
             Model::Shofar => asset!("shofar.webp"),
             Model::Temple => asset!("temple-complex.webp"),
+            Model::MagenDavid => asset!("magen-david.webp"),
+            Model::Hanukkiah => asset!("hanukkiah.webp"),
+            Model::SederPlate => asset!("seder-plate.webp"),
+            Model::LulavEtrog => asset!("lulav-etrog.webp"),
+            Model::MegillatEsther => asset!("megillat-esther.webp"),
         }
     }
 
@@ -213,6 +246,51 @@ impl Model {
                 section_title: "Основы",
                 zoom_max: 2.0,
             },
+            Model::MagenDavid => Info {
+                kicker: "Основы",
+                title: "Маген Давид",
+                lead: "Маген Давид — шестиконечная звезда, общепринятый знак еврейского народа.",
+                caption: "Как общепринятый еврейский знак звезда закрепилась сравнительно недавно, в Новое время; сегодня её изображение стоит на флаге Государства Израиль. Это не заповедь Торы и не ритуальный предмет: у этого знака нет источника в Торе или в храмовой службе. «Маген Давид» — устоявшееся имя знака; достоверных сведений о том, что это был личный щит царя Давида, нет.",
+                section: "osnovy",
+                section_title: "Основы",
+                zoom_max: 2.0,
+            },
+            Model::Hanukkiah => Info {
+                kicker: "Праздники · Ханука",
+                title: "Ханукия",
+                lead: "Ханукия — светильник Хануки: восемь огней и шамаш, которым их зажигают.",
+                caption: "У ханукии восемь светильников и ещё шамаш — служебный огонь, которым зажигают остальные. Это не семисвечная менора Храма. Принято каждый вечер добавлять по одному огню: в первый вечер зажигают один, в восьмой — все восемь.",
+                section: "prazdniki",
+                section_title: "Праздники",
+                zoom_max: 2.0,
+            },
+            Model::SederPlate => Info {
+                kicker: "Праздники · Песах",
+                title: "Пасхальное блюдо",
+                lead: "Кеара — специальное блюдо для седера, трапезы Песаха, на которое кладут символы праздника.",
+                caption: "На кеару кладут зроа — запечённую кость, бейца — яйцо, марор — горькие травы, харосет — смесь фруктов, орехов и вина, и карпас — овощ, который обмакивают в солёную воду; часто добавляют ещё хазерет. К седеру также берут три мацы. Каждый предмет напоминает об Исходе из Египта. Расположение предметов в разных общинах бывает разным, поэтому на модели оно условное.",
+                section: "prazdniki",
+                section_title: "Праздники",
+                zoom_max: 2.0,
+            },
+            Model::LulavEtrog => Info {
+                kicker: "Праздники · Суккот",
+                title: "Лулав и этрог",
+                lead: "Четыре вида растений — арбаат ха-миним — берут в руки в праздник Суккот: лулав, хадас, арава и этрог.",
+                caption: "В четыре вида входят лулав — нераскрывшаяся пальмовая ветвь, хадас — ветви мирта, арава — ветви ивы и этрог — плод цитрона. Лулав, хадас и арава обычно связывают в один пучок, а этрог держат отдельно. Все четыре вида берут вместе и потрясают в Суккот.",
+                section: "prazdniki",
+                section_title: "Праздники",
+                zoom_max: 2.0,
+            },
+            Model::MegillatEsther => Info {
+                kicker: "Праздники · Пурим",
+                title: "Мегилат Эстер",
+                lead: "Мегилат Эстер — свиток с историей Пурима, одна из книг Танаха; его читают в праздник вечером и утром.",
+                caption: "Книга Эстер рассказывает, как Эстер и Мордехай спасли евреев от Амана. В Пурим свиток читают дважды: вечером и на следующее утро. Буквы на этой модели условные — это не настоящий текст.",
+                section: "prazdniki",
+                section_title: "Праздники",
+                zoom_max: 1.15,
+            },
         }
     }
 
@@ -238,6 +316,8 @@ impl Model {
     fn view0(self) -> (f32, f32) {
         match self {
             Model::Temple => (YAW0, 0.62),
+            // The plate is flat: a slightly higher view shows the wells and the foods.
+            Model::SederPlate => (YAW0, 0.55),
             _ => (YAW0, PITCH0),
         }
     }
@@ -921,7 +1001,8 @@ impl shader::Pipeline for Pipeline {
         let live = std::mem::take(&mut self.live);
         self.targets.retain(|m, _| live.contains(m));
         // Uploaded models stay cached for the whole run (the target PCs
-        // have 16 GB+ RAM; five models take a few hundred MB at most).
+        // have 16 GB+ RAM; eleven models, and up to seven on «Праздники»,
+        // still fit in a few hundred MB on a real GPU).
     }
 }
 
