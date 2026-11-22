@@ -58,6 +58,17 @@ the short thick rear ring was removed (a tiny nub remains on the back-right),
 and a shallow handle-like recess on one side of the titura was left. The
 letter shin and the straps are not on the model. v1 and v2 were not placed.
 
+`kotel` and `chuppah` were added the same way (`199999 2048 2048`). The Kotel
+is a short fragment of ashlar with plants in the joints and a paved stand;
+the side already reads as solid stone blocks about one course deep, so the
+slab was not thickened. The back is also stone with plants; there are no
+kvitlach in the cracks. The chuppah is a tallit-like cloth on four wooden
+poles with a small table and a cup; the cloth is thin and the fringes are
+uneven, and the back hem is a little asymmetric. The chuppah still uses
+pitch 0.40 so the table under the cloth is visible (the app start view
+matches).
+
+
 Runtime: `src/ui/model3d` (GLB reader, wgpu shader widget). Debug hooks: `SHORASHIM_3D_STATS=1` (fps and 3D-pass
 time to stderr), `SHORASHIM_3D_YAW=<rad>` (fixed angle, no idle spin), `SHORASHIM_3D_MSAA=1` (no MSAA),
 `SHORASHIM_3D_SIZE=<px>` (fixed model size on all cards; by default 190–280 px, scaled with the reading column).

@@ -72,6 +72,8 @@ pub enum Model {
     Mezuzah,
     Siddur,
     Tefillin,
+    Kotel,
+    Chuppah,
 }
 
 /// Card texts and view limits of one model.
@@ -91,7 +93,7 @@ pub struct Info {
 }
 
 /// Bit per model for the per-model GPU-ready flags.
-pub(crate) const ALL: [Model; 16] = [
+pub(crate) const ALL: [Model; 18] = [
     Model::KiddushCup,
     Model::ShabbatCandles,
     Model::Menorah,
@@ -108,6 +110,8 @@ pub(crate) const ALL: [Model; 16] = [
     Model::Mezuzah,
     Model::Siddur,
     Model::Tefillin,
+    Model::Kotel,
+    Model::Chuppah,
 ];
 
 enum Load {
@@ -124,7 +128,7 @@ fn slots() -> &'static std::sync::Mutex<HashMap<Model, Load>> {
 
 impl Model {
     /// Objects that rotate as «Предмет дня» on «Уроки», one per day.
-    pub const OF_THE_DAY: [Model; 16] = [
+    pub const OF_THE_DAY: [Model; 18] = [
         Model::KiddushCup,
         Model::Menorah,
         Model::ShabbatCandles,
@@ -141,6 +145,8 @@ impl Model {
         Model::Mezuzah,
         Model::Siddur,
         Model::Tefillin,
+        Model::Kotel,
+        Model::Chuppah,
     ];
 
     pub fn of_the_day(day: chrono::NaiveDate) -> Model {
@@ -171,7 +177,9 @@ impl Model {
                 Model::MegillatEsther,
                 Model::SederPlate,
                 Model::Temple,
+                Model::Kotel,
             ],
+            "semya" => &[Model::Chuppah],
             _ => &[],
         }
     }
@@ -198,6 +206,8 @@ impl Model {
             Model::Mezuzah => asset!("mezuzah.glb"),
             Model::Siddur => asset!("siddur.glb"),
             Model::Tefillin => asset!("tefillin.glb"),
+            Model::Kotel => asset!("kotel.glb"),
+            Model::Chuppah => asset!("chuppah.glb"),
         }
     }
 
@@ -219,6 +229,8 @@ impl Model {
             Model::Mezuzah => asset!("mezuzah.webp"),
             Model::Siddur => asset!("siddur.webp"),
             Model::Tefillin => asset!("tefillin.webp"),
+            Model::Kotel => asset!("kotel.webp"),
+            Model::Chuppah => asset!("chuppah.webp"),
         }
     }
 
@@ -368,6 +380,24 @@ impl Model {
                 section_title: "Иврит и молитва",
                 zoom_max: 2.0,
             },
+            Model::Kotel => Info {
+                kicker: "Праздники · Тиша бе-Ав",
+                title: "Котель",
+                lead: "Котель ха-Маарави — Западная стена Храмовой горы, место молитвы у сохранившейся стены Второго Храма.",
+                caption: "Это подпорная стена Храмовой горы со времён Второго Храма; после разрушения Храма в 70 году (3830 год по еврейскому счёту) она стала главным местом молитвы у горы. В щели стены принято класть записки с просьбами. Разрушение Храма вспоминают в пост Тиша бе-Ав. На этой модели — небольшой фрагмент кладки с растениями в швах; это художественное приближение, а не точный вид стены, и записок на модели нет.",
+                section: "prazdniki",
+                section_title: "Праздники",
+                zoom_max: 2.0,
+            },
+            Model::Chuppah => Info {
+                kicker: "Жизненный цикл и семья",
+                title: "Хупа",
+                lead: "Хупа — свадебный балдахин, под которым проходит церемония еврейского брака.",
+                caption: "Под хупой совершают кидушин и нисуин: благословения над вином, кольцо, кетуба. Часто полотно хупы — талит или белая ткань на четырёх шестах; под ним стоят жених и невеста. На этой модели — условная хупа (ткань с синими полосами, деревянные шесты, столик с бокалом); ткань тонкая, кисти неровные, устройство не притязает на точный ритуальный вид.",
+                section: "semya",
+                section_title: "Жизненный цикл и семья",
+                zoom_max: 2.0,
+            },
         }
     }
 
@@ -399,6 +429,8 @@ impl Model {
             Model::Sukkah => (YAW0, 0.48),
             // Open pages and the star on the cover: a slightly higher view than a standing object.
             Model::Siddur => (YAW0, 0.40),
+            // The table and the hanging cloth are visible from a slightly higher view.
+            Model::Chuppah => (YAW0, 0.40),
             _ => (YAW0, PITCH0),
         }
     }
@@ -1082,7 +1114,7 @@ impl shader::Pipeline for Pipeline {
         let live = std::mem::take(&mut self.live);
         self.targets.retain(|m, _| live.contains(m));
         // Uploaded models stay cached for the whole run (the target PCs
-        // have 16 GB+ RAM; eleven models, and up to seven on «Праздники»,
+        // have 16 GB+ RAM; eighteen models, and up to eight on «Праздники»,
         // still fit in a few hundred MB on a real GPU).
     }
 }
