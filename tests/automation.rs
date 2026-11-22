@@ -61,6 +61,11 @@ fn settings() {
 }
 
 #[test]
+fn exam_setup_mode_tiles() {
+    run_script("08-exam-setup-modes.jsonl");
+}
+
+#[test]
 fn errors_are_replies_not_panics() {
     let mut s = session();
     for req in [

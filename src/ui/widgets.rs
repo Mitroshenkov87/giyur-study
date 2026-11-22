@@ -810,3 +810,61 @@ pub fn open_url(url: &str) {
     let (prog, args): (&str, [&str; 1]) = ("xdg-open", [url]);
     let _ = std::process::Command::new(prog).args(args).spawn();
 }
+
+/// A measure-only copy of `content`: it takes part in layout (so it gives
+/// its parent a size) but draws nothing, takes no input and is invisible to
+/// widget operations. Used as the base layer of a [`iced::widget::Stack`] to
+/// give a row of `Fill`-height tiles the height of their tallest content
+/// inside a scrollable, where a `Fill` cross axis would otherwise collapse
+/// to zero.
+pub fn ghost<'a, Message: 'a>(
+    content: impl Into<Element<'a, Message, Theme, Renderer>>,
+) -> Element<'a, Message, Theme, Renderer> {
+    Element::new(Ghost {
+        content: content.into(),
+    })
+}
+
+struct Ghost<'a, Message> {
+    content: Element<'a, Message, Theme, Renderer>,
+}
+
+impl<Message> iced::advanced::Widget<Message, Theme, Renderer> for Ghost<'_, Message> {
+    fn size(&self) -> iced::Size<Length> {
+        self.content.as_widget().size()
+    }
+    fn size_hint(&self) -> iced::Size<Length> {
+        self.content.as_widget().size_hint()
+    }
+    fn tag(&self) -> iced::advanced::widget::tree::Tag {
+        self.content.as_widget().tag()
+    }
+    fn state(&self) -> iced::advanced::widget::tree::State {
+        self.content.as_widget().state()
+    }
+    fn children(&self) -> Vec<iced::advanced::widget::Tree> {
+        self.content.as_widget().children()
+    }
+    fn diff(&self, tree: &mut iced::advanced::widget::Tree) {
+        self.content.as_widget().diff(tree);
+    }
+    fn layout(
+        &mut self,
+        tree: &mut iced::advanced::widget::Tree,
+        renderer: &Renderer,
+        limits: &iced::advanced::layout::Limits,
+    ) -> iced::advanced::layout::Node {
+        self.content.as_widget_mut().layout(tree, renderer, limits)
+    }
+    fn draw(
+        &self,
+        _tree: &iced::advanced::widget::Tree,
+        _renderer: &mut Renderer,
+        _theme: &Theme,
+        _style: &iced::advanced::renderer::Style,
+        _layout: iced::advanced::Layout<'_>,
+        _cursor: iced::mouse::Cursor,
+        _viewport: &Rectangle,
+    ) {
+    }
+}

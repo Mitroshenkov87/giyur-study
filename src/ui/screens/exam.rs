@@ -1056,13 +1056,12 @@ impl Screen {
                 "Открытые вопросы как на собеседовании; оцениваете себя сами.",
             ),
         ];
-        let mut cards = Row::new()
-            .spacing(12)
-            .width(Length::Fill)
-            .height(Length::Shrink);
-        for (mode, glyph, title, desc) in modes {
-            let selected = setup.mode == mode;
-            let content = column![
+        // Equal-height tiles inside the page scrollable: a `Fill` height
+        // collapses to zero there, so an invisible copy of the tiles at
+        // their natural height (the stack's base layer) sets the row height
+        // and the real tiles fill it.
+        let tile = move |glyph: &'a str, title: &'a str, desc: &'a str| {
+            column![
                 txt(glyph).size(26.0).font(SERIF_BOLD).color(p.gold2),
                 txt(title)
                     .font(SANS_BOLD)
@@ -1071,8 +1070,21 @@ impl Screen {
                 txt(desc).size(theme::text::SMALL).color(p.muted),
             ]
             .spacing(8)
-            .width(Length::Fill);
-            let b = button(content)
+            .width(Length::Fill)
+        };
+        let mut sizer = Row::new().spacing(12).width(Length::Fill);
+        let mut cards = Row::new()
+            .spacing(12)
+            .width(Length::Fill)
+            .height(Length::Fill);
+        for (mode, glyph, title, desc) in modes {
+            let selected = setup.mode == mode;
+            sizer = sizer.push(
+                container(tile(glyph, title, desc))
+                    .width(Length::FillPortion(1))
+                    .padding(16),
+            );
+            let b = button(tile(glyph, title, desc))
                 .width(Length::FillPortion(1))
                 .height(Length::Fill)
                 .padding(16)
@@ -1094,7 +1106,11 @@ impl Screen {
                 .on_press(Msg::Mode(mode));
             cards = cards.push(b);
         }
-        col = col.push(cards);
+        col = col.push(
+            iced::widget::stack![widgets::ghost(sizer), cards]
+                .width(Length::Fill)
+                .height(Length::Shrink),
+        );
 
         // Setup card.
         let mut card_col = Column::new().spacing(16).width(Length::Fill);
