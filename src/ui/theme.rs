@@ -151,7 +151,8 @@ pub const DARK: Palette = Palette {
 
 /// The light «Пергамент» palette: matte klaf (tan/ochre) with iron-gall ink.
 /// Kept at moderate luminance (cards ≈ 0.45 relative luminance, not paper
-/// white) so it does not glare on bright screens; body text stays ≥ 7:1.
+/// white) so it does not glare on bright screens. Body text is ≈ 8:1 on
+/// cards; `muted` is meant for cards, not for the bare window background.
 pub const PARCHMENT: Palette = Palette {
     bg0: rgb(0x9a835c),
     bg1: rgb(0xa89068),
@@ -161,7 +162,7 @@ pub const PARCHMENT: Palette = Palette {
     line: hexa(0x6b4712, 0.22),
     line2: hexa(0x6b4712, 0.40),
     text: rgb(0x2a1a0c),
-    muted: rgb(0x433020),
+    muted: rgb(0x3a2818),
     gold: rgb(0x6a4810),
     gold2: rgb(0x4a2e06),
     gold_soft: hexa(0x6a4810, 0.14),

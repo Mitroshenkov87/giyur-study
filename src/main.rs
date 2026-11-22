@@ -12,6 +12,7 @@ use shorashim::ui::theme::{self, ThemeKind};
 use shorashim::ui::{assets, fonts, layout, widgets};
 
 const MAIN_SCROLL: &str = "main-scroll";
+const ASIDE_SCROLL: &str = "aside-scroll";
 
 struct App {
     ctx: Ctx,
@@ -241,7 +242,8 @@ impl App {
         };
         let body = container(self.screen.view(&self.ctx).map(Message::Screen))
             .padding([28.0, layout::CONTENT_PAD])
-            .width(g.content);
+            .width(g.content)
+            .clip(true);
         // The scrollable spans everything right of the nav, so the wheel
         // works over the margins and the scrollbar sits at the window edge;
         // the aside is drawn on top, fixed, in the reserved space.
@@ -250,25 +252,34 @@ impl App {
             .id(MAIN_SCROLL)
             .width(Length::Fill)
             .height(Length::Fill);
-        let mut base = row![].height(Length::Fill);
-        if g.left > 0.0 {
-            base = base
-                .push(iced::widget::space().width(g.left - 1.0))
-                .push(hairline());
-        }
-        base = base.push(self.sidebar()).push(hairline()).push(scroll);
-        if !g.aside {
-            return base.into();
-        }
-        let aside = shorashim::ui::aside::panel(&self.ctx, Message::Nav(Route::Calendar));
-        stack![
-            base,
+        // Keep the widget tree the same shape at every width (iced matches
+        // widget state by position), so resizing across a breakpoint does
+        // not reset the scroll position or input focus.
+        let lead = if g.left > 0.0 { g.left - 1.0 } else { 0.0 };
+        let lead_line: Element<'_, Message> = if g.left > 0.0 {
+            hairline().into()
+        } else {
+            iced::widget::space().width(0).into()
+        };
+        let base = row![
+            iced::widget::space().width(lead),
+            lead_line,
+            self.sidebar(),
+            hairline(),
+            scroll,
+        ]
+        .height(Length::Fill);
+        let overlay: Element<'_, Message> = if g.aside {
+            let aside = shorashim::ui::aside::panel(&self.ctx, Message::Nav(Route::Calendar));
             row![
                 iced::widget::space().width(g.aside_x()),
-                container(aside).height(Length::Fill),
+                scrollable(aside).id(ASIDE_SCROLL).height(Length::Fill),
             ]
-        ]
-        .into()
+            .into()
+        } else {
+            iced::widget::space().into()
+        };
+        stack![base, overlay].into()
     }
 
     fn toasts(&self) -> Element<'_, Message> {

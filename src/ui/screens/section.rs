@@ -789,9 +789,13 @@ fn lesson_row<'a>(
         .align_x(iced::alignment::Horizontal::Center)
         .align_y(iced::alignment::Vertical::Center)
         .style(move |_| iced::widget::container::Style {
-            background: Some(Background::Color(if read { p.gold } else { p.surface3 })),
+            background: Some(Background::Color(if read {
+                p.brass_mid
+            } else {
+                p.surface3
+            })),
             border: Border {
-                color: if read { p.gold } else { p.line2 },
+                color: if read { p.brass_edge } else { p.line2 },
                 width: 1.0,
                 radius: theme::radius::PILL.into(),
             },
