@@ -87,10 +87,13 @@ pub enum Msg {
 
 impl Screen {
     pub fn new(_ctx: &mut Ctx, _route: &Route) -> Self {
+        let install = install::status();
+        // New install: desktop shortcut on; update: keep what is there.
+        let desktop_shortcut = install.installed.is_none() || install.desktop_link;
         Screen {
             confirm: None,
-            install: install::status(),
-            desktop_shortcut: true,
+            install,
+            desktop_shortcut,
         }
     }
 

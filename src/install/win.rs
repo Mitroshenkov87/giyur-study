@@ -85,6 +85,7 @@ pub fn status() -> Status {
         support: Support::Supported,
         installed,
         running_installed,
+        desktop_link: desktop_link().is_some_and(|l| l.exists()),
     }
 }
 
@@ -299,12 +300,16 @@ pub fn cli_uninstall(quiet: bool) {
     if quiet {
         return;
     }
+    report(res.map(|_| {
+        "«Шорашим» удалён. Прогресс сохранён — он вернётся, если установить программу снова."
+            .to_string()
+    }));
+}
+
+/// A native message box with the outcome of a CLI install / uninstall.
+pub fn report(res: Result<String, String>) {
     let (level, text) = match res {
-        Ok(_) => (
-            rfd::MessageLevel::Info,
-            "«Шорашим» удалён. Прогресс сохранён — он вернётся, если установить программу снова."
-                .to_string(),
-        ),
+        Ok(t) => (rfd::MessageLevel::Info, t),
         Err(e) => (rfd::MessageLevel::Error, e),
     };
     rfd::MessageDialog::new()

@@ -55,6 +55,8 @@ pub struct Status {
     pub installed: Option<Installed>,
     /// This process is the installed copy.
     pub running_installed: bool,
+    /// A desktop shortcut exists (kept as is on update by default).
+    pub desktop_link: bool,
 }
 
 /// What Settings offers for a [`Status`].
@@ -199,6 +201,7 @@ pub fn status() -> Status {
             ),
             installed: None,
             running_installed: false,
+            desktop_link: false,
         }
     }
 }
@@ -235,13 +238,31 @@ pub fn cleanup_after_update() {
     win::cleanup_after_update();
 }
 
-/// Handle `--uninstall [--quiet]` before the UI starts (Apps & features
-/// runs the UninstallString). Returns true when the flag was handled.
+/// Handle `--uninstall [--quiet]` (Apps & features runs the
+/// UninstallString) and `--install [--desktop] [--quiet]` (scripted
+/// install) before the UI starts. Returns true when a flag was handled.
 pub fn handle_cli(args: &[String]) -> bool {
-    if !args.iter().any(|a| a == "--uninstall") {
+    let has = |f: &str| args.iter().any(|a| a == f);
+    let quiet = has("--quiet");
+    if has("--install") {
+        let res = install(Options {
+            desktop_shortcut: has("--desktop"),
+        });
+        match &res {
+            Ok(p) => eprintln!("installed: {}", p.display()),
+            Err(e) => eprintln!("install failed: {e}"),
+        }
+        #[cfg(windows)]
+        if !quiet {
+            win::report(res.map(|_| {
+                "«Шорашим» установлен: ярлык в меню «Пуск», запись в «Приложениях».".to_string()
+            }));
+        }
+        return true;
+    }
+    if !has("--uninstall") {
         return false;
     }
-    let quiet = args.iter().any(|a| a == "--quiet");
     #[cfg(windows)]
     win::cli_uninstall(quiet);
     #[cfg(not(windows))]
@@ -296,6 +317,7 @@ mod tests {
             support: Support::Supported,
             installed: i,
             running_installed: running,
+            desktop_link: false,
         };
         assert_eq!(st(None, false).offer(), Offer::Install);
         assert_eq!(
@@ -317,6 +339,7 @@ mod tests {
             support: Support::Unsupported("x"),
             installed: None,
             running_installed: false,
+            desktop_link: false,
         };
         assert_eq!(un.offer(), Offer::Unsupported("x"));
     }
