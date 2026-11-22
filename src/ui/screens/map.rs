@@ -957,13 +957,15 @@ fn timed_cta<'a>(_p: theme::Palette) -> Element<'a, Msg> {
     .padding(18.0)
     .style(move |_, status| {
         let hovered = matches!(status, button::Status::Hovered | button::Status::Pressed);
+        // Oxblood leather with a brass edge: the same in both themes, so the
+        // banner reads as a bound volume on the library shelf.
         let top = if hovered {
-            Color::from_rgb8(0x45, 0x39, 0xa0)
+            Color::from_rgb8(0x5a, 0x22, 0x1c)
         } else {
-            Color::from_rgb8(0x3a, 0x2f, 0x8a)
+            Color::from_rgb8(0x4a, 0x1c, 0x17)
         };
         button::Style {
-            background: Some(v_gradient(top, Color::from_rgb8(0x08, 0x08, 0x1d))),
+            background: Some(v_gradient(top, Color::from_rgb8(0x1e, 0x0c, 0x0a))),
             text_color: tq.text,
             border: Border {
                 color: alpha(tq.gold, 0.55),
