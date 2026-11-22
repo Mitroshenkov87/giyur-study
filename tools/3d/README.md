@@ -14,4 +14,4 @@ camera the app uses:
 
 Runtime: `src/ui/model3d` (GLB reader, wgpu shader widget). Debug hooks: `SHORASHIM_3D_STATS=1` (fps and 3D-pass
 time to stderr), `SHORASHIM_3D_YAW=<rad>` (fixed angle, no idle spin), `SHORASHIM_3D_MSAA=1` (no MSAA),
-`SHORASHIM_3D_SIZE=<px>` (hero size on the lessons map).
+`SHORASHIM_3D_SIZE=<px>` (fixed model size on all cards; by default 190–280 px, scaled with the reading column).

@@ -45,6 +45,20 @@ impl Grid {
     }
 }
 
+/// Reading width of the content column in the current frame (logical px,
+/// without padding). Set by the main grid before screens build their view,
+/// so widgets that scale with the window (the 3D object cards) can read it.
+static READING_WIDTH: std::sync::atomic::AtomicU32 =
+    std::sync::atomic::AtomicU32::new(CONTENT.to_bits());
+
+pub fn set_reading_width(w: f32) {
+    READING_WIDTH.store(w.max(0.0).to_bits(), std::sync::atomic::Ordering::Relaxed);
+}
+
+pub fn reading_width() -> f32 {
+    f32::from_bits(READING_WIDTH.load(std::sync::atomic::Ordering::Relaxed))
+}
+
 /// Full content column width (reading width plus padding).
 pub const fn content_col() -> f32 {
     CONTENT + 2.0 * CONTENT_PAD
