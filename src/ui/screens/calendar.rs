@@ -422,14 +422,18 @@ impl Screen {
         )
         .on_press(Msg::GeoNotNow);
 
-        let allow = button(txt("Разрешить").size(theme::text::SMALL + 0.5))
-            .padding([10.0, 18.0])
-            .style(move |_, s| theme::button_primary(&palette(), s))
-            .on_press(Msg::GeoAllow);
-        let not_now = button(txt("Не сейчас").size(theme::text::SMALL + 0.5))
-            .padding([10.0, 18.0])
-            .style(move |_, s| theme::button_ghost(&palette(), s))
-            .on_press(Msg::GeoNotNow);
+        let allow = widgets::btn(
+            "Разрешить",
+            widgets::Btn::Primary,
+            widgets::BtnSize::Md,
+            Some(Msg::GeoAllow),
+        );
+        let not_now = widgets::btn(
+            "Не сейчас",
+            widgets::Btn::Ghost,
+            widgets::BtnSize::Md,
+            Some(Msg::GeoNotNow),
+        );
 
         let modal = container(
             column![
@@ -602,8 +606,8 @@ impl Screen {
 
         let mut chips = Row::new().spacing(8);
         for ev in &info.events {
-            let (accent, soft) = kind_tint(&p, ev.kind);
-            chips = chips.push(event_chip(ev.title.clone(), accent, soft));
+            let (accent, _) = kind_tint(&p, ev.kind);
+            chips = chips.push(event_chip(ev.title.clone(), accent));
         }
         col = col.push(chips.wrap());
 
@@ -1191,12 +1195,12 @@ impl Screen {
                 );
             }
         }
-        col = col.push(
-            button(txt("Открыть день").size(theme::text::SMALL + 0.5))
-                .padding([10.0, 18.0])
-                .style(move |_, s| theme::button_primary(&palette(), s))
-                .on_press(Msg::OpenDay(date)),
-        );
+        col = col.push(widgets::btn(
+            "Открыть день",
+            widgets::Btn::Primary,
+            widgets::BtnSize::Md,
+            Some(Msg::OpenDay(date)),
+        ));
         widgets::card(col)
     }
 
@@ -1327,13 +1331,13 @@ impl Screen {
         );
         for (i, c) in self.city_results.iter().enumerate() {
             col = col.push(
-                button(
-                    txt(format!("{}, {}", c.name_ru, c.country_ru)).size(theme::text::SMALL + 0.5),
+                widgets::btn(
+                    format!("{}, {}", c.name_ru, c.country_ru),
+                    widgets::Btn::Secondary,
+                    widgets::BtnSize::Sm,
+                    Some(Msg::PickCity(i)),
                 )
-                .padding([9.0, 14.0])
-                .width(Length::Fill)
-                .style(move |_, s| theme::button_secondary(&palette(), s))
-                .on_press(Msg::PickCity(i)),
+                .width(Length::Fill),
             );
         }
 
@@ -1493,25 +1497,9 @@ fn dot<'a>(color: Color, size: f32) -> Element<'a, Msg> {
         .into()
 }
 
-/// Event chip: soft tint pill with the kind's accent colour.
-fn event_chip<'a>(title: impl IntoFragment<'a>, accent: Color, soft: Color) -> Element<'a, Msg> {
-    container(
-        txt(title)
-            .size(theme::text::SMALL + 0.5)
-            .font(SANS_BOLD)
-            .color(accent),
-    )
-    .padding([6.0, 12.0])
-    .style(move |_| container::Style {
-        background: Some(Background::Color(soft)),
-        border: Border {
-            color: accent,
-            width: 1.0,
-            radius: theme::radius::PILL.into(),
-        },
-        ..plain_container(None)
-    })
-    .into()
+/// Event chip: the shared tinted pill in the kind's accent colour.
+fn event_chip<'a>(title: impl IntoFragment<'a>, accent: Color) -> Element<'a, Msg> {
+    widgets::pill(title, widgets::Pill::Tint(accent))
 }
 
 /// Soft banner (fast warning, note).
@@ -1556,52 +1544,52 @@ fn lesson_link<'a>(ctx: &'a Ctx, id: &'a str) -> Option<Element<'a, Msg>> {
     let (lesson, _) = ctx.lib.lesson(id)?;
     let title = lesson.title.as_deref().unwrap_or(id);
     Some(
-        button(txt(format!("{title} →")).size(theme::text::SMALL + 0.5))
-            .padding([9.0, 14.0])
-            .style(move |_, s| theme::button_secondary(&palette(), s))
-            .on_press(Msg::Lesson(id.to_string()))
-            .into(),
+        widgets::btn(
+            format!("{title} →"),
+            widgets::Btn::Secondary,
+            widgets::BtnSize::Sm,
+            Some(Msg::Lesson(id.to_string())),
+        )
+        .into(),
     )
 }
 
 fn nav_arrow<'a>(label: &'static str, msg: Msg) -> Element<'a, Msg> {
-    button(txt(label).size(20.0))
-        .padding([8.0, 16.0])
-        .style(move |_, s| theme::button_secondary(&palette(), s))
-        .on_press(msg)
-        .into()
+    widgets::btn(
+        label,
+        widgets::Btn::Secondary,
+        widgets::BtnSize::Sm,
+        Some(msg),
+    )
+    .into()
 }
 
 fn btn_primary<'a>(label: &'static str, msg: Msg) -> Element<'a, Msg> {
-    button(txt(label).size(theme::text::SMALL + 0.5))
-        .padding([10.0, 18.0])
-        .style(move |_, s| theme::button_primary(&palette(), s))
-        .on_press(msg)
-        .into()
+    widgets::btn(
+        label,
+        widgets::Btn::Primary,
+        widgets::BtnSize::Md,
+        Some(msg),
+    )
+    .into()
 }
 
 fn btn_secondary<'a>(label: &'static str, msg: Msg) -> Element<'a, Msg> {
-    button(txt(label).size(theme::text::SMALL + 0.5))
-        .padding([10.0, 18.0])
-        .style(move |_, s| theme::button_secondary(&palette(), s))
-        .on_press(msg)
-        .into()
+    widgets::btn(
+        label,
+        widgets::Btn::Secondary,
+        widgets::BtnSize::Md,
+        Some(msg),
+    )
+    .into()
 }
 
 fn btn_ghost<'a>(label: &'static str, msg: Msg) -> Element<'a, Msg> {
-    button(txt(label).size(theme::text::SMALL + 0.5))
-        .padding([10.0, 18.0])
-        .style(move |_, s| theme::button_ghost(&palette(), s))
-        .on_press(msg)
-        .into()
+    widgets::btn(label, widgets::Btn::Ghost, widgets::BtnSize::Md, Some(msg)).into()
 }
 
 fn btn_danger<'a>(label: &'static str, msg: Msg) -> Element<'a, Msg> {
-    button(txt(label).size(theme::text::SMALL + 0.5))
-        .padding([10.0, 18.0])
-        .style(move |_, s| theme::button_danger(&palette(), s))
-        .on_press(msg)
-        .into()
+    widgets::btn(label, widgets::Btn::Danger, widgets::BtnSize::Md, Some(msg)).into()
 }
 
 /// A row of segmented buttons (selected = gold-soft, gold2 text, gold border).
@@ -1614,41 +1602,7 @@ fn seg_row<'a>(items: &[(&'static str, bool, Msg)]) -> Element<'a, Msg> {
 }
 
 fn seg_button<'a>(label: impl IntoFragment<'a>, selected: bool, msg: Msg) -> Element<'a, Msg> {
-    button(
-        txt(label)
-            .size(theme::text::SMALL + 0.5)
-            .font(if selected { SANS_BOLD } else { SANS })
-            .align_x(Horizontal::Center),
-    )
-    .padding([9.0, 14.0])
-    .style(move |_, status| seg_style(&palette(), selected, status))
-    .on_press(msg)
-    .into()
-}
-
-fn seg_style(p: &Palette, selected: bool, status: button::Status) -> button::Style {
-    let base = button::Style {
-        background: Some(Background::Color(if selected {
-            p.gold_soft
-        } else {
-            p.surface2
-        })),
-        text_color: if selected { p.gold2 } else { p.text },
-        border: Border {
-            color: if selected { p.gold } else { p.line2 },
-            width: 1.0,
-            radius: theme::radius::SEGMENT.into(),
-        },
-        shadow: Shadow::default(),
-        snap: true,
-    };
-    match status {
-        button::Status::Hovered | button::Status::Pressed if !selected => button::Style {
-            background: Some(Background::Color(p.surface3)),
-            ..base
-        },
-        _ => base,
-    }
+    widgets::choice(label, selected, false, msg)
 }
 
 /// Month grid cell style: today outlined in gold, the selected day gold-soft,

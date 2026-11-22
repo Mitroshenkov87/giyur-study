@@ -436,7 +436,12 @@ impl Screen {
                 txt("Израиль или диаспора, местоположение для времени свечей и постов")
                     .size(theme::text::SMALL)
                     .color(p.muted),
-                secondary_button("Настройки календаря", Msg::GoCalendar),
+                widgets::btn(
+                    "Настройки календаря",
+                    widgets::Btn::Secondary,
+                    widgets::BtnSize::Sm,
+                    Some(Msg::GoCalendar),
+                ),
             ]
             .spacing(12),
         )
