@@ -12,7 +12,7 @@ import numpy as np
 from PIL import Image
 
 SRC = "assets/textures/{}.webp"
-QUALITY = 86
+QUALITY = 90
 OUT = "assets/img/{}.webp"
 # 4K: window backgrounds are 3840x2160 (16:9); sidebars 480x2160, the
 # 230-px nav at 200 % scale on a 2160-px-high screen. Both are drawn with
