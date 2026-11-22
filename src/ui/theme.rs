@@ -567,7 +567,8 @@ pub fn button_nav(p: &Palette, status: button::Status) -> button::Style {
     let style = button_style(None, p.text);
     match status {
         button::Status::Hovered | button::Status::Pressed => button::Style {
-            background: Some(Background::Color(alpha(p.gold, 0.08))),
+            background: Some(Background::Color(alpha(p.gold, 0.06))),
+            text_color: p.gold2,
             border: Border {
                 radius: radius::BUTTON.into(),
                 ..Border::default()
@@ -585,14 +586,18 @@ pub fn pick_list(
     status: iced::widget::pick_list::Status,
 ) -> iced::widget::pick_list::Style {
     use iced::widget::pick_list::Status;
-    let open = !matches!(status, Status::Active);
+    let (edge, bg) = match status {
+        Status::Active => (p.line2, p.input_bg),
+        Status::Hovered => (alpha(p.gold, 0.6), p.input_bg),
+        Status::Opened { .. } => (p.gold, p.surface3),
+    };
     iced::widget::pick_list::Style {
         text_color: p.text,
         placeholder_color: p.muted,
         handle_color: p.gold2,
-        background: Background::Color(p.input_bg),
+        background: Background::Color(bg),
         border: Border {
-            color: if open { p.gold } else { p.line2 },
+            color: edge,
             width: 1.0,
             radius: radius::SEGMENT.into(),
         },
@@ -1151,9 +1156,13 @@ pub fn fillet(p: &Palette) -> container::Style {
 
 /// Active sidebar item: gold2 text on gold-soft (the 3 px brass left bar is
 /// added by the layout in `main.rs`).
-pub fn button_nav_active(p: &Palette, _status: button::Status) -> button::Style {
+pub fn button_nav_active(p: &Palette, status: button::Status) -> button::Style {
+    let wash = match status {
+        button::Status::Hovered | button::Status::Pressed => 0.22,
+        _ => 0.16,
+    };
     button::Style {
-        background: Some(Background::Color(alpha(p.gold, 0.12))),
+        background: Some(Background::Color(alpha(p.gold, wash))),
         text_color: p.gold2,
         border: Border {
             color: p.gold,

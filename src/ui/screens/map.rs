@@ -345,9 +345,9 @@ pub(crate) mod icons {
                             line(b, 5.0, 7.0, 19.0, 7.0);
                             for cx in [5.0_f32, 19.0] {
                                 b.move_to(pt(cx, 7.0));
-                                b.line_to(pt(cx - 2.5, 13.0));
+                                b.line_to(pt(cx - 3.0, 13.0));
                                 b.move_to(pt(cx, 7.0));
-                                b.line_to(pt(cx + 2.5, 13.0));
+                                b.line_to(pt(cx + 3.0, 13.0));
                                 b.move_to(pt(cx - 3.0, 13.0));
                                 b.quadratic_curve_to(pt(cx, 17.0), pt(cx + 3.0, 13.0));
                                 b.line_to(pt(cx - 3.0, 13.0));

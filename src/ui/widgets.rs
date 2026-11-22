@@ -727,11 +727,10 @@ pub fn segmented<'a, M: Clone + 'a>(
                 } else {
                     SANS
                 }))
-                .center(Length::Fill),
+                .center_x(Length::Fill),
             )
             .width(Length::FillPortion(1))
-            .height(theme::size::BTN_SM - 6.0)
-            .padding(0)
+            .padding([6, 8])
             .style(move |_, s| theme::segment(&palette(), is_sel, s))
             .on_press(msg),
         );

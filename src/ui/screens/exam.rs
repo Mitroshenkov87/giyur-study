@@ -1095,21 +1095,35 @@ impl Screen {
             .height(Length::Fill);
         for (mode, kind, title, desc) in modes {
             let selected = setup.mode == mode;
+            // Same padding and 1 px border as the button, so the ghost
+            // measures exactly the real tile.
             sizer = sizer.push(
                 container(tile(kind, title, desc, selected))
                     .width(Length::FillPortion(1))
-                    .padding(18),
+                    .padding(TILE_PAD)
+                    .style(|_| iced::widget::container::Style {
+                        border: Border {
+                            width: 1.0,
+                            color: Color::TRANSPARENT,
+                            ..Border::default()
+                        },
+                        ..Default::default()
+                    }),
             );
             let b = button(tile(kind, title, desc, selected))
                 .width(Length::FillPortion(1))
                 .height(Length::Fill)
-                .padding(18)
+                .padding(TILE_PAD)
                 .style(move |_, status| {
                     let hovered =
                         matches!(status, button::Status::Hovered | button::Status::Pressed);
                     container_button_style(
                         &p,
-                        if selected {
+                        if selected && hovered {
+                            Some(Background::Color(crate::ui::screens::map::alpha(
+                                p.gold, 0.22,
+                            )))
+                        } else if selected {
                             Some(Background::Color(p.gold_soft))
                         } else if hovered {
                             Some(Background::Color(p.surface3))
@@ -1121,7 +1135,7 @@ impl Screen {
                         } else if hovered {
                             crate::ui::screens::map::alpha(p.gold, 0.5)
                         } else {
-                            p.line
+                            p.line2
                         },
                     )
                 })
@@ -1167,9 +1181,11 @@ impl Screen {
                         .position(|s| s.id == id)
                         .map(|i| labels[i].clone())
                 });
-                card_col = card_col.push(form_row(
-                    "Раздел",
-                    Some("Доступны открытые разделы"),
+                let control: Element<'a, Msg> = if labels.is_empty() {
+                    muted("Нет открытых разделов")
+                        .size(theme::text::SMALL)
+                        .into()
+                } else {
                     pick_list(labels, selected, Msg::SectionLabel)
                         .placeholder("— выберите —")
                         .text_shaping(Shaping::Advanced)
@@ -1177,31 +1193,50 @@ impl Screen {
                         .width(Length::Fill)
                         .style(move |_, st| theme::pick_list(&p, st))
                         .menu_style(move |_| theme::pick_menu(&p))
-                        .into(),
+                        .into()
+                };
+                card_col = card_col.push(form_row(
+                    "Раздел",
+                    Some("Доступны открытые разделы"),
+                    control,
                 ));
             }
             SetupMode::General => {
-                card_col = card_col.push(form_row(
-                    "Только открытые разделы",
-                    Some("Иначе — из всех разделов"),
-                    container(
-                        iced::widget::toggler(setup.only_unlocked).on_toggle(Msg::OnlyUnlocked),
-                    )
-                    .align_right(Length::Fill)
-                    .into(),
-                ));
+                // The whole row toggles, not only the small switch.
+                card_col = card_col.push(
+                    button(form_row(
+                        "Только открытые разделы",
+                        Some("Иначе — из всех разделов"),
+                        container(
+                            iced::widget::toggler(setup.only_unlocked).on_toggle(Msg::OnlyUnlocked),
+                        )
+                        .align_right(Length::Fill)
+                        .into(),
+                    ))
+                    .padding(0)
+                    .width(Length::Fill)
+                    .style(|_, _| button::Style {
+                        background: None,
+                        ..button::Style::default()
+                    })
+                    .on_press(Msg::OnlyUnlocked(!setup.only_unlocked)),
+                );
             }
             SetupMode::Beitdin => {
-                card_col = card_col.push(form_row(
-                    "Как это проходит",
-                    None,
-                    muted(
-                        "Вопросы задаются по одному, как на настоящем собеседовании. \
-                         Подумайте или ответьте вслух, затем сравните с эталоном.",
-                    )
-                    .size(theme::text::SMALL)
-                    .into(),
-                ));
+                card_col = card_col.push(
+                    column![
+                        txt("Как это проходит")
+                            .size(theme::text::BODY)
+                            .color(p.text),
+                        muted(
+                            "Вопросы задаются по одному, как на настоящем собеседовании. \
+                             Подумайте или ответьте вслух, затем сравните с эталоном.",
+                        )
+                        .size(theme::text::SMALL),
+                    ]
+                    .spacing(4)
+                    .width(Length::Fill),
+                );
             }
         }
         card_col = card_col.push(divider());
@@ -1230,10 +1265,12 @@ impl Screen {
         );
         card_col = card_col.push(
             row![
-                muted(avail_line).size(theme::text::SMALL),
-                space::horizontal(),
+                muted(avail_line)
+                    .size(theme::text::SMALL)
+                    .width(Length::Fill),
                 start,
             ]
+            .spacing(GAP)
             .align_y(Alignment::Center)
             .width(Length::Fill),
         );
@@ -1246,7 +1283,11 @@ impl Screen {
 /// Gap between the mode tiles and between form columns (the page grid).
 const GAP: f32 = 16.0;
 /// Width of the label column in the options card.
-const LABEL_W: f32 = 240.0;
+/// (224 px fits «Только открытые разделы» on one line and leaves the
+/// controls ≈ 145 px at the 720 px minimum window.)
+const LABEL_W: f32 = 224.0;
+/// Inner padding of a mode tile (shared by the ghost sizer and the button).
+const TILE_PAD: f32 = 18.0;
 
 fn container_button_style(
     p: &Palette,
