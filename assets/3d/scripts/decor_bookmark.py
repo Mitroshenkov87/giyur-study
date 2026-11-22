@@ -1,4 +1,4 @@
-"""Decor: burgundy silk ribbon bookmark with a brass tip (both themes)."""
+"""Decor: deep burgundy silk ribbon bookmark with a brass tip (both themes)."""
 
 import math
 import os
@@ -9,14 +9,17 @@ from mathutils import Vector
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import common
+import emblemkit
 
-# centreline of the hanging ribbon (x, z), top -> bottom
-PATH = [(0.00, 0.95), (0.06, 0.70), (0.08, 0.42), (0.02, 0.14),
-        (-0.05, -0.14), (-0.04, -0.40)]
-V_BL = (-0.17, -0.54)   # bottom-left of the V cut
-V_BR = (0.09, -0.54)    # bottom-right of the V cut
-V_TIP = (-0.04, -0.72)  # V tip
-HALF_W = 0.125
+# Smooth hanging ribbon, top -> bottom. A sine keeps it silk, not a bent bar.
+PATH = []
+for _i in range(14):
+    _t = _i / 13.0
+    PATH.append((0.085 * math.sin(_t * math.pi * 1.35), 1.00 - _t * 1.42))
+V_BL = (-0.16, -0.50)
+V_BR = (0.12, -0.50)
+V_TIP = (-0.02, -0.74)
+HALF_W = 0.155
 
 
 def ribbon_mesh(name, mat):
@@ -37,8 +40,8 @@ def ribbon_mesh(name, mat):
     for i in range(n - 1):
         l0, r0, l1, r1 = 2 * i, 2 * i + 1, 2 * i + 2, 2 * i + 3
         faces.append((l0, l1, r1, r0))
-    faces.append((2 * n - 2, ibl, ibr, 2 * n - 1))  # bottom edge
-    faces.append((ibl, itip, ibr))                  # the V
+    faces.append((2 * n - 2, ibl, ibr, 2 * n - 1))
+    faces.append((ibl, itip, ibr))
     mesh = bpy.data.meshes.new(name + "_mesh")
     mesh.from_pydata(verts, [], faces)
     mesh.update()
@@ -46,31 +49,30 @@ def ribbon_mesh(name, mat):
     bpy.context.collection.objects.link(ob)
     common.assign(ob, mat)
     sol = ob.modifiers.new("thickness", "SOLIDIFY")
-    sol.thickness = 0.018
+    sol.thickness = 0.030
     bpy.context.view_layer.objects.active = ob
     ob.select_set(True)
     bpy.ops.object.modifier_apply(modifier=sol.name)
     ob.select_set(False)
-    common.bevel(ob, 0.008, segments=2)
+    common.bevel(ob, 0.006, segments=1)
     return ob
 
 
 def build():
     common.reset_scene()
     common.setup_render()
-    metal = common.theme_metal()
-    silk = common.mat_velvet()
-    objs = []
+    metal = emblemkit.medal_metal(0.15)
+    # Deep burgundy, saturated. Sheen stays tinted inside emblemkit.silk.
+    silk = emblemkit.silk((0.065, 0.003, 0.005, 1.0))
+    objs = [ribbon_mesh("ribbon", silk)]
 
-    objs.append(ribbon_mesh("ribbon", silk))
-
-    # brass sleeve over the V-cut end
-    tip_outline = [(-0.185, -0.49), (0.105, -0.49), (0.075, -0.60),
-                   (-0.04, -0.76), (-0.155, -0.60)]
+    tip_outline = [(-0.185, -0.44), (0.145, -0.44), (0.10, -0.58),
+                   (-0.02, -0.80), (-0.16, -0.58)]
     n = len(tip_outline)
-    y_front, depth = -0.045, 0.055
-    verts = [(x, -0.02, z) for x, z in tip_outline] + [(x, -0.02 - depth, z)
-                                                       for x, z in tip_outline]
+    depth = 0.07
+    y0 = -0.02
+    verts = [(x, y0, z) for x, z in tip_outline] + [
+        (x, y0 - depth, z) for x, z in tip_outline]
     faces = [tuple(range(n - 1, -1, -1)), tuple(range(n, 2 * n))]
     for i in range(n):
         j = (i + 1) % n
@@ -81,17 +83,17 @@ def build():
     tip = bpy.data.objects.new("brass_tip", mesh)
     bpy.context.collection.objects.link(tip)
     common.assign(tip, metal)
-    common.bevel(tip, 0.018, segments=3)
+    common.bevel(tip, 0.016, segments=2)
     objs.append(tip)
 
-    # hanging loop at the top
-    loop = common.add_torus("loop", 0.085, 0.022, location=(0.0, -0.01, 1.03),
-                            mat=metal, major_segments=40, minor_segments=12)
+    loop = common.add_torus(
+        "loop", 0.090, 0.024, location=(0.0, -0.02, 1.05),
+        mat=metal, major_segments=36, minor_segments=12)
     loop.rotation_euler = (math.radians(90), 0, 0)
     objs.append(loop)
 
     common.frame_object(objs, margin=0.12, focal=72.0,
-                        elevation=14.0, azimuth=24.0)
+                        elevation=14.0, azimuth=22.0)
     common.setup_lights()
     common.add_shadow_catcher()
     common.render(common.variant_name("bookmark"), common.OUT_DIR)
