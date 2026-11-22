@@ -366,21 +366,16 @@ fn interview_card<'a>(
             .spacing(10)
             .align_y(Alignment::Start),
         );
-        item = item.push(
-            button(
-                txt(if open {
-                    "Скрыть образец ответа"
-                } else {
-                    "Показать образец ответа"
-                })
-                .size(theme::text::SMALL)
-                .font(SANS_BOLD)
-                .color(p.gold2),
-            )
-            .padding([6.0, 10.0])
-            .style(move |_, s| theme::button_ghost(&p, s))
-            .on_press(Msg::Reveal(common.id.clone())),
-        );
+        item = item.push(widgets::btn(
+            if open {
+                "Скрыть образец ответа"
+            } else {
+                "Показать образец ответа"
+            },
+            widgets::Btn::Ghost,
+            widgets::BtnSize::Sm,
+            Some(Msg::Reveal(common.id.clone())),
+        ));
         if open {
             item = item.push(widgets::note_block("Образец ответа", model_answer));
             if !key_points.is_empty() {

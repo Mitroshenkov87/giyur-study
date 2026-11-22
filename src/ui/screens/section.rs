@@ -534,7 +534,7 @@ fn readiness_card<'a>(
         row![
             widgets::kicker("Готовность к экзамену"),
             iced::widget::Space::new().width(Length::Fill),
-            band_pill(rd.band.title(), p),
+            widgets::pill(rd.band.title(), widgets::Pill::Chip),
         ]
         .align_y(Alignment::Center),
     );
@@ -550,42 +550,16 @@ fn readiness_card<'a>(
     .spacing(12)
     .align_y(Alignment::Center);
     if let Some(msg) = next_msg {
-        next_row = next_row.push(
-            button(
-                txt(next_label)
-                    .size(theme::text::BODY)
-                    .font(fonts::SANS_BOLD),
-            )
-            .padding([10.0, 20.0])
-            .style(move |_, s| theme::button_primary(&theme::current(), s))
-            .on_press(msg),
-        );
+        next_row = next_row.push(widgets::btn(
+            next_label,
+            widgets::Btn::Primary,
+            widgets::BtnSize::Md,
+            Some(msg),
+        ));
     }
     right = right.push(next_row);
 
     widgets::card(row![ring, right].spacing(24).align_y(Alignment::Center))
-}
-
-/// Readiness band pill (gold-soft, vertically centred label).
-fn band_pill<'a>(label: &'a str, p: theme::Palette) -> Element<'a, Msg> {
-    container(
-        txt(label)
-            .size(theme::text::SMALL)
-            .font(fonts::SANS_BOLD)
-            .color(p.gold2),
-    )
-    .padding([5.0, 14.0])
-    .align_y(iced::alignment::Vertical::Center)
-    .style(move |_| iced::widget::container::Style {
-        background: Some(Background::Color(p.gold_soft)),
-        border: Border {
-            color: p.gold,
-            width: 1.0,
-            radius: theme::radius::PILL.into(),
-        },
-        ..iced::widget::container::Style::default()
-    })
-    .into()
 }
 
 /// Text, button label and action for the next step.
@@ -670,20 +644,18 @@ fn prep_row<'a>(
     ]
     .spacing(4)
     .width(Length::Fill);
-    let read_btn = button(txt("Читать").size(theme::text::SMALL))
-        .padding([8.0, 14.0])
-        .style(move |_, s| theme::button_ghost(&theme::current(), s))
-        .on_press(Msg::Go(Route::Lesson(lesson.id.clone())));
-    let mut check_btn = button(
-        txt("Самопроверка")
-            .size(theme::text::SMALL)
-            .font(fonts::SANS_BOLD),
-    )
-    .padding([8.0, 14.0])
-    .style(move |_, s| theme::button_secondary(&theme::current(), s));
-    if lp.checks > 0 {
-        check_btn = check_btn.on_press(Msg::SelfCheck(lesson.id.clone()));
-    }
+    let read_btn = widgets::btn(
+        "Читать",
+        widgets::Btn::Ghost,
+        widgets::BtnSize::Sm,
+        Some(Msg::Go(Route::Lesson(lesson.id.clone()))),
+    );
+    let check_btn = widgets::btn(
+        "Самопроверка",
+        widgets::Btn::Secondary,
+        widgets::BtnSize::Sm,
+        (lp.checks > 0).then(|| Msg::SelfCheck(lesson.id.clone())),
+    );
     container(
         row![text_col, read_btn, check_btn]
             .spacing(10)
@@ -708,10 +680,12 @@ fn cta_row<'a>(text_: &'a str, label: &'a str, msg: Msg, p: theme::Palette) -> E
     container(
         row![
             txt(text_).size(theme::text::BODY).color(p.muted),
-            button(txt(label).size(theme::text::BODY).font(fonts::SANS_BOLD))
-                .padding([10.0, 20.0])
-                .style(move |_, s| theme::button_secondary(&theme::current(), s))
-                .on_press(msg),
+            widgets::btn(
+                label,
+                widgets::Btn::Secondary,
+                widgets::BtnSize::Md,
+                Some(msg)
+            ),
         ]
         .spacing(16)
         .align_y(Alignment::Center),
