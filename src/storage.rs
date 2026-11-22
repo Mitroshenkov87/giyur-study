@@ -222,6 +222,9 @@ pub struct State {
     pub counters: HashMap<String, i64>,
     #[serde(default)]
     pub goal_celebrated: Option<String>,
+    /// sectionId -> "read" | "prep": last study mode chosen in that section.
+    #[serde(default)]
+    pub study_mode: HashMap<String, String>,
     /// Unknown top-level keys kept for round-trip fidelity (js/storage.js fill).
     #[serde(flatten)]
     pub extra: serde_json::Map<String, serde_json::Value>,
@@ -256,6 +259,7 @@ impl Default for State {
             badges: HashMap::new(),
             counters: HashMap::new(),
             goal_celebrated: None,
+            study_mode: HashMap::new(),
             extra: serde_json::Map::new(),
         }
     }
@@ -284,6 +288,7 @@ fn fill(s: &mut State) {
 /// Map fields that must be JSON objects (js/storage.js importJSON list).
 const OBJECT_FIELDS: &[&str] = &[
     "lessonsRead",
+    "studyMode",
     "cards",
     "questions",
     "best",

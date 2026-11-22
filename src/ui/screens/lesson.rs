@@ -10,7 +10,8 @@ use iced::{Alignment, Background, Element, Length, Subscription};
 use crate::content::{self, Block, Differs, Lesson, SectionMeta};
 use crate::game;
 use crate::storage::Level;
-use crate::ui::app::{Action, Ctx, Deck, Route};
+use crate::study;
+use crate::ui::app::{Action, Ctx, Deck, ExamSpec, Route};
 use crate::ui::fonts::SANS_BOLD;
 use crate::ui::theme::{self, Palette};
 use crate::ui::widgets;
@@ -41,6 +42,8 @@ pub struct Screen {
     citations_line: Option<String>,
     /// «Урок {pos} из {count} · {minutes} мин» header line.
     kicker: String,
+    /// Beit-din questions whose model answer is shown.
+    revealed: HashSet<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -49,6 +52,10 @@ pub enum Msg {
     MarkRead,
     ToggleDiffers(u32),
     OpenUrl(String),
+    /// Show / hide the model answer of a beit-din question.
+    Reveal(String),
+    /// «Самопроверка» of this lesson.
+    SelfCheck,
 }
 
 impl Screen {
@@ -99,6 +106,7 @@ impl Screen {
             open_others: HashSet::new(),
             citations_line,
             kicker,
+            revealed: HashSet::new(),
         }
     }
 
@@ -122,6 +130,25 @@ impl Screen {
             Msg::OpenUrl(url) => {
                 widgets::open_url(&url);
                 Action::None
+            }
+            Msg::Reveal(id) => {
+                if !self.revealed.remove(&id) {
+                    self.revealed.insert(id);
+                }
+                Action::None
+            }
+            Msg::SelfCheck => {
+                let Some((_, sec)) = ctx.lib.lesson(&self.lesson_id) else {
+                    return Action::None;
+                };
+                let ids = study::self_check_ids(&ctx.lib, sec, &self.lesson_id, &ctx.state);
+                if ids.is_empty() {
+                    return Action::None;
+                }
+                Action::Go(Route::ExamRun(ExamSpec::SelfCheck {
+                    section_id: sec.id.clone(),
+                    ids,
+                }))
             }
         }
     }
@@ -175,24 +202,46 @@ impl Screen {
         root = root.push(header);
         root = root.push(widgets::card(article));
 
+        // ---- «Главное» (docs/STRUCTURE.md): the lesson in 3–5 lines ----
+        if !lesson.key_ideas.is_empty() {
+            root = root.push(key_ideas_card(&lesson.key_ideas));
+        }
+
+        // ---- «Что спрашивают на бейт-дине» ----
+        let interview = ctx.lib.lesson_interview(sec, &lesson.id, user);
+        if !interview.is_empty() {
+            root = root.push(interview_card(&interview, user, &self.revealed));
+        }
+
         // Actions (centred): mark read, or read mark + cards button.
+        let has_check = !study::self_check_ids(&ctx.lib, sec, &lesson.id, &ctx.state).is_empty();
         let actions: Element<Msg> = if read {
             let p = palette();
-            row![
-                txt("✓ Прочитано")
-                    .size(theme::text::BODY)
-                    .font(SANS_BOLD)
-                    .color(p.ok),
-                widgets::btn(
-                    "К карточкам урока",
+            let mut r = row![txt("✓ Прочитано")
+                .size(theme::text::BODY)
+                .font(SANS_BOLD)
+                .color(p.ok),]
+            .spacing(16)
+            .align_y(Alignment::Center);
+            if has_check {
+                r = r.push(widgets::btn(
+                    "Самопроверка",
                     widgets::Btn::Primary,
                     widgets::BtnSize::Lg,
-                    Some(Msg::Go(Route::Cards(Deck::Lesson(lesson.id.clone())))),
-                ),
-            ]
-            .spacing(16)
-            .align_y(Alignment::Center)
-            .into()
+                    Some(Msg::SelfCheck),
+                ));
+            }
+            r = r.push(widgets::btn(
+                "К карточкам урока",
+                if has_check {
+                    widgets::Btn::Secondary
+                } else {
+                    widgets::Btn::Primary
+                },
+                widgets::BtnSize::Lg,
+                Some(Msg::Go(Route::Cards(Deck::Lesson(lesson.id.clone())))),
+            ));
+            r.into()
         } else {
             row![widgets::btn(
                 "Отметить прочитанным",
@@ -256,6 +305,120 @@ fn header<'a>(back_label: &'a str, back: Msg, kicker: &'a str, title: &'a str) -
     .spacing(10)
     .width(Length::Fill)
     .into()
+}
+
+/// «Главное»: key ideas of the lesson as a gold-marked list.
+fn key_ideas_card<'a>(ideas: &'a [String]) -> Element<'a, Msg> {
+    let p = palette();
+    let mut col = Column::new().spacing(8).width(Length::Fill);
+    col = col.push(widgets::kicker("Главное"));
+    for (i, idea) in ideas.iter().enumerate() {
+        col = col.push(
+            row![
+                txt(format!("{}", i + 1))
+                    .size(theme::text::BODY)
+                    .font(SANS_BOLD)
+                    .color(p.gold),
+                widgets::rich_paragraph(idea),
+            ]
+            .spacing(10)
+            .align_y(Alignment::Start),
+        );
+    }
+    widgets::card(col)
+}
+
+/// «Что спрашивают на бейт-дине»: the lesson's interview questions; the
+/// model answer and key points open on demand, so the reader can answer
+/// in their own words first.
+fn interview_card<'a>(
+    qs: &[&'a content::Question],
+    user: Level,
+    revealed: &HashSet<String>,
+) -> Element<'a, Msg> {
+    let p = palette();
+    let mut col = Column::new().spacing(12).width(Length::Fill);
+    col = col.push(widgets::kicker("Что спрашивают на бейт-дине"));
+    col = col.push(
+        txt("Сначала ответьте вслух своими словами, потом сверьтесь с образцом.")
+            .size(theme::text::SMALL)
+            .color(p.muted),
+    );
+    for q in qs {
+        let content::Question::Open {
+            common,
+            model_answer,
+            key_points,
+        } = q
+        else {
+            continue;
+        };
+        let open = revealed.contains(&common.id);
+        let mut item = Column::new().spacing(8).width(Length::Fill);
+        item = item.push(
+            row![
+                txt("?")
+                    .size(theme::text::BODY)
+                    .font(SANS_BOLD)
+                    .color(p.gold),
+                widgets::rich_paragraph(&common.prompt),
+            ]
+            .spacing(10)
+            .align_y(Alignment::Start),
+        );
+        item = item.push(widgets::btn(
+            if open {
+                "Скрыть образец ответа"
+            } else {
+                "Показать образец ответа"
+            },
+            widgets::Btn::Ghost,
+            widgets::BtnSize::Sm,
+            Some(Msg::Reveal(common.id.clone())),
+        ));
+        if open {
+            item = item.push(widgets::note_block("Образец ответа", model_answer));
+            if !key_points.is_empty() {
+                let mut kp = Column::new().spacing(4);
+                kp = kp.push(
+                    txt("Ключевые пункты")
+                        .size(theme::text::SMALL)
+                        .font(SANS_BOLD),
+                );
+                for k in key_points {
+                    kp = kp.push(
+                        row![
+                            txt("✓").size(theme::text::SMALL).color(p.ok),
+                            widgets::rich_paragraph(k),
+                        ]
+                        .spacing(8),
+                    );
+                }
+                item = item.push(kp);
+            }
+            for d in common.differs.iter().filter(|d| d.level == user) {
+                item = item.push(widgets::differs_note(
+                    content::level_info(d.level).differs_label,
+                    &d.text,
+                ));
+            }
+        }
+        col = col.push(
+            container(item)
+                .padding([10.0, 12.0])
+                .width(Length::Fill)
+                .style(move |_| iced::widget::container::Style {
+                    background: Some(Background::Color(p.surface2)),
+                    border: iced::Border {
+                        color: p.line,
+                        width: 1.0,
+                        radius: theme::radius::SMALL.into(),
+                    },
+                    ..Default::default()
+                }),
+        );
+    }
+    widgets::card(col)
 }
 
 fn block_differs(b: &Block) -> &[Differs] {

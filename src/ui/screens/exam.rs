@@ -661,6 +661,20 @@ fn build_run(ctx: &Ctx, spec: &ExamSpec) -> Option<Run> {
             None,
             Some(ids.clone()),
         ),
+        ExamSpec::SelfCheck { section_id, ids } => (
+            Mode::SelfCheck,
+            Some(section_id.clone()),
+            None,
+            None,
+            Some(ids.clone()),
+        ),
+        ExamSpec::Rehearsal { section_id, ids } => (
+            Mode::Rehearsal,
+            Some(section_id.clone()),
+            None,
+            None,
+            Some(ids.clone()),
+        ),
     };
     let mut rng = rand::thread_rng();
     let s = exam::build(
@@ -864,7 +878,16 @@ impl Screen {
                 }
                 Action::None
             }
-            Msg::QuitConfirm => Action::Go(Route::Exam(None)),
+            Msg::QuitConfirm => match &self.phase {
+                // Self-check and rehearsal start from a section: go back there.
+                Phase::Run(run) if matches!(run.mode, Mode::SelfCheck | Mode::Rehearsal) => {
+                    match &run.section_id {
+                        Some(id) => Action::Go(Route::Section(id.clone())),
+                        None => Action::Go(Route::Exam(None)),
+                    }
+                }
+                _ => Action::Go(Route::Exam(None)),
+            },
             Msg::QuitCancel => {
                 if let Phase::Run(run) = &mut self.phase {
                     run.confirm_quit = false;
@@ -875,10 +898,19 @@ impl Screen {
             Msg::Retry => {
                 if let Phase::Results(r) = &self.phase {
                     if !r.mistake_ids.is_empty() {
-                        return Action::Go(Route::ExamRun(ExamSpec::Retry {
-                            ids: r.mistake_ids.clone(),
-                            section_id: r.res.section_id.clone(),
-                        }));
+                        let ids = r.mistake_ids.clone();
+                        // Practice runs retry as the same practice (interview
+                        // chrome, back to the section).
+                        let spec = match (r.res.mode, r.res.section_id.clone()) {
+                            (Mode::SelfCheck, Some(section_id)) => {
+                                ExamSpec::SelfCheck { section_id, ids }
+                            }
+                            (Mode::Rehearsal, Some(section_id)) => {
+                                ExamSpec::Rehearsal { section_id, ids }
+                            }
+                            (_, section_id) => ExamSpec::Retry { ids, section_id },
+                        };
+                        return Action::Go(Route::ExamRun(spec));
                     }
                 }
                 Action::None
@@ -1170,7 +1202,7 @@ fn container_button_style(
 impl Screen {
     fn view_run<'a>(&'a self, ctx: &'a Ctx, run: &'a Run) -> Element<'a, Msg> {
         let p = tp();
-        let interview = run.mode == Mode::Beitdin;
+        let interview = matches!(run.mode, Mode::Beitdin | Mode::Rehearsal);
         let it = &run.items[run.idx];
         let q = &it.q;
         let total = run.items.len();
@@ -1647,8 +1679,13 @@ impl Screen {
         let is_section = res.mode == Mode::Section;
         let sec = res.section_id.as_deref().and_then(|id| ctx.lib.section(id));
 
+        let practice = matches!(res.mode, Mode::SelfCheck | Mode::Rehearsal);
+        let (back_label, back_msg) = match (practice, sec) {
+            (true, Some(s)) => (s.title.as_str(), Msg::ToSection(s.id.clone())),
+            _ => ("Экзамен", Msg::NewExam),
+        };
         let mut col = Column::new().spacing(18).width(Length::Fill);
-        col = col.push(widgets::back_button("Экзамен", Msg::NewExam));
+        col = col.push(widgets::back_button(back_label, back_msg));
         let mut kicker = exam::mode_title(res.mode).to_string();
         if let Some(s) = sec {
             kicker.push_str(" · ");
@@ -1692,8 +1729,10 @@ impl Screen {
         let goal = game::goal(&ctx.state);
         let xp_text = if res.xp > 0 {
             format!("+{} XP", res.xp)
-        } else {
+        } else if is_section {
             "Без XP: тест не сдан — попробуйте ещё раз".to_string()
+        } else {
+            "Без XP: верных ответов пока нет".to_string()
         };
         right_col = right_col.push(
             txt(format!("{xp_text} · сегодня {today_xp} / {goal} XP"))
@@ -1721,12 +1760,14 @@ impl Screen {
                 Some(Msg::Retry),
             ));
         }
-        buttons = buttons.push(widgets::btn(
-            "Новый экзамен",
-            widgets::Btn::Secondary,
-            widgets::BtnSize::Md,
-            Some(Msg::NewExam),
-        ));
+        if !practice {
+            buttons = buttons.push(widgets::btn(
+                "Новый экзамен",
+                widgets::Btn::Secondary,
+                widgets::BtnSize::Md,
+                Some(Msg::NewExam),
+            ));
+        }
         let ghost = match sec {
             Some(s) => widgets::btn(
                 "К разделу",

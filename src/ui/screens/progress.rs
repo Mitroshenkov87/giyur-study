@@ -450,8 +450,19 @@ fn mode_title(mode: &str) -> &str {
         "beitdin" => "Пробный бейт-дин",
         "retry" => "Работа над ошибками",
         "timed" => "Экзамен (на время)",
+        "selfcheck" => "Самопроверка",
+        "rehearsal" => "Репетиция бейт-дина",
         other => other,
     }
+}
+
+/// Lesson self-checks and section rehearsals are practice, not exams: they
+/// stay out of the exam chart and the exam count (docs/STRUCTURE.md).
+fn is_practice(e: &serde_json::Value) -> bool {
+    matches!(
+        e.get("mode").and_then(|m| m.as_str()),
+        Some("selfcheck") | Some("rehearsal")
+    )
 }
 
 fn fmt_ts(ms: i64) -> String {
@@ -559,7 +570,13 @@ impl Screen {
         }
 
         // Exam history (last 20) + chart points (chronological).
-        let last: Vec<&serde_json::Value> = state.exams.iter().rev().take(20).collect();
+        let last: Vec<&serde_json::Value> = state
+            .exams
+            .iter()
+            .rev()
+            .filter(|e| !is_practice(e))
+            .take(20)
+            .collect();
         let mut history = Vec::new();
         let mut chart = Vec::new();
         for e in last.iter().rev() {
@@ -633,7 +650,7 @@ impl Screen {
             .map(|g| g.title)
             .unwrap_or("");
         let explain_items = vec![
-            "**XP** начисляются за учёбу: урок прочитан — 10, каждая оценённая карточка — 1 («Не вспомнил» тоже: важна работа), колода пройдена — 5, тест раздела сдан — 20 (+10 за 100%), экзамен — 2 за каждый верный ответ, пробный бейт-дин — 15.".to_string(),
+            "**XP** начисляются за учёбу: урок прочитан — 10, каждая оценённая карточка — 1 («Не вспомнил» тоже: важна работа), колода пройдена — 5, тест раздела сдан — 20 (+10 за 100%), экзамен — 2 за каждый верный ответ, пробный бейт-дин — 15, самопроверка, репетиция бейт-дина и работа над ошибками — 1 за каждый верный ответ.".to_string(),
             format!(
                 "**Цель дня** — {} XP ({}). Её можно изменить в настройках: 10, 20, 30 или 50 XP. Сегодня набрано {} XP.",
                 goal, goal_title, today_xp
@@ -652,7 +669,7 @@ impl Screen {
             kpi_read,
             kpi_lessons,
             kpi_mastered,
-            kpi_exams: state.exams.len(),
+            kpi_exams: state.exams.iter().filter(|e| !is_practice(e)).count(),
             week,
             badges,
             badges_got,

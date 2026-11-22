@@ -80,6 +80,16 @@ pub enum ExamSpec {
         ids: Vec<String>,
         section_id: Option<String>,
     },
+    /// «Самопроверка» of one lesson (question ids picked by study::self_check_ids).
+    SelfCheck {
+        section_id: String,
+        ids: Vec<String>,
+    },
+    /// «Репетиция бейт-дина» of one section (study::rehearsal_ids).
+    Rehearsal {
+        section_id: String,
+        ids: Vec<String>,
+    },
 }
 
 /// What a screen asks the shell to do after an update.

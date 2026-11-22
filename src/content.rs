@@ -171,6 +171,37 @@ pub struct Lesson {
     /// Lesson-level differences by movement (js/ui/lesson.js renders L.differs).
     #[serde(default)]
     pub differs: Vec<Differs>,
+    /// «Главное»: 3–5 key ideas that restate the lesson (docs/STRUCTURE.md).
+    #[serde(default)]
+    pub key_ideas: Vec<String>,
+}
+
+/// Section overview shown at the top of the «Читать» mode (docs/STRUCTURE.md).
+#[derive(Debug, Clone, Default, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Overview {
+    /// Why this section matters for understanding Judaism.
+    #[serde(default)]
+    pub why: String,
+    /// What the beit din usually checks on this topic.
+    #[serde(default)]
+    pub exam_focus: String,
+    /// «После раздела вы сможете …»
+    #[serde(default)]
+    pub goals: Vec<String>,
+}
+
+/// «Углубиться»: further reading that points at one of the section sources.
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Deeper {
+    pub title: String,
+    #[serde(default)]
+    pub source_ref: Option<String>,
+    #[serde(default)]
+    pub text: String,
+    #[serde(default)]
+    pub min_level: Option<Level>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Deserialize)]
@@ -240,9 +271,9 @@ pub enum Question {
     Open {
         #[serde(flatten)]
         common: QCommon,
-        #[serde(default)]
+        #[serde(default, rename = "modelAnswer")]
         model_answer: String,
-        #[serde(default)]
+        #[serde(default, rename = "keyPoints")]
         key_points: Vec<String>,
     },
 }
@@ -260,6 +291,11 @@ impl Question {
 
     pub fn id(&self) -> &str {
         &self.common().id
+    }
+
+    /// Open (beit-din interview) question with a model answer.
+    pub fn is_open(&self) -> bool {
+        matches!(self, Question::Open { .. })
     }
 
     pub fn format(&self) -> &'static str {
@@ -292,6 +328,10 @@ pub struct Section {
     pub lessons: Vec<Lesson>,
     #[serde(default)]
     pub questions: Vec<Question>,
+    #[serde(default)]
+    pub overview: Option<Overview>,
+    #[serde(default)]
+    pub deeper: Vec<Deeper>,
 }
 
 // ---- Level info (exact strings from js/content.js) ----
@@ -637,6 +677,68 @@ impl Library {
                     })
             })
             .collect()
+    }
+
+    /// Questions of one lesson visible at the user level, in bank order.
+    pub fn lesson_questions<'a>(
+        &self,
+        sec: &'a SectionMeta,
+        lesson_id: &str,
+        user: Level,
+    ) -> Vec<&'a Question> {
+        self.questions(sec, user)
+            .into_iter()
+            .filter(|q| q.common().lesson_id.as_deref() == Some(lesson_id))
+            .collect()
+    }
+
+    /// «Что спрашивают на бейт-дине»: the lesson's open (interview) questions.
+    pub fn lesson_interview<'a>(
+        &self,
+        sec: &'a SectionMeta,
+        lesson_id: &str,
+        user: Level,
+    ) -> Vec<&'a Question> {
+        self.lesson_questions(sec, lesson_id, user)
+            .into_iter()
+            .filter(|q| q.is_open())
+            .collect()
+    }
+
+    /// The section's open (interview) questions that belong to a lesson
+    /// visible at the user level (the ones shown under «Что спрашивают»).
+    pub fn section_interview<'a>(&self, sec: &'a SectionMeta, user: Level) -> Vec<&'a Question> {
+        let visible: Vec<&str> = self
+            .lessons(sec, user)
+            .iter()
+            .map(|l| l.id.as_str())
+            .collect();
+        self.questions(sec, user)
+            .into_iter()
+            .filter(|q| {
+                q.is_open()
+                    && q.common()
+                        .lesson_id
+                        .as_deref()
+                        .is_some_and(|l| visible.contains(&l))
+            })
+            .collect()
+    }
+
+    /// «Углубиться» items visible at the user level.
+    pub fn deeper<'a>(&self, sec: &'a SectionMeta, user: Level) -> Vec<&'a Deeper> {
+        match &sec.data {
+            None => Vec::new(),
+            Some(d) => d
+                .deeper
+                .iter()
+                .filter(|x| Self::visible(x.min_level, None, user))
+                .collect(),
+        }
+    }
+
+    pub fn overview<'a>(&self, sec: &'a SectionMeta) -> Option<&'a Overview> {
+        sec.data.as_ref().and_then(|d| d.overview.as_ref())
     }
 
     pub fn sources<'a>(&self, sec: &'a SectionMeta, ids: Option<&[String]>) -> Vec<&'a Source> {
@@ -995,6 +1097,23 @@ mod tests {
     }
 
     #[test]
+    fn open_questions_load_model_answer_and_key_points() {
+        // The JSON keys are camelCase (modelAnswer, keyPoints).
+        let lib = lib();
+        let (q, _) = lib.question("osnovy-q8").unwrap();
+        let Question::Open {
+            model_answer,
+            key_points,
+            ..
+        } = q
+        else {
+            panic!("osnovy-q8 must be open")
+        };
+        assert!(!model_answer.is_empty());
+        assert!(!key_points.is_empty());
+    }
+
+    #[test]
     fn lesson_differs_parsed() {
         let manifest = r#"{"sections":[{"id":"x"}]}"#;
         let section = r#"{
@@ -1009,5 +1128,99 @@ mod tests {
         assert_eq!(lesson.differs.len(), 1);
         assert_eq!(lesson.differs[0].level, Level::Reform);
         assert_eq!(lesson.differs[0].text, "Иначе в реформе");
+    }
+
+    // ---- Study structure (docs/STRUCTURE.md) ----
+
+    #[test]
+    fn every_section_has_overview_and_deeper_from_its_sources() {
+        let lib = lib();
+        for sec in &lib.sections {
+            let data = sec.data.as_ref().unwrap();
+            let ov = data
+                .overview
+                .as_ref()
+                .unwrap_or_else(|| panic!("{}: overview", sec.id));
+            assert!(
+                !ov.why.is_empty() && !ov.exam_focus.is_empty(),
+                "{}",
+                sec.id
+            );
+            assert!((3..=5).contains(&ov.goals.len()), "{}: goals", sec.id);
+            assert!((3..=6).contains(&data.deeper.len()), "{}: deeper", sec.id);
+            for d in &data.deeper {
+                let r = d.source_ref.as_deref().unwrap_or("");
+                assert!(
+                    data.sources.iter().any(|s| s.id == r),
+                    "{}: deeper «{}» points at unknown source {r:?}",
+                    sec.id,
+                    d.title
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn every_lesson_has_key_ideas_and_beit_din_questions() {
+        let lib = lib();
+        for sec in &lib.sections {
+            let min = if sec.id == "beit-din" { 3 } else { 2 };
+            for lesson in &sec.data.as_ref().unwrap().lessons {
+                assert!(
+                    (3..=5).contains(&lesson.key_ideas.len()),
+                    "{}: keyIdeas",
+                    lesson.id
+                );
+                // Visible at the lesson's own level and above.
+                let level = lesson.min_level.unwrap_or(Level::Reform);
+                let n = lib.lesson_interview(sec, &lesson.id, Level::Orthodox).len();
+                assert!(n >= min, "{}: {n} beit-din questions", lesson.id);
+                let own = lib.lesson_interview(sec, &lesson.id, level).len();
+                assert!(own >= 1, "{}: none visible at its own level", lesson.id);
+                for q in lib.lesson_interview(sec, &lesson.id, Level::Orthodox) {
+                    let Question::Open {
+                        model_answer,
+                        key_points,
+                        ..
+                    } = q
+                    else {
+                        unreachable!()
+                    };
+                    assert!(
+                        !model_answer.is_empty() && !key_points.is_empty(),
+                        "{}",
+                        q.id()
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn no_christian_framing_in_content() {
+        let banned = [
+            "библи",
+            "ветхий завет",
+            "ветхого завета",
+            "ветхом завете",
+            "новый завет",
+            "нового завета",
+            "новом завете",
+        ];
+        for raw in [
+            include_str!("../content/sections/01-osnovy.json"),
+            include_str!("../content/sections/02-ivrit.json"),
+            include_str!("../content/sections/03-shabbat.json"),
+            include_str!("../content/sections/04-kashrut.json"),
+            include_str!("../content/sections/05-prazdniki.json"),
+            include_str!("../content/sections/06-semya.json"),
+            include_str!("../content/sections/07-etika.json"),
+            include_str!("../content/sections/08-beit-din.json"),
+        ] {
+            let low = raw.to_lowercase();
+            for b in banned {
+                assert!(!low.contains(b), "content contains «{b}»");
+            }
+        }
     }
 }
