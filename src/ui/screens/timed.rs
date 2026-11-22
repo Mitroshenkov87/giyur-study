@@ -1607,7 +1607,9 @@ fn view_run<'a>(run: &'a Run, w: f32) -> Element<'a, Msg> {
     }
 
     // The step being shown: the answered one during the reveal.
-    let (step, no, hidden, reveal): (&Step, usize, &[usize], Option<(Option<usize>, bool)>) =
+    // `Shown` = (the picked option, whether it was right).
+    type Shown = (Option<usize>, bool);
+    let (step, no, hidden, reveal): (&Step, usize, &[usize], Option<Shown>) =
         match (&run.reveal, l.current()) {
             (Some(rv), _) => (&rv.step, rv.no, &rv.hidden, Some((rv.pick, rv.right))),
             (None, Some(s)) => (s, l.step_no(), &l.hidden, None),
