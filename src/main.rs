@@ -389,18 +389,27 @@ impl App {
         let p = theme::current();
         let bare = self.screen.bare(&self.ctx);
         let content: Element<'_, Message> = if bare {
-            // Shrink-height scrollable: centres when the content fits,
-            // scrolls when it doesn't (welcome / first-run level choice).
-            let inner = container(
-                container(self.screen.view(&self.ctx).map(Message::Screen))
-                    .padding([28.0, layout::CONTENT_PAD])
+            // Fill-height scrollable. The inner column is at least as tall
+            // as the viewport and vertically centred, so a short page stays
+            // centred with no scrollbar, and a tall one (200 % scale or a
+            // small window) scrolls so «Начать» stays reachable.
+            // A Shrink-height scrollable was centred but never scrolled:
+            // its viewport grew with the content and overflowed the window.
+            iced::widget::responsive(move |size| {
+                let inner = container(
+                    container(self.screen.view(&self.ctx).map(Message::Screen))
+                        .padding([28.0, layout::CONTENT_PAD])
+                        .width(Length::Fill)
+                        .max_width(layout::content_col()),
+                )
+                .center_x(Length::Fill);
+                scrollable(widgets::min_height(size.height, inner))
+                    .id(MAIN_SCROLL)
                     .width(Length::Fill)
-                    .max_width(layout::content_col()),
-            )
-            .center_x(Length::Fill);
-            container(scrollable(inner).height(Length::Shrink))
-                .center(Length::Fill)
-                .into()
+                    .height(Length::Fill)
+                    .into()
+            })
+            .into()
         } else {
             // One grid for every screen (src/ui/layout.rs): the nav, the
             // reading column and the optional quote panel move together.

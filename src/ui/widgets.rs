@@ -5,6 +5,9 @@
 //! itself. Colours come from the process-global active palette
 //! (`theme::current`), which the app sets on every theme switch.
 
+use iced::advanced::layout::Node;
+use iced::advanced::widget::{Operation, Tree};
+use iced::advanced::{Clipboard, Layout, Shell, Widget};
 use iced::alignment::Horizontal;
 use iced::widget::canvas::{self, Canvas, Frame, Path, Stroke};
 use iced::widget::text::{IntoFragment, Shaping};
@@ -12,8 +15,8 @@ use iced::widget::{
     button, column, container, rich_text, row, space, span, text, Button, Column, Row, Text,
 };
 use iced::{
-    Alignment, Background, Border, Color, Element, Font, Length, Point, Rectangle, Renderer,
-    Shadow, Theme,
+    Alignment, Background, Border, Color, Element, Event, Font, Length, Point, Rectangle, Renderer,
+    Shadow, Theme, Vector,
 };
 
 use crate::ui::fonts::{HEBREW, SANS, SANS_BOLD, SERIF_BOLD};
@@ -890,5 +893,157 @@ impl<Message> iced::advanced::Widget<Message, Theme, Renderer> for Ghost<'_, Mes
         _cursor: iced::mouse::Cursor,
         _viewport: &Rectangle,
     ) {
+    }
+}
+
+/// Make `content` at least `min` tall. If the content is shorter, it is
+/// centred in the extra space; if it is taller, the widget grows with it.
+/// Used as the body of a Fill-height scrollable so a short page stays
+/// centred with no scrollbar and a tall one can scroll.
+pub fn min_height<'a, Message: 'a>(
+    min: f32,
+    content: impl Into<Element<'a, Message, Theme, Renderer>>,
+) -> Element<'a, Message, Theme, Renderer> {
+    Element::new(MinHeight {
+        min,
+        content: content.into(),
+    })
+}
+
+struct MinHeight<'a, Message> {
+    min: f32,
+    content: Element<'a, Message, Theme, Renderer>,
+}
+
+impl<Message> Widget<Message, Theme, Renderer> for MinHeight<'_, Message> {
+    fn size(&self) -> iced::Size<Length> {
+        let mut size = self.content.as_widget().size();
+        size.height = Length::Shrink;
+        size
+    }
+
+    fn size_hint(&self) -> iced::Size<Length> {
+        self.size()
+    }
+
+    fn tag(&self) -> iced::advanced::widget::tree::Tag {
+        self.content.as_widget().tag()
+    }
+
+    fn state(&self) -> iced::advanced::widget::tree::State {
+        self.content.as_widget().state()
+    }
+
+    fn children(&self) -> Vec<Tree> {
+        self.content.as_widget().children()
+    }
+
+    fn diff(&self, tree: &mut Tree) {
+        self.content.as_widget().diff(tree);
+    }
+
+    fn layout(
+        &mut self,
+        tree: &mut Tree,
+        renderer: &Renderer,
+        limits: &iced::advanced::layout::Limits,
+    ) -> Node {
+        let width = self.content.as_widget().size().width;
+        let limits = limits.width(width);
+        let content = self
+            .content
+            .as_widget_mut()
+            .layout(tree, renderer, &limits.loose());
+        let width = limits.resolve(width, Length::Shrink, content.size()).width;
+        let height = content.size().height.max(self.min);
+        let y = ((height - content.size().height) / 2.0).max(0.0);
+        Node::with_children(
+            iced::Size::new(width, height),
+            vec![content.move_to((0.0, y))],
+        )
+    }
+
+    fn operate(
+        &mut self,
+        tree: &mut Tree,
+        layout: Layout<'_>,
+        renderer: &Renderer,
+        operation: &mut dyn Operation,
+    ) {
+        operation.container(None, layout.bounds());
+        if let Some(child) = layout.children().next() {
+            operation.traverse(&mut |operation| {
+                self.content
+                    .as_widget_mut()
+                    .operate(tree, child, renderer, operation);
+            });
+        }
+    }
+
+    fn update(
+        &mut self,
+        tree: &mut Tree,
+        event: &Event,
+        layout: Layout<'_>,
+        cursor: iced::mouse::Cursor,
+        renderer: &Renderer,
+        clipboard: &mut dyn Clipboard,
+        shell: &mut Shell<'_, Message>,
+        viewport: &Rectangle,
+    ) {
+        let Some(child) = layout.children().next() else {
+            return;
+        };
+        self.content.as_widget_mut().update(
+            tree, event, child, cursor, renderer, clipboard, shell, viewport,
+        );
+    }
+
+    fn mouse_interaction(
+        &self,
+        tree: &Tree,
+        layout: Layout<'_>,
+        cursor: iced::mouse::Cursor,
+        viewport: &Rectangle,
+        renderer: &Renderer,
+    ) -> iced::mouse::Interaction {
+        let Some(child) = layout.children().next() else {
+            return iced::mouse::Interaction::None;
+        };
+        self.content
+            .as_widget()
+            .mouse_interaction(tree, child, cursor, viewport, renderer)
+    }
+
+    fn draw(
+        &self,
+        tree: &Tree,
+        renderer: &mut Renderer,
+        theme: &Theme,
+        style: &iced::advanced::renderer::Style,
+        layout: Layout<'_>,
+        cursor: iced::mouse::Cursor,
+        viewport: &Rectangle,
+    ) {
+        let Some(child) = layout.children().next() else {
+            return;
+        };
+        self.content
+            .as_widget()
+            .draw(tree, renderer, theme, style, child, cursor, viewport);
+    }
+
+    fn overlay<'a>(
+        &'a mut self,
+        tree: &'a mut Tree,
+        layout: Layout<'a>,
+        renderer: &Renderer,
+        viewport: &Rectangle,
+        translation: Vector,
+    ) -> Option<iced::advanced::overlay::Element<'a, Message, Theme, Renderer>> {
+        let child = layout.children().next()?;
+        self.content
+            .as_widget_mut()
+            .overlay(tree, child, renderer, viewport, translation)
     }
 }
