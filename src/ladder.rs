@@ -91,6 +91,29 @@ pub fn tier_title(d: Difficulty) -> &'static str {
     }
 }
 
+/// Timer choices on the setup screen: (seconds per question, label);
+/// 0 = no timer. Stored in `settings.timed_seconds`.
+pub const TIMER_CHOICES: [(i64, &str); 3] = [(0, "Без таймера"), (30, "30 с"), (20, "20 с")];
+
+/// Normalise a stored timer value to one of [`TIMER_CHOICES`] (30 by default).
+pub fn sanitize_seconds(v: i64) -> i64 {
+    match v {
+        0 => 0,
+        20 => 20,
+        _ => 30,
+    }
+}
+
+/// Seconds per ladder question from settings (0 = no timer).
+pub fn timer_seconds(state: &State) -> i64 {
+    sanitize_seconds(state.settings.timed_seconds)
+}
+
+/// Plural of «ступень» after a number: «1 ступень», «3 ступени», «5 ступеней».
+pub fn steps_word(n: usize) -> &'static str {
+    util::plural(n as i64, &["ступень", "ступени", "ступеней"])
+}
+
 /// Steps kept after falling with `climbed` steps already answered.
 pub fn safe_below(climbed: usize) -> usize {
     SAFE.iter()
@@ -886,6 +909,30 @@ mod tests {
         l.answer(&mut state, Some(k), day());
         assert!(l.shown.is_empty() && l.hidden.is_empty());
         assert!(Lifeline::ALL.iter().all(|x| !l.can_use(*x)));
+    }
+
+    #[test]
+    fn timer_setting_allows_no_timer_and_defaults_to_30() {
+        let mut s = State::default();
+        assert_eq!(timer_seconds(&s), 30);
+        s.settings.timed_seconds = 0;
+        assert_eq!(timer_seconds(&s), 0);
+        // The old timed exam still sees 30 for «no timer».
+        assert_eq!(exam::base_seconds(&s), 30);
+        s.settings.timed_seconds = 20;
+        assert_eq!(timer_seconds(&s), 20);
+        s.settings.timed_seconds = 45;
+        assert_eq!(timer_seconds(&s), 30);
+        assert_eq!(sanitize_seconds(-1), 30);
+    }
+
+    #[test]
+    fn steps_word_forms() {
+        assert_eq!(steps_word(1), "ступень");
+        assert_eq!(steps_word(3), "ступени");
+        assert_eq!(steps_word(5), "ступеней");
+        assert_eq!(steps_word(11), "ступеней");
+        assert_eq!(steps_word(12), "ступеней");
     }
 
     #[test]

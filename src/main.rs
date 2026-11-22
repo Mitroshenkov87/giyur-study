@@ -141,7 +141,7 @@ impl App {
             ("Карта", Route::Map),
             ("Календарь", Route::Calendar),
             ("Повторение", Route::Cards(Deck::Review)),
-            ("Экзамен", Route::Timed),
+            ("Маалот", Route::Timed),
             ("Тесты", Route::Exam(None)),
             ("Прогресс", Route::Progress),
             ("Настройки", Route::Settings),
