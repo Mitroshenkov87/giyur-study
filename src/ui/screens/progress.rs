@@ -506,6 +506,8 @@ pub enum Msg {
     CloseObject,
     ToggleCaption,
     Model3dReady,
+    /// «Тренажёр собеседования»: open the trainer (a tab of it).
+    OpenInterview(crate::interview::Mode),
 }
 
 /// js/exam.js E.MODE_TITLES (history entries store the raw mode string).
@@ -769,6 +771,7 @@ impl Screen {
                 Action::None
             }
             Msg::OpenLesson(id) => Action::Go(Route::Lesson(id)),
+            Msg::OpenInterview(m) => Action::Go(Route::Interview(m)),
             Msg::OpenObject(m) => {
                 let unlocked = self.collection.iter().any(|c| c.model == m && c.unlocked);
                 if self.open_object == Some(m) {
@@ -801,6 +804,7 @@ impl Screen {
             column![widgets::kicker("Ваш путь"), widgets::heading("Успехи", 1),].spacing(6),
             self.kpis(p),
             self.game_card(p),
+            interview_card(ctx, p),
             self.collection_card(ctx, p),
             self.badges_card(p),
             self.activity_card(p),
@@ -1670,4 +1674,64 @@ fn tip_style(p: &Palette) -> container::Style {
         text_color: None,
         snap: true,
     }
+}
+
+/// «Тренажёр собеседования с бейт-дином» in «Успехи»: questions practised,
+/// readiness by the last self-ratings, mock interviews.
+fn interview_card<'a>(ctx: &'a Ctx, p: Palette) -> Element<'a, Msg> {
+    use crate::interview::{self, Mode};
+    let st = interview::stats(&ctx.state, ctx.today());
+    let frac = st.readiness as f32 / 100.0;
+    let mut col = Column::new().spacing(12).width(Length::Fill);
+    col = col.push(
+        row![
+            widgets::heading("Тренажёр собеседования", 3),
+            space::horizontal(),
+            txt(format!("готовность {}%", st.readiness))
+                .size(theme::text::BODY)
+                .font(SANS_BOLD)
+                .color(p.gold2),
+        ]
+        .spacing(8)
+        .align_y(Alignment::Center),
+    );
+    col = col.push(
+        progress_bar(0.0..=1.0, frac)
+            .girth(6)
+            .style(move |_| bar_style(&p, p.gold)),
+    );
+    let runs = match (st.last_run, st.best_run) {
+        (Some(last), Some(best)) => format!(
+            "{} {} · последняя {last}% · лучшая {best}%",
+            st.runs,
+            util::plural(st.runs as i64, &["репетиция", "репетиции", "репетиций"])
+        ),
+        _ => "Репетиций пока не было".to_string(),
+    };
+    col = col.push(
+        txt(format!(
+            "Отработано {} из {} вопросов · «Готов» — {} · к повторению сегодня — {}. {runs}.",
+            st.practiced, st.total, st.ready, st.due
+        ))
+        .size(theme::text::SMALL)
+        .color(p.muted),
+    );
+    col = col.push(
+        row![
+            widgets::btn(
+                "Практика",
+                widgets::Btn::Secondary,
+                widgets::BtnSize::Sm,
+                Some(Msg::OpenInterview(Mode::Practice)),
+            ),
+            widgets::btn(
+                "Репетиция",
+                widgets::Btn::Ghost,
+                widgets::BtnSize::Sm,
+                Some(Msg::OpenInterview(Mode::Rehearsal)),
+            ),
+        ]
+        .spacing(10),
+    );
+    widgets::card(col)
 }

@@ -97,7 +97,7 @@ pub fn route(index: usize) -> Route {
 /// Which item is highlighted for a route (`None` on the welcome screen).
 pub fn group(r: &Route) -> Option<usize> {
     Some(match r {
-        Route::Map | Route::Section(_) | Route::Lesson(_) => 0,
+        Route::Map | Route::Section(_) | Route::Lesson(_) | Route::Interview(_) => 0,
         Route::Calendar => 1,
         Route::Cards(Deck::Review) => 2,
         Route::Cards(_) => 0,

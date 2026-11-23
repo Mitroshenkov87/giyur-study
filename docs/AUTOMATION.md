@@ -82,7 +82,9 @@ failure, `error`. Action commands reply with a short summary (`screen`,
 `calendar:YYYY-MM-DD`, `section:<id>`, `lesson:<id>`, `cards:<lessonId>`,
 `deck:<sectionId>`, `cards:review`, `exam`, `exam:<sectionId>`,
 `examrun:section:<id>[:n]`, `examrun:general[:n]`, `examrun:beitdin[:n]`,
-`timed`, `timedrun`, `progress`, `settings`, `sources`. Until the first-run
+`timed`, `timedrun`, `progress`, `settings`, `sources`, `interview`
+(«Тренажёр собеседования»: `interview:practice`, `interview:rehearsal` open
+its tabs). Until the first-run
 level choice is made, every route goes to the welcome screen, as in the app.
 
 **Sidebar labels.** `navigate` takes the sidebar names from the app's own
@@ -114,6 +116,9 @@ prefix plus a hash. `label` joins the visible texts inside the control.
 - `knew`: flashcard; flips the card first when needed, then «Вспомнил» /
   «Не вспомнил».
 - `self_grade`: open (beit-din) questions; reveals the model answer and grades.
+  On the interview trainer it reveals the guidance and rates the answer
+  (≥ 0.75 «Готов», ≥ 0.25 «Частично», otherwise «Ещё не готов»); `next`
+  goes on to the next question.
 - `auto`: any answer to whatever question is shown (smoke tests).
 - `next`: then press «Далее» / «Дальше».
 

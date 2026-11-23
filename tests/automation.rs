@@ -66,6 +66,11 @@ fn exam_setup_mode_tiles() {
 }
 
 #[test]
+fn interview_trainer() {
+    run_script("09-interview.jsonl");
+}
+
+#[test]
 fn errors_are_replies_not_panics() {
     let mut s = session();
     for req in [
