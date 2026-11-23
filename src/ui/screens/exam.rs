@@ -13,7 +13,7 @@ use iced::keyboard::{self, key};
 use iced::widget::canvas::{self, Canvas, Frame, Path, Stroke};
 use iced::widget::text::Shaping;
 use iced::widget::{
-    button, center, checkbox, column, container, pick_list, row, space, stack, text, text_editor,
+    button, checkbox, column, container, pick_list, row, space, stack, text, text_editor,
     text_input, Column, Row, Text,
 };
 use iced::{
@@ -198,63 +198,17 @@ fn score_ring<'a, Message: 'a>(pct: i64, size: f32) -> Element<'a, Message> {
     stack![canvas, label].width(Length::Shrink).into()
 }
 
-/// Quit-confirm dialog (§0.3): dimmed backdrop (click = cancel) + modal card.
-/// Rendered as a shell layer above the whole window (see `screens::mod.rs`).
+/// Quit-confirm dialog (§0.3), the shared calm style (t164u). Rendered as a
+/// shell layer above the whole window (see `screens::mod.rs`).
 fn confirm_dialog<'a>(title: &'a str, body: &'a str) -> Element<'a, Msg> {
-    let p = tp();
-    let dialog = container(
-        column![
-            serif(title, theme::text::H2).color(p.text),
-            txt(body).size(theme::text::BODY).color(p.text),
-            row![
-                space::horizontal(),
-                widgets::btn(
-                    "Отмена",
-                    widgets::Btn::Ghost,
-                    widgets::BtnSize::Md,
-                    Some(Msg::QuitCancel),
-                ),
-                widgets::btn(
-                    "Выйти",
-                    widgets::Btn::Primary,
-                    widgets::BtnSize::Md,
-                    Some(Msg::QuitConfirm),
-                ),
-            ]
-            .spacing(10)
-            .width(Length::Fill),
-        ]
-        .spacing(14)
-        .width(Length::Fill),
+    widgets::confirm_modal(
+        title,
+        body,
+        "Продолжить",
+        "Выйти",
+        Msg::QuitCancel,
+        Msg::QuitConfirm,
     )
-    .padding(24)
-    .max_width(460)
-    .style(move |_| container::Style {
-        background: Some(Background::Color(p.surface)),
-        border: Border {
-            color: p.line2,
-            width: 1.0,
-            radius: theme::radius::MODAL.into(),
-        },
-        shadow: Shadow {
-            color: Color::from_rgba8(0, 0, 0, 0.5),
-            offset: iced::Vector::new(0.0, 12.0),
-            blur_radius: 34.0,
-        },
-        ..plain()
-    });
-    let back = Color::from_rgba8(3, 5, 12, 0.66);
-    let backdrop = button(container(space()).style(move |_| container::Style {
-        background: Some(Background::Color(back)),
-        ..plain()
-    }))
-    .width(Length::Fill)
-    .height(Length::Fill)
-    .on_press(Msg::QuitCancel);
-    stack![backdrop, center(widgets::modal_fit(dialog)).padding(16)]
-        .width(Length::Fill)
-        .height(Length::Fill)
-        .into()
 }
 
 /// Badge / goal toasts after a finished run (mirrors `Ctx::award` effects;
@@ -423,6 +377,11 @@ struct Run {
     kp: Vec<bool>,
     differs_open: bool,
     confirm_quit: bool,
+    /// «Открытый режим рецензента»: the answer of the current question is
+    /// shown without an attempt («Показать ответ»).
+    peek: bool,
+    /// What started this run, for «Пройти ещё раз» on the results.
+    spec: Option<ExamSpec>,
 }
 
 impl Run {
@@ -442,12 +401,26 @@ impl Run {
             kp: Vec::new(),
             differs_open: false,
             confirm_quit: false,
+            peek: false,
+            spec: None,
         };
         run.reset_question();
         run
     }
 
+    /// «Открытый режим рецензента»: show question `idx` (0-based) as it
+    /// stands: answered ones with their feedback, the rest fresh.
+    fn go_to(&mut self, idx: usize) {
+        if idx >= self.items.len() {
+            return;
+        }
+        self.idx = idx;
+        self.reset_question();
+        self.answered = self.answers[idx].clone();
+    }
+
     fn reset_question(&mut self) {
+        self.peek = false;
         self.answered = None;
         self.typed = String::new();
         self.open_text = text_editor::Content::new();
@@ -552,6 +525,7 @@ impl Run {
             res,
             cards,
             mistake_ids,
+            again: self.spec.clone(),
         }
     }
 }
@@ -573,6 +547,9 @@ struct Results {
     res: exam::ExamResult,
     cards: Vec<MistakeCard>,
     mistake_ids: Vec<String>,
+    /// The same test once more (GS-29 «Пройти ещё раз»); the best result
+    /// is kept (exam::finish only raises it).
+    again: Option<ExamSpec>,
 }
 
 // ---------------------------------------------------------------------------
@@ -613,9 +590,14 @@ pub enum Msg {
     Quit,
     QuitConfirm,
     QuitCancel,
+    /// «Открытый режим рецензента»: any question (1-based), and its answer.
+    Jump(usize),
+    Peek,
     // Results.
     Retry,
     NewExam,
+    /// «Пройти ещё раз»: the same test again.
+    Again,
     ToSection(String),
     ToMap,
     // Keyboard subscription.
@@ -709,7 +691,9 @@ fn build_run(ctx: &Ctx, spec: &ExamSpec) -> Option<Run> {
             rights: it.rights.clone(),
         })
         .collect();
-    Some(Run::new(s.mode, s.section_id, items, s.started_at))
+    let mut run = Run::new(s.mode, s.section_id, items, s.started_at);
+    run.spec = Some(spec.clone());
+    Some(run)
 }
 
 impl Screen {
@@ -873,6 +857,18 @@ impl Screen {
                 }
                 Action::None
             }
+            Msg::Jump(n) => {
+                if let (true, Phase::Run(run)) = (ctx.reviewer(), &mut self.phase) {
+                    run.go_to(n.saturating_sub(1));
+                }
+                Action::None
+            }
+            Msg::Peek => {
+                if let (true, Phase::Run(run)) = (ctx.reviewer(), &mut self.phase) {
+                    run.peek = !run.peek;
+                }
+                Action::None
+            }
             Msg::DiffersToggle => {
                 if let Phase::Run(run) = &mut self.phase {
                     run.differs_open = !run.differs_open;
@@ -923,6 +919,13 @@ impl Screen {
                 Action::None
             }
             Msg::NewExam => Action::Go(Route::Exam(None)),
+            Msg::Again => match &self.phase {
+                Phase::Results(r) => match r.again.clone() {
+                    Some(spec) => Action::Go(Route::ExamRun(spec)),
+                    None => Action::None,
+                },
+                _ => Action::None,
+            },
             Msg::ToSection(id) => Action::Go(Route::Section(id)),
             Msg::ToMap => Action::Go(Route::Map),
             // ---- Keyboard ----
@@ -982,12 +985,24 @@ impl Screen {
         }
     }
 
+    /// A run in progress (not its results): leaving it via the sidebar
+    /// asks first (`screens::Current::leave_guard`).
+    pub fn leave_guard(&self) -> Option<super::LeaveGuard> {
+        match &self.phase {
+            Phase::Run(_) => Some(super::LeaveGuard {
+                title: super::LEAVE_EXAM_TITLE.to_string(),
+                body: super::LEAVE_EXAM_BODY.to_string(),
+            }),
+            _ => None,
+        }
+    }
+
     /// The quit-confirm dialog, rendered as a shell layer above the window.
     pub fn dialog<'a>(&'a self, _ctx: &'a Ctx) -> Option<Element<'a, Msg>> {
         match &self.phase {
             Phase::Run(run) if run.confirm_quit => Some(confirm_dialog(
                 "Прервать тест?",
-                "Ответы на текущие вопросы сохранятся в статистике, но результат не будет засчитан.",
+                "Результат этой попытки не будет засчитан, а ответы останутся в статистике. Вернуться к тесту можно в любой момент.",
             )),
             _ => None,
         }
@@ -1004,6 +1019,42 @@ impl Screen {
             _ => Subscription::none(),
         }
     }
+}
+
+/// «Показать ответ» (the «Открытый режим рецензента»): the right answer,
+/// the explanation and the source, without an attempt.
+fn peek_view<'a>(q: &'a Question) -> Element<'a, Msg> {
+    let p = tp();
+    let mut col = Column::new().spacing(8).width(Length::Fill);
+    col = col.push(gold_meta("ОТВЕТ · РЕЖИМ РЕЦЕНЗЕНТА"));
+    col = col.push(rich_line(
+        vec![
+            ("Правильный ответ: ".to_string(), false),
+            (exam::correct_text(q), true),
+        ],
+        theme::text::BODY,
+        p.text,
+    ));
+    if let Question::Open { key_points, .. } = q {
+        for kp in key_points {
+            col = col.push(
+                txt(format!("• {kp}"))
+                    .size(theme::text::SMALL)
+                    .color(p.text),
+            );
+        }
+    }
+    if let Some(expl) = &q.common().explanation {
+        col = col.push(widgets::rich_paragraph(expl));
+    }
+    if let Some(src) = &q.common().source {
+        col = col.push(
+            txt(format!("Источник: {src}"))
+                .size(theme::text::SMALL)
+                .color(p.muted),
+        );
+    }
+    tinted_box(col, p.gold_soft, alpha(p.gold, 0.45))
 }
 
 /// Map a section pick-list label back to the section id.
@@ -1365,6 +1416,37 @@ impl Screen {
             .width(Length::Fill),
         );
         col = col.push(widgets::step_bar(run.idx, total));
+        if ctx.reviewer() {
+            let prev = widgets::btn(
+                "‹ Назад",
+                widgets::Btn::Ghost,
+                widgets::BtnSize::Sm,
+                (run.idx > 0).then_some(Msg::Jump(run.idx)),
+            );
+            let next = widgets::btn(
+                "Вперёд ›",
+                widgets::Btn::Ghost,
+                widgets::BtnSize::Sm,
+                (run.idx + 1 < total).then(|| Msg::Jump(run.idx + 2)),
+            );
+            let peek = widgets::btn(
+                if run.peek {
+                    "Скрыть ответ"
+                } else {
+                    "Показать ответ"
+                },
+                widgets::Btn::Secondary,
+                widgets::BtnSize::Sm,
+                run.answered.is_none().then_some(Msg::Peek),
+            );
+            col = col.push(widgets::reviewer_jumps(
+                "Любой вопрос: нажмите номер или «Назад» / «Вперёд». «Показать ответ» открывает правильный ответ без попытки.",
+                total,
+                run.idx + 1,
+                Msg::Jump,
+                vec![prev.into(), next.into(), peek.into()],
+            ));
+        }
 
         // Question card.
         let mut card_col = Column::new().spacing(14).width(Length::Fill);
@@ -1415,6 +1497,8 @@ impl Screen {
         card_col = card_col.push(self.view_body(run, it));
         if run.answered.is_some() {
             card_col = card_col.push(self.view_feedback(ctx, run, it));
+        } else if run.peek {
+            card_col = card_col.push(peek_view(q));
         }
         col = col.push(widgets::card(card_col));
         col.into()
@@ -1897,6 +1981,18 @@ impl Screen {
                 widgets::Btn::Primary,
                 widgets::BtnSize::Md,
                 Some(Msg::Retry),
+            ));
+        }
+        if r.again.is_some() {
+            buttons = buttons.push(widgets::btn(
+                "Пройти ещё раз",
+                if r.mistake_ids.is_empty() {
+                    widgets::Btn::Primary
+                } else {
+                    widgets::Btn::Secondary
+                },
+                widgets::BtnSize::Md,
+                Some(Msg::Again),
             ));
         }
         if !practice {

@@ -619,7 +619,7 @@ impl Screen {
         let mut badges = Vec::new();
         let mut badges_got = 0;
         for b in game::badge_list(lib) {
-            let earned = state.badges.contains_key(&b.id);
+            let earned = game::badge_open(state, &b.id);
             if earned {
                 badges_got += 1;
             }

@@ -68,7 +68,10 @@ impl Screen {
             None => Some(Guard::NotFound),
             Some((lesson, sec)) => {
                 let user = content::Library::user_level(&ctx.state);
-                if !content::Library::visible(lesson.min_level, None, user) {
+                // «Открытый режим рецензента»: any lesson, at any level.
+                if !content::Library::visible(lesson.min_level, None, user)
+                    && !crate::reviewer::active(&ctx.state)
+                {
                     Some(Guard::NotFound)
                 } else if !ctx.lib.is_unlocked(sec, &ctx.state) {
                     Some(Guard::Locked)
@@ -708,6 +711,7 @@ mod tests {
             music_available: false,
             music_error: None,
             music_track_count: 0,
+            sandbox: None,
         }
     }
 

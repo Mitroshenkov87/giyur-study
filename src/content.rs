@@ -810,7 +810,7 @@ impl Library {
         if !sec.available {
             return false;
         }
-        if state.settings.unlock_all {
+        if state.settings.unlock_all || crate::reviewer::active(state) {
             return true;
         }
         let user = Self::user_level(state);

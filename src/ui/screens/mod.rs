@@ -18,6 +18,18 @@ use iced::{Element, Subscription};
 
 use crate::ui::app::{Action, Ctx, Route};
 
+/// The question the shell asks before leaving a run in progress.
+#[derive(Debug, Clone, PartialEq)]
+pub struct LeaveGuard {
+    pub title: String,
+    pub body: String,
+}
+
+/// Title and text of the leave dialog for an exam or a test.
+pub const LEAVE_EXAM_TITLE: &str = "Прервать экзамен?";
+pub const LEAVE_EXAM_BODY: &str =
+    "Прогресс этой попытки не засчитается — вернуться можно в любой момент.";
+
 /// The live screen for the current route.
 pub enum Current {
     Welcome(welcome::Screen),
@@ -149,6 +161,20 @@ impl Current {
     pub fn leave(&mut self, ctx: &mut Ctx) {
         if let Current::Timed(s) = self {
             s.leave(ctx);
+        }
+    }
+
+    /// A run that leaving the screen would cut short (an exam or a test in
+    /// progress, a «Маалот» climb): the shell asks «Прервать экзамен?»
+    /// before a sidebar jump. Never in the «Открытый режим рецензента».
+    pub fn leave_guard(&self, ctx: &Ctx) -> Option<LeaveGuard> {
+        if ctx.reviewer() {
+            return None;
+        }
+        match self {
+            Current::Exam(s) => s.leave_guard(),
+            Current::Timed(s) => s.leave_guard(),
+            _ => None,
         }
     }
 

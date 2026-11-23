@@ -17,6 +17,9 @@ use shorashim::automation::server::{self as control, ControlMsg};
 
 const MAIN_SCROLL: &str = "main-scroll";
 const ASIDE_SCROLL: &str = "aside-scroll";
+/// Height kept at the foot of the sidebar for the hovered item's hint
+/// (four lines of the longest one).
+const NAV_HINT_H: f32 = 100.0;
 
 struct App {
     ctx: Ctx,
@@ -30,6 +33,8 @@ struct App {
     splash: Option<Splash>,
     /// When the app started: toasts raised under the splash wait for it.
     started: Instant,
+    /// A sidebar jump waiting for «Прервать экзамен?» (a run in progress).
+    pending_nav: Option<Route>,
 }
 
 #[derive(Debug, Clone)]
@@ -49,6 +54,10 @@ enum Message {
     SplashSkip,
     /// A click on the toast: close it.
     DismissToast,
+    /// «Прервать экзамен?»: «Остаться» (false) or «Прервать» (true).
+    LeaveAnswer(bool),
+    /// «Выключить» on the «Открытый режим рецензента» banner.
+    ReviewerOff,
 }
 
 fn theme_kind(ctx: &Ctx) -> ThemeKind {
@@ -92,6 +101,7 @@ impl App {
             music: shorashim::music::Controller::start(),
             splash: splash::wanted().then(|| Splash::new(Instant::now())),
             started: Instant::now(),
+            pending_nav: None,
         };
         shorashim::ui::model3d::suppress_live(app.splash.is_some());
         app.maybe_music_hint();
@@ -114,6 +124,7 @@ impl App {
         self.nav_hover = None;
         // First-launch guard (PARITY §0.1).
         let route = if !self.ctx.state.onboarded
+            && !shorashim::reviewer::active(&self.ctx.state)
             && !matches!(route, Route::Welcome | Route::Level { .. })
         {
             Route::Welcome
@@ -189,7 +200,32 @@ impl App {
                     self.sync_music();
                 }
             },
-            Message::Nav(r) => return self.go(r),
+            Message::Nav(r) => {
+                // A sidebar jump out of a run in progress asks first.
+                if r != self.route && self.screen.leave_guard(&self.ctx).is_some() {
+                    self.pending_nav = Some(r);
+                    return Task::none();
+                }
+                return self.go(r);
+            }
+            Message::LeaveAnswer(go) => {
+                if let Some(r) = self.pending_nav.take() {
+                    if go {
+                        return self.go(r);
+                    }
+                }
+            }
+            Message::ReviewerOff => {
+                self.ctx.set_reviewer(false, false);
+                self.ctx.toast(
+                    "Открытый режим рецензента выключен",
+                    "Ваш прогресс — в точности как до включения.",
+                    "",
+                );
+                // Rebuild the screen: its gates are back.
+                self.screen = Current::open(&mut self.ctx, &self.route);
+                theme::set_current(theme_kind(&self.ctx));
+            }
             Message::DismissToast => self.ctx.dismiss_toast(Instant::now()),
             Message::Tick(now) => {
                 // Under the splash toasts wait (see SplashTick).
@@ -360,22 +396,13 @@ impl App {
                 }
             })
             .on_press(Message::Nav(nav::route(i)));
-            let tip = container(
-                text(item.tooltip)
-                    .size(13)
-                    .color(main_p.text)
-                    .shaping(text::Shaping::Advanced),
-            )
-            .padding([7, 11])
-            .max_width(300);
+            // The hint is shown at the foot of the sidebar (below), not as
+            // a floating tooltip: one beside the item covered the page
+            // heading (laptop test of v0.5.5).
             let b = iced::widget::mouse_area(b)
                 .on_enter(Message::NavHover(i, true))
                 .on_exit(Message::NavHover(i, false));
-            col = col.push(
-                iced::widget::tooltip(b, tip, iced::widget::tooltip::Position::Right)
-                    .gap(6)
-                    .style(move |_| theme::tooltip(&main_p)),
-            );
+            col = col.push(b);
         }
         // Nine items and more no longer fit a short window: let the list
         // scroll (no visible bar) instead of clipping the last items.
@@ -384,6 +411,32 @@ impl App {
                 scrollable::Scrollbar::new().width(0).scroller_width(0),
             ))
             .height(Length::Fill);
+        // The hovered item's hint, at the foot of the sidebar: it never
+        // covers the page. The space is kept whether or not an item is
+        // hovered, so the list above never shrinks under the mouse.
+        let hint: Element<'_, Message> = match self.nav_hover.and_then(|i| nav::ITEMS.get(i)) {
+            Some(item) => container(
+                container(
+                    text(item.tooltip)
+                        .size(12.5)
+                        .color(main_p.text)
+                        .shaping(text::Shaping::Advanced),
+                )
+                .padding([7, 11])
+                .width(Length::Fill)
+                .style(move |_| theme::tooltip(&main_p)),
+            )
+            .padding(iced::Padding {
+                top: 4.0,
+                right: 12.0,
+                bottom: 14.0,
+                left: 12.0,
+            })
+            .height(NAV_HINT_H)
+            .into(),
+            None => iced::widget::space().height(NAV_HINT_H).into(),
+        };
+        let col = column![col, hint];
         let panel = container(col)
             .width(layout::NAV)
             .height(Length::Fill)
@@ -402,6 +455,51 @@ impl App {
             .into(),
             None => panel.into(),
         }
+    }
+
+    /// The thin strip on top of the window while the «Открытый режим
+    /// рецензента» is on, with a quick «Выключить».
+    fn reviewer_banner(&self, p: theme::Palette) -> Element<'_, Message> {
+        let off = button(
+            text("Выключить")
+                .size(12.5)
+                .font(fonts::SANS_BOLD)
+                .shaping(text::Shaping::Advanced),
+        )
+        .padding([3, 12])
+        .style(move |_, s| theme::button_secondary(&p, s))
+        .on_press(Message::ReviewerOff);
+        let strip = row![
+            text("◆").size(12).color(p.gold),
+            text(shorashim::reviewer::TITLE)
+                .size(13)
+                .font(fonts::SANS_BOLD)
+                .color(p.gold2)
+                .shaping(text::Shaping::Advanced),
+            text("Открыто всё: разделы, уроки, ступени, предметы, экзамены. Прогресс не засчитывается.")
+                .size(12.5)
+                .color(p.muted)
+                .shaping(text::Shaping::Advanced)
+                .wrapping(text::Wrapping::None),
+            iced::widget::space::horizontal(),
+            off,
+        ]
+        .spacing(10)
+        .align_y(Alignment::Center);
+        container(strip)
+            .padding([4, 16])
+            .width(Length::Fill)
+            .clip(true)
+            .style(move |_| iced::widget::container::Style {
+                background: Some(iced::Background::Color(iced::Color { a: 0.16, ..p.gold })),
+                border: iced::Border {
+                    color: iced::Color { a: 0.55, ..p.gold },
+                    width: 1.0,
+                    radius: 0.0.into(),
+                },
+                ..Default::default()
+            })
+            .into()
     }
 
     /// The main grid for a window `width` (see `layout::compute`).
@@ -597,6 +695,8 @@ impl App {
                     .width(Length::Fill)
                     .height(Length::Fill),
             );
+        } else if self.ctx.reviewer() && !bare {
+            bg = bg.push(column![self.reviewer_banner(p), content]);
         } else {
             bg = bg.push(content);
         }
@@ -606,6 +706,18 @@ impl App {
         let mut layers = stack![bg, self.toasts()];
         if let Some(d) = self.screen.dialog(&self.ctx) {
             layers = layers.push(iced::widget::opaque(d.map(Message::Screen)));
+        }
+        if self.pending_nav.is_some() {
+            if let Some(g) = self.screen.leave_guard(&self.ctx) {
+                layers = layers.push(iced::widget::opaque(widgets::confirm_modal(
+                    g.title,
+                    g.body,
+                    "Продолжить",
+                    "Выйти",
+                    Message::LeaveAnswer(false),
+                    Message::LeaveAnswer(true),
+                )));
+            }
         }
         if let Some(s) = &self.splash {
             layers = layers.push(iced::widget::opaque(

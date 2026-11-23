@@ -19,7 +19,7 @@ use iced::keyboard::{self, key};
 use iced::widget::canvas::{self, Canvas, Frame, Path, Stroke};
 use iced::widget::text::Shaping;
 use iced::widget::{
-    button, center, column, container, responsive, row, space, stack, text, Column, Row, Text,
+    button, column, container, responsive, row, space, stack, text, Column, Row, Text,
 };
 use iced::{
     Alignment, Background, Border, Color, Element, Gradient, Length, Point, Radians, Rectangle,
@@ -273,66 +273,34 @@ fn celebrate_award(ctx: &mut Ctx, award: &AwardOutcome) {
     }
 }
 
-/// Confirm dialog: dimmed backdrop (click = cancel) + modal card. Rendered
-/// as a shell layer above the whole window (see `screens::mod.rs`).
-fn confirm_dialog<'a>(title: String, body: String, yes: String) -> Element<'a, Msg> {
-    let p = tp();
-    let dialog = container(
-        column![
-            txt(title)
-                .font(SERIF_BOLD)
-                .size(theme::text::H2)
-                .color(p.text),
-            txt(body).size(theme::text::BODY).color(p.text),
-            row![
-                space::horizontal(),
-                widgets::btn(
-                    "Продолжить",
-                    widgets::Btn::Ghost,
-                    widgets::BtnSize::Md,
-                    Some(Msg::ConfirmNo),
-                ),
-                widgets::btn(
-                    yes,
-                    widgets::Btn::Primary,
-                    widgets::BtnSize::Md,
-                    Some(Msg::ConfirmYes),
-                ),
-            ]
-            .spacing(10)
-            .width(Length::Fill),
-        ]
-        .spacing(14)
-        .width(Length::Fill),
+/// «Прервать восхождение?» (t164u): the shared calm dialog, «Продолжить»
+/// first. Rendered as a shell layer above the whole window.
+fn confirm_dialog<'a>(body: String) -> Element<'a, Msg> {
+    widgets::confirm_modal(
+        LEAVE_TITLE,
+        body,
+        "Продолжить",
+        "Выйти",
+        Msg::ConfirmNo,
+        Msg::ConfirmYes,
     )
-    .padding(24)
-    .max_width(460)
-    .style(move |_| container::Style {
-        background: Some(Background::Color(p.surface)),
-        border: Border {
-            color: p.line2,
-            width: 1.0,
-            radius: theme::radius::MODAL.into(),
-        },
-        shadow: Shadow {
-            color: Color::from_rgba8(0, 0, 0, 0.5),
-            offset: iced::Vector::new(0.0, 12.0),
-            blur_radius: 34.0,
-        },
-        ..plain()
-    });
-    let back = Color::from_rgba8(3, 5, 12, 0.66);
-    let backdrop = button(container(space()).style(move |_| container::Style {
-        background: Some(Background::Color(back)),
-        ..plain()
-    }))
-    .width(Length::Fill)
-    .height(Length::Fill)
-    .on_press(Msg::ConfirmNo);
-    stack![backdrop, center(widgets::modal_fit(dialog)).padding(16)]
-        .width(Length::Fill)
-        .height(Length::Fill)
-        .into()
+}
+
+/// The title of the leave dialogs.
+const LEAVE_TITLE: &str = "Прервать восхождение?";
+
+/// What leaving now means, said gently and truthfully: no answers yet —
+/// the run does not count; steps climbed — they stay (as «Забрать»).
+fn leave_note(climbed: usize) -> String {
+    if climbed == 0 {
+        "Эта попытка не будет засчитана — ничего страшного, подняться можно в любой момент."
+            .to_string()
+    } else {
+        format!(
+            "Восхождение на этом закончится, а {climbed} {} останутся за вами. Продолжить можно и позже — новой попыткой.",
+            ladder::steps_word(climbed)
+        )
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -740,6 +708,28 @@ impl Run {
         !self.frozen && self.secs > 0 && self.playing() && Instant::now() >= self.timer_end
     }
 
+    /// «Открытый режим рецензента»: stand on step `n` (1-based) as if the
+    /// steps below were climbed; the lamp walks there.
+    fn jump(&mut self, n: usize) {
+        let n = n.clamp(1, self.ladder.len().max(1));
+        let now = Instant::now();
+        let before = self.climber_pos(now);
+        self.ladder.climbed = n - 1;
+        self.ladder.outcome = None;
+        self.ladder.fell_pick = None;
+        self.ladder.shown.clear();
+        self.ladder.hidden.clear();
+        self.reveal = None;
+        self.confirm = false;
+        self.confirm_at = None;
+        self.done = None;
+        if !self.frozen {
+            self.climb_from = before;
+            self.climb_at = Some(now);
+        }
+        self.start_clock();
+    }
+
     /// From a right answer's reveal to the next step.
     fn advance(&mut self) {
         self.reveal = None;
@@ -838,6 +828,8 @@ pub enum Msg {
     ConfirmYes,
     ConfirmNo,
     Next,
+    /// «Открытый режим рецензента»: go straight to step n (1-based).
+    Jump(usize),
     // Results.
     Again,
     ToMap,
@@ -1058,6 +1050,24 @@ impl Screen {
                     self.end(ctx);
                 }
             }
+            Msg::Jump(n) => {
+                if !ctx.reviewer() {
+                    return Action::None;
+                }
+                match &mut self.phase {
+                    Phase::Run(run) => run.jump(n),
+                    // From the results: a new ladder, standing on step n.
+                    _ => {
+                        if let Some(l) =
+                            ladder::build(&ctx.lib, &ctx.state, &mut rand::thread_rng())
+                        {
+                            let mut run = Run::new(l, run_seconds(ctx));
+                            run.jump(n);
+                            self.phase = Phase::Run(Box::new(run));
+                        }
+                    }
+                }
+            }
             Msg::Tick(now) => {
                 if let Phase::Run(run) = &mut self.phase {
                     run.tick(ctx, now);
@@ -1104,31 +1114,31 @@ impl Screen {
     fn view_at<'a>(&'a self, ctx: &'a Ctx, w: f32) -> Element<'a, Msg> {
         match &self.phase {
             Phase::Setup => view_setup(ctx, w),
-            Phase::Run(run) => view_run(run, w, crate::ui::model3d::enabled(ctx)),
+            Phase::Run(run) => view_run(run, w, crate::ui::model3d::enabled(ctx), ctx.reviewer()),
             Phase::Results(r) => view_results(ctx, r, w),
+        }
+    }
+
+    /// A climb in progress: leaving it via the sidebar asks first
+    /// (`screens::Current::leave_guard`). Like «Забрать», leaving keeps the
+    /// steps climbed, so the text says so.
+    pub fn leave_guard(&self) -> Option<super::LeaveGuard> {
+        match &self.phase {
+            Phase::Run(run) if run.ladder.outcome.is_none() && !run.frozen => {
+                let n = run.ladder.climbed;
+                Some(super::LeaveGuard {
+                    title: LEAVE_TITLE.to_string(),
+                    body: leave_note(n),
+                })
+            }
+            _ => None,
         }
     }
 
     /// The walk-away / leave dialog, rendered as a shell layer above the window.
     pub fn dialog<'a>(&'a self, _ctx: &'a Ctx) -> Option<Element<'a, Msg>> {
         match &self.phase {
-            Phase::Run(run) if run.confirm => {
-                let n = run.ladder.climbed;
-                Some(if n == 0 {
-                    confirm_dialog(
-                        "Выйти из игры?".to_string(),
-                        "Ответов пока нет, игра не будет засчитана.".to_string(),
-                        "Выйти".to_string(),
-                    )
-                } else {
-                    confirm_dialog(
-                        format!("Забрать {n} {}?", ladder::steps_word(n)),
-                        "Игра на этом закончится, а пройденные ступени останутся за вами."
-                            .to_string(),
-                        "Забрать".to_string(),
-                    )
-                })
-            }
+            Phase::Run(run) if run.confirm => Some(confirm_dialog(leave_note(run.ladder.climbed))),
             _ => None,
         }
     }
@@ -1196,6 +1206,15 @@ fn view_setup<'a>(ctx: &'a Ctx, w: f32) -> Element<'a, Msg> {
         .spacing(10)
         .width(Length::Fill),
     );
+    if ctx.reviewer() {
+        col = col.push(widgets::reviewer_jumps(
+            "Начать сразу с любой ступени: нажмите номер.",
+            ladder::STEPS,
+            0,
+            Msg::Jump,
+            Vec::new(),
+        ));
+    }
     col = col.push(widgets::quote_block(
         "В пять лет — к Микре, в десять — к Мишне, в тринадцать — к мицвот, … \
          в пятнадцать — к Гмаре",
@@ -1659,7 +1678,7 @@ fn reveal_view<'a>(run: &'a Run, rv: &'a Reveal) -> Element<'a, Msg> {
     tinted_box(col, bg, alpha(color, 0.45))
 }
 
-fn view_run<'a>(run: &'a Run, w: f32, three_d: bool) -> Element<'a, Msg> {
+fn view_run<'a>(run: &'a Run, w: f32, three_d: bool, reviewer: bool) -> Element<'a, Msg> {
     let p = tp();
     let l = &run.ladder;
     let wide = w >= WIDE;
@@ -1848,7 +1867,17 @@ fn view_run<'a>(run: &'a Run, w: f32, three_d: bool) -> Element<'a, Msg> {
             .width(Length::Fill)
             .into()
     };
-    column![top, body].spacing(16).width(Length::Fill).into()
+    let mut page = column![top].spacing(16).width(Length::Fill);
+    if reviewer {
+        page = page.push(widgets::reviewer_jumps(
+            "Любая ступень сразу: нажмите номер. Ответы и рекорды не засчитываются.",
+            l.len(),
+            run.reveal.as_ref().map_or(l.step_no(), |rv| rv.no),
+            Msg::Jump,
+            Vec::new(),
+        ));
+    }
+    page.push(body).into()
 }
 
 // ---------------------------------------------------------------------------
@@ -2024,6 +2053,7 @@ mod tests {
             music_available: false,
             music_error: None,
             music_track_count: 0,
+            sandbox: None,
         }
     }
 

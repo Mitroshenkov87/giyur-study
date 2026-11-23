@@ -12,6 +12,7 @@ fn session() -> Session {
     Session::new(Options {
         data: None,
         today: chrono::NaiveDate::from_ymd_opt(2026, 11, 22),
+        reviewer: false,
     })
 }
 
@@ -225,4 +226,346 @@ fn prayers_display_toggle_hides_and_persists() {
     // An unknown prayer id is refused, not silently opened.
     let bad = s.run(&json!({"cmd": "navigate", "to": "prayers:nope"}));
     assert_eq!(bad["ok"], false, "{bad}");
+}
+
+/// Progress as stored, without the settings (which the reviewer mode may
+/// change: the switch itself, theme, font).
+fn progress_without_settings(v: &Value) -> Value {
+    let mut v = v.clone();
+    v.as_object_mut().expect("object").remove("settings");
+    v
+}
+
+fn file_json(path: &std::path::Path) -> Value {
+    serde_json::from_str(&std::fs::read_to_string(path).expect("progress file")).expect("json")
+}
+
+/// «Открытый режим рецензента»: every gate opens, and whatever is done in
+/// it — exams, «Маалот» runs, flashcards, lessons — never reaches the real
+/// progress; switching it off restores exactly the state before.
+#[test]
+fn reviewer_mode_opens_everything_and_leaves_progress_untouched() {
+    let dir = std::env::temp_dir().join(format!("shorashim-reviewer-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    let path = dir.join("progress.json");
+    let mut s = Session::new(Options {
+        data: Some(path.clone()),
+        today: chrono::NaiveDate::from_ymd_opt(2026, 11, 22),
+        reviewer: false,
+    });
+    let ok = |s: &mut Session, c: Value| {
+        let r = s.run(&c);
+        assert_eq!(r["ok"], json!(true), "{c} → {r}");
+        r
+    };
+    ok(&mut s, json!({"cmd": "press", "label": "Начать"}));
+    ok(&mut s, json!({"cmd": "press", "contains": "Реформистский"}));
+    // Some real progress first: a read lesson and XP.
+    let lesson_id = {
+        let lib = &s.ctx.lib;
+        lib.lessons(&lib.sections[0], shorashim::storage::Level::Reform)[0]
+            .id
+            .clone()
+    };
+    s.ctx
+        .state
+        .lessons_read
+        .insert(lesson_id, "2026-11-22".to_string());
+    s.ctx.award(12);
+    let before_state = serde_json::to_value(&s.ctx.state).unwrap();
+    let before_file = file_json(&path);
+    assert_eq!(before_file["xpTotal"], json!(12));
+    let locked: Vec<String> = s
+        .ctx
+        .lib
+        .sections
+        .iter()
+        .filter(|sec| sec.available && !s.ctx.lib.is_unlocked(sec, &s.ctx.state))
+        .map(|sec| sec.id.clone())
+        .collect();
+    assert!(!locked.is_empty());
+
+    // On.
+    let r = ok(&mut s, json!({"cmd": "reviewer", "on": true}));
+    assert_eq!(r["reviewer"], json!(true));
+    assert_eq!(r["progress"]["xp_total"], json!(12));
+    assert_eq!(file_json(&path)["settings"]["reviewerMode"], json!(true));
+
+    // Every gate is open.
+    for id in &locked {
+        let r = ok(
+            &mut s,
+            json!({"cmd": "navigate", "to": format!("section:{id}"), "state": true}),
+        );
+        assert_eq!(r["screen"], json!("section"));
+        assert!(!r.to_string().contains("пока закрыт"), "{id}: {r}");
+    }
+    ok(&mut s, json!({"cmd": "navigate", "to": "progress"}));
+    assert_eq!(
+        shorashim::collection::count(&s.ctx.state),
+        shorashim::collection::ITEMS.len()
+    );
+
+    // An exam: free navigation, answers revealed, run to the results.
+    ok(
+        &mut s,
+        json!({"cmd": "navigate", "to": format!("examrun:section:{}:4", locked[0])}),
+    );
+    ok(&mut s, json!({"cmd": "press", "id": "Exam(Jump(3))"}));
+    let r = ok(
+        &mut s,
+        json!({"cmd": "press", "id": "Exam(Peek)", "state": true}),
+    );
+    assert!(r.to_string().contains("Правильный ответ"), "{r}");
+    ok(&mut s, json!({"cmd": "press", "id": "Exam(Jump(1))"}));
+    for _ in 0..4 {
+        ok(&mut s, json!({"cmd": "answer", "auto": true, "next": true}));
+    }
+    assert!(
+        s.screen.leave_guard(&s.ctx).is_none(),
+        "no confirm in the mode"
+    );
+    // «Маалот»: straight to step 12, a wrong answer, the results.
+    ok(
+        &mut s,
+        json!({"cmd": "set", "key": "timed_seconds", "value": 0}),
+    );
+    ok(&mut s, json!({"cmd": "navigate", "to": "timed"}));
+    ok(&mut s, json!({"cmd": "press", "id": "Timed(Jump(12))"}));
+    ok(&mut s, json!({"cmd": "wait", "ms": 2600}));
+    let r = ok(&mut s, json!({"cmd": "state"}));
+    assert!(
+        r.to_string().contains("Ступень 12 из 15") || r.to_string().contains("СТУПЕНЬ 12 ИЗ 15"),
+        "{r}"
+    );
+    ok(&mut s, json!({"cmd": "answer", "auto": true}));
+    // Flashcards of a locked section, a lesson marked read.
+    ok(
+        &mut s,
+        json!({"cmd": "navigate", "to": format!("deck:{}", locked[0])}),
+    );
+    let _ = s.run(&json!({"cmd": "answer", "knew": true}));
+    let _ = s.run(&json!({"cmd": "answer", "knew": true}));
+    let l2 = {
+        let lib = &s.ctx.lib;
+        let sec = lib.section(&locked[0]).unwrap();
+        lib.lessons(sec, shorashim::storage::Level::Orthodox)[0]
+            .id
+            .clone()
+    };
+    ok(
+        &mut s,
+        json!({"cmd": "navigate", "to": format!("lesson:{l2}")}),
+    );
+    let _ = s.run(&json!({"cmd": "press", "contains": "Отметить прочитанным"}));
+
+    // Nothing reached the file, and no XP even in the sandbox.
+    assert_eq!(
+        progress_without_settings(&file_json(&path)),
+        progress_without_settings(&before_file)
+    );
+    assert_eq!(s.ctx.state.xp_total, 12);
+    let r = ok(&mut s, json!({"cmd": "reviewer"}));
+    assert_eq!(r["progress"]["xp_total"], json!(12));
+    assert_eq!(
+        r["progress"]["exams_taken"],
+        json!(before_state["exams"].as_array().map_or(0, |a| a.len()))
+    );
+
+    // Off: exactly the state before.
+    let r = ok(&mut s, json!({"cmd": "reviewer", "on": false}));
+    assert_eq!(r["reviewer"], json!(false));
+    // Progress exactly as before; settings changed in the mode are kept.
+    let after_state = serde_json::to_value(&s.ctx.state).unwrap();
+    assert_eq!(
+        progress_without_settings(&after_state),
+        progress_without_settings(&before_state)
+    );
+    assert_eq!(after_state["settings"]["timedSeconds"], json!(0));
+    assert_eq!(after_state["settings"]["reviewerMode"], json!(false));
+    assert_eq!(
+        progress_without_settings(&file_json(&path)),
+        progress_without_settings(&before_file)
+    );
+    assert_eq!(file_json(&path)["settings"], after_state["settings"]);
+    for id in &locked {
+        let sec = s.ctx.lib.section(id).unwrap();
+        assert!(
+            !s.ctx.lib.is_unlocked(sec, &s.ctx.state),
+            "{id} locked again"
+        );
+    }
+    let _ = std::fs::remove_dir_all(&dir);
+}
+
+/// A sidebar jump out of an exam in progress asks «Прервать экзамен?»;
+/// the «Маалот» climb asks «Прервать восхождение?» (t164u); the results
+/// do not.
+#[test]
+fn leaving_a_run_asks_first() {
+    let mut s = session();
+    s.run(&json!({"cmd": "press", "label": "Начать"}));
+    s.run(&json!({"cmd": "press", "contains": "Ортодоксальный"}));
+    s.run(&json!({"cmd": "navigate", "to": "examrun:section:osnovy:2"}));
+    let g = s.screen.leave_guard(&s.ctx).expect("exam run guard");
+    assert_eq!(g.title, "Прервать экзамен?");
+    assert_eq!(g.body, shorashim::ui::screens::LEAVE_EXAM_BODY);
+    assert!(g.body.contains("не засчитается"), "{g:?}");
+    s.run(&json!({"cmd": "answer", "auto": true, "next": true}));
+    s.run(&json!({"cmd": "answer", "auto": true, "next": true}));
+    assert!(
+        s.screen.leave_guard(&s.ctx).is_none(),
+        "results: nothing to lose"
+    );
+    s.run(&json!({"cmd": "set", "key": "timed_seconds", "value": 0}));
+    s.run(&json!({"cmd": "navigate", "to": "timedrun"}));
+    let g = s.screen.leave_guard(&s.ctx).expect("ladder guard");
+    assert_eq!(g.title, "Прервать восхождение?");
+    assert!(g.body.contains("не будет засчитана"), "{g:?}");
+    // In the reviewer mode nothing asks.
+    s.run(&json!({"cmd": "reviewer", "on": true, "persist": false}));
+    s.run(&json!({"cmd": "navigate", "to": "examrun:section:osnovy:2"}));
+    assert!(s.screen.leave_guard(&s.ctx).is_none());
+}
+
+/// `--reviewer` (headless) starts in the mode for this run only.
+#[test]
+fn reviewer_flag_is_for_this_run_only() {
+    let dir = std::env::temp_dir().join(format!("shorashim-reviewer-flag-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    let path = dir.join("progress.json");
+    let s = Session::new(Options {
+        data: Some(path.clone()),
+        today: chrono::NaiveDate::from_ymd_opt(2026, 11, 22),
+        reviewer: true,
+    });
+    assert!(s.ctx.reviewer());
+    assert_eq!(file_json(&path)["settings"]["reviewerMode"], json!(false));
+    drop(s);
+    let s = Session::new(Options {
+        data: Some(path.clone()),
+        today: chrono::NaiveDate::from_ymd_opt(2026, 11, 22),
+        reviewer: false,
+    });
+    assert!(!s.ctx.reviewer());
+    let _ = std::fs::remove_dir_all(&dir);
+}
+
+/// GS-29 and t162u: every movement has its own progress (the progress made
+/// so far belongs to the movement chosen now), a fresh track starts with
+/// the Torah scroll (also the first «предмет дня»), «Сбросить прохождение»
+/// clears one movement or all, and a finished test can be taken again.
+#[test]
+fn movement_tracks_reset_replay_and_the_torah_scroll_first() {
+    use shorashim::storage::Level;
+    use shorashim::ui::model3d::Model;
+    use shorashim::ui::screens::map::day_object;
+    let dir = std::env::temp_dir().join(format!("shorashim-tracks-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    let path = dir.join("progress.json");
+    let mut s = Session::new(Options {
+        data: Some(path.clone()),
+        today: chrono::NaiveDate::from_ymd_opt(2026, 11, 22),
+        reviewer: false,
+    });
+    let ok = |s: &mut Session, c: Value| {
+        let r = s.run(&c);
+        assert_eq!(r["ok"], json!(true), "{c} → {r}");
+        r
+    };
+    // A fresh profile: the Torah scroll is the first object and the object
+    // of the day.
+    assert!(shorashim::collection::is_unlocked(
+        &s.ctx.state,
+        "torah-scroll"
+    ));
+    assert_eq!(shorashim::collection::count(&s.ctx.state), 1);
+    ok(&mut s, json!({"cmd": "press", "label": "Начать"}));
+    ok(
+        &mut s,
+        json!({"cmd": "press", "contains": "Ортодоксальный"}),
+    );
+    assert_eq!(day_object(&s.ctx), Model::TorahScroll);
+    let r = ok(
+        &mut s,
+        json!({"cmd": "navigate", "to": "map", "state": true}),
+    );
+    assert!(r.to_string().contains("Свиток Торы"), "{r}");
+
+    // Some orthodox progress.
+    s.ctx
+        .state
+        .lessons_read
+        .insert("semya-3".into(), "2026-11-22".into());
+    s.ctx.award(10);
+    shorashim::collection::sync(&mut s.ctx.state, "2026-11-22");
+    s.ctx.save();
+    assert!(shorashim::collection::is_unlocked(&s.ctx.state, "chuppah"));
+
+    // Reform: its own, empty progress, starting with the Torah scroll.
+    ok(&mut s, json!({"cmd": "navigate", "to": "level"}));
+    ok(&mut s, json!({"cmd": "press", "contains": "Реформистский"}));
+    ok(&mut s, json!({"cmd": "press", "id": "Level(ConfirmYes)"}));
+    assert_eq!(s.ctx.state.settings.level, Some(Level::Reform));
+    assert!(s.ctx.state.lessons_read.is_empty());
+    assert_eq!(s.ctx.state.xp_total, 0);
+    assert!(!shorashim::collection::is_unlocked(&s.ctx.state, "chuppah"));
+    assert!(shorashim::collection::is_unlocked(
+        &s.ctx.state,
+        "torah-scroll"
+    ));
+    assert_eq!(day_object(&s.ctx), Model::TorahScroll);
+    let saved = file_json(&path);
+    assert_eq!(saved["xpTotal"], json!(0));
+    assert_eq!(saved["tracks"]["orthodox"]["xpTotal"], json!(10));
+
+    // Back to orthodox: everything is there again.
+    ok(&mut s, json!({"cmd": "navigate", "to": "level"}));
+    ok(
+        &mut s,
+        json!({"cmd": "press", "contains": "Ортодоксальный"}),
+    );
+    ok(&mut s, json!({"cmd": "press", "id": "Level(ConfirmYes)"}));
+    assert_eq!(s.ctx.state.xp_total, 10);
+    assert!(s.ctx.state.lessons_read.contains_key("semya-3"));
+
+    // Replay: a section test, then «Пройти ещё раз»; the best is kept.
+    ok(
+        &mut s,
+        json!({"cmd": "navigate", "to": "examrun:section:osnovy:4"}),
+    );
+    for _ in 0..4 {
+        ok(&mut s, json!({"cmd": "answer", "auto": true, "next": true}));
+    }
+    let best = s.ctx.state.best.get("osnovy").copied();
+    assert!(best.is_some());
+    ok(&mut s, json!({"cmd": "press", "id": "Exam(Again)"}));
+    assert!(s.screen.leave_guard(&s.ctx).is_some(), "a new run is on");
+    assert_eq!(s.ctx.state.best.get("osnovy").copied(), best);
+
+    // «Сбросить прохождение» → only this movement.
+    ok(&mut s, json!({"cmd": "navigate", "to": "settings"}));
+    ok(&mut s, json!({"cmd": "press", "id": "Settings(AskReset)"}));
+    let r = ok(&mut s, json!({"cmd": "state"}));
+    assert!(r.to_string().contains("Все течения"), "{r}");
+    ok(
+        &mut s,
+        json!({"cmd": "press", "id": "Settings(ResetCurrent)"}),
+    );
+    assert!(s.ctx.state.lessons_read.is_empty());
+    assert_eq!(s.ctx.state.xp_total, 0);
+    assert!(s.ctx.state.onboarded);
+    assert_eq!(s.ctx.state.settings.level, Some(Level::Orthodox));
+    assert_eq!(shorashim::collection::count(&s.ctx.state), 1);
+    assert!(shorashim::tracks::stored(&s.ctx.state).contains(&Level::Reform));
+    // … and all of them.
+    ok(&mut s, json!({"cmd": "navigate", "to": "settings"}));
+    ok(&mut s, json!({"cmd": "press", "id": "Settings(AskReset)"}));
+    ok(&mut s, json!({"cmd": "press", "id": "Settings(ConfirmOk)"}));
+    assert!(shorashim::tracks::stored(&s.ctx.state).is_empty());
+    assert!(file_json(&path).get("tracks").is_none());
+    let _ = std::fs::remove_dir_all(&dir);
 }

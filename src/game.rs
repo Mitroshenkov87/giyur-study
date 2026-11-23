@@ -156,6 +156,16 @@ pub struct AwardOutcome {
 
 /// award(amount) adds XP for today, records goal / streak / freezes, checks badges.
 pub fn award(lib: &Library, state: &mut State, amount: i64, today: NaiveDate) -> AwardOutcome {
+    // «Открытый режим рецензента»: progress is not counted.
+    if crate::reviewer::active(state) {
+        return AwardOutcome {
+            amount: 0,
+            goal_reached: false,
+            freeze_earned: false,
+            celebration: None,
+            new_badges: Vec::new(),
+        };
+    }
     let today_key = util::day_key(today);
     let amount = amount.max(0);
     if amount > 0 {
@@ -400,8 +410,17 @@ pub fn badge_ok(b: &Badge, lib: &Library, state: &State, today: NaiveDate) -> bo
     }
 }
 
+/// Whether a badge shows as earned in «Успехи» (all of them in the
+/// «Открытый режим рецензента»).
+pub fn badge_open(state: &State, id: &str) -> bool {
+    crate::reviewer::active(state) || state.badges.contains_key(id)
+}
+
 /// Unlock newly earned badges; returns the fresh ones (js/game.js G.checkBadges).
 pub fn check_badges(lib: &Library, state: &mut State, today: NaiveDate) -> Vec<Badge> {
+    if crate::reviewer::active(state) {
+        return Vec::new();
+    }
     let today_key = util::day_key(today);
     let bs = best_streak(state, today);
     state.counters.insert("bestStreak".to_string(), bs);

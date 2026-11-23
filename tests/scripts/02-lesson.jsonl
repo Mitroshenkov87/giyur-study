@@ -6,8 +6,8 @@
 {"cmd":"press","id":"Lesson(Reveal(\"osnovy-bd1\"))","expect":{"screen":"lesson"}}
 {"cmd":"press","id":"Lesson(MarkRead)","expect":{"min_xp":10}}
 {"cmd":"press","contains":"Следующий урок","expect":{"route":"lesson:osnovy-2"}}
-# The read lesson puts its 3D object (Маген Давид) into the «Успехи» collection; it opens in the viewer.
+# The read lesson puts its 3D object (Маген Давид) into the «Успехи» collection next to the Torah scroll (open from the start); it opens in the viewer.
 {"cmd":"navigate","to":"progress","expect":{"screen":"progress","text":"Коллекция предметов","control":"Progress(OpenObject(MagenDavid))"}}
-{"cmd":"state","expect":{"text":"1 из 22"}}
+{"cmd":"state","expect":{"text":"2 из 22","control":"Progress(OpenObject(TorahScroll))"}}
 {"cmd":"press","id":"Progress(OpenObject(MagenDavid))","expect":{"text":"Из вашей коллекции"}}
 {"cmd":"press","label":"Свернуть","expect":{"screen":"progress"}}

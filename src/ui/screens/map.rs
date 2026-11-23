@@ -706,6 +706,9 @@ pub(crate) fn heading_owned<'a, Message: 'a>(content: String, level: u8) -> Elem
 pub struct Screen {
     /// 3D objects whose caption is open (toggled by a click on the model).
     captions: Vec<crate::ui::model3d::Model>,
+    /// «Открытый режим рецензента»: «Предмет дня» of another day (days
+    /// from today), to browse every object.
+    day_shift: i64,
 }
 
 #[derive(Debug, Clone)]
@@ -716,12 +719,15 @@ pub enum Msg {
     Model3dReady,
     /// Click on the 3D object: show / hide its caption.
     ToggleCaption(crate::ui::model3d::Model),
+    /// «Открытый режим рецензента»: the previous (-1) / next (+1) object.
+    ShiftDay(i64),
 }
 
 impl Screen {
     pub fn new(_ctx: &mut Ctx, _route: &Route) -> Self {
         Screen {
             captions: Vec::new(),
+            day_shift: 0,
         }
     }
 
@@ -729,6 +735,10 @@ impl Screen {
         match msg {
             Msg::Go(route) => Action::Go(route),
             Msg::Model3dReady => Action::None,
+            Msg::ShiftDay(d) => {
+                self.day_shift += d;
+                Action::None
+            }
             Msg::ToggleCaption(m) => {
                 toggle(&mut self.captions, m);
                 Action::None
@@ -750,7 +760,7 @@ impl Screen {
         page = page.push(reminders(ctx, p));
         page = page.push(timed_cta(p));
         page = page.push(interview_cta(ctx));
-        page = page.push(object_of_the_day(ctx, &self.captions));
+        page = page.push(object_of_the_day(ctx, &self.captions, self.day_shift));
 
         if !ctx.lib.sections.iter().any(|s| s.available) {
             page = page.push(notice(
@@ -796,7 +806,7 @@ impl Screen {
         }
         page = page.push(path);
 
-        if !state.settings.unlock_all {
+        if !state.settings.unlock_all && !crate::reviewer::active(state) {
             page = page.push(
                 txt("Следующий раздел открывается, когда прочитаны все уроки и тест сдан на 80% и выше. Свободный режим — в настройках.")
                     .size(theme::text::SMALL)
@@ -1376,11 +1386,59 @@ pub(crate) fn toggle(open: &mut Vec<crate::ui::model3d::Model>, m: crate::ui::mo
 
 /// «Предмет дня»: one live 3D ritual object, a different one each day,
 /// linking to its section.
-fn object_of_the_day<'a>(ctx: &'a Ctx, captions: &[crate::ui::model3d::Model]) -> Element<'a, Msg> {
+/// «Предмет дня» for the learner (t162u): the Torah scroll at the very
+/// start (nothing read yet; it is also the first object of the collection),
+/// then one a day from the objects already in the collection and those of
+/// the section being studied now.
+pub fn day_object(ctx: &Ctx) -> crate::ui::model3d::Model {
+    use crate::collection;
+    use crate::ui::model3d::Model;
+    let state = &ctx.state;
+    // The real records, not the reviewer mode's «everything is open».
+    let mut pool: Vec<Model> = collection::ITEMS
+        .iter()
+        .filter(|i| collection::unlocked_on(state, i.key).is_some())
+        .filter_map(|i| Model::from_key(i.key))
+        .collect();
+    let user = Library::user_level(state);
+    let current = ctx.lib.sections.iter().find(|s| {
+        s.available
+            && ctx.lib.is_unlocked(s, state)
+            && !ctx.lib.section_stats(s, user, state).complete
+    });
+    if let Some(sec) = current {
+        for m in Model::for_section(&sec.id) {
+            if !pool.contains(m) {
+                pool.push(*m);
+            }
+        }
+    }
+    if state.lessons_read.is_empty() || pool.len() <= 1 {
+        return Model::TorahScroll;
+    }
+    use chrono::Datelike;
+    let n = ctx.today().num_days_from_ce().rem_euclid(pool.len() as i32);
+    pool[n as usize]
+}
+
+fn object_of_the_day<'a>(
+    ctx: &'a Ctx,
+    captions: &[crate::ui::model3d::Model],
+    shift: i64,
+) -> Element<'a, Msg> {
     use crate::ui::model3d::{card, Model};
-    let model = Model::of_the_day(ctx.today());
+    // Today's object for this learner; in the «Открытый режим рецензента»
+    // ‹ › walk through all of them from there.
+    let base = day_object(ctx);
+    let model = if ctx.reviewer() && shift != 0 {
+        let all = &Model::OF_THE_DAY;
+        let at = all.iter().position(|m| *m == base).unwrap_or(0) as i64;
+        all[(at + shift).rem_euclid(all.len() as i64) as usize]
+    } else {
+        base
+    };
     let info = model.info();
-    card::card(
+    let card = card::card(
         ctx,
         model,
         Some("Предмет дня"),
@@ -1393,5 +1451,41 @@ fn object_of_the_day<'a>(ctx: &'a Ctx, captions: &[crate::ui::model3d::Model]) -
                 Msg::Go(Route::Section(info.section.to_string())),
             )),
         },
-    )
+    );
+    if !ctx.reviewer() {
+        return card;
+    }
+    let n = Model::OF_THE_DAY.len() as i64;
+    let pos = (Model::OF_THE_DAY
+        .iter()
+        .position(|m| *m == model)
+        .unwrap_or(0)
+        + 1) as i64;
+    let browse = widgets::reviewer_jumps(
+        "Любой «Предмет дня» из всех, что сменяются по дням.",
+        0,
+        0,
+        |_| Msg::ShiftDay(0),
+        vec![
+            widgets::btn(
+                "‹ Предыдущий",
+                widgets::Btn::Ghost,
+                widgets::BtnSize::Sm,
+                Some(Msg::ShiftDay(-1)),
+            )
+            .into(),
+            txt(format!("{pos} из {n}"))
+                .size(theme::text::SMALL)
+                .color(theme::current().muted)
+                .into(),
+            widgets::btn(
+                "Следующий ›",
+                widgets::Btn::Ghost,
+                widgets::BtnSize::Sm,
+                Some(Msg::ShiftDay(1)),
+            )
+            .into(),
+        ],
+    );
+    column![browse, card].spacing(8).width(Length::Fill).into()
 }

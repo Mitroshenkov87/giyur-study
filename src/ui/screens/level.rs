@@ -1,5 +1,7 @@
 //! Movement / level choice (PARITY §2): three level cards, confirmation
-//! dialog when changing an already chosen movement. Progress is never reset.
+//! dialog when changing an already chosen movement. Each movement keeps its
+//! own progress (src/tracks.rs): switching puts the current one aside and
+//! brings the chosen movement's progress back.
 
 use iced::widget::{button, column, container, row, space, Column, Row};
 use iced::{Alignment, Background, Border, Color, Element, Length};
@@ -30,7 +32,13 @@ impl Screen {
 
     fn apply(&mut self, ctx: &mut Ctx, level: Level) -> Action {
         let first = !ctx.state.onboarded;
-        ctx.state.settings.level = Some(level);
+        if ctx.reviewer() {
+            // Only the view changes in the mode; the progress stays put.
+            ctx.state.settings.level = Some(level);
+        } else {
+            let today = ctx.today_key();
+            crate::tracks::switch(&mut ctx.state, level, &today);
+        }
         ctx.state.onboarded = true;
         ctx.save();
         let info = content::level_info(level);
@@ -99,7 +107,7 @@ impl Screen {
         }));
         page = page.push(widgets::heading("Выберите течение", 1));
         page = page.push(
-            txt("Уровни вложены друг в друга: консервативный включает всё реформистское, ортодоксальный — всё. Прогресс сохранится; уроки и вопросы другого уровня появятся или скроются.")
+            txt("Уровни вложены друг в друга: консервативный включает всё реформистское, ортодоксальный — всё. У каждого течения своё прохождение: уроки, тесты, «Маалот», карточки, опыт и коллекция. При смене прогресс этого течения сохранится и вернётся, когда вы снова его выберете.")
                 .size(theme::text::BODY)
                 .color(p.muted)
                 .width(Length::Fill),
@@ -196,7 +204,7 @@ fn confirm_dialog<'a>(level: Level, p: theme::Palette) -> Element<'a, Msg> {
     let dialog = container(
         column![
             heading_owned(format!("Сменить течение на «{}»?", info.title), 2),
-            txt("Прогресс сохранится; уроки и вопросы другого уровня появятся или скроются.")
+            txt("Откроется прохождение этого течения: его уроки, результаты и коллекция. Прогресс нынешнего течения сохранится и вернётся, когда вы снова его выберете.")
                 .size(theme::text::BODY)
                 .color(p.muted)
                 .width(Length::Fill),
@@ -244,7 +252,7 @@ fn confirm_dialog<'a>(level: Level, p: theme::Palette) -> Element<'a, Msg> {
         .center(Length::Fill)
         .padding(32.0)
         .style(|_| iced::widget::container::Style {
-            background: Some(Background::Color(Color::from_rgba8(3, 5, 12, 0.66))),
+            background: Some(Background::Color(Color::from_rgba8(3, 5, 12, 0.38))),
             ..iced::widget::container::Style::default()
         })
         .into()

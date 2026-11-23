@@ -132,7 +132,8 @@ pub const COMMANDS: &[(&str, &str)] = &[
     ("answer", "Answer the current question: choice (0-based, in the order shown), tf (true/false), text (typed answer, submitted), knew (flashcard: flips if needed, then grades), self_grade (0..1, open answers), auto=true (any answer, for smoke tests); next=true then presses «Далее»."),
     ("type", "Type into an input field: text, input (index from `state`, default 0), append (keep current text), submit (press Enter)."),
     ("select", "Pick from a drop-down listed under `choices` in `state`: choice (index) or target (shown text, substring; nth for several), option (option text, exact or substring)."),
-    ("set", "Change a setting: key = theme (dark|leather; parchment = old name of leather) | font_step (0..3) | translit | unlock_all | timed_sound | timed_auto (bool) | timed_seconds (20|30) | daily_goal (10|20|30|50), value."),
+    ("reviewer", "«Открытый режим рецензента»: on=true|false switches it (like the settings switch; persist=false: for this run only, like --reviewer). Without on, reports it. The reply has `progress` = the real progress, which the mode never changes."),
+    ("set", "Change a setting: key = theme (dark|leather; parchment = old name of leather) | font_step (0..3) | translit | unlock_all | reviewer_mode | timed_sound | timed_auto (bool) | timed_seconds (20|30) | daily_goal (10|20|30|50), value."),
     ("screenshot", "Save a WebP screenshot: path (.webp). Windowed: the real window. Headless: the page; full_page=true for the whole page, width/height optional."),
     ("scroll", "Windowed only: to = \"top\" | \"bottom\" | 0..1."),
     ("wait", "Let time pass: ms (default 1000, max 60000). Timers run (the timed quiz reveals options after a pause)."),
@@ -369,8 +370,10 @@ pub fn inspect(host: &dyn Host) -> View {
 
 // ----------------------------------------------------------------- state
 
+/// Progress counters. While the «Открытый режим рецензента» is on they are
+/// read from the real progress (kept aside), not from the sandbox.
 fn progress_json(ctx: &Ctx) -> Value {
-    let s = &ctx.state;
+    let s = ctx.real_state();
     let today = ctx.today();
     json!({
         "xp_total": s.xp_total,
@@ -397,6 +400,7 @@ fn settings_json(ctx: &Ctx) -> Value {
         "font_step": s.font_step,
         "translit": s.translit,
         "unlock_all": s.unlock_all,
+        "reviewer_mode": ctx.reviewer(),
         "timed_seconds": s.timed_seconds,
         "timed_sound": s.timed_sound,
         "timed_auto": s.timed_auto,
@@ -762,6 +766,11 @@ fn set_setting(host: &mut dyn Host, a: &Map<String, Value>) -> Result<(), String
     tmp.insert("v".into(), val.clone());
     let b = || arg_bool(&tmp, "v").ok_or_else(|| format!("{key}: expected true/false"));
     let n = || arg_num(&tmp, "v").ok_or_else(|| format!("{key}: expected a number"));
+    if key == "reviewer_mode" {
+        host.ctx_mut().set_reviewer(b()?, true);
+        host.settings_changed();
+        return Ok(());
+    }
     {
         let s = &mut host.ctx_mut().state.settings;
         match key.as_str() {
@@ -955,6 +964,20 @@ pub fn execute(host: &mut dyn Host, req: &Value) -> Outcome {
                 host.dispatch(m);
             }
             after(host)
+        }
+        "reviewer" => {
+            if let Some(on) = arg_bool(a, "on") {
+                let persist = arg_bool(a, "persist").unwrap_or(true);
+                host.ctx_mut().set_reviewer(on, persist);
+                host.settings_changed();
+                // Reopen the screen, so its gates follow the mode.
+                let r = host.route().clone();
+                host.navigate(r);
+            }
+            let mut o = after(host);
+            o.reply["reviewer"] = Value::Bool(host.ctx().reviewer());
+            o.reply["progress"] = progress_json(host.ctx());
+            o
         }
         "set" => match set_setting(host, a) {
             Ok(()) => {

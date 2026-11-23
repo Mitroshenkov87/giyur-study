@@ -41,6 +41,8 @@ pub struct Options {
     pub data: Option<PathBuf>,
     /// Fixed "today" (calendar, streaks) for reproducible runs.
     pub today: Option<NaiveDate>,
+    /// Start in the «Открытый режим рецензента» (`--reviewer`).
+    pub reviewer: bool,
 }
 
 impl Session {
@@ -73,10 +75,19 @@ impl Session {
             music_available: false,
             music_error: None,
             music_track_count: 0,
+            sandbox: None,
         };
         game::apply_freezes(&mut ctx.state, today);
         let _ = game::check_badges(&ctx.lib, &mut ctx.state, today);
+        // As `Ctx::load`: earned objects (and the Torah scroll, open from the
+        // start) join the collection quietly.
+        crate::collection::sync(&mut ctx.state, &crate::util::day_key(today));
         ctx.save();
+        if opts.reviewer {
+            ctx.set_reviewer(true, false);
+        } else {
+            ctx.start_reviewer_if_asked();
+        }
         theme::set_current(super::theme_kind(&ctx));
         let route = if ctx.state.onboarded {
             Route::Map
