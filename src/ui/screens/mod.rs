@@ -1,6 +1,7 @@
 //! All screens and the dispatch enum used by the shell.
 pub mod calendar;
 pub mod cards;
+pub mod eretz;
 pub mod exam;
 pub mod interview;
 pub mod lesson;
@@ -36,6 +37,7 @@ pub enum Current {
     Level(level::Screen),
     Map(map::Screen),
     Calendar(calendar::Screen),
+    Eretz(eretz::Screen),
     Section(section::Screen),
     Sources(sources::Screen),
     Lesson(lesson::Screen),
@@ -54,6 +56,7 @@ pub enum Msg {
     Level(level::Msg),
     Map(map::Msg),
     Calendar(calendar::Msg),
+    Eretz(eretz::Msg),
     Section(section::Msg),
     Sources(sources::Msg),
     Lesson(lesson::Msg),
@@ -73,6 +76,7 @@ impl Current {
             Route::Level { .. } => Current::Level(level::Screen::new(ctx, route)),
             Route::Map => Current::Map(map::Screen::new(ctx, route)),
             Route::Calendar => Current::Calendar(calendar::Screen::new(ctx, route)),
+            Route::Eretz => Current::Eretz(eretz::Screen::new(ctx, route)),
             Route::Section(_) => Current::Section(section::Screen::new(ctx, route)),
             Route::Sources => Current::Sources(sources::Screen::new(ctx, route)),
             Route::Lesson(_) => Current::Lesson(lesson::Screen::new(ctx, route)),
@@ -92,6 +96,7 @@ impl Current {
             (Current::Level(s), Msg::Level(m)) => s.update(ctx, m),
             (Current::Map(s), Msg::Map(m)) => s.update(ctx, m),
             (Current::Calendar(s), Msg::Calendar(m)) => s.update(ctx, m),
+            (Current::Eretz(s), Msg::Eretz(m)) => s.update(ctx, m),
             (Current::Section(s), Msg::Section(m)) => s.update(ctx, m),
             (Current::Sources(s), Msg::Sources(m)) => s.update(ctx, m),
             (Current::Lesson(s), Msg::Lesson(m)) => s.update(ctx, m),
@@ -112,6 +117,7 @@ impl Current {
             Current::Level(s) => s.view(ctx).map(Msg::Level),
             Current::Map(s) => s.view(ctx).map(Msg::Map),
             Current::Calendar(s) => s.view(ctx).map(Msg::Calendar),
+            Current::Eretz(s) => s.view(ctx).map(Msg::Eretz),
             Current::Section(s) => s.view(ctx).map(Msg::Section),
             Current::Sources(s) => s.view(ctx).map(Msg::Sources),
             Current::Lesson(s) => s.view(ctx).map(Msg::Lesson),
@@ -144,6 +150,7 @@ impl Current {
             Current::Level(s) => s.subscription().map(Msg::Level),
             Current::Map(s) => s.subscription().map(Msg::Map),
             Current::Calendar(s) => s.subscription().map(Msg::Calendar),
+            Current::Eretz(s) => s.subscription().map(Msg::Eretz),
             Current::Section(s) => s.subscription().map(Msg::Section),
             Current::Sources(s) => s.subscription().map(Msg::Sources),
             Current::Lesson(s) => s.subscription().map(Msg::Lesson),

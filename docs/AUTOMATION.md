@@ -80,7 +80,7 @@ failure, `error`. Action commands reply with a short summary (`screen`,
 | `quit` | | close the app (headless: end the session) |
 
 **Routes:** `welcome`, `level`, `map`, `calendar`, `calendar:today|month|settings`,
-`calendar:YYYY-MM-DD`, `section:<id>`, `lesson:<id>`, `cards:<lessonId>`,
+`calendar:YYYY-MM-DD`, `eretz`, `eretz:torah`, `eretz:tribes`, `section:<id>`, `lesson:<id>`, `cards:<lessonId>`,
 `deck:<sectionId>`, `cards:review`, `exam`, `exam:<sectionId>`,
 `examrun:section:<id>[:n]`, `examrun:general[:n]`, `examrun:beitdin[:n]`,
 `timed`, `timedrun`, `progress`, `settings`, `sources`, `interview`
@@ -98,6 +98,7 @@ subtitles and tooltips.
 |---|---|---|
 | Уроки | Карта | `map` |
 | Календарь | | `calendar` |
+| Земля | | `eretz` |
 | Молитвы | | `prayers` |
 | Карточки | Повторение | `cards:review` |
 | Викторина | Экзамен | `timed` |

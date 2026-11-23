@@ -20,7 +20,7 @@ pub struct Item {
 }
 
 /// The sidebar, top to bottom (index = `group` of a route).
-pub const ITEMS: [Item; 9] = [
+pub const ITEMS: [Item; 10] = [
     Item {
         label: "Уроки",
         subtitle: "тексты по темам",
@@ -34,6 +34,13 @@ pub const ITEMS: [Item; 9] = [
         tooltip: "Еврейский календарь",
         old_label: None,
         art: "calendar",
+    },
+    Item {
+        label: "Земля",
+        subtitle: "Эрец-Исраэль",
+        tooltip: "Карта всей Эрец-Исраэль: Иудея и Шомрон, Голан, Аза и единый Иерусалим, вечная неделимая столица. Слой «Границы по Торе»",
+        old_label: None,
+        art: "land",
     },
     Item {
         label: "Молитвы",
@@ -92,12 +99,13 @@ pub fn route(index: usize) -> Route {
     match index {
         0 => Route::Map,
         1 => Route::Calendar,
-        2 => Route::Prayers(None),
-        3 => Route::Cards(Deck::Review),
-        4 => Route::Timed,
-        5 => Route::Exam(None),
-        6 => Route::Progress,
-        7 => Route::Settings,
+        2 => Route::Eretz,
+        3 => Route::Prayers(None),
+        4 => Route::Cards(Deck::Review),
+        5 => Route::Timed,
+        6 => Route::Exam(None),
+        7 => Route::Progress,
+        8 => Route::Settings,
         _ => Route::Sources,
     }
 }
@@ -107,14 +115,15 @@ pub fn group(r: &Route) -> Option<usize> {
     Some(match r {
         Route::Map | Route::Section(_) | Route::Lesson(_) | Route::Interview(_) => 0,
         Route::Calendar => 1,
-        Route::Prayers(_) => 2,
-        Route::Cards(Deck::Review) => 3,
+        Route::Eretz => 2,
+        Route::Prayers(_) => 3,
+        Route::Cards(Deck::Review) => 4,
         Route::Cards(_) => 0,
-        Route::Timed | Route::TimedRun { .. } => 4,
-        Route::Exam(_) | Route::ExamRun(_) => 5,
-        Route::Progress => 6,
-        Route::Settings | Route::Level { .. } => 7,
-        Route::Sources => 8,
+        Route::Timed | Route::TimedRun { .. } => 5,
+        Route::Exam(_) | Route::ExamRun(_) => 6,
+        Route::Progress => 7,
+        Route::Settings | Route::Level { .. } => 8,
+        Route::Sources => 9,
         Route::Welcome => return None,
     })
 }
@@ -145,10 +154,11 @@ mod tests {
             }
         }
         assert_eq!(find("Карта"), Some(0));
-        assert_eq!(find("повторение"), Some(3));
-        assert_eq!(find("Экзамен"), Some(4));
-        assert_eq!(find("Прогресс"), Some(6));
-        assert_eq!(find("молитвы"), Some(2));
+        assert_eq!(find("Земля"), Some(2));
+        assert_eq!(find("повторение"), Some(4));
+        assert_eq!(find("Экзамен"), Some(5));
+        assert_eq!(find("Прогресс"), Some(7));
+        assert_eq!(find("молитвы"), Some(3));
         assert_eq!(find("Нет такого"), None);
     }
 }

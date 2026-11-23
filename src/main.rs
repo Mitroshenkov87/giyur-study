@@ -786,6 +786,16 @@ fn parse_route(r: &str) -> Option<Route> {
             }
             Route::Calendar
         }
+        "eretz" | "land" | "земля" | "эрец-исраэль" => {
+            use shorashim::ui::screens::eretz::Start;
+            let start = match v.as_str() {
+                "torah" => Start::Torah,
+                "tribes" => Start::Tribes,
+                _ => Start::Land,
+            };
+            shorashim::ui::screens::eretz::open_with(start);
+            Route::Eretz
+        }
         "level" => Route::Level { reopened: true },
         "section" => Route::Section(v),
         "lesson" => Route::Lesson(v),

@@ -5,6 +5,7 @@
 {"cmd":"press","contains":"Ортодоксальный","expect":{"screen":"map","text":"Уроки"}}
 {"cmd":"screens","expect":{"reply":{"ok":true}}}
 {"cmd":"navigate","to":"Календарь","expect":{"screen":"calendar"}}
+{"cmd":"navigate","to":"Земля","expect":{"screen":"eretz","route":"eretz"}}
 {"cmd":"navigate","to":"Уроки","expect":{"screen":"map","route":"map"}}
 {"cmd":"navigate","to":"Карточки","expect":{"screen":"cards","route":"cards:review"}}
 {"cmd":"navigate","to":"Викторина","expect":{"screen":"timed","route":"timed"}}
@@ -22,6 +23,9 @@
 {"cmd":"navigate","to":"progress","expect":{"screen":"progress"}}
 {"cmd":"navigate","to":"settings","expect":{"screen":"settings"}}
 {"cmd":"navigate","to":"sources","expect":{"screen":"sources"}}
+{"cmd":"navigate","to":"map","expect":{"screen":"map"}}
+{"cmd":"navigate","to":"eretz","expect":{"screen":"eretz","route":"eretz"}}
+{"cmd":"navigate","to":"eretz:torah","expect":{"screen":"eretz","text":"Границы по Торе"}}
 {"cmd":"navigate","to":"map","expect":{"screen":"map"}}
 # A section, its read / prepare switch, and back.
 {"cmd":"press","contains":"Основы","expect":{"screen":"section","route":"section:osnovy"}}

@@ -2,6 +2,7 @@ pub mod automation;
 pub mod calendar;
 pub mod collection;
 pub mod content;
+pub mod eretz;
 pub mod exam;
 pub mod game;
 pub mod install;
