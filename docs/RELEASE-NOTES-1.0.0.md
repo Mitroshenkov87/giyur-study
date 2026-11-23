@@ -14,7 +14,7 @@ The judges want to know who you are, why you have come, and how you already live
 
 **Flashcards** with spaced repetition help the ideas stay with you, including how a point is taught in the other movements. **Ma'alot** is a 15-step ladder of knowledge, with hints. Section tests and a general exam let you review your mistakes in peace.
 
-**Prayers** come with Hebrew, a translation and a transliteration. The **Jewish calendar** shows the date, the meaning of the day, the weekly Torah portion, and candle-lighting and fast times for a place you choose. You can turn **3D objects** with the mouse — a Torah scroll, and more — and play quiet instrumental music if you like (off by default, in Settings).
+**Prayers** come with Hebrew, a translation and a transliteration. The **Jewish calendar** shows the date, the meaning of the day, the weekly Torah portion, and candle-lighting and fast times for a place you choose. You can turn **3D objects** with the mouse — a Second Temple, a Torah scroll, and more — and play quiet instrumental music if you like (off by default, in Settings).
 
 A **reviewer mode** lets a rabbi or a tester open any part of the app without changing a student’s progress.
 
@@ -24,6 +24,8 @@ The course is written in the language of Torah and Tanakh. It is consistently pr
 
 ![Welcome](https://raw.githubusercontent.com/Mitroshenkov87/shorashim/main/docs/screenshots/welcome.webp)
 
+![The Second Temple, a 3D model you can turn](https://raw.githubusercontent.com/Mitroshenkov87/shorashim/main/docs/screenshots/temple.webp)
+
 ![Beit din interview trainer](https://raw.githubusercontent.com/Mitroshenkov87/shorashim/main/docs/screenshots/interview.webp)
 
 ![Flashcards](https://raw.githubusercontent.com/Mitroshenkov87/shorashim/main/docs/screenshots/flashcards.webp)
@@ -32,7 +34,7 @@ The course is written in the language of Torah and Tanakh. It is consistently pr
 
 Lessons, cards, questions, prayers and calendar texts live as JSON files in a `content` folder next to the program, not inside the `.exe`. A wording fix is an edit to a file and a short repack of the installer. If a file is missing or invalid, the app shows a calm message with the file, the line and what is wrong.
 
-All course content is checked by a rabbi. The checklists [`docs/RABBI-REVIEW.md`](https://github.com/Mitroshenkov87/shorashim/blob/main/docs/RABBI-REVIEW.md) and [`docs/RABBI-REVIEW.en.md`](https://github.com/Mitroshenkov87/shorashim/blob/main/docs/RABBI-REVIEW.en.md) share the same item ids. If you are a rabbi or a knowledgeable reader and would like to help, please open a GitHub issue and cite the item id. The app helps you study; it does not replace a teacher.
+All course content must be checked by a rabbi. The checklists [`docs/RABBI-REVIEW.md`](https://github.com/Mitroshenkov87/shorashim/blob/main/docs/RABBI-REVIEW.md) and [`docs/RABBI-REVIEW.en.md`](https://github.com/Mitroshenkov87/shorashim/blob/main/docs/RABBI-REVIEW.en.md) share the same item ids. If you are a rabbi or a knowledgeable reader and would like to help, please open a GitHub issue and cite the item id. The app helps you study; it does not replace a teacher.
 
 ## Support
 
