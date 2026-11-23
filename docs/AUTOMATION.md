@@ -153,6 +153,14 @@ shorashim --headless < commands.jsonl          # stdin, keeps going on errors
   «Маалот» stair mid-climb. Live 3D needs the wgpu renderer (a real window);
   the software renderer shows the stills.
 
+**Start-up splash.** The windowed app opens with a 5-second splash (the
+menorah picture and «Шорашим», a click or any key skips it). It is never
+shown with `--control` / `SHORASHIM_CONTROL=1`, with the
+`SHORASHIM_START_ROUTE` hook, with `--no-splash` or `SHORASHIM_NO_SPLASH=1`,
+and headless runs have no window at all, so tests and the night test are not
+delayed. `SHORASHIM_SPLASH=1` shows it anyway; `SHORASHIM_SPLASH_HOLD=1`
+(or `0.5` for mid-fade) freezes it for a screenshot.
+
 CI runs `tests/automation.rs`, which plays `tests/scripts/*.jsonl` (first
 run and navigation, a lesson, flashcards, a section test, the timed quiz («Викторина») and
 a mock beit-din, the calendar, settings, the «Тесты» mode tiles) and checks the MCP server.

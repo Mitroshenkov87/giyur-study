@@ -668,6 +668,15 @@ fn fixed_yaw() -> Option<f32> {
     *Y.get_or_init(|| crate::util::env_hook("3D_YAW").and_then(|v| v.parse().ok()))
 }
 
+/// Live viewers off for a moment (the start-up splash fades over the page:
+/// a custom-shader layer would draw above it). [`view`] shows the static
+/// picture meanwhile.
+static SUPPRESS_LIVE: AtomicBool = AtomicBool::new(false);
+
+pub fn suppress_live(on: bool) {
+    SUPPRESS_LIVE.store(on, Ordering::Relaxed);
+}
+
 /// A rotatable model viewport. `on_ready` is published once when the GPU has
 /// drawn it, so the caller can drop its static placeholder.
 /// `on_click` (if any) is published on a single click (not a drag, not a
@@ -679,6 +688,9 @@ pub fn view<'a, M: Clone + 'a>(
     on_ready: M,
     on_click: Option<M>,
 ) -> Element<'a, M> {
+    if SUPPRESS_LIVE.load(Ordering::Relaxed) {
+        return still(model, size);
+    }
     model.preload();
     let still = model.still_image();
     let live = shader::Shader::new(Viewer {
