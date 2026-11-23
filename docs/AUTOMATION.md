@@ -138,7 +138,8 @@ shorashim --headless < commands.jsonl          # stdin, keeps going on errors
 - One reply line per command on stdout. With `--script`, the run stops at the
   first failure (`--keep-going` to continue); the exit code is 1 if any
   command failed.
-- `--data FILE` uses that progress file; by default a fresh throw-away one is
+- `--data FILE` uses that progress file (a folder, or a path ending in `/`
+  or `\`, means `progress.json` in it, as for `SHORASHIM_DATA`); by default a fresh throw-away one is
   used, never your own progress. `--today YYYY-MM-DD` fixes the date.
 - `expect` makes a line an assertion, checked after the command:
   `{"screen": "lesson", "route": "lesson:", "text": "гиюр", "control": "Exam(Start)", "min_xp": 10, "reply": {"dialog": true}}`
@@ -160,6 +161,12 @@ shown with `--control` / `SHORASHIM_CONTROL=1`, with the
 and headless runs have no window at all, so tests and the night test are not
 delayed. `SHORASHIM_SPLASH=1` shows it anyway; `SHORASHIM_SPLASH_HOLD=1`
 (or `0.5` for mid-fade) freezes it for a screenshot.
+
+**Progress file for the windowed app.** `SHORASHIM_DATA=PATH` makes the
+app (and `ctl`, which finds `control.json` next to it) use another progress
+file instead of `%APPDATA%\Shorashim\progress.json`. `PATH` may be a file
+or a folder: an existing folder, or a path ending in `/` or `\`, means
+`PATH/progress.json` (the folder is created when the file is first saved).
 
 CI runs `tests/automation.rs`, which plays `tests/scripts/*.jsonl` (first
 run and navigation, a lesson, flashcards, a section test, the timed quiz («Викторина») and

@@ -91,7 +91,7 @@ pub fn take_flag(args: &mut Vec<String>, name: &str) -> bool {
 
 /// Headless options shared by `--headless` and `mcp --headless`.
 pub fn session_options(args: &mut Vec<String>) -> Result<Options, String> {
-    let data = take_opt(args, "--data").map(PathBuf::from);
+    let data = take_opt(args, "--data").map(crate::storage::resolve_data_path);
     let today = match take_opt(args, "--today") {
         Some(d) => Some(
             chrono::NaiveDate::parse_from_str(&d, "%Y-%m-%d")

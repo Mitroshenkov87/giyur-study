@@ -28,6 +28,8 @@ struct App {
     music: shorashim::music::Controller,
     /// The start-up splash while it is shown (src/ui/splash.rs).
     splash: Option<Splash>,
+    /// When the app started: toasts raised under the splash wait for it.
+    started: Instant,
 }
 
 #[derive(Debug, Clone)]
@@ -45,6 +47,8 @@ enum Message {
     SplashTick(Instant),
     /// A click or a key on the splash: fade out now.
     SplashSkip,
+    /// A click on the toast: close it.
+    DismissToast,
 }
 
 fn theme_kind(ctx: &Ctx) -> ThemeKind {
@@ -87,6 +91,7 @@ impl App {
             nav_hover: shorashim::util::env_hook("NAV_HOVER").and_then(|v| v.parse().ok()),
             music: shorashim::music::Controller::start(),
             splash: splash::wanted().then(|| Splash::new(Instant::now())),
+            started: Instant::now(),
         };
         shorashim::ui::model3d::suppress_live(app.splash.is_some());
         app.maybe_music_hint();
@@ -143,6 +148,11 @@ impl App {
                     if s.done(now) {
                         self.splash = None;
                         shorashim::ui::model3d::suppress_live(false);
+                        // Toasts raised at start-up (a newer copy, the music
+                        // hint, new collection objects) were hidden under
+                        // the splash: their time starts now.
+                        self.ctx
+                            .delay_toasts(now.saturating_duration_since(self.started));
                     }
                 }
             }
@@ -180,8 +190,12 @@ impl App {
                 }
             },
             Message::Nav(r) => return self.go(r),
+            Message::DismissToast => self.ctx.dismiss_toast(Instant::now()),
             Message::Tick(now) => {
-                self.ctx.toasts.retain(|t| t.until > now);
+                // Under the splash toasts wait (see SplashTick).
+                if self.splash.is_none() {
+                    self.ctx.toasts.retain(|t| t.until > now);
+                }
                 self.sync_music();
             }
             Message::Control(ControlMsg::Request(req)) => {
@@ -436,36 +450,56 @@ impl App {
         stack![base, overlay].into()
     }
 
+    /// The toast on screen: a compact card in the bottom-right corner (the
+    /// pages keep [`layout::TOAST_CLEARANCE`] free under their content, so
+    /// it can be scrolled clear). A click closes it; the rest of the layer
+    /// lets clicks through to the page.
     fn toasts(&self) -> Element<'_, Message> {
-        let mut col = Column::new().spacing(8).align_x(Alignment::Center);
+        let mut col = Column::new().spacing(8).align_x(Alignment::End);
         if let Some(t) = self.ctx.toasts.first() {
-            let mut r = row![].spacing(12).align_y(Alignment::Center);
+            let p = theme::current();
+            let mut r = row![].spacing(10).align_y(Alignment::Center);
             if let Some(h) = t
                 .badge_id
                 .as_ref()
                 .and_then(|id| assets::img(&format!("badge-{id}")))
             {
-                r = r.push(image(h).width(48).height(48));
+                r = r.push(image(h).width(36).height(36));
             }
-            r = r.push(column![
-                text(&t.title)
-                    .font(fonts::SERIF_BOLD)
-                    .size(17)
-                    .color(theme::current().gold2)
-                    .shaping(text::Shaping::Advanced),
-                text(&t.text)
-                    .size(13)
-                    .color(theme::current().muted)
-                    .shaping(text::Shaping::Advanced),
-            ]);
-            col = col.push(widgets::card(r));
+            r = r.push(
+                column![
+                    text(&t.title)
+                        .font(fonts::SERIF_BOLD)
+                        .size(15)
+                        .color(p.gold2)
+                        .shaping(text::Shaping::Advanced),
+                    text(&t.text)
+                        .size(12.5)
+                        .color(p.muted)
+                        .shaping(text::Shaping::Advanced),
+                ]
+                .spacing(2)
+                .width(Length::Fill),
+            );
+            r = r.push(text("×").size(16).color(p.muted));
+            let card = container(r)
+                .padding([10.0, 14.0])
+                .width(Length::Fill)
+                .style(move |_| theme::card(&p));
+            col = col.push(
+                button(card)
+                    .padding(0)
+                    .width(Length::Fixed(340.0))
+                    .style(|_, _| button::Style::default())
+                    .on_press(Message::DismissToast),
+            );
         }
         container(col)
             .width(Length::Fill)
             .height(Length::Fill)
-            .align_x(Alignment::Center)
+            .align_x(Alignment::End)
             .align_y(Alignment::End)
-            .padding(24)
+            .padding(16)
             .into()
     }
 

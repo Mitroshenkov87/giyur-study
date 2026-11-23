@@ -138,11 +138,8 @@ pub struct Ctx {
 
 impl Ctx {
     pub fn load() -> Ctx {
-        let path = std::env::var_os("SHORASHIM_DATA")
-            // GIYUR_STUDY_DATA: the pre-rename spelling.
-            .or_else(|| std::env::var_os("GIYUR_STUDY_DATA"))
-            .map(PathBuf::from)
-            .unwrap_or_else(storage::default_path);
+        // A file or a folder (then progress.json inside it).
+        let path = storage::data_path_from_env().unwrap_or_else(storage::default_path);
         let today = chrono::Local::now().date_naive();
         let (state, writable) = storage::load_checked(&path, &crate::util::day_key(today));
         let mut ctx = Ctx {
@@ -211,6 +208,27 @@ impl Ctx {
         let now = Instant::now();
         let start = self.toasts.last().map_or(now, |t| t.until.max(now));
         start + Duration::from_millis(ms)
+    }
+
+    /// Close the toast on screen (a click on it); the next ones move up and
+    /// keep their full time.
+    pub fn dismiss_toast(&mut self, now: Instant) {
+        if self.toasts.is_empty() {
+            return;
+        }
+        let first = self.toasts.remove(0);
+        let gained = first.until.saturating_duration_since(now);
+        for t in &mut self.toasts {
+            t.until -= gained;
+        }
+    }
+
+    /// Hold every toast for `by` (they were raised while the start-up
+    /// splash covered the window): the first one starts its time now.
+    pub fn delay_toasts(&mut self, by: Duration) {
+        for t in &mut self.toasts {
+            t.until += by;
+        }
     }
 
     pub fn toast(&mut self, title: &str, text: &str, icon: &str) {
