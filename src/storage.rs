@@ -548,7 +548,7 @@ impl State {
     }
 }
 
-/// Folder name under config_dir() (%APPDATA% on Windows).
+/// Folder name under [`data_base`] (%APPDATA% on Windows).
 pub const DATA_DIR: &str = "Shorashim";
 /// Folder used before the rename to Shorashim (v0.1.x).
 pub const LEGACY_DATA_DIR: &str = "GiyurStudy";
@@ -576,14 +576,30 @@ pub fn data_path_from_env() -> Option<PathBuf> {
         .map(resolve_data_path)
 }
 
-/// Default progress file path: config_dir()/Shorashim/progress.json
+/// Default progress file path: data_base()/Shorashim/progress.json
 /// (%APPDATA%\Shorashim\progress.json on Windows). Progress saved by
 /// v0.1.x under GiyurStudy is copied over on first start.
 pub fn default_path() -> PathBuf {
-    let base = dirs::config_dir().unwrap_or_else(|| PathBuf::from("."));
+    let base = data_base();
     let path = base.join(DATA_DIR).join("progress.json");
     migrate_legacy(&base.join(LEGACY_DATA_DIR).join("progress.json"), &path);
+    #[cfg(all(unix, not(target_os = "macos")))]
+    if let Some(cfg) = dirs::config_dir() {
+        // Linux builds before 1.0.0 kept progress under ~/.config.
+        migrate_legacy(&cfg.join(DATA_DIR).join("progress.json"), &path);
+    }
     path
+}
+
+/// The folder that holds `Shorashim/`: `%APPDATA%` on Windows,
+/// `~/Library/Application Support` on macOS, and on Linux
+/// `$XDG_DATA_HOME` (`~/.local/share`).
+pub fn data_base() -> PathBuf {
+    #[cfg(all(unix, not(target_os = "macos")))]
+    let base = dirs::data_dir();
+    #[cfg(not(all(unix, not(target_os = "macos"))))]
+    let base = dirs::config_dir();
+    base.unwrap_or_else(|| PathBuf::from("."))
 }
 
 /// Copy the pre-rename progress file to the new location if the new one does

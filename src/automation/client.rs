@@ -21,8 +21,7 @@ pub fn control_file(explicit: Option<PathBuf>) -> PathBuf {
     if let Some(p) = crate::storage::data_path_from_env() {
         return super::server::control_path_for(&p);
     }
-    dirs::config_dir()
-        .unwrap_or_else(|| PathBuf::from("."))
+    crate::storage::data_base()
         .join(crate::storage::DATA_DIR)
         .join(CONTROL_FILE)
 }

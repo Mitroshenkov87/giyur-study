@@ -1,12 +1,16 @@
 # Shorashim
 
-Shorashim means “roots.” It is an offline app for Windows and macOS for studying the foundations of Judaism and for calm, step-by-step preparation for **giyur** and the **beit din** interview.
+Shorashim means “roots.” It is an offline app for Windows, macOS and Linux for studying the foundations of Judaism and for calm, step-by-step preparation for **giyur** and the **beit din** interview.
 
 The course is written in the language of Torah and Tanakh — the Written and Oral Torah. It is consistently pro-Israel: Eretz Israel is the heritage the Torah gives the Jewish people, Jerusalem is the eternal undivided capital, and the State of Israel is the Jewish people’s return home.
 
 **[Download Shorashim-Setup.exe](https://github.com/Mitroshenkov87/shorashim/releases/latest)** — Windows 10 or 11, for the current user, no administrator rights needed.
 
 **[Download Shorashim-macOS.dmg](https://github.com/Mitroshenkov87/shorashim/releases/latest/download/Shorashim-macOS.dmg)** — Apple Silicon Mac (M1 or newer), macOS 11 or later.
+
+**[Download Shorashim-x86_64.AppImage](https://github.com/Mitroshenkov87/shorashim/releases/latest/download/Shorashim-x86_64.AppImage)** — Linux, 64-bit (x86_64); make it executable and run it, no installation needed.
+
+So far we have tested Shorashim only on Windows. The macOS and Linux builds are provided as well, but have not been tested by us yet.
 
 **[User guide](docs/Shorashim-User-Guide.pdf)** — a short PDF on installing the app and using each part of it.
 
@@ -63,6 +67,20 @@ Progress is stored separately, in `%APPDATA%\Shorashim`, and is left as it is if
 3. The app is not signed with an Apple developer ID yet, so the first time macOS will not open it with a double click. Right-click (or Control-click) **Shorashim** in Applications and choose **Open**, then **Open** again. On macOS 15 or later, if there is no Open button, go to **System Settings → Privacy & Security** and click **Open Anyway**. After that it opens normally.
 
 Progress is stored in `~/Library/Application Support/Shorashim`.
+
+### Linux
+
+1. Download **`Shorashim-x86_64.AppImage`** from the **[latest release](https://github.com/Mitroshenkov87/shorashim/releases/latest)**.
+2. Make it executable and run it:
+
+   ```sh
+   chmod +x Shorashim-x86_64.AppImage
+   ./Shorashim-x86_64.AppImage
+   ```
+
+   Or right-click the file → Properties → allow it to run as a program, then double-click it. If your system has no FUSE, run it as `./Shorashim-x86_64.AppImage --appimage-extract-and-run`.
+
+Progress is stored in `~/.local/share/Shorashim` (or `$XDG_DATA_HOME/Shorashim`).
 
 ## Course content
 

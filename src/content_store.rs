@@ -162,6 +162,10 @@ pub fn candidate_roots() -> Vec<PathBuf> {
         if let Some(res) = bundle_resources(&dir) {
             out.push(res.join(DIR_NAME));
         }
+        // Linux AppImage (usr/bin/shorashim): usr/share/shorashim/content.
+        if let Some(share) = share_dir(&dir) {
+            out.push(share.join(DIR_NAME));
+        }
     }
     out.push(Path::new(env!("CARGO_MANIFEST_DIR")).join(DIR_NAME));
     out
@@ -175,6 +179,16 @@ pub fn bundle_resources(exe_dir: &Path) -> Option<PathBuf> {
     }
     let res = exe_dir.parent()?.join("Resources");
     res.is_dir().then_some(res)
+}
+
+/// `../share/shorashim` beside a `bin/` folder (Linux AppImage or a
+/// system install); `None` when it does not exist.
+pub fn share_dir(exe_dir: &Path) -> Option<PathBuf> {
+    if exe_dir.file_name()? != "bin" {
+        return None;
+    }
+    let share = exe_dir.parent()?.join("share").join("shorashim");
+    share.is_dir().then_some(share)
 }
 
 /// The language folder inside a root: `<root>/<lang>/`, or the root itself
@@ -913,6 +927,12 @@ mod tests {
         std::fs::create_dir_all(&res).unwrap();
         assert_eq!(bundle_resources(&macos), Some(res));
         assert_eq!(bundle_resources(&tmp), None, "not a bundle");
+        let bin = tmp.join("AppDir/usr/bin");
+        std::fs::create_dir_all(&bin).unwrap();
+        assert_eq!(share_dir(&bin), None, "no share yet");
+        let share = tmp.join("AppDir/usr/share/shorashim");
+        std::fs::create_dir_all(&share).unwrap();
+        assert_eq!(share_dir(&bin), Some(share));
         let _ = std::fs::remove_dir_all(&tmp);
     }
 
