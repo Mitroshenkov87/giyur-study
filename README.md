@@ -1,10 +1,12 @@
 # Shorashim
 
+**[🌐 Project website: mitroshenkov87.github.io/shorashim](https://mitroshenkov87.github.io/shorashim/)** — screenshots, the 3D collection and downloads for Windows, macOS and Linux.
+
 Shorashim means “roots.” It is an offline app for Windows, macOS and Linux for studying the foundations of Judaism and for calm, step-by-step preparation for **giyur** and the **beit din** interview.
 
 The course is written in the language of Torah and Tanakh — the Written and Oral Torah. It is consistently pro-Israel: Eretz Israel is the heritage the Torah gives the Jewish people, Jerusalem is the eternal undivided capital, and the State of Israel is the Jewish people’s return home.
 
-**[Download Shorashim-Setup.exe](https://github.com/Mitroshenkov87/shorashim/releases/latest)** — Windows 10 or 11, for the current user, no administrator rights needed.
+**[Download Shorashim-Setup.exe](https://github.com/Mitroshenkov87/shorashim/releases/latest/download/Shorashim-Setup.exe)** — Windows 10 or 11, for the current user, no administrator rights needed.
 
 **[Download Shorashim-macOS.dmg](https://github.com/Mitroshenkov87/shorashim/releases/latest/download/Shorashim-macOS.dmg)** — Apple Silicon Mac (M1 or newer), macOS 11 or later.
 
