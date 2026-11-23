@@ -251,7 +251,7 @@ fn confirm_dialog<'a>(title: &'a str, body: &'a str) -> Element<'a, Msg> {
     .width(Length::Fill)
     .height(Length::Fill)
     .on_press(Msg::QuitCancel);
-    stack![backdrop, center(dialog)]
+    stack![backdrop, center(widgets::modal_fit(dialog)).padding(16)]
         .width(Length::Fill)
         .height(Length::Fill)
         .into()

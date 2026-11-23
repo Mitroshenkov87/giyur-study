@@ -14,7 +14,7 @@ use chrono::{Datelike, Duration, NaiveDate, Weekday};
 use iced::alignment::Horizontal;
 use iced::widget::text::IntoFragment;
 use iced::widget::{
-    button, column, container, mouse_area, opaque, row, rule, space, stack, text_input, Column, Row,
+    button, column, container, mouse_area, row, rule, space, stack, text_input, Column, Row,
 };
 use iced::{Alignment, Background, Border, Color, Element, Length, Shadow, Subscription, Theme};
 
@@ -401,17 +401,20 @@ impl Screen {
         .width(Length::Fill)
         .max_width(theme::spacing::CONTENT_MAX)
         .into();
-        if self.consent {
-            self.with_dialog(base)
-        } else {
-            base
-        }
+        base
+    }
+
+    /// The location consent dialog, rendered as a shell layer above the
+    /// whole window (like the other confirm dialogs), so it is centred on the
+    /// window and not on the long calendar page.
+    pub fn dialog<'a>(&'a self, _ctx: &'a Ctx) -> Option<Element<'a, Msg>> {
+        self.consent.then(|| self.consent_dialog())
     }
 
     // ---- Consent dialog -----------------------------------------------------
 
     /// The location consent modal (§0.3 style, like settings.rs).
-    fn with_dialog<'a>(&'a self, base: Element<'a, Msg>) -> Element<'a, Msg> {
+    fn consent_dialog<'a>(&'a self) -> Element<'a, Msg> {
         let p = palette();
         let backdrop = mouse_area(
             container(space::horizontal())
@@ -466,9 +469,10 @@ impl Screen {
         });
 
         stack![
-            base,
-            opaque(backdrop),
-            container(modal).center(Length::Fill).padding(20.0),
+            backdrop,
+            container(widgets::modal_fit(modal))
+                .center(Length::Fill)
+                .padding(20.0),
         ]
         .into()
     }

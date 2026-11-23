@@ -786,6 +786,17 @@ pub fn tag<'a, Message: 'a>(content: &'a str) -> Element<'a, Message> {
 }
 
 /// Card container: surface bg, border, radius 18, padding.
+/// A modal dialog card that always fits the window: as tall as its content
+/// when there is room, and scrolling inside the window when there is not
+/// (a very small window or the largest font size), so the buttons stay
+/// reachable. Place it in a centring container with some padding.
+pub fn modal_fit<'a, Message: 'a>(card: impl Into<Element<'a, Message>>) -> Element<'a, Message> {
+    iced::widget::scrollable(card)
+        .width(Length::Shrink)
+        .height(Length::Shrink)
+        .into()
+}
+
 pub fn card<'a, Message: 'a>(content: impl Into<Element<'a, Message>>) -> Element<'a, Message> {
     container(content)
         .padding(theme::spacing::CARD_PAD)

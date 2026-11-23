@@ -238,7 +238,7 @@ fn confirm_dialog<'a>(level: Level, p: theme::Palette) -> Element<'a, Msg> {
         ..iced::widget::container::Style::default()
     });
 
-    container(dialog)
+    container(widgets::modal_fit(dialog))
         .width(Length::Fill)
         .height(Length::Fill)
         .center(Length::Fill)

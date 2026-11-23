@@ -411,8 +411,18 @@ struct CollItem {
 
 /// Tiles per shelf row for a reading column `reading` px wide.
 fn shelf_cols(reading: f32) -> usize {
-    (((reading - 2.0 * theme::spacing::CARD_PAD) / 150.0).floor() as usize).clamp(3, 6)
+    (((reading - 2.0 * theme::spacing::CARD_PAD) / 150.0).floor() as usize).clamp(2, 6)
 }
+
+/// Badges per row: four on a normal column, fewer on a narrow one, so the
+/// titles and rules keep a readable width (about 150 px per badge).
+fn badge_cols(reading: f32) -> usize {
+    (((reading - 2.0 * theme::spacing::CARD_PAD + 10.0) / 160.0).floor() as usize).clamp(2, 4)
+}
+
+/// Below this reading width the «По разделам» and «Слабые темы» rows put
+/// the title above the bars instead of beside them.
+const NARROW_ROWS: f32 = 560.0;
 
 /// Shelf order: by section (as on «Уроки»), then by the model list.
 fn collection_items(lib: &Library, state: &crate::storage::State) -> Vec<CollItem> {
@@ -1178,7 +1188,8 @@ impl Screen {
                     alpha(p.text, 0.6)
                 })
                 .align_x(Horizontal::Center)
-                .width(Length::Fill),
+                .width(Length::Fill)
+                .wrapping(iced::widget::text::Wrapping::WordOrGlyph),
         );
         body = body.push(
             txt(if c.unlocked {
@@ -1189,7 +1200,8 @@ impl Screen {
             .size(12.0)
             .color(p.muted)
             .align_x(Horizontal::Center)
-            .width(Length::Fill),
+            .width(Length::Fill)
+            .wrapping(iced::widget::text::Wrapping::WordOrGlyph),
         );
         if c.unlocked {
             button(body)
@@ -1235,13 +1247,16 @@ impl Screen {
     }
 
     fn badges_card<'a>(&'a self, p: Palette) -> Element<'a, Msg> {
+        let cols = badge_cols(crate::ui::layout::reading_width());
+        // Narrow cells wrap long titles and rules to more lines.
+        let cell_h = if cols < 4 { 176.0 } else { 150.0 };
         let mut grid = Column::new().spacing(10).width(Length::Fill);
-        for chunk in self.badges.chunks(4) {
+        for chunk in self.badges.chunks(cols) {
             let mut r = Row::new().spacing(10).width(Length::Fill);
             for b in chunk {
-                r = r.push(badge_cell(b, p));
+                r = r.push(badge_cell(b, p, cell_h));
             }
-            for _ in chunk.len()..4 {
+            for _ in chunk.len()..cols {
                 r = r.push(space::horizontal().width(Length::FillPortion(1)));
             }
             grid = grid.push(r);
@@ -1301,6 +1316,12 @@ impl Screen {
     }
 
     fn sections_card<'a>(&'a self, p: Palette) -> Element<'a, Msg> {
+        let narrow = crate::ui::layout::reading_width() < NARROW_ROWS;
+        let title_w = if narrow {
+            Length::Fill
+        } else {
+            Length::Fixed(220.0)
+        };
         let mut list = Column::new().spacing(12).width(Length::Fill);
         for s in &self.sections {
             if s.soon {
@@ -1309,7 +1330,7 @@ impl Screen {
                         txt(s.title.clone())
                             .size(theme::text::BODY)
                             .color(alpha(p.text, 0.55))
-                            .width(Length::Fixed(220.0)),
+                            .width(title_w),
                         widgets::tag("Скоро"),
                     ]
                     .spacing(10)
@@ -1334,46 +1355,51 @@ impl Screen {
                     .color(p.gold2),
                 None => txt("—").size(theme::text::BODY).color(p.muted),
             };
-            list = list.push(
-                row![
-                    txt(s.title.clone())
-                        .size(theme::text::BODY)
-                        .width(Length::Fixed(220.0)),
-                    column![
-                        row![
-                            txt(format!("Уроки {}/{}", s.read, s.lessons))
-                                .size(theme::text::SMALL - 1.0)
-                                .color(p.muted)
-                                .width(Length::Fixed(110.0)),
-                            progress_bar(0.0..=1.0, lessons_pct)
-                                .girth(6.0)
-                                .style(move |_| theme::progress_bar(&palette())),
-                        ]
-                        .spacing(8)
-                        .align_y(Alignment::Center),
-                        row![
-                            txt(format!("Карточки {}/{}", s.mastered, s.cards))
-                                .size(theme::text::SMALL - 1.0)
-                                .color(p.muted)
-                                .width(Length::Fixed(110.0)),
-                            progress_bar(0.0..=1.0, cards_pct)
-                                .girth(6.0)
-                                .style(move |_| {
-                                    bar_style(&palette(), Color::from_rgb8(0x6f, 0x8f, 0xd0))
-                                }),
-                        ]
-                        .spacing(8)
-                        .align_y(Alignment::Center),
+            let title = txt(s.title.clone()).size(theme::text::BODY).width(title_w);
+            let bars = row![
+                column![
+                    row![
+                        txt(format!("Уроки {}/{}", s.read, s.lessons))
+                            .size(theme::text::SMALL - 1.0)
+                            .color(p.muted)
+                            .width(Length::Fixed(110.0)),
+                        progress_bar(0.0..=1.0, lessons_pct)
+                            .girth(6.0)
+                            .style(move |_| theme::progress_bar(&palette())),
                     ]
-                    .spacing(6)
-                    .width(Length::Fill),
-                    container(best)
-                        .width(Length::Fixed(52.0))
-                        .align_x(Alignment::End),
+                    .spacing(8)
+                    .align_y(Alignment::Center),
+                    row![
+                        txt(format!("Карточки {}/{}", s.mastered, s.cards))
+                            .size(theme::text::SMALL - 1.0)
+                            .color(p.muted)
+                            .width(Length::Fixed(110.0)),
+                        progress_bar(0.0..=1.0, cards_pct)
+                            .girth(6.0)
+                            .style(move |_| {
+                                bar_style(&palette(), Color::from_rgb8(0x6f, 0x8f, 0xd0))
+                            }),
+                    ]
+                    .spacing(8)
+                    .align_y(Alignment::Center),
                 ]
-                .spacing(10)
-                .align_y(Alignment::Center),
-            );
+                .spacing(6)
+                .width(Length::Fill),
+                container(best)
+                    .width(Length::Fixed(52.0))
+                    .align_x(Alignment::End),
+            ]
+            .spacing(10)
+            .align_y(Alignment::Center);
+            let line: Element<'a, Msg> = if narrow {
+                column![title, bars].spacing(6).into()
+            } else {
+                row![title, bars]
+                    .spacing(10)
+                    .align_y(Alignment::Center)
+                    .into()
+            };
+            list = list.push(line);
         }
         widgets::card(
             column![
@@ -1450,6 +1476,7 @@ impl Screen {
     }
 
     fn weak_card<'a>(&'a self, p: Palette) -> Element<'a, Msg> {
+        let narrow = crate::ui::layout::reading_width() < NARROW_ROWS;
         let mut body = Column::new().spacing(10).width(Length::Fill);
         if self.weak.is_empty() {
             body = body.push(
@@ -1472,23 +1499,33 @@ impl Screen {
                     .spacing(2),
                 )
                 .padding([6.0, 10.0])
-                .width(Length::Fixed(260.0))
+                .width(if narrow {
+                    Length::Fill
+                } else {
+                    Length::Fixed(260.0)
+                })
                 .style(move |_, s| theme::button_ghost(&palette(), s))
                 .on_press(Msg::OpenLesson(w.lesson_id.clone()));
-                body = body.push(
-                    row![
-                        link,
-                        progress_bar(0.0..=1.0, w.pct as f32 / 100.0)
-                            .girth(6.0)
-                            .style(move |_| bar_style(&palette(), palette().bad)),
-                        txt(format!("{}% ошибок", w.pct))
-                            .size(theme::text::SMALL)
-                            .color(p.bad)
-                            .width(Length::Fixed(90.0)),
-                    ]
-                    .spacing(12)
-                    .align_y(Alignment::Center),
-                );
+                let bar = row![
+                    progress_bar(0.0..=1.0, w.pct as f32 / 100.0)
+                        .girth(6.0)
+                        .style(move |_| bar_style(&palette(), palette().bad)),
+                    txt(format!("{}% ошибок", w.pct))
+                        .size(theme::text::SMALL)
+                        .color(p.bad)
+                        .width(Length::Fixed(90.0)),
+                ]
+                .spacing(12)
+                .align_y(Alignment::Center);
+                let line: Element<'a, Msg> = if narrow {
+                    column![link, bar].spacing(6).into()
+                } else {
+                    row![link, bar]
+                        .spacing(12)
+                        .align_y(Alignment::Center)
+                        .into()
+                };
+                body = body.push(line);
             }
         }
         widgets::card(column![widgets::heading("Слабые темы", 3), body].spacing(14))
@@ -1501,7 +1538,7 @@ impl Screen {
 
 /// One badge in the grid (§11.3): 64 px emblem, title, text; locked badges
 /// are dimmed and show a padlock.
-fn badge_cell<'a>(b: &'a BadgeItem, p: Palette) -> Element<'a, Msg> {
+fn badge_cell<'a>(b: &'a BadgeItem, p: Palette, height: f32) -> Element<'a, Msg> {
     let emblem: Element<'a, Msg> = match assets::img(&format!("badge-{}", b.id)) {
         Some(handle) => container(
             image(handle)
@@ -1565,7 +1602,7 @@ fn badge_cell<'a>(b: &'a BadgeItem, p: Palette) -> Element<'a, Msg> {
     let body: Element<'a, Msg> = container(content)
         .padding(12.0)
         .width(Length::Fill)
-        .height(Length::Fixed(150.0))
+        .height(Length::Fixed(height))
         .style(move |_| container::Style {
             background: Some(Background::Color(if earned {
                 p.surface2
