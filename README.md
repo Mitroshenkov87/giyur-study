@@ -6,6 +6,8 @@ The course is written in the language of Torah and Tanakh — the Written and Or
 
 **[Download Shorashim-Setup.exe](https://github.com/Mitroshenkov87/shorashim/releases/latest)** — Windows 10 or 11, for the current user, no administrator rights needed.
 
+**[User guide](docs/Shorashim-User-Guide.pdf)** — a short PDF on installing the app and using each part of it.
+
 ![Welcome](docs/screenshots/welcome.webp)
 
 Giyur is a path, not a cram session. Shorashim walks with you: short lessons, honest practice, and the questions a beit din actually asks — so you can answer in your own words, not from a memorized script.
