@@ -119,6 +119,12 @@ pub fn steps_word(n: usize) -> &'static str {
     )
 }
 
+/// Russian verb agreement: true when `n` takes the singular verb
+/// («1 ступень останется», «21 ступень остаётся»; but «11 ступеней»).
+pub fn ru_singular(n: usize) -> bool {
+    n % 10 == 1 && n % 100 != 11
+}
+
 /// Steps kept after falling with `climbed` steps already answered.
 pub fn safe_below(climbed: usize) -> usize {
     SAFE.iter()
