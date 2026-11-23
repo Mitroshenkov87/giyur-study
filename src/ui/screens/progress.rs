@@ -20,6 +20,7 @@ use iced::{
 use crate::collection;
 use crate::content::Library;
 use crate::game;
+use crate::i18n::tr;
 use crate::ui::app::{Action, Ctx, Route};
 use crate::ui::fonts::{SANS, SANS_BOLD, SERIF_BOLD};
 use crate::ui::model3d::Model;
@@ -513,14 +514,14 @@ pub enum Msg {
 /// js/exam.js E.MODE_TITLES (history entries store the raw mode string).
 fn mode_title(mode: &str) -> &str {
     match mode {
-        "section" => "Тест раздела",
-        "general" => "Общий экзамен",
-        "beitdin" => "Пробный бейт-дин",
-        "retry" => "Работа над ошибками",
-        "timed" => "Викторина",
-        "ladder" => "Маалот",
-        "selfcheck" => "Самопроверка",
-        "rehearsal" => "Репетиция бейт-дина",
+        "section" => tr("Тест раздела"),
+        "general" => tr("Общий экзамен"),
+        "beitdin" => tr("Пробный бейт-дин"),
+        "retry" => tr("Работа над ошибками"),
+        "timed" => tr("Викторина"),
+        "ladder" => tr("Маалот"),
+        "selfcheck" => tr("Самопроверка"),
+        "rehearsal" => tr("Репетиция бейт-дина"),
         other => other,
     }
 }
@@ -605,7 +606,11 @@ impl Screen {
                 .map(|dt| names[dt.weekday().num_days_from_sunday() as usize])
                 .unwrap_or("");
             week.push(DayBar {
-                tip: format!("{d}: {v} XP{}", if frozen { " (заморозка)" } else { "" }),
+                tip: if frozen {
+                    crate::trf!("{d}: {v} XP (заморозка)", "{d}: {v} XP (frozen)")
+                } else {
+                    format!("{d}: {v} XP")
+                },
                 label: weekday.to_string(),
                 frac: v as f32 / max,
                 goal_frac: goal as f32 / max,
@@ -720,13 +725,16 @@ impl Screen {
             .map(|g| g.title)
             .unwrap_or("");
         let explain_items = vec![
-            "**XP** начисляются за учёбу: урок прочитан — 10, каждая оценённая карточка — 1 («Не вспомнил» тоже: важна работа), колода пройдена — 5, тест раздела сдан — 20 (+10 за 100%), викторина — 2 за каждый верный ответ, пробный бейт-дин — 15, самопроверка, репетиция бейт-дина и работа над ошибками — 1 за каждый верный ответ.".to_string(),
-            format!(
+            tr("**XP** начисляются за учёбу: урок прочитан — 10, каждая оценённая карточка — 1 («Не вспомнил» тоже: важна работа), колода пройдена — 5, тест раздела сдан — 20 (+10 за 100%), викторина — 2 за каждый верный ответ, пробный бейт-дин — 15, самопроверка, репетиция бейт-дина и работа над ошибками — 1 за каждый верный ответ.").to_string(),
+            crate::trf!(
                 "**Цель дня** — {} XP ({}). Её можно изменить в настройках: 10, 20, 30 или 50 XP. Сегодня набрано {} XP.",
-                goal, goal_title, today_xp
+                "**Daily goal** — {} XP ({}). You can change it in Settings: 10, 20, 30, or 50 XP. You've earned {} XP today.",
+                goal,
+                tr(goal_title),
+                today_xp
             ),
-            "**Серия** — сколько дней подряд выполнена цель дня. Если сегодня цель ещё не выполнена, серия не сгорает до конца дня.".to_string(),
-            "**Заморозка серии** — за каждые 7 дней серии вы получаете одну (хранится не больше двух). Если вы пропустите день, заморозка спишется автоматически и серия сохранится.".to_string(),
+            tr("**Серия** — сколько дней подряд выполнена цель дня. Если сегодня цель ещё не выполнена, серия не сгорает до конца дня.").to_string(),
+            tr("**Заморозка серии** — за каждые 7 дней серии вы получаете одну (хранится не больше двух). Если вы пропустите день, заморозка спишется автоматически и серия сохранится.").to_string(),
         ];
 
         let collection = collection_items(lib, state);
@@ -801,7 +809,11 @@ impl Screen {
     pub fn view<'a>(&'a self, ctx: &'a Ctx) -> Element<'a, Msg> {
         let p = palette();
         column![
-            column![widgets::kicker("Ваш путь"), widgets::heading("Успехи", 1),].spacing(6),
+            column![
+                widgets::kicker(tr("Ваш путь")),
+                widgets::heading(tr("Успехи"), 1),
+            ]
+            .spacing(6),
             self.kpis(p),
             self.game_card(p),
             interview_card(ctx, p),
@@ -847,24 +859,30 @@ impl Screen {
         row![
             tile(
                 self.streak.to_string(),
-                format!(
+                crate::trf!(
                     "{} подряд",
-                    util::plural(self.streak, &["день", "дня", "дней"])
+                    "{} in a row",
+                    util::plural_l(self.streak, &["день", "дня", "дней"], &["day", "days"])
                 ),
             ),
             tile(
                 format!("{}/{}", self.kpi_read, self.kpi_lessons),
-                "уроков прочитано".to_string(),
+                tr("уроков прочитано").to_string(),
             ),
             tile(
                 self.kpi_mastered.to_string(),
-                "карточек выучено (интервал 30 дней)".to_string(),
+                tr("карточек выучено (интервал 30 дней)").to_string(),
             ),
             tile(
                 self.kpi_exams.to_string(),
-                format!(
+                crate::trf!(
                     "{} пройдено",
-                    util::plural(self.kpi_exams as i64, &["экзамен", "экзамена", "экзаменов"])
+                    "{} passed",
+                    util::plural_l(
+                        self.kpi_exams as i64,
+                        &["экзамен", "экзамена", "экзаменов"],
+                        &["exam", "exams"]
+                    )
                 ),
             ),
         ]
@@ -908,9 +926,10 @@ impl Screen {
                     .size(26.0)
                     .font(SERIF_BOLD)
                     .color(p.text),
-                txt(format!(
+                txt(crate::trf!(
                     "{} подряд",
-                    util::plural(self.streak, &["день", "дня", "дней"])
+                    "{} in a row",
+                    util::plural_l(self.streak, &["день", "дня", "дней"], &["day", "days"])
                 ))
                 .size(theme::text::SMALL)
                 .color(p.muted),
@@ -940,8 +959,9 @@ impl Screen {
         }
         let freeze_box = column![
             freeze_dots,
-            txt(format!(
+            txt(crate::trf!(
                 "{} из {} заморозок",
+                "{} of {} freezes",
                 self.freezes,
                 game::MAX_FREEZES
             ))
@@ -955,7 +975,7 @@ impl Screen {
                 .size(26.0)
                 .font(SERIF_BOLD)
                 .color(p.text),
-            txt("XP всего").size(theme::text::SMALL).color(p.muted),
+            txt(tr("XP всего")).size(theme::text::SMALL).color(p.muted),
         ]
         .spacing(0);
 
@@ -966,7 +986,7 @@ impl Screen {
 
         widgets::card(
             column![
-                widgets::heading("Цель и серия", 3),
+                widgets::heading(tr("Цель и серия"), 3),
                 top_row,
                 self.xp_week(p),
                 self.explainer(p),
@@ -1029,7 +1049,7 @@ impl Screen {
                 .center_x(Length::Fill)
                 .into()
             } else {
-                txt(d.label.clone())
+                txt(tr(&d.label))
                     .size(theme::text::SMALL - 1.0)
                     .font(if d.is_today { SANS_BOLD } else { SANS })
                     .color(if d.is_today { p.gold2 } else { p.muted })
@@ -1058,7 +1078,7 @@ impl Screen {
             button(
                 row![
                     txt(marker).size(theme::text::BODY).color(p.gold),
-                    txt("Как работают цель, серия и заморозки")
+                    txt(tr("Как работают цель, серия и заморозки"))
                         .size(theme::text::SMALL + 0.5)
                         .font(SANS_BOLD)
                         .color(p.gold2),
@@ -1100,12 +1120,17 @@ impl Screen {
         let mut col = Column::new().spacing(14).width(Length::Fill);
         col = col.push(
             row![
-                widgets::heading("Коллекция предметов", 3),
+                widgets::heading(tr("Коллекция предметов"), 3),
                 space::horizontal(),
-                txt(format!("{} из {}", self.collection_got, total))
-                    .size(theme::text::BODY)
-                    .font(SANS_BOLD)
-                    .color(p.gold2),
+                txt(crate::trf!(
+                    "{} из {}",
+                    "{} of {}",
+                    self.collection_got,
+                    total
+                ))
+                .size(theme::text::BODY)
+                .font(SANS_BOLD)
+                .color(p.gold2),
             ]
             .spacing(8)
             .align_y(Alignment::Center),
@@ -1116,10 +1141,10 @@ impl Screen {
                 .style(move |_| bar_style(&p, p.gold)),
         );
         col = col.push(
-            txt(
+            txt(tr(
                 "Каждый предмет попадает на полку, когда вы прочитаете урок, \
                  где о нём рассказано. Откройте предмет, чтобы рассмотреть его со всех сторон.",
-            )
+            ))
             .size(theme::text::SMALL)
             .color(p.muted),
         );
@@ -1139,12 +1164,12 @@ impl Screen {
                 col = col.push(crate::ui::model3d::card::card(
                     ctx,
                     m,
-                    Some("Из вашей коллекции"),
+                    Some(tr("Из вашей коллекции")),
                     self.caption_open,
                     crate::ui::model3d::card::Msgs {
                         ready: Msg::Model3dReady,
                         toggle_caption: Msg::ToggleCaption,
-                        link: Some(("Свернуть".to_string(), Msg::CloseObject)),
+                        link: Some((tr("Свернуть").to_string(), Msg::CloseObject)),
                     },
                 ));
             }
@@ -1183,7 +1208,7 @@ impl Screen {
             .width(Length::Fill);
         body = body.push(container(picture).center_x(Length::Fill));
         body = body.push(
-            txt(c.title)
+            txt(tr(c.title))
                 .size(theme::text::SMALL)
                 .font(SANS_BOLD)
                 .color(if c.unlocked {
@@ -1197,9 +1222,9 @@ impl Screen {
         );
         body = body.push(
             txt(if c.unlocked {
-                c.section.to_string()
+                tr(c.section)
             } else {
-                c.condition.clone()
+                c.condition.as_str()
             })
             .size(12.0)
             .color(p.muted)
@@ -1268,10 +1293,15 @@ impl Screen {
         widgets::card(
             column![
                 row![
-                    widgets::heading("Значки", 3),
-                    txt(format!("· {} из {}", self.badges_got, self.badges.len()))
-                        .size(theme::text::SMALL)
-                        .color(p.muted),
+                    widgets::heading(tr("Значки"), 3),
+                    txt(crate::trf!(
+                        "· {} из {}",
+                        "· {} of {}",
+                        self.badges_got,
+                        self.badges.len()
+                    ))
+                    .size(theme::text::SMALL)
+                    .color(p.muted),
                 ]
                 .spacing(8)
                 .align_y(Alignment::End),
@@ -1316,7 +1346,7 @@ impl Screen {
             }
             rows = rows.push(r);
         }
-        widgets::card(column![widgets::heading("Активность за 4 недели", 3), rows,].spacing(14))
+        widgets::card(column![widgets::heading(tr("Активность за 4 недели"), 3), rows,].spacing(14))
     }
 
     fn sections_card<'a>(&'a self, p: Palette) -> Element<'a, Msg> {
@@ -1335,7 +1365,7 @@ impl Screen {
                             .size(theme::text::BODY)
                             .color(alpha(p.text, 0.55))
                             .width(title_w),
-                        widgets::tag("Скоро"),
+                        widgets::tag(tr("Скоро")),
                     ]
                     .spacing(10)
                     .align_y(Alignment::Center),
@@ -1363,10 +1393,15 @@ impl Screen {
             let bars = row![
                 column![
                     row![
-                        txt(format!("Уроки {}/{}", s.read, s.lessons))
-                            .size(theme::text::SMALL - 1.0)
-                            .color(p.muted)
-                            .width(Length::Fixed(110.0)),
+                        txt(crate::trf!(
+                            "Уроки {}/{}",
+                            "Lessons {}/{}",
+                            s.read,
+                            s.lessons
+                        ))
+                        .size(theme::text::SMALL - 1.0)
+                        .color(p.muted)
+                        .width(Length::Fixed(110.0)),
                         progress_bar(0.0..=1.0, lessons_pct)
                             .girth(6.0)
                             .style(move |_| theme::progress_bar(&palette())),
@@ -1374,10 +1409,15 @@ impl Screen {
                     .spacing(8)
                     .align_y(Alignment::Center),
                     row![
-                        txt(format!("Карточки {}/{}", s.mastered, s.cards))
-                            .size(theme::text::SMALL - 1.0)
-                            .color(p.muted)
-                            .width(Length::Fixed(110.0)),
+                        txt(crate::trf!(
+                            "Карточки {}/{}",
+                            "Cards {}/{}",
+                            s.mastered,
+                            s.cards
+                        ))
+                        .size(theme::text::SMALL - 1.0)
+                        .color(p.muted)
+                        .width(Length::Fixed(110.0)),
                         progress_bar(0.0..=1.0, cards_pct)
                             .girth(6.0)
                             .style(move |_| {
@@ -1408,8 +1448,10 @@ impl Screen {
         widgets::card(
             column![
                 row![
-                    widgets::heading("По разделам", 3),
-                    txt("· лучший тест").size(theme::text::SMALL).color(p.muted),
+                    widgets::heading(tr("По разделам"), 3),
+                    txt(tr("· лучший тест"))
+                        .size(theme::text::SMALL)
+                        .color(p.muted),
                 ]
                 .spacing(8)
                 .align_y(Alignment::End),
@@ -1423,7 +1465,7 @@ impl Screen {
         let mut body = Column::new().spacing(12).width(Length::Fill);
         if self.history.is_empty() {
             body = body.push(
-                txt("Вы ещё не проходили экзамены.")
+                txt(tr("Вы ещё не проходили экзамены."))
                     .size(theme::text::BODY)
                     .color(p.muted),
             );
@@ -1476,7 +1518,7 @@ impl Screen {
             }
             body = body.push(list);
         }
-        widgets::card(column![widgets::heading("История экзаменов", 3), body].spacing(14))
+        widgets::card(column![widgets::heading(tr("История экзаменов"), 3), body].spacing(14))
     }
 
     fn weak_card<'a>(&'a self, p: Palette) -> Element<'a, Msg> {
@@ -1484,9 +1526,11 @@ impl Screen {
         let mut body = Column::new().spacing(10).width(Length::Fill);
         if self.weak.is_empty() {
             body = body.push(
-                txt("Пока недостаточно данных: решайте тесты и повторяйте карточки.")
-                    .size(theme::text::BODY)
-                    .color(p.muted),
+                txt(tr(
+                    "Пока недостаточно данных: решайте тесты и повторяйте карточки.",
+                ))
+                .size(theme::text::BODY)
+                .color(p.muted),
             );
         } else {
             for w in &self.weak {
@@ -1514,7 +1558,7 @@ impl Screen {
                     progress_bar(0.0..=1.0, w.pct as f32 / 100.0)
                         .girth(6.0)
                         .style(move |_| bar_style(&palette(), palette().bad)),
-                    txt(format!("{}% ошибок", w.pct))
+                    txt(crate::trf!("{}% ошибок", "{}% errors", w.pct))
                         .size(theme::text::SMALL)
                         .color(p.bad)
                         .width(Length::Fixed(90.0)),
@@ -1532,7 +1576,7 @@ impl Screen {
                 body = body.push(line);
             }
         }
-        widgets::card(column![widgets::heading("Слабые темы", 3), body].spacing(14))
+        widgets::card(column![widgets::heading(tr("Слабые темы"), 3), body].spacing(14))
     }
 }
 
@@ -1543,6 +1587,8 @@ impl Screen {
 /// One badge in the grid (§11.3): 64 px emblem, title, text; locked badges
 /// are dimmed and show a padlock.
 fn badge_cell<'a>(b: &'a BadgeItem, p: Palette, height: f32) -> Element<'a, Msg> {
+    let title = tr(&b.title);
+    let text = tr(&b.text);
     let emblem: Element<'a, Msg> = match assets::img(&format!("badge-{}", b.id)) {
         Some(handle) => container(
             image(handle)
@@ -1561,7 +1607,7 @@ fn badge_cell<'a>(b: &'a BadgeItem, p: Palette, height: f32) -> Element<'a, Msg>
         })
         .into(),
         None => container(
-            txt(b.title.chars().next().unwrap_or('?').to_string())
+            txt(title.chars().next().unwrap_or('?').to_string())
                 .size(24.0)
                 .font(SERIF_BOLD)
                 .color(p.gold2),
@@ -1586,7 +1632,7 @@ fn badge_cell<'a>(b: &'a BadgeItem, p: Palette, height: f32) -> Element<'a, Msg>
         .width(Length::Fill);
     content = content.push(container(emblem).center_x(Length::Fill));
     content = content.push(
-        txt(b.title.clone())
+        txt(title)
             .size(theme::text::SMALL + 0.5)
             .font(SANS_BOLD)
             .color(if b.earned { p.text } else { p.muted })
@@ -1594,7 +1640,7 @@ fn badge_cell<'a>(b: &'a BadgeItem, p: Palette, height: f32) -> Element<'a, Msg>
             .width(Length::Fill),
     );
     content = content.push(
-        txt(b.text.clone())
+        txt(text)
             .size(theme::text::SMALL - 1.5)
             .color(p.muted)
             .align_x(Horizontal::Center)
@@ -1685,9 +1731,9 @@ fn interview_card<'a>(ctx: &'a Ctx, p: Palette) -> Element<'a, Msg> {
     let mut col = Column::new().spacing(12).width(Length::Fill);
     col = col.push(
         row![
-            widgets::heading("Тренажёр собеседования", 3),
+            widgets::heading(tr("Тренажёр собеседования"), 3),
             space::horizontal(),
-            txt(format!("готовность {}%", st.readiness))
+            txt(crate::trf!("готовность {}%", "readiness {}%", st.readiness))
                 .size(theme::text::BODY)
                 .font(SANS_BOLD)
                 .color(p.gold2),
@@ -1701,17 +1747,26 @@ fn interview_card<'a>(ctx: &'a Ctx, p: Palette) -> Element<'a, Msg> {
             .style(move |_| bar_style(&p, p.gold)),
     );
     let runs = match (st.last_run, st.best_run) {
-        (Some(last), Some(best)) => format!(
+        (Some(last), Some(best)) => crate::trf!(
             "{} {} · последняя {last}% · лучшая {best}%",
+            "{} {} · last {last}% · best {best}%",
             st.runs,
-            util::plural(st.runs as i64, &["репетиция", "репетиции", "репетиций"])
+            util::plural_l(
+                st.runs as i64,
+                &["репетиция", "репетиции", "репетиций"],
+                &["rehearsal", "rehearsals"]
+            )
         ),
-        _ => "Репетиций пока не было".to_string(),
+        _ => tr("Репетиций пока не было").to_string(),
     };
     col = col.push(
-        txt(format!(
+        txt(crate::trf!(
             "Отработано {} из {} вопросов · «Готов» — {} · к повторению сегодня — {}. {runs}.",
-            st.practiced, st.total, st.ready, st.due
+            "Practiced {} of {} questions · “Ready” — {} · to review today — {}. {runs}.",
+            st.practiced,
+            st.total,
+            st.ready,
+            st.due
         ))
         .size(theme::text::SMALL)
         .color(p.muted),
@@ -1719,13 +1774,13 @@ fn interview_card<'a>(ctx: &'a Ctx, p: Palette) -> Element<'a, Msg> {
     col = col.push(
         row![
             widgets::btn(
-                "Практика",
+                tr("Практика"),
                 widgets::Btn::Secondary,
                 widgets::BtnSize::Sm,
                 Some(Msg::OpenInterview(Mode::Practice)),
             ),
             widgets::btn(
-                "Репетиция",
+                tr("Репетиция"),
                 widgets::Btn::Ghost,
                 widgets::BtnSize::Sm,
                 Some(Msg::OpenInterview(Mode::Rehearsal)),

@@ -20,6 +20,7 @@ use chrono::NaiveDate;
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 
+use crate::i18n::tr;
 use crate::storage::{CardState, Level, State};
 use crate::{srs, util};
 
@@ -119,13 +120,13 @@ pub fn user_level(state: &State) -> Level {
 pub fn mode_hint(mode: Mode) -> &'static str {
     match mode {
         Mode::Browse => {
-            "Темы: читайте вопросы и образцы ответов, чтобы спокойно изучить материал."
+            tr("Темы: читайте вопросы и образцы ответов, чтобы спокойно изучить материал.")
         }
         Mode::Practice => {
-            "Практика: выберите верный ответ из нескольких вариантов. Результат проверяется сразу и учитывается в повторениях."
+            tr("Практика: выберите верный ответ из нескольких вариантов. Результат проверяется сразу и учитывается в повторениях.")
         }
         Mode::Rehearsal => {
-            "Репетиция: десять вопросов с вариантами ответа, как пробная беседа. В конце — счёт. По желанию можно сначала ответить вслух."
+            tr("Репетиция: десять вопросов с вариантами ответа, как пробная беседа. В конце — счёт. По желанию можно сначала ответить вслух.")
         }
     }
 }
@@ -206,9 +207,9 @@ pub enum Rating {
 impl Rating {
     pub fn label(self) -> &'static str {
         match self {
-            Rating::Ready => "Готов",
-            Rating::Partly => "Частично",
-            Rating::NotYet => "Ещё не готов",
+            Rating::Ready => tr("Готов"),
+            Rating::Partly => tr("Частично"),
+            Rating::NotYet => tr("Ещё не готов"),
         }
     }
 

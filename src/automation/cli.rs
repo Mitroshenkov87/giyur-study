@@ -9,6 +9,8 @@ use serde_json::{json, Map, Value};
 use super::client::{self, Client};
 use super::session::{Options, Session};
 
+use crate::i18n::tr;
+
 const USAGE: &str = "\
 Shorashim automation (docs/AUTOMATION.md)
 
@@ -21,6 +23,7 @@ Shorashim automation (docs/AUTOMATION.md)
   shorashim --headless [--script FILE] [--data FILE] [--today YYYY-MM-DD] [--reviewer] [--keep-going]
                                       run JSON-line commands without a window
   shorashim validate-content [DIR]    check the course files (content/<lang>/) and exit
+  shorashim validate-parity [DIR]     check content/en against content/ru (skip if en is absent)
   shorashim ctl reload-content        re-read edited course files in the running app
   shorashim --reviewer                start in the «Открытый режим рецензента» for this run
                                       (also SHORASHIM_REVIEWER=1; ctl launch --reviewer)
@@ -38,7 +41,15 @@ pub fn companion_main() -> i32 {
     let mut args: Vec<String> = std::env::args().skip(1).collect();
     let known = matches!(
         args.first().map(String::as_str),
-        Some("ctl" | "mcp" | "--headless" | "headless" | "--automation-help" | "validate-content")
+        Some(
+            "ctl"
+                | "mcp"
+                | "--headless"
+                | "headless"
+                | "--automation-help"
+                | "validate-content"
+                | "validate-parity"
+        )
     );
     if !known {
         args.insert(0, "ctl".into());
@@ -65,9 +76,13 @@ fn main_hook_with(args: Vec<String>) -> Option<i32> {
             attach_console();
             validate_content(&args[1..])
         }
+        "validate-parity" | "--validate-parity" => {
+            attach_console();
+            validate_parity(&args[1..])
+        }
         "--automation-help" => {
             attach_console();
-            print!("{USAGE}");
+            print!("{}", tr(USAGE));
             0
         }
         _ => return None,
@@ -117,10 +132,6 @@ pub fn session_options(args: &mut Vec<String>) -> Result<Options, String> {
 
 fn headless(args: &[String]) -> i32 {
     let mut args = args.to_vec();
-    if let Err(e) = crate::content_store::init(crate::content_store::DEFAULT_LANG) {
-        eprintln!("course content not loaded: {e}");
-        return 2;
-    }
     let script = take_opt(&mut args, "--script");
     let keep_going = take_flag(&mut args, "--keep-going");
     let opts = match session_options(&mut args) {
@@ -130,8 +141,12 @@ fn headless(args: &[String]) -> i32 {
             return 2;
         }
     };
+    if let Err(e) = crate::content_store::start(opts.data.as_deref()) {
+        eprintln!("course content not loaded: {e}");
+        return 2;
+    }
     if let Some(extra) = args.first() {
-        eprintln!("unknown option {extra}\n{USAGE}");
+        eprintln!("unknown option {extra}\n{}", tr(USAGE));
         return 2;
     }
     let mut session = Session::new(opts);
@@ -167,7 +182,49 @@ fn validate_content(args: &[String]) -> i32 {
             0
         }
         Err(e) => {
-            eprintln!("ОШИБКА {e}");
+            eprintln!("{}", crate::trf!("ОШИБКА {e}", "ERROR {e}"));
+            1
+        }
+    }
+}
+
+/// `validate-parity [DIR]`: `content/en` must have the same JSON files, ids
+/// and fields as `content/ru`. Missing `en/` is a skip (exit 0): English
+/// course files may land later.
+fn validate_parity(args: &[String]) -> i32 {
+    use crate::content_store as cs;
+    let root = match args.first() {
+        Some(d) => PathBuf::from(d),
+        None => cs::candidate_roots()
+            .into_iter()
+            .find(|p| p.is_dir())
+            .unwrap_or_else(|| PathBuf::from(cs::DIR_NAME)),
+    };
+    match cs::check_parity(&root) {
+        cs::ParityResult::Ok => {
+            if let Some(dir) = cs::lang_dir(&root, "en") {
+                if let Err(e) = cs::load_dir(&dir, "en") {
+                    eprintln!("{}", crate::trf!("ОШИБКА {e}", "ERROR {e}"));
+                    return 1;
+                }
+            }
+            println!("OK parity {} ru ↔ en", root.display());
+            0
+        }
+        cs::ParityResult::Skipped { missing } => {
+            println!(
+                "SKIP no {} (English course files are optional until they exist)",
+                missing.display()
+            );
+            0
+        }
+        cs::ParityResult::Failed(issues) => {
+            for i in &issues {
+                eprintln!(
+                    "{}",
+                    crate::trf!("ОШИБКА {}: {}", "ERROR {}: {}", i.file, i.reason)
+                );
+            }
             1
         }
     }
@@ -206,7 +263,7 @@ fn ctl(args: &[String]) -> i32 {
     let file = client::control_file(take_opt(&mut args, "--file").map(PathBuf::from));
     let raw = take_opt(&mut args, "--json");
     let Some(cmd) = raw.clone().or_else(|| args.first().cloned()) else {
-        eprint!("{USAGE}");
+        eprint!("{}", tr(USAGE));
         return 2;
     };
     if raw.is_none() && cmd == "launch" {

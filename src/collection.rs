@@ -10,6 +10,7 @@
 //! a progress reset clears them with everything else.
 
 use crate::content::Library;
+use crate::i18n::tr;
 use crate::storage::State;
 
 /// `State::extra` key of the unlocked objects map.
@@ -87,24 +88,39 @@ pub fn met(state: &State, unlock: Unlock) -> bool {
     }
 }
 
-/// The unlock rule in Russian, for a locked tile.
+/// The unlock rule, for a locked tile.
 pub fn condition(lib: &Library, unlock: Unlock) -> String {
     match unlock {
         Unlock::Lesson(id) => match lib.lesson(id) {
-            Some((l, sec)) => format!(
-                "Прочитайте урок «{}» ({})",
-                l.title.as_deref().unwrap_or(&sec.title),
-                sec.title
-            ),
-            None => "Прочитайте урок, где рассказано об этом предмете".to_string(),
+            Some((l, sec)) => {
+                let lesson = l.title.as_deref().unwrap_or(sec.title.as_str());
+                let section = sec.title.as_str();
+                crate::trf!(
+                    "Прочитайте урок «{lesson}» ({section})",
+                    "Read the lesson “{lesson}” ({section})"
+                )
+            }
+            None => tr("Прочитайте урок, где рассказано об этом предмете").to_string(),
         },
-        Unlock::Start => "Открыт с самого начала".to_string(),
+        Unlock::Start => tr("Открыт с самого начала").to_string(),
         Unlock::Ladder(n) => {
             let r = crate::ladder::rung(n);
             if r.name.is_empty() {
-                format!("Поднимитесь в «Маалот» на {n} ступеней")
+                let steps = crate::util::plural_l(
+                    n as i64,
+                    &["ступень", "ступени", "ступеней"],
+                    &["step", "steps"],
+                );
+                crate::trf!(
+                    "Поднимитесь в «Маалот» на {n} {steps}",
+                    "Climb {n} {steps} in Ma'alot"
+                )
             } else {
-                format!("Поднимитесь в «Маалот» до {n}-й ступени «{}»", r.name)
+                let name = tr(r.name);
+                crate::trf!(
+                    "Поднимитесь в «Маалот» до {n}-й ступени «{name}»",
+                    "Climb to step {n} (“{name}”) in Ma'alot"
+                )
             }
         }
     }

@@ -6,6 +6,7 @@
 //! module computes.
 
 use crate::content::{Difficulty, Library, Question, SectionMeta, PASS};
+use crate::i18n::tr;
 use crate::storage::{Level, State};
 
 /// The two ways to work with a section.
@@ -27,8 +28,8 @@ impl StudyMode {
 
     pub fn title(self) -> &'static str {
         match self {
-            StudyMode::Read => "Читать",
-            StudyMode::Prep => "Готовиться",
+            StudyMode::Read => tr("Читать"),
+            StudyMode::Prep => tr("Готовиться"),
         }
     }
 
@@ -94,9 +95,9 @@ impl LevelCount {
     /// «Лёгкие» / «Средние» / «Трудные».
     pub fn title(&self) -> &'static str {
         match self.difficulty {
-            Difficulty::Easy => "Лёгкие",
-            Difficulty::Medium => "Средние",
-            Difficulty::Hard => "Трудные",
+            Difficulty::Easy => tr("Лёгкие"),
+            Difficulty::Medium => tr("Средние"),
+            Difficulty::Hard => tr("Трудные"),
         }
     }
 }
@@ -255,11 +256,11 @@ pub enum Band {
 impl Band {
     pub fn title(self) -> &'static str {
         match self {
-            Band::NotStarted => "Ещё не начато",
-            Band::FirstSteps => "Первые шаги",
-            Band::InProgress => "В процессе",
-            Band::Almost => "Почти готовы",
-            Band::Ready => "Готовы к бейт-дину",
+            Band::NotStarted => tr("Ещё не начато"),
+            Band::FirstSteps => tr("Первые шаги"),
+            Band::InProgress => tr("В процессе"),
+            Band::Almost => tr("Почти готовы"),
+            Band::Ready => tr("Готовы к бейт-дину"),
         }
     }
 }

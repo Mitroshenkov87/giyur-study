@@ -6,6 +6,7 @@ use rand::Rng;
 
 use crate::content::{Difficulty, Library, Question, SectionMeta};
 use crate::game::{self, AwardOutcome};
+use crate::i18n::tr;
 use crate::storage::State;
 use crate::util;
 
@@ -41,13 +42,13 @@ impl Mode {
 /// js/exam.js E.MODE_TITLES.
 pub fn mode_title(mode: Mode) -> &'static str {
     match mode {
-        Mode::Section => "Тест раздела",
-        Mode::General => "Общий экзамен",
-        Mode::Beitdin => "Пробный бейт-дин",
-        Mode::Retry => "Работа над ошибками",
-        Mode::Timed => "Викторина",
-        Mode::SelfCheck => "Самопроверка",
-        Mode::Rehearsal => "Репетиция бейт-дина",
+        Mode::Section => tr("Тест раздела"),
+        Mode::General => tr("Общий экзамен"),
+        Mode::Beitdin => tr("Пробный бейт-дин"),
+        Mode::Retry => tr("Работа над ошибками"),
+        Mode::Timed => tr("Викторина"),
+        Mode::SelfCheck => tr("Самопроверка"),
+        Mode::Rehearsal => tr("Репетиция бейт-дина"),
     }
 }
 
@@ -67,9 +68,9 @@ pub fn weight(state: &State, qid: &str) -> f64 {
 /// js/exam.js E.DIFF_TITLES.
 pub fn diff_title(d: Option<Difficulty>) -> &'static str {
     match d {
-        Some(Difficulty::Easy) => "лёгкий",
-        Some(Difficulty::Hard) => "трудный",
-        _ => "средний",
+        Some(Difficulty::Easy) => tr("лёгкий"),
+        Some(Difficulty::Hard) => tr("трудный"),
+        _ => tr("средний"),
     }
 }
 
@@ -428,11 +429,12 @@ pub fn correct_text(q: &Question) -> String {
             options, answer, ..
         } => options.get(*answer).cloned().unwrap_or_default(),
         Question::Tf { answer, .. } => {
-            if *answer {
-                "Верно".to_string()
+            let text = if *answer {
+                tr("Верно")
             } else {
-                "Неверно".to_string()
-            }
+                tr("Неверно")
+            };
+            text.to_string()
         }
         Question::Typed { answer, .. } => answer.clone(),
         Question::Match { pairs, .. } => pairs
@@ -462,10 +464,15 @@ pub fn check(item: &Item, response: &Response) -> CheckResult {
         }
         (Question::Tf { answer, .. }, Response::Tf(r)) => {
             let score = if r == answer { 1.0 } else { 0.0 };
+            let user = if *r {
+                tr("Верно")
+            } else {
+                tr("Неверно")
+            };
             CheckResult {
                 score,
                 correct: score == 1.0,
-                user: if *r { "Верно" } else { "Неверно" }.to_string(),
+                user: user.to_string(),
             }
         }
         (Question::Typed { answer, accept, .. }, Response::Typed(r)) => {
@@ -518,11 +525,11 @@ pub fn check(item: &Item, response: &Response) -> CheckResult {
         (Question::Open { .. }, Response::Open(r)) => {
             let score = *r;
             let user = if score == 1.0 {
-                "Ответил верно"
+                tr("Ответил верно")
             } else if score == 0.5 {
-                "Частично"
+                tr("Частично")
             } else {
-                "Не ответил"
+                tr("Не ответил")
             };
             CheckResult {
                 score,
@@ -758,11 +765,11 @@ fn timed_prepare<'a>(
         }
         Question::Tf { answer, .. } => vec![
             TimedOption {
-                text: "Верно".to_string(),
+                text: tr("Верно").to_string(),
                 right: *answer,
             },
             TimedOption {
-                text: "Неверно".to_string(),
+                text: tr("Неверно").to_string(),
                 right: !*answer,
             },
         ],
@@ -795,12 +802,12 @@ impl TimedStatus {
     }
 
     /// Verdict text shown on reveal (js/ui/timed.js reveal msg).
-    pub fn message(self) -> &'static str {
+    pub fn message(self) -> String {
         match self {
-            TimedStatus::Right => "Верно!",
-            TimedStatus::Wrong => "Неверно",
-            TimedStatus::Skip => "Не знаю",
-            TimedStatus::Timeout => "Время вышло",
+            TimedStatus::Right => crate::trf!("Верно!", "Correct!"),
+            TimedStatus::Wrong => crate::trf!("Неверно", "Wrong"),
+            TimedStatus::Skip => crate::trf!("Не знаю", "Don't know"),
+            TimedStatus::Timeout => crate::trf!("Время вышло", "Time's up"),
         }
     }
 }
@@ -920,21 +927,24 @@ pub struct TimedResult {
 /// Results headline and sub-line (js/ui/timed.js timedResults).
 pub fn timed_result_title(pct: i64) -> (&'static str, &'static str) {
     if pct >= 90 {
-        ("Блестяще!", "Вы уверенно держитесь под давлением таймера.")
+        (
+            tr("Блестяще!"),
+            tr("Вы уверенно держитесь под давлением таймера."),
+        )
     } else if pct >= 75 {
         (
-            "Отличная игра",
-            "Ещё немного — и ни один вопрос не застанет врасплох.",
+            tr("Отличная игра"),
+            tr("Ещё немного — и ни один вопрос не застанет врасплох."),
         )
     } else if pct >= 50 {
         (
-            "Достойный результат",
-            "Половина пути пройдена: разберите ошибки ниже.",
+            tr("Достойный результат"),
+            tr("Половина пути пройдена: разберите ошибки ниже."),
         )
     } else {
         (
-            "Есть над чем поработать",
-            "Разберите ошибки и повторите уроки — следующая игра пройдёт лучше.",
+            tr("Есть над чем поработать"),
+            tr("Разберите ошибки и повторите уроки — следующая игра пройдёт лучше."),
         )
     }
 }

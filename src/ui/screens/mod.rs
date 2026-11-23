@@ -17,6 +17,7 @@ pub mod welcome;
 
 use iced::{Element, Subscription};
 
+use crate::i18n::tr;
 use crate::ui::app::{Action, Ctx, Route};
 
 /// The question the shell asks before leaving a run in progress.
@@ -178,11 +179,17 @@ impl Current {
         if ctx.reviewer() {
             return None;
         }
-        match self {
+        let guard = match self {
             Current::Exam(s) => s.leave_guard(),
             Current::Timed(s) => s.leave_guard(),
             _ => None,
-        }
+        }?;
+        // The stored text stays Russian (tests compare it). Translate here,
+        // where the shell is about to show the dialog.
+        Some(LeaveGuard {
+            title: tr(&guard.title).to_string(),
+            body: tr(&guard.body).to_string(),
+        })
     }
 
     /// Screens where the sidebar is hidden (first-run welcome / level choice).

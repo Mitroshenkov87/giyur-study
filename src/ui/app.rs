@@ -21,6 +21,7 @@ use chrono::NaiveDate;
 
 use crate::content::Library;
 use crate::game::{self, AwardOutcome, Celebration};
+use crate::i18n::tr;
 use crate::storage::{self, State};
 
 /// Navigation targets (mirror of the PWA hash routes, docs/PARITY.md §0.1).
@@ -107,6 +108,8 @@ pub enum Action {
     Back,
     /// Theme or level changed: rebuild everything that depends on settings.
     SettingsChanged,
+    /// Interface language switched: content reloaded, go to a safe home.
+    LanguageChanged,
     /// Close the app (after «Удалить из системы» from the installed copy).
     Quit,
     /// Skip to the next background track (settings «Следующий трек»).
@@ -180,8 +183,8 @@ impl Ctx {
         ctx.music_track_count = cat.tracks.len();
         if !writable {
             ctx.toast(
-                "Файл прогресса недоступен",
-                "Прогресс не сохранится, пока файл занят или повреждён.",
+                tr("Файл прогресса недоступен"),
+                tr("Прогресс не сохранится, пока файл занят или повреждён."),
                 "⚠",
             );
         }
@@ -192,9 +195,38 @@ impl Ctx {
         let _ = game::check_badges(&ctx.lib, &mut ctx.state, today);
         // Objects earned before the collection existed join it quietly.
         crate::collection::sync(&mut ctx.state, &crate::util::day_key(today));
+        // First launch: remember the language boot() / boot_os() chose, unless
+        // SHORASHIM_LANG is overriding this run only.
+        if crate::i18n::persist_detected(ctx.state.settings.lang) {
+            ctx.state.settings.lang = Some(crate::i18n::lang());
+        }
         ctx.save();
         ctx.start_reviewer_if_asked();
         ctx
+    }
+
+    /// Load another language's course files, then switch the interface.
+    /// On an error the previous language and content stay (the caller
+    /// shows the reason). A successful switch is persisted.
+    pub fn switch_lang(
+        &mut self,
+        lang: crate::i18n::Lang,
+    ) -> Result<(), crate::content_store::LoadError> {
+        let content = crate::content_store::switch_language(lang.code())?;
+        crate::i18n::set_lang(lang);
+        self.state.settings.lang = Some(lang);
+        self.lib = content.library.clone();
+        self.save();
+        Ok(())
+    }
+
+    /// Map after onboarding, welcome before: where a language switch lands.
+    pub fn home_route(&self) -> Route {
+        if self.state.onboarded {
+            Route::Map
+        } else {
+            Route::Welcome
+        }
     }
 
     /// Enter the «Открытый режим рецензента» at start-up when the progress
@@ -281,7 +313,7 @@ impl Ctx {
             None => storage::save(&self.path, &self.state),
         };
         if let Err(e) = res {
-            self.toast("Не удалось сохранить прогресс", &e.to_string(), "⚠");
+            self.toast(tr("Не удалось сохранить прогресс"), &e.to_string(), "⚠");
         }
     }
 
@@ -354,9 +386,13 @@ impl Ctx {
         }
         for key in new {
             if let Some(m) = crate::ui::model3d::Model::from_key(key) {
-                let text = format!("«{}» — откройте его в разделе «Успехи».", m.info().title);
+                let title = tr(m.info().title);
+                let text = crate::trf!(
+                    "«{title}» — откройте его в разделе «Успехи».",
+                    "“{title}” — open it in Progress."
+                );
                 self.toasts.push(Toast {
-                    title: "Новый предмет в коллекции".into(),
+                    title: tr("Новый предмет в коллекции").into(),
                     text,
                     icon: "✓".into(),
                     badge_id: None,

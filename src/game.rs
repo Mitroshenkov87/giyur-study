@@ -4,6 +4,7 @@
 use chrono::NaiveDate;
 
 use crate::content::Library;
+use crate::i18n::tr;
 use crate::storage::State;
 use crate::util;
 
@@ -72,7 +73,7 @@ pub fn goal_title(xp: Option<i64>, state: &State) -> &'static str {
     GOALS
         .iter()
         .find(|g| g.xp == x)
-        .map(|g| g.title)
+        .map(|g| tr(g.title))
         .unwrap_or("")
 }
 
@@ -192,19 +193,22 @@ pub fn award(lib: &Library, state: &mut State, amount: i64, today: NaiveDate) ->
     if reached && state.goal_celebrated.as_deref() != Some(today_key.as_str()) {
         state.goal_celebrated = Some(today_key.clone());
         let n = streak(state, today);
+        let xp_today = today_xp(state, today);
+        let days = util::plural_l(n, &["день", "дня", "дней"], &["day", "days"]);
+        let text = if freeze_earned {
+            crate::trf!(
+                "{xp_today} XP сегодня · серия {n} {days} · получена заморозка серии ❄",
+                "{xp_today} XP today · streak of {n} {days} · streak freeze earned ❄"
+            )
+        } else {
+            crate::trf!(
+                "{xp_today} XP сегодня · серия {n} {days}",
+                "{xp_today} XP today · streak of {n} {days}"
+            )
+        };
         celebration = Some(Celebration {
-            title: "Цель дня выполнена!".to_string(),
-            text: format!(
-                "{} XP сегодня · серия {} {}{}",
-                today_xp(state, today),
-                n,
-                util::plural(n, &["день", "дня", "дней"]),
-                if freeze_earned {
-                    " · получена заморозка серии ❄"
-                } else {
-                    ""
-                }
-            ),
+            title: tr("Цель дня выполнена!").to_string(),
+            text,
             icon: "🔥".to_string(),
             is_badge: false,
         });
@@ -237,9 +241,21 @@ pub struct Badge {
 
 impl Badge {
     pub fn celebration(&self) -> Celebration {
+        // Section badges take their name from course content, already in the
+        // interface language. The fixed badges are Russian literals.
+        let name = if self.section {
+            self.title.as_str()
+        } else {
+            tr(self.title.as_str())
+        };
+        let text = if self.section {
+            self.text.clone()
+        } else {
+            tr(self.text.as_str()).to_string()
+        };
         Celebration {
-            title: format!("Новый значок: «{}»", self.title),
-            text: self.text.clone(),
+            title: crate::trf!("Новый значок: «{name}»", "New badge: “{name}”"),
+            text,
             icon: self.icon.clone(),
             is_badge: true,
         }
@@ -252,85 +268,85 @@ pub fn badge_list(lib: &Library) -> Vec<Badge> {
         Badge {
             id: "first-lesson".into(),
             icon: "📖".into(),
-            title: "Первый урок".into(),
-            text: "Прочитать первый урок".into(),
+            title: tr("Первый урок").into(),
+            text: tr("Прочитать первый урок").into(),
             section: false,
         },
         Badge {
             id: "first-deck".into(),
             icon: "🃏".into(),
-            title: "Первая колода".into(),
-            text: "Пройти колоду карточек до конца".into(),
+            title: tr("Первая колода").into(),
+            text: tr("Пройти колоду карточек до конца").into(),
             section: false,
         },
         Badge {
             id: "goal-first".into(),
             icon: "🎯".into(),
-            title: "Цель дня".into(),
-            text: "Впервые выполнить дневную цель".into(),
+            title: tr("Цель дня").into(),
+            text: tr("Впервые выполнить дневную цель").into(),
             section: false,
         },
         Badge {
             id: "first-test".into(),
             icon: "✅".into(),
-            title: "Тест сдан".into(),
-            text: "Сдать тест раздела на 80% и выше".into(),
+            title: tr("Тест сдан").into(),
+            text: tr("Сдать тест раздела на 80% и выше").into(),
             section: false,
         },
         Badge {
             id: "perfect".into(),
             icon: "💯".into(),
-            title: "Без ошибок".into(),
-            text: "Сдать тест раздела на 100%".into(),
+            title: tr("Без ошибок").into(),
+            text: tr("Сдать тест раздела на 100%").into(),
             section: false,
         },
         Badge {
             id: "streak-3".into(),
             icon: "🔥".into(),
-            title: "Три дня подряд".into(),
-            text: "Серия 3 дня".into(),
+            title: tr("Три дня подряд").into(),
+            text: tr("Серия 3 дня").into(),
             section: false,
         },
         Badge {
             id: "streak-7".into(),
             icon: "🔥".into(),
-            title: "Неделя".into(),
-            text: "Серия 7 дней".into(),
+            title: tr("Неделя").into(),
+            text: tr("Серия 7 дней").into(),
             section: false,
         },
         Badge {
             id: "streak-30".into(),
             icon: "🏆".into(),
-            title: "Месяц".into(),
-            text: "Серия 30 дней".into(),
+            title: tr("Месяц").into(),
+            text: tr("Серия 30 дней").into(),
             section: false,
         },
         Badge {
             id: "cards-100".into(),
             icon: "🧠".into(),
-            title: "100 карточек".into(),
-            text: "Выучить 100 карточек (интервал 30 дней)".into(),
+            title: tr("100 карточек").into(),
+            text: tr("Выучить 100 карточек (интервал 30 дней)").into(),
             section: false,
         },
         Badge {
             id: "millionaire".into(),
             icon: "🪜".into(),
-            title: "Пятнадцать ступеней".into(),
-            text: "Маалот: подняться на все 15 ступеней".into(),
+            title: tr("Пятнадцать ступеней").into(),
+            text: tr("Маалот: подняться на все 15 ступеней").into(),
             section: false,
         },
         Badge {
             id: "beit-din-mock".into(),
             icon: "🏛️".into(),
-            title: "Пробный бейт-дин".into(),
-            text: "Пройти пробное собеседование".into(),
+            title: tr("Пробный бейт-дин").into(),
+            text: tr("Пройти пробное собеседование").into(),
             section: false,
         },
         Badge {
             id: "all-lessons".into(),
             icon: "📚".into(),
-            title: "Все уроки".into(),
-            text: "Прочитать все уроки всех разделов".into(),
+            title: tr("Все уроки").into(),
+            text: tr("Прочитать все уроки всех разделов").into(),
             section: false,
         },
     ];
@@ -339,7 +355,7 @@ pub fn badge_list(lib: &Library) -> Vec<Badge> {
             id: format!("section-{}", sec.id),
             icon: sec.icon.clone(),
             title: sec.title.clone(),
-            text: format!("Пройти раздел «{}»", sec.title),
+            text: crate::trf!("Пройти раздел «{}»", "Complete the “{}” section", sec.title),
             section: true,
         });
     }
@@ -453,33 +469,36 @@ pub fn reminders(lib: &Library, state: &State, today: NaiveDate) -> Vec<Reminder
     let n = streak(state, today);
     if left > 0 {
         if at_risk(state, today) {
+            let days = util::plural_l(n, &["день", "дня", "дней"], &["day", "days"]);
             out.push(Reminder {
                 kind: "streak",
-                text: format!(
-                    "Серия {} {} под угрозой — наберите ещё {} XP сегодня",
-                    n,
-                    util::plural(n, &["день", "дня", "дней"]),
-                    left
+                text: crate::trf!(
+                    "Серия {n} {days} под угрозой — наберите ещё {left} XP сегодня",
+                    "Your streak of {n} {days} is at risk — earn {left} more XP today"
                 ),
                 href: None,
             });
         } else {
             out.push(Reminder {
                 kind: "goal",
-                text: format!("До цели дня — {} XP. Один урок даёт 10 XP", left),
+                text: crate::trf!(
+                    "До цели дня — {left} XP. Один урок даёт 10 XP",
+                    "{left} XP to go for today's goal. One lesson gives 10 XP"
+                ),
                 href: None,
             });
         }
     }
     let due = lib.due_cards(state, today).len() as i64;
     if due > 0 {
+        let word = util::plural_l(
+            due,
+            &["карточка ждёт", "карточки ждут", "карточек ждут"],
+            &["card is waiting for review", "cards are waiting for review"],
+        );
         out.push(Reminder {
             kind: "due",
-            text: format!(
-                "{} {} повторения",
-                due,
-                util::plural(due, &["карточка ждёт", "карточки ждут", "карточек ждут"])
-            ),
+            text: crate::trf!("{due} {word} повторения", "{due} {word}"),
             href: Some("#/review"),
         });
     }

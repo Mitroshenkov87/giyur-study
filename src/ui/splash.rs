@@ -151,7 +151,7 @@ pub fn view<'a, M: 'a>(splash: &Splash, now: Instant) -> Element<'a, M> {
             .width(Length::Fixed(SIZE))
             .height(Length::Fixed(SIZE))
             .opacity(a),
-        text("Шорашим")
+        text(crate::i18n::app_name())
             .font(SERIF_BOLD)
             .size(44.0)
             .color(fade(p.text)),
@@ -160,7 +160,7 @@ pub fn view<'a, M: 'a>(splash: &Splash, now: Instant) -> Element<'a, M> {
             .size(22.0)
             .color(fade(p.hebrew))
             .shaping(Shaping::Advanced),
-        text("основы иудаизма и подготовка к гиюру")
+        text(crate::i18n::app_tagline())
             .font(SANS)
             .size(15.0)
             .color(fade(p.muted)),

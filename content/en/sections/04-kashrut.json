@@ -1,0 +1,4198 @@
+{
+ "id": "kashrut",
+ "order": 4,
+ "title": "Kashrut",
+ "subtitle": "The holiness of the Jewish table",
+ "icon": "🍽️",
+ "intro": "Kashrut turns every meal into the fulfillment of a mitzvah. In this section you will learn where in the Torah the food laws come from, which animals, birds and fish are permitted, what shechitah is, how meat and milk are kept apart, how a kosher kitchen is set up, and how the different movements of Judaism approach kashrut.",
+ "overview": {
+  "why": "Kashrut makes ordinary food part of holiness: the Torah links the food laws with the words “sanctify yourselves and be holy,” and the Talmud likens a person’s table to the altar. The section shows where the prohibitions come from, how a kosher kitchen is set up, and why, at giyur, they are accepted as a mitzvah and not as a diet. In life, kashrut gathers a home and a community around a table at which any Jew can eat.",
+  "examFocus": "At the beit din you are almost always asked what kashrut means to you and how you live by it: what you do not eat, how you keep meat and milk apart, where you get meat, and what you will do when you are a guest. What is wanted is not a list of terms, but an honest answer in your own words and a clear understanding that kashrut is a chok, a commandment of the Almighty. In advance, talk through with your rabbi your custom of waiting, the hechsher you rely on, and how your kitchen is set up.",
+  "goals": [
+   "After this section you will be able to explain that kashrut is a mitzvah of holiness, and not a diet",
+   "After this section you will be able to name the signs of kosher animals, fish and birds, with examples",
+   "After this section you will be able to describe the path of meat: shechitah, inspection, blood, chelev and the gid ha-nasheh",
+   "After this section you will be able to separate meat and milk and say how long to wait",
+   "After this section you will be able to explain dishes, a hechsher, and the differences in kashrut among the movements"
+  ]
+ },
+ "sources": [
+  {
+   "id": "tanakh",
+   "title": "Tanakh, Russian transl. by D. Yosifon (Mossad HaRav Kook)",
+   "url": "https://shabat-shalom.info/books/Tanach-ru/Chumash_Mosad_Rav_Cook/index.htm",
+   "movement": "all"
+  },
+  {
+   "id": "chumash-gurevich",
+   "title": "Torah with Rashi’s commentary, Russian transl. by F. Gurfinkel (Mosad HaRav Kook / Soncino Chumash, Russian)",
+   "url": "(печатное издание)",
+   "movement": "orthodox"
+  },
+  {
+   "id": "ksa",
+   "title": "Kitzur Shulchan Aruch, R. Shlomo Ganzfried, Russian transl. by A. Kutukov (KEROOR, 1999)",
+   "url": "https://libcat.ru/knigi/religioznaya-literatura/15623-shlomo-gancfrid-kicur-shulhan-aruh.html",
+   "movement": "orthodox"
+  },
+  {
+   "id": "avot",
+   "title": "Pirkei Avot (Tractate Avot), Russian transl. ed. by Prof. H. Branover",
+   "url": "https://chassidus.ru/library/avot/",
+   "movement": "all"
+  },
+  {
+   "id": "chabad-ru",
+   "title": "The website ru.chabad.org — articles on Shabbat, kashrut, holidays",
+   "url": "https://ru.chabad.org",
+   "movement": "orthodox"
+  },
+  {
+   "id": "toldot",
+   "title": "The website toldot.com (Toldot Yeshurun) — halacha and holidays in Russian",
+   "url": "https://toldot.com",
+   "movement": "orthodox"
+  },
+  {
+   "id": "eee",
+   "title": "ORT Electronic Jewish Encyclopedia (EEE)",
+   "url": "https://eleven.co.il",
+   "movement": "neutral"
+  },
+  {
+   "id": "telushkin",
+   "title": "J. Telushkin, “Jewish Literacy” (Russian transl., Lechaim / Mosty Kultury)",
+   "url": "(печатное издание)",
+   "movement": "neutral"
+  },
+  {
+   "id": "donin",
+   "title": "R. H. Donin, “To Be a Jew” (Russian transl.)",
+   "url": "(печатное издание)",
+   "movement": "orthodox"
+  },
+  {
+   "id": "masorti",
+   "title": "Masorti / Conservative Judaism: Rabbinical Assembly; overview of the movement in Russian (Derakhim)",
+   "url": "https://ru.derakhim.com/zramim/conservative ; https://www.masorti.org.il/about-masorti/",
+   "movement": "conservative"
+  },
+  {
+   "id": "reform-spb",
+   "title": "Giyur school of the “Shaarei Shalom” community (Progressive Judaism, ROOPI)",
+   "url": "https://reformspb.ru/giura",
+   "movement": "reform"
+  },
+  {
+   "id": "mcpj",
+   "title": "Moscow Center for Progressive Judaism (ROOPI, WUPJ)",
+   "url": "https://mcpj.ru/about_us/",
+   "movement": "reform"
+  },
+  {
+   "id": "giyur-denominations",
+   "title": "“Giyur in the Context of Different Denominations of Judaism” (CyberLeninka)",
+   "url": "https://cyberleninka.ru/article/n/giyur-v-kontekste-razlichnyh-denominatsiy-iudaizma-ot-naturalizatsii-k-religioznomu-protsessu",
+   "movement": "neutral"
+  },
+  {
+   "id": "ccar",
+   "title": "Central Conference of American Rabbis (CCAR): resolutions and responsa",
+   "url": "https://www.ccarnet.org/",
+   "movement": "reform"
+  }
+ ],
+ "deeper": [
+  {
+   "title": "The food laws in the Torah",
+   "sourceRef": "tanakh",
+   "text": "Read Vayikra 11 and Devarim 14:3–21: there are the signs of animals and fish, the forbidden birds, and the words about holiness. This is the written basis of everything asked at the beit din about kashrut.",
+   "minLevel": "reform"
+  },
+  {
+   "title": "The table and the words of the Torah",
+   "sourceRef": "avot",
+   "text": "In Pirkei Avot 3:3 (in some editions 3:4) there is the teaching about three who ate at one table and spoke words of Torah. This helps you see kashrut not only as a list of prohibitions, but also as service at an ordinary meal.",
+   "minLevel": "reform"
+  },
+  {
+   "title": "Practice in the Kitzur Shulchan Aruch",
+   "sourceRef": "ksa",
+   "text": "In the Russian “Kitzur Shulchan Aruch,” the salting of meat (chapter 36) and the laws of dishes (chapter 37) are set out briefly. Read it alongside the lessons on meat and the kitchen, and check the details of a particular case with your rabbi.",
+   "minLevel": "orthodox"
+  },
+  {
+   "title": "Kashrut as a way of life",
+   "sourceRef": "donin",
+   "text": "In H. Donin’s book “To Be a Jew,” kashrut is shown as an everyday home: shopping, the kitchen and guests. That makes it easier to answer at the beit din in your own words about life, and not with a list of terms.",
+   "minLevel": "reform"
+  },
+  {
+   "title": "Kashrut in the Masorti movement",
+   "sourceRef": "masorti",
+   "text": "A survey of Conservative Judaism shows that kashrut there is binding halacha, but on wine, cheese and food prepared by a non-Jew the decisions are more lenient than the Orthodox ones. Check this with the rabbi of your community.",
+   "minLevel": "conservative"
+  },
+  {
+   "title": "Kashrut as an informed choice",
+   "sourceRef": "ccar",
+   "text": "CCAR responsa and guides, and the practice of the Progressive communities of ROOPI, help you understand how Reform Judaism approaches kashrut: knowledge of the laws, the ethical side of food, and a personal but serious commitment, and not a turning away from the subject. Read this together with the lessons on the kitchen and on the movements.",
+   "minLevel": "reform"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "kashrut-1",
+   "title": "What kashrut is, and why it is needed",
+   "minLevel": "reform",
+   "minutes": 8,
+   "sourceRefs": [
+    "tanakh",
+    "chumash-gurevich",
+    "avot",
+    "telushkin",
+    "donin",
+    "eee"
+   ],
+   "citations": [
+    "Vayikra 11",
+    "Devarim 14:3–21",
+    "Vayikra 11:44",
+    "Shemot 22:30",
+    "Esther 8:5",
+    "Bereshit 9:4",
+    "Rashi on Vayikra 20:26 (Sifra)",
+    "Ramban on Vayikra 11:13",
+    "Rambam, Guide for the Perplexed 3:48",
+    "Berachot 55a",
+    "Pirkei Avot 3:3"
+   ],
+   "keyIdeas": [
+    "Kashrut comes from the word “kasher,” “fit”: the laws of what a Jew eats, how food is obtained and prepared, and what it is not mixed with.",
+    "The basis is Vayikra 11 and Devarim 14:3–21; the Oral Torah (Chullin, the Rambam, Yoreh De'ah) explains how these laws are to be fulfilled.",
+    "Kashrut is in large measure a chok: it is kept because the Almighty so commanded, and not out of disgust and not as a diet.",
+    "The Torah links food with holiness; the commentators also see the training of character, discipline, and the preservation of the people.",
+    "A table with blessings and words of Torah is likened to the altar; of the food laws, the descendants of Noach are given only ever min ha-chai."
+   ],
+   "blocks": [
+    {
+     "type": "h",
+     "text": "The word “kasher”"
+    },
+    {
+     "type": "p",
+     "text": "The word **kashrut** (Heb. כַּשְׁרוּת) comes from the root כ-ש-ר, which means “fit, suitable, proper.” In the Tanakh this root appears, for example, in the Book of Esther (8:5): “if it please the king, and if the matter is *proper* before the king.” In halacha, “kasher” is what one calls everything fit for use according to the law: not only meat and bread can be kasher, but also a Torah scroll, a mezuzah, a shofar, a mikveh. As applied to food, kashrut is the whole set of laws about what a Jew may eat, how food must be obtained and prepared, and what it may not be mixed with."
+    },
+    {
+     "type": "term",
+     "term": "Kasher",
+     "he": "כָּשֵׁר",
+     "text": "“fit”: food or an object that meets the requirements of halacha. In Yiddish and in everyday Russian, people often say “kosher.”"
+    },
+    {
+     "type": "term",
+     "term": "Treifa",
+     "he": "טְרֵפָה",
+     "text": "literally “torn”: in the Torah, an animal torn by a beast, or one that has a fatal defect; in everyday speech this is the name for any food that is not kasher (“treif”)."
+    },
+    {
+     "type": "hebrew",
+     "he": "וְאַנְשֵׁי קֹדֶשׁ תִּהְיוּן לִי וּבָשָׂר בַּשָּׂדֶה טְרֵפָה לֹא תֹאכֵלוּ",
+     "translit": "Ve'anshei kodesh tihyun li uvasar basadeh treifa lo tokhelu",
+     "ru": "And you shall be holy people to Me, and you shall not eat meat torn in the field",
+     "ref": "Shemot 22:30"
+    },
+    {
+     "type": "h",
+     "text": "Where the Torah speaks of this"
+    },
+    {
+     "type": "p",
+     "text": "The main food laws are written in two chapters of the Torah: **Vayikra (Leviticus) 11** and **Devarim (Deuteronomy) 14:3–21**. There the signs of permitted animals and fish are listed, and the forbidden birds and insects. Other prohibitions are scattered through the whole Torah: the prohibition of blood (Vayikra 17:10–14; Devarim 12:16, 23), the prohibition of a certain fat — chelev (Vayikra 7:23–25), the prohibition of the sciatic nerve — the gid ha-nasheh (Bereshit (Genesis) 32:33), the prohibition of meat with milk (Shemot (Exodus) 23:19; 34:26; Devarim 14:21), the prohibition of an animal that died of itself — a neveilah (Devarim 14:21), and of what is torn — a treifa (Shemot 22:30)."
+    },
+    {
+     "type": "p",
+     "text": "The Written Torah gives the foundation, and the Oral Torah explains how to fulfill it: how to perform shechitah, by what signs to recognize kosher birds, how long to wait between meat and milk. These laws are set out in detail in the Talmudic tractate **Chullin**, codified by the Rambam in the “Mishneh Torah” (Laws of Forbidden Foods and Laws of Shechitah), and then in the **Shulchan Aruch**, in the section **Yoreh De'ah**. A short practical presentation is in the “Kitzur Shulchan Aruch,” which you can read in Russian."
+    },
+    {
+     "type": "list",
+     "items": [
+      "which animals, birds, fish and insects are permitted as food;",
+      "how an animal must be slaughtered (shechitah) and inspected after slaughter;",
+      "the prohibition of blood, of forbidden fat (chelev) and of the sciatic nerve (gid ha-nasheh);",
+      "the prohibition of mixing meat with milk;",
+      "the requirements for dishes and the kitchen;",
+      "special laws about wine, bread and food prepared by non-Jews — these are mostly enactments of the sages."
+     ],
+     "differs": [
+      {
+       "level": "reform",
+       "text": "Reform Judaism does not regard the laws of kashrut as binding. Each Jew decides for themselves which of them to observe, but does so consciously, having studied the tradition. More on this is in lesson 6."
+      }
+     ]
+    },
+    {
+     "type": "note",
+     "text": "The laws of permitted food are commandments of the Torah, and they have not been “abolished” and have not been replaced by a new teaching about food. Like the other mitzvot, kashrut belongs to the eternal covenant: “do not add and do not take away” (Devarim 13:1). A person may not yet keep everything, but the rule of the Torah itself does not cease to be the rule."
+    },
+    {
+     "type": "h",
+     "text": "A chok — a law without an explanation"
+    },
+    {
+     "type": "p",
+     "text": "The sages divide the commandments into several groups. **Mishpatim** are laws clear to the mind: the prohibition of theft, murder, deceit. **Edot** (“testimonies”) are commandments that recall events of history, for example the festivals. **Chukim** are decrees whose meaning the Torah does not reveal. Classic examples of chukim are the law of the red heifer (Bamidbar 19), the prohibition of shaatnez (a mixture of wool and linen), and, in large measure, the laws of kashrut. The Torah does not say why the pig is forbidden and the cow permitted; it only names the signs."
+    },
+    {
+     "type": "term",
+     "term": "Chok (pl. chukim)",
+     "he": "חֹק",
+     "text": "a decree-commandment, fulfilled because the Almighty so commanded, even if the reason is unknown."
+    },
+    {
+     "type": "quote",
+     "text": "Let a person not say: “Pork is repulsive to me.” Let him say: “I would want it, but what can I do if my Father in Heaven has forbidden it to me.”",
+     "ref": "Sifra; cited by Rashi on Vayikra 20:26"
+    },
+    {
+     "type": "p",
+     "text": "This idea matters for a candidate for giyur. Kashrut is not a diet and not a matter of taste. A Jew refrains from certain foods not because they are unpleasant to him, but because he has taken the commandments upon himself. That is why, at the beit din, people often ask not only “what is forbidden,” but also “why do you keep this.”"
+    },
+    {
+     "type": "h",
+     "text": "And yet, why? The commentators' explanations"
+    },
+    {
+     "type": "p",
+     "text": "Although kashrut is a chok, Jewish thinkers have looked for meaning in it. These explanations are not a condition for keeping it; they are an attempt to understand what the laws teach:"
+    },
+    {
+     "type": "list",
+     "items": [
+      "**Holiness.** The Torah itself links the food laws to holiness: “sanctify yourselves and be holy, for I am holy” (Vayikra 11:44); “for you are a holy people to the L-rd your G-d… do not eat any abomination” (Devarim 14:2–3).",
+      "**Shaping character.** The Ramban (on Vayikra 11:13) explains that the forbidden birds are birds of prey, and their nature can pass to the one who eats them, fostering cruelty.",
+      "**Health.** The Rambam wrote in the “Guide for the Perplexed” (3:48) that forbidden food is harmful to the body. But many authors, such as Abarbanel, objected: if it were only a matter of hygiene, the Torah would be a medical book.",
+      "**Self-discipline.** Every meal becomes a choice: a person learns to say “no” to desire, and this skill carries over into the whole of life.",
+      "**People and family.** For centuries kashrut set Jews apart from the surrounding cultures and preserved the community. A kosher home is open to every Jew: anyone can eat there."
+     ]
+    },
+    {
+     "type": "hebrew",
+     "he": "וְהִתְקַדִּשְׁתֶּם וִהְיִיתֶם קְדֹשִׁים כִּי קָדוֹשׁ אָנִי",
+     "translit": "Vehitkadishtem viheyitem kedoshim ki kadosh ani",
+     "ru": "Sanctify yourselves and be holy, for I am holy",
+     "ref": "Vayikra 11:44"
+    },
+    {
+     "type": "h",
+     "text": "The table as an altar"
+    },
+    {
+     "type": "p",
+     "text": "The Talmud says: while the Temple stood, the altar atoned for Israel, and now “a person's table atones for him” (Berachot 55a). Kashrut, together with the blessings before and after eating, washing the hands before bread, and words of Torah at the meal, turns an ordinary dinner into divine service. That is why it is customary to put salt on the bread, as on the offerings in the Temple (Vayikra 2:13)."
+    },
+    {
+     "type": "hebrew",
+     "he": "שֻׁלְחָנוֹ שֶׁל אָדָם מְכַפֵּר עָלָיו",
+     "translit": "Shulchano shel adam mechaper alav",
+     "ru": "A person's table atones for him",
+     "ref": "Berachot 55a"
+    },
+    {
+     "type": "quote",
+     "text": "Three who ate at one table and spoke words of Torah there are as if they had eaten from the table of the Almighty.",
+     "ref": "Pirkei Avot 3:3 (in some editions 3:4)"
+    },
+    {
+     "type": "h",
+     "text": "Kashrut and non-Jews"
+    },
+    {
+     "type": "p",
+     "text": "The descendants of Noach, that is, all of humanity, were given only one of the food laws: the prohibition of eating a part cut from a living animal, **ever min ha-chai** (Bereshit 9:4). All the other laws of kashrut are mitzvot given to Israel. In accepting giyur, a person takes them upon themselves: before giyur, kashrut is preparation and study; after giyur, it is an obligation."
+    },
+    {
+     "type": "note",
+     "text": "Start gradually, preferably together with a mentor. The usual path: first stop eating forbidden animals and seafood, then stop mixing meat and dairy, then switch to products with a hechsher, and finally kasher the kitchen."
+    }
+   ],
+   "cards": [
+    {
+     "id": "kashrut-1-c1",
+     "front": "What does the word “kasher” mean?",
+     "back": "“Fit, suitable” (root כ-ש-ר). The word is used for food, and also for a Torah scroll, a mezuzah or a shofar that is fit according to halacha.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-1-c2",
+     "front": "In which chapters of the Torah are the main laws about permitted animals?",
+     "back": "Vayikra (Leviticus) 11 and Devarim (Deuteronomy) 14:3–21.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-1-c3",
+     "front": "What does “treifah” literally mean?",
+     "back": "“Torn”: an animal torn by a beast (Shemot 22:30). In everyday use, any non-kosher food.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-1-c4",
+     "front": "What is a chok?",
+     "back": "A decree-mitzvah whose reason the Torah does not explain. Kashrut is the classic example.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-1-c5",
+     "front": "How do mishpatim differ from chukim?",
+     "back": "Mishpatim are understandable to reason (the prohibition of theft); chukim are kept as a decree of the Almighty (kashrut, shatnez, the red heifer).",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-1-c6",
+     "front": "Which verse links kashrut to holiness?",
+     "back": "“Sanctify yourselves and be holy, for I am holy” (Vayikra 11:44).",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-1-c7",
+     "front": "According to the Sifra (cited by Rashi on Vayikra 20:26), what should one say about pork?",
+     "back": "Not “it disgusts me,” but “I would like to, but what can I do: my Father in Heaven has forbidden it.”",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-1-c8",
+     "front": "How does the Ramban explain the prohibition of birds of prey?",
+     "back": "Their predatory nature can pass to a person and foster cruelty (Ramban on Vayikra 11:13).",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-1-c9",
+     "front": "What reason for kashrut does the Rambam give in the “Guide for the Perplexed” 3:48?",
+     "back": "Benefit to health: forbidden food is harmful to the body. Other authors (Abarbanel) disputed this.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-1-c10",
+     "front": "Which food prohibition was given to all the descendants of Noach?",
+     "back": "Ever min ha-chai: the prohibition of eating a part of a living animal (Bereshit 9:4).",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-1-c11",
+     "front": "What does “a person's table atones for him” mean?",
+     "back": "Since the destruction of the Temple, a table with kashrut, blessings and words of Torah is like the altar (Berachot 55a).",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-1-c12",
+     "front": "In which section of the Shulchan Aruch are the laws of kashrut collected?",
+     "back": "Yoreh De'ah.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-1-c13",
+     "front": "Which tractate of the Talmud is devoted to shechitah and meat foods?",
+     "back": "Chullin.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-1-c14",
+     "front": "Into which three categories is food divided in a kosher kitchen?",
+     "back": "Meat (basari), dairy (chalavi) and neutral (parve).",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-1-c15",
+     "front": "Why is salt put on the bread at a meal?",
+     "back": "In memory of the offerings in the Temple, which were salted (Vayikra 2:13): the table is like the altar.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-1-c16",
+     "front": "How does Reform Judaism approach kashrut?",
+     "back": "As a tradition that each person chooses consciously; the laws of kashrut are not considered binding.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-1-n1",
+     "front": "What are edot among the mitzvot?",
+     "back": "“Testimonies”: mitzvot that recall events of history, for example the festivals.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-1-n2",
+     "front": "Where in the Tanakh does the root כ-ש-ר appear in the sense of “right, pleasing”?",
+     "back": "In the book of Esther (8:5): “if it please the king, and the thing seem right before the king.”",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-1-n3",
+     "front": "What does Pirkei Avot say about three who ate at one table?",
+     "back": "If they spoke words of Torah, it is as if they ate from the table of the Almighty (Avot 3:3, in some editions 3:4).",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-1-n4",
+     "front": "What was Abarbanel's objection to explaining kashrut by hygiene?",
+     "back": "If it were only a matter of health, the Torah would be a medical book.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-1-n5",
+     "front": "What is the usual gradual path to kashrut?",
+     "back": "Give up forbidden animals and seafood → stop mixing meat and dairy → products with a hechsher → kasher the kitchen.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-1-n6",
+     "front": "Where does the Torah forbid what is torn (treifah) and carrion (neveilah)?",
+     "back": "Treifah: Shemot 22:30; neveilah: Devarim 14:21.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-1-n7",
+     "front": "What does kashrut mean before giyur and after it?",
+     "back": "Before giyur it is preparation and study; after giyur it is an obligation, since the laws of kashrut were given to Israel.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-1-z1",
+     "front": "Have the laws of kashrut been abolished by a “new teaching” about food?",
+     "back": "No. They are mitzvot of the Torah in an eternal covenant; “do not add to it and do not take away from it” (Devarim 13:1).",
+     "minLevel": "reform"
+    }
+   ]
+  },
+  {
+   "id": "kashrut-2",
+   "title": "Permitted animals, birds and fish",
+   "minLevel": "reform",
+   "minutes": 9,
+   "sourceRefs": [
+    "tanakh",
+    "ksa",
+    "chabad-ru",
+    "toldot",
+    "eee"
+   ],
+   "citations": [
+    "Vayikra 11:3–8",
+    "Devarim 14:4–8",
+    "Vayikra 11:9–12",
+    "Mishnah Niddah 6:9",
+    "Vayikra 11:13–19",
+    "Mishnah Chullin 3:6",
+    "Chullin 63b",
+    "Vayikra 11:20–23, 41–44",
+    "Mishnah Bechorot 1:2",
+    "Bechorot 7b",
+    "Makkot 16b",
+    "Shulchan Aruch, Yoreh De'ah 79–86"
+   ],
+   "keyIdeas": [
+    "A mammal is kosher only if it has both signs at once: fully split hooves and chewing the cud (ma'alat gerah).",
+    "The camel, the shafan and the hare chew the cud but lack split hooves; the pig has split hooves but does not chew the cud.",
+    "A fish is kosher if it has fins and removable scales; it is parve and needs no shechitah; seafood is forbidden.",
+    "Birds are eaten only with a mesorah: chicken, turkey, duck, goose, pigeon, quail; the eggs of kosher birds are parve.",
+    "Insects are forbidden, except for four kinds of locust in communities with a tradition; honey is permitted, since the bee only collects it."
+   ],
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Four-legged animals: two signs"
+    },
+    {
+     "type": "p",
+     "text": "For mammals the Torah gives two signs, and they must be present **both at the same time**: the animal must have fully split hooves and chew the cud, that is, bring up swallowed food and chew it again. These rules apply both to domestic animals (behemah) and to wild animals (chayah)."
+    },
+    {
+     "type": "hebrew",
+     "he": "כֹּל מַפְרֶסֶת פַּרְסָה וְשֹׁסַעַת שֶׁסַע פְּרָסֹת מַעֲלַת גֵּרָה בַּבְּהֵמָה אֹתָהּ תֹּאכֵלוּ",
+     "translit": "Kol mafreset parsah veshosa'at shesa perasot ma'alat gerah babehemah otah tochelu",
+     "ru": "Every animal that has split hooves, with a deep cleft in the hooves, and that brings up the cud, that you may eat",
+     "ref": "Vayikra 11:3"
+    },
+    {
+     "type": "p",
+     "text": "The Torah specifically names four animals that have only one sign and are therefore forbidden (Vayikra 11:4–7). The camel, the shafan (usually identified with the hyrax) and the hare outwardly “chew,” but do not have split hooves. The pig, on the contrary, has split hooves but does not chew the cud. That is why in Jewish culture the pig became the symbol of what is treif: it looks “kosher” on the outside, but it is not."
+    },
+    {
+     "type": "p",
+     "text": "The book of Devarim (14:4–5) lists the permitted animals: among domestic animals, the ox, the sheep and the goat, and also seven kinds of wild animals, traditionally translated as deer, gazelle, roe deer, ibex and others; the exact identification of some names is disputed. In practice, kosher meat means beef, veal, lamb, goat, and sometimes venison. Pork, rabbit, horse meat, camel meat and the meat of all predators are forbidden."
+    },
+    {
+     "type": "term",
+     "term": "Ma'alat gerah",
+     "he": "מַעֲלַת גֵּרָה",
+     "text": "“bringing up the cud”: one of the two signs of a kosher mammal."
+    },
+    {
+     "type": "p",
+     "text": "A general rule applies: “what comes from the impure is impure” (Mishnah Bechorot 1:2). The milk of a camel or a mare, the eggs of non-kosher birds and the roe of non-kosher fish are forbidden. A well-known exception is **honey**: the bee is forbidden as food, but honey is not produced by its body; it is only collected and stored in it, so it is permitted (Bechorot 7b)."
+    },
+    {
+     "type": "h",
+     "text": "Fish: fins and scales"
+    },
+    {
+     "type": "hebrew",
+     "he": "כֹּל אֲשֶׁר לוֹ סְנַפִּיר וְקַשְׂקֶשֶׂת בַּמַּיִם בַּיַּמִּים וּבַנְּחָלִים אֹתָם תֹּאכֵלוּ",
+     "translit": "Kol asher lo snapir vekaskeset bamayim bayamim uvanechalim otam tochelu",
+     "ru": "Everything in the water, in the seas and in the rivers, that has fins and scales, those you may eat",
+     "ref": "Vayikra 11:9"
+    },
+    {
+     "type": "p",
+     "text": "The Mishnah (Niddah 6:9) notes: every fish that has scales also has fins, but not the other way round. So in practice it is above all the scales that are checked. According to halacha these must be scales that can be removed without damaging the skin, as on a carp or a perch (Shulchan Aruch, Yoreh De'ah 83). Fish needs no shechitah or salting to remove blood, and it is considered **parve**, neither meat nor dairy."
+    },
+    {
+     "type": "list",
+     "items": [
+      "Kosher fish (examples): salmon, trout, carp, herring, cod, hake, pollock, tuna, mackerel, pike, zander, perch, tilapia.",
+      "Non-kosher: catfish, eel, shark, and also, according to the Orthodox position, sturgeon and beluga.",
+      "All “seafood” is forbidden: shrimp, crabs, crayfish, lobsters, mussels, oysters, squid, octopus; marine mammals are forbidden as well.",
+      "Caviar: red caviar from salmon is kosher (with supervision of production); black caviar from sturgeon is not."
+     ]
+    },
+    {
+     "type": "note",
+     "text": "A skinless fillet cannot be checked for scales. That is why fish is bought either whole, or with the skin on, or under kashrut supervision."
+    },
+    {
+     "type": "h",
+     "text": "Birds: tradition matters more than signs"
+    },
+    {
+     "type": "p",
+     "text": "For birds the Torah gives no signs; instead it lists the forbidden species (Vayikra 11:13–19; Devarim 14:11–20); the Talmud counts 24 impure species (Chullin 63b). Among them are the eagle, the hawk, the owl, the raven, the stork and the ostrich. The Mishnah (Chullin 3:6) names the signs of a kosher bird: it is not a bird of prey, it has an “extra” (hind) toe and a crop, and the inner lining of its gizzard peels off easily by hand."
+    },
+    {
+     "type": "p",
+     "text": "However, the names of the birds in the Torah cannot always be reliably identified. Therefore halacha ruled that only birds for which there is a **mesorah** are eaten: an unbroken tradition that our ancestors ate them (Shulchan Aruch, Yoreh De'ah 82:2, Rema). The accepted kosher birds are chicken, turkey, duck, goose, pigeon and quail; some communities also have a tradition for pheasant or guinea fowl. The eggs of kosher birds are permitted and are parve."
+    },
+    {
+     "type": "term",
+     "term": "Mesorah",
+     "he": "מְסוֹרָה",
+     "text": "“transmission, tradition”: here, the tradition confirming that a given bird is kosher."
+    },
+    {
+     "type": "p",
+     "text": "When breaking eggs, it is customary to check each one for a blood spot; an egg with blood is not used (Shulchan Aruch, Yoreh De'ah 66). That is why eggs are broken one at a time into a clear glass.",
+     "minLevel": "orthodox"
+    },
+    {
+     "type": "h",
+     "text": "Insects"
+    },
+    {
+     "type": "p",
+     "text": "The Torah forbids all “swarming” creatures: insects, worms, reptiles, rodents (Vayikra 11:20–23, 41–44). The exception is four kinds of locust (Vayikra 11:22), but only the Yemenite and some North African communities have preserved the tradition of identifying them; other Jews do not eat locusts. The prohibition of insects is very strict: the Talmud (Makkot 16b) explains that by eating one small insect a person can transgress several Torah prohibitions at once."
+    },
+    {
+     "type": "p",
+     "text": "That is why in a kosher kitchen vegetables, fruit and grains are checked. Particular care is taken with leafy greens (lettuce, cabbage, parsley, dill, cilantro), broccoli and cauliflower, strawberries, raspberries, blackberries, artichokes, and also flour (it is sifted), grains, legumes and dried fruit. A common method: soak the greens in water with a few drops of dish soap, rinse under a strong stream and examine the leaves against the light. There are products grown under supervision as “insect-free,” and lists issued by rabbinates (Shulchan Aruch, Yoreh De'ah 84).",
+     "minLevel": "orthodox"
+    },
+    {
+     "type": "note",
+     "text": "What is visible to the naked eye is forbidden. Microscopic organisms that can be seen only under magnification are not forbidden.",
+     "minLevel": "orthodox"
+    },
+    {
+     "type": "note",
+     "text": "The food coloring carmine (E120) is made from cochineal insects, so products containing it are not kosher. This is one of the reasons why ready-made products are bought with a hechsher."
+    }
+   ],
+   "cards": [
+    {
+     "id": "kashrut-2-c1",
+     "front": "What are the two signs of a kosher mammal?",
+     "back": "Fully split hooves and chewing the cud (ma'alat gerah), both signs at once (Vayikra 11:3).",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-2-c2",
+     "front": "Which four animals does the Torah name as having only one sign?",
+     "back": "The camel, the shafan (hyrax) and the hare chew the cud but lack split hooves; the pig has split hooves but does not chew the cud (Vayikra 11:4–7).",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-2-c3",
+     "front": "Which domestic animals does the Torah explicitly name as kosher?",
+     "back": "The ox, the sheep and the goat (Devarim 14:4).",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-2-c4",
+     "front": "What are the signs of a kosher fish?",
+     "back": "Fins and scales (Vayikra 11:9); the scales must come off without damaging the skin.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-2-c5",
+     "front": "Why, in practice, is it the scales of a fish that are checked?",
+     "back": "Every fish with scales also has fins, but not the other way round (Mishnah Niddah 6:9).",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-2-c6",
+     "front": "Are shrimp, squid and mussels kosher?",
+     "back": "No: all seafood without fins and scales is forbidden.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-2-c7",
+     "front": "Is black sturgeon caviar kosher?",
+     "back": "According to the Orthodox position, no: the sturgeon is not considered a kosher fish. Red salmon caviar is kosher with supervision.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-2-c8",
+     "front": "Which category does fish belong to?",
+     "back": "Parve: it is neither meat nor dairy, and needs no shechitah or salting.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-2-c9",
+     "front": "What is a mesorah with regard to birds?",
+     "back": "A tradition that our ancestors ate a given bird; only birds with a mesorah are eaten.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-2-c10",
+     "front": "Name the birds that are commonly considered kosher.",
+     "back": "Chicken, turkey, duck, goose, pigeon, quail.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-2-c11",
+     "front": "Which signs of a kosher bird does Mishnah Chullin 3:6 name?",
+     "back": "Not a bird of prey; a hind toe; a crop; a gizzard lining that peels off by hand.",
+     "minLevel": "conservative"
+    },
+    {
+     "id": "kashrut-2-c12",
+     "front": "Why is honey kosher, even though the bee is forbidden?",
+     "back": "Honey is not produced by the bee's body; the bee only collects it (Bechorot 7b).",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-2-c13",
+     "front": "What does “what comes from the impure is impure” mean?",
+     "back": "Products of non-kosher animals (mare's milk, raven's eggs, catfish roe) are forbidden (Mishnah Bechorot 1:2).",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-2-c14",
+     "front": "Which insects does the Torah permit?",
+     "back": "Four kinds of locust (Vayikra 11:22); the tradition has been preserved mainly by Yemenite Jews.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-2-c15",
+     "front": "Which foods are checked for insects with particular care?",
+     "back": "Leafy greens, broccoli, cauliflower, strawberries, raspberries, flour, grains, dried fruit.",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-2-c16",
+     "front": "Why are eggs broken one at a time into a glass?",
+     "back": "To check for a blood spot; an egg with blood is not used (Yoreh De'ah 66).",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-2-n1",
+     "front": "How many impure species of birds does the Talmud count?",
+     "back": "24 species (Chullin 63b); among them the eagle, hawk, owl, raven, stork and ostrich.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-2-n2",
+     "front": "Why is the prohibition of insects considered very strict?",
+     "back": "By eating one small insect, a person can transgress several Torah prohibitions at once (Makkot 16b).",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-2-n3",
+     "front": "Are microorganisms visible only under magnification forbidden?",
+     "back": "No: what is visible to the naked eye is forbidden.",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-2-n4",
+     "front": "Why are products with the coloring E120 not kosher?",
+     "back": "Carmine (E120) is made from cochineal insects.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-2-n5",
+     "front": "Why is fish bought whole, with the skin on, or under supervision?",
+     "back": "A skinless fillet cannot be checked for scales.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-2-n6",
+     "front": "What do the words “behemah” and “chayah” mean?",
+     "back": "Behemah means domestic animals, chayah means wild animals; the signs of kashrut are the same for both.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-2-n7",
+     "front": "Is horse meat forbidden?",
+     "back": "Yes. The lesson places horse meat among the forbidden meats, together with pork, rabbit and camel meat.",
+     "minLevel": "reform"
+    }
+   ]
+  },
+  {
+   "id": "kashrut-3",
+   "title": "Shechitah, blood, chelev and gid ha-nasheh",
+   "minLevel": "reform",
+   "minutes": 9,
+   "sourceRefs": [
+    "tanakh",
+    "ksa",
+    "chabad-ru",
+    "toldot",
+    "donin",
+    "eee"
+   ],
+   "citations": [
+    "Devarim 12:21",
+    "Chullin 28a",
+    "Devarim 14:21",
+    "Vayikra 17:10–14",
+    "Devarim 12:23",
+    "Vayikra 7:23–27",
+    "Bereshit 32:33",
+    "Mishnah Chullin 3:1",
+    "Shulchan Aruch, Yoreh De'ah 23–24, 39, 64–65, 69, 73",
+    "Kitzur Shulchan Aruch 36"
+   ],
+   "keyIdeas": [
+    "Without shechitah even a cow or a chicken is forbidden: one that died on its own or was killed another way is neveilah. Fish and locusts need no shechitah.",
+    "The Torah does not describe the method of slaughter, but it says “as I have commanded you”: the laws were handed down orally. The shochet cuts with a smooth chalaf.",
+    "After shechitah the organs are checked: a defect with which the animal would not have lived a year makes it treifah; in cattle the lungs are examined.",
+    "Blood is forbidden, “for the blood is the life.” Chelev is forbidden in the ox, sheep and goat; gid ha-nasheh is a sinew, forbidden in memory of Yaakov.",
+    "The remaining blood is removed by salting or broiling, and the liver only over fire. Meat is bought with a hechsher: a kosher species is not enough."
+   ],
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Why shechitah is needed"
+    },
+    {
+     "type": "p",
+     "text": "Even an animal of a kosher species, such as a cow, a sheep or a chicken, is forbidden as food if it was not slaughtered in a special way called **shechitah**. An animal that died on its own or was killed another way (by shooting, a blow, or stunning followed by death) is called **neveilah**, “carrion,” and the Torah forbids eating it (Devarim 14:21). Fish and locusts need no shechitah."
+    },
+    {
+     "type": "hebrew",
+     "he": "וְזָבַחְתָּ מִבְּקָרְךָ וּמִצֹּאנְךָ אֲשֶׁר נָתַן ה׳ לְךָ כַּאֲשֶׁר צִוִּיתִךָ",
+     "translit": "Vezavachta mibekarcha umitzoncha asher natan Adonai lecha ka'asher tziviticha",
+     "ru": "And you shall slaughter of your cattle and of your flock, which the L-rd has given you, as I have commanded you",
+     "ref": "Devarim 12:21"
+    },
+    {
+     "type": "p",
+     "text": "The Written Torah does not describe the method of slaughter, but it says: “as I have commanded you.” From these words the Talmud (Chullin 28a) derives that the laws of shechitah were given to Moshe orally. This is a good example of how the Written Torah is inseparable from the Oral Torah."
+    },
+    {
+     "type": "p",
+     "text": "Shechitah is a swift, continuous cut across the throat with a very sharp knife whose blade is perfectly smooth, without a single nick. The trachea and the esophagus are severed (in cattle, the greater part of both; in a bird, the greater part of one is enough), and with them the carotid arteries and jugular veins. Blood pressure in the brain drops sharply, the animal quickly loses consciousness, and most of the blood drains from the body. Jewish tradition sees in this an expression of the mitzvah of **tza'ar ba'alei chayim**, the prohibition of causing animals unnecessary suffering.",
+     "differs": [
+      {
+       "level": "reform",
+       "text": "Reform Judaism does not consider shechitah obligatory. Some Reform Jews still buy kosher meat out of respect for tradition and for the unity of the community; others choose vegetarianism or meat with an ethical label."
+      }
+     ]
+    },
+    {
+     "type": "term",
+     "term": "Shochet",
+     "he": "שׁוֹחֵט",
+     "text": "ritual slaughterer: a G-d-fearing Jew who has studied the laws of shechitah and received authorization (kabbalah) from a rabbi."
+    },
+    {
+     "type": "term",
+     "term": "Chalaf",
+     "he": "חַלָּף",
+     "text": "the knife for shechitah: long, very sharp, with an absolutely smooth blade; it is checked before and after every slaughter."
+    },
+    {
+     "type": "hebrew",
+     "he": "בָּרוּךְ אַתָּה ה׳ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו וְצִוָּנוּ עַל הַשְּׁחִיטָה",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, asher kideshanu bemitzvotav vetzivanu al hashechitah",
+     "ru": "Blessed are You, L-rd our G-d, King of the universe, who has sanctified us with His mitzvot and commanded us concerning shechitah",
+     "ref": "The shochet's blessing (Shulchan Aruch, Yoreh De'ah 19:1)"
+    },
+    {
+     "type": "list",
+     "minLevel": "orthodox",
+     "items": [
+      "**Shehiyah**: pausing; the cut must be continuous.",
+      "**Derasah**: pressing; the knife moves back and forth and does not press down from above.",
+      "**Chaladah**: “concealment”; the blade must be visible the whole time and may not be hidden under the skin or the wool.",
+      "**Hagramah**: deviation; a cut outside the proper place on the neck.",
+      "**Ikur**: tearing; the trachea or esophagus is torn out rather than cut."
+     ]
+    },
+    {
+     "type": "p",
+     "minLevel": "orthodox",
+     "text": "These are the five actions that invalidate shechitah (Chullin 9a; Shulchan Aruch, Yoreh De'ah 23–24). If any one of them occurs, the animal is considered neveilah. After slaughtering a wild animal or a bird, the blood is covered with earth or ash, with a blessing: this is the mitzvah of **kisui ha-dam** (Vayikra 17:13)."
+    },
+    {
+     "type": "h",
+     "text": "Inspection: treifot and “glatt”"
+    },
+    {
+     "type": "p",
+     "text": "After shechitah the internal organs are examined. If the animal is found to have a defect because of which it would not have lived even a year (for example, a perforated organ or a damaged lung), it is **treifah** and forbidden, even if the shechitah was correct. The main kinds of such defects are listed in the Mishnah (Chullin 3:1). In cattle the lungs must be checked for adhesions, **sirchot**."
+    },
+    {
+     "type": "p",
+     "minLevel": "orthodox",
+     "text": "The word **glatt** (Yiddish for “smooth,” Hebrew *chalak*) means that the animal's lungs are completely smooth, without adhesions. Sephardim, following the Beit Yosef (Shulchan Aruch, Yoreh De'ah 39), eat only such meat. Ashkenazim, following the Rema, allow certain easily removed adhesions, but today many of them also buy “glatt.” Strictly speaking, the term applies only to the lungs of cattle; a “glatt kosher” label on chicken or cheese is just a marketing way of saying “strict kashrut.”"
+    },
+    {
+     "type": "h",
+     "text": "The prohibition of blood"
+    },
+    {
+     "type": "hebrew",
+     "he": "רַק חֲזַק לְבִלְתִּי אֲכֹל הַדָּם כִּי הַדָּם הוּא הַנָּפֶשׁ",
+     "translit": "Rak chazak levilti achol hadam ki hadam hu hanefesh",
+     "ru": "Only be firm not to eat blood, for blood is the soul",
+     "ref": "Devarim 12:23"
+    },
+    {
+     "type": "p",
+     "text": "The prohibition of blood is repeated in the Torah many times (Bereshit 9:4; Vayikra 3:17; 7:26–27; 17:10–14; Devarim 12:16, 23–25), and for its deliberate violation the Torah assigns **karet** — \"cutting off of the soul\" (Vayikra 7:27). The explanation is given in the verse itself: blood is the bearer of life. A person is permitted to eat meat, but not the life of the animal. The prohibition concerns the blood of mammals and birds; the Torah does not forbid the blood of fish."
+    },
+    {
+     "type": "h",
+     "text": "Chelev and gid ha-nashe"
+    },
+    {
+     "type": "hebrew",
+     "he": "כָּל חֵלֶב שׁוֹר וְכֶשֶׂב וָעֵז לֹא תֹאכֵלוּ",
+     "translit": "Kol chelev shor ve-chesev va-ez lo tochelu",
+     "ru": "You shall eat no fat of ox, sheep, or goat",
+     "ref": "Vayikra 7:23"
+    },
+    {
+     "type": "p",
+     "text": "**Chelev** is certain kinds of fat around the stomach, kidneys, and intestines, which in the Temple was burned on the altar. Ordinary fat interspersed through the meat (*shuman*) is permitted. The prohibition of chelev applies only to domestic animals — the ox, sheep, and goat; the chelev of wild animals and of birds is permitted."
+    },
+    {
+     "type": "hebrew",
+     "he": "עַל כֵּן לֹא יֹאכְלוּ בְנֵי יִשְׂרָאֵל אֶת גִּיד הַנָּשֶׁה",
+     "translit": "Al ken lo yochlu bnei Yisrael et gid ha-nashe",
+     "ru": "Therefore the children of Israel do not eat the sciatic nerve",
+     "ref": "Bereshit 32:33"
+    },
+    {
+     "type": "p",
+     "text": "**Gid ha-nashe** is the sciatic nerve of the hind leg. The prohibition recalls the struggle of the patriarch Yaakov with the angel, who injured his hip. It applies to both domestic and wild animals, but not to birds. The removal of the chelev and the nerve is called **nikkur** (in Yiddish, \"treibering\") and requires a specialist. Outside Israel, because of the difficulty of this work, the hindquarters of the carcass (from which, for example, tenderloin and rump steak are taken) are usually sold to non-Jewish buyers; in Israel they are processed by specialist menakkrim."
+    },
+    {
+     "type": "h",
+     "text": "Koshering meat with salt",
+     "minLevel": "orthodox"
+    },
+    {
+     "type": "p",
+     "minLevel": "orthodox",
+     "text": "The blood remaining in the meat after shechitah is removed by **salting** (melichah) or by roasting over an open fire. The order of salting is set out in the Kitzur Shulchan Aruch (ch. 36) and the Shulchan Aruch (Yoreh Deah 69):"
+    },
+    {
+     "type": "list",
+     "ordered": true,
+     "minLevel": "orthodox",
+     "items": [
+      "Soak the meat in water so that it is covered, for about half an hour.",
+      "Let the water drain off.",
+      "Sprinkle it on all sides with salt of medium coarseness — not fine, so that it does not dissolve, and not too coarse, so that it does not roll off.",
+      "Leave it for an hour on a rack or a slanted board so that the blood drains off.",
+      "Shake off the salt and rinse the meat thoroughly, by custom three times."
+     ]
+    },
+    {
+     "type": "p",
+     "minLevel": "orthodox",
+     "text": "The liver contains so much blood that it is koshered only by roasting over fire (Yoreh Deah 73). Meat that was not salted and rinsed within 72 hours of shechitah can be koshered only by roasting over fire. Ground meat is made from already koshered meat. Today almost all meat with a hechsher is sold already koshered, as stated on the packaging."
+    },
+    {
+     "type": "note",
+     "text": "Practical conclusion: buy meat and poultry only at a kosher store or with a reliable hechsher. An animal of a kosher species, without shechitah, inspection, and removal of blood, is not yet kosher meat."
+    }
+   ],
+   "cards": [
+    {
+     "id": "kashrut-3-c1",
+     "front": "What is shechitah?",
+     "back": "Ritual slaughter: a swift, continuous cut across the throat with a smooth, sharp knife, cutting through the trachea and the esophagus.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-3-c2",
+     "front": "From which verse is it derived that the laws of shechitah were transmitted orally?",
+     "back": "\"And slaughter… as I have commanded you\" (Devarim 12:21; Chullin 28a).",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-3-c3",
+     "front": "What is nevelah?",
+     "back": "An animal that died on its own or was killed not by shechitah; eating it is forbidden (Devarim 14:21).",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-3-c4",
+     "front": "Who is a shochet?",
+     "back": "A slaughterer: a G-d-fearing Jew who knows the laws of shechitah and has received a rabbi's authorization.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-3-c5",
+     "front": "What is the knife for shechitah called, and what must it be like?",
+     "back": "A chalaf: very sharp, with an absolutely smooth blade free of nicks.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-3-c6",
+     "front": "Which animals do not require shechitah?",
+     "back": "Fish and (kosher) locusts.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-3-c7",
+     "front": "Name the five violations that render shechitah invalid.",
+     "back": "Shehiyah (pausing), derasah (pressing), chaladah (hiding the knife), hagremah (deviating), ikkur (tearing).",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-3-c8",
+     "front": "What is a treifah after a proper shechitah?",
+     "back": "An animal with a defect of the organs because of which it would not live out the year (Mishnah Chullin 3:1).",
+     "minLevel": "conservative"
+    },
+    {
+     "id": "kashrut-3-c9",
+     "front": "What does \"glatt\" mean?",
+     "back": "\"Smooth\": the animal's lungs without adhesions (sirchot). Sephardim eat only such meat.",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-3-c10",
+     "front": "Why does the Torah forbid blood?",
+     "back": "\"For blood is the soul\" (Devarim 12:23): a person may eat meat, but not the life of the animal.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-3-c11",
+     "front": "What punishment does the Torah assign for deliberately consuming blood?",
+     "back": "Karet — \"cutting off of the soul\" (Vayikra 7:27).",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-3-c12",
+     "front": "What is chelev, and to whom does the prohibition apply?",
+     "back": "A special fat around the stomach, kidneys, and intestines; forbidden only in the ox, sheep, and goat (Vayikra 7:23).",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-3-c13",
+     "front": "What is gid ha-nashe, and why is it forbidden?",
+     "back": "The sciatic nerve — in memory of Yaakov's struggle with the angel (Bereshit 32:33).",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-3-c14",
+     "front": "What is the removal of the chelev and the sciatic nerve called?",
+     "back": "Nikkur (in Yiddish — \"treibering\").",
+     "minLevel": "conservative"
+    },
+    {
+     "id": "kashrut-3-c15",
+     "front": "What is the order of salting meat?",
+     "back": "Soak for ~30 minutes, drain, salt on all sides, leave for an hour, rinse thoroughly (KSA 36).",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-3-c16",
+     "front": "How is the liver koshered?",
+     "back": "Only by roasting over an open fire — it contains too much blood (Yoreh Deah 73).",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-3-c17",
+     "front": "What is kisuy ha-dam?",
+     "back": "The commandment to cover with earth the blood of a wild animal or bird after shechitah (Vayikra 17:13).",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-3-n1",
+     "front": "What part of the trachea and esophagus is cut in shechitah?",
+     "back": "For cattle — the greater part of both; for birds, the greater part of one is sufficient.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-3-n2",
+     "front": "Which commandment does tradition see in the swift cut of shechitah?",
+     "back": "Tzaar baalei chaim — the prohibition against causing animals unnecessary suffering.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-3-n3",
+     "front": "What blessing does the shochet recite?",
+     "back": "\"…ve-tzivanu al ha-shechitah\" — \"Who commanded us concerning shechitah\" (Yoreh Deah 19:1).",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-3-n4",
+     "front": "What is shuman?",
+     "back": "Ordinary fat interspersed through the meat; unlike chelev, it is permitted.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-3-n5",
+     "front": "Why are the hindquarters of the carcass usually sold to non-Jews outside Israel?",
+     "back": "Removing the chelev and the sciatic nerve from them is difficult; in Israel this is done by specialist menakkrim.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-3-n6",
+     "front": "What should be done with meat not salted within 72 hours of shechitah?",
+     "back": "It can be koshered only by roasting over fire.",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-3-n7",
+     "front": "Is the blood of fish forbidden by the Torah?",
+     "back": "No: the prohibition concerns the blood of mammals and birds.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-3-n8",
+     "front": "What meat is kosher ground meat made from?",
+     "back": "Only from already koshered (salted and rinsed) meat.",
+     "minLevel": "orthodox"
+    }
+   ]
+  },
+  {
+   "id": "kashrut-4",
+   "title": "Meat and Dairy",
+   "minLevel": "reform",
+   "minutes": 9,
+   "sourceRefs": [
+    "tanakh",
+    "chumash-gurevich",
+    "ksa",
+    "chabad-ru",
+    "toldot",
+    "telushkin"
+   ],
+   "citations": [
+    "Shemot 23:19",
+    "Shemot 34:26",
+    "Devarim 14:21",
+    "Chullin 115b",
+    "Mishnah Chullin 8:1, 8:4",
+    "Chullin 105a",
+    "Shulchan Aruch, Yoreh Deah 87–89, 97, 116:2",
+    "Rema on Yoreh Deah 89:1–2",
+    "Pesachim 76b"
+   ],
+   "keyIdeas": [
+    "The verse \"You shall not cook a kid in its mother's milk\" is said three times: one may not cook such a mixture, eat it, or derive benefit from it.",
+    "By Torah law the prohibition concerns the meat of domestic cattle; the Sages extended it to birds and wild animals. Fish is not included in the prohibition.",
+    "Food is divided into basari (meat), chalavi (dairy), and parve. Hot cookware absorbs flavor, so separate meat and dairy sets are kept.",
+    "After meat, people wait: most commonly six hours, in some communities three or one. After dairy, they rinse the mouth, eat parve, and wash the hands.",
+    "Parve cooked in meat or dairy cookware takes on its status. The waiting custom is chosen together with the community rabbi."
+   ],
+   "blocks": [
+    {
+     "type": "h",
+     "text": "The thrice-stated prohibition"
+    },
+    {
+     "type": "hebrew",
+     "he": "לֹא תְבַשֵּׁל גְּדִי בַּחֲלֵב אִמּוֹ",
+     "translit": "Lo tevashel gedi ba-chalev imo",
+     "ru": "You shall not cook a kid in its mother's milk",
+     "ref": "Shemot 23:19"
+    },
+    {
+     "type": "p",
+     "text": "These words appear in the Torah three times: Shemot 23:19, Shemot 34:26, and Devarim 14:21. The Oral Tradition (Chullin 115b) explains that the threefold repetition points to three separate prohibitions: **one may not cook** meat with milk together, **one may not eat** such a mixture, and **one may not derive benefit from it** — for example, selling it or feeding it to one's animal."
+    },
+    {
+     "type": "p",
+     "text": "\"Kid\" in this verse is an example, not a limitation: the Torah prohibition applies to the meat of any kosher domestic animal (beef, lamb, goat meat) cooked with the milk of any kosher animal. The Sages extended the prohibition to the meat of wild animals and birds (Mishnah Chullin 8:1; according to Rabbi Akiva, 8:4, this is a decree of the Sages). Fish and locusts are not included in the prohibition: they may be eaten with milk."
+    },
+    {
+     "type": "p",
+     "text": "The Torah does not explain the meaning of the prohibition — this is another chok. Commentators offer moral interpretations: it is impermissible to mix the source of life (milk, with which a mother feeds her young) with the death of an animal; this cultivates mercy in a person. There are also historical explanations connected with the pagan rites of antiquity."
+    },
+    {
+     "type": "term",
+     "term": "Basari",
+     "he": "בְּשָׂרִי",
+     "text": "\"meat\": meat, poultry, and everything cooked with them or in meat cookware. In Yiddish — \"fleishik\"."
+    },
+    {
+     "type": "term",
+     "term": "Chalavi",
+     "he": "חֲלָבִי",
+     "text": "\"dairy\": milk, cheese, butter, sour cream, yogurt, and everything made with them. In Yiddish — \"milchik\"."
+    },
+    {
+     "type": "term",
+     "term": "Parve",
+     "he": "פַּרְוֶה",
+     "text": "\"neutral\": vegetables, fruits, grains, eggs, fish, water, sugar, salt. They may be eaten with either meat or dairy."
+    },
+    {
+     "type": "h",
+     "text": "Two kitchens in one"
+    },
+    {
+     "type": "p",
+     "text": "Hot cookware absorbs the flavor of food. Therefore a kosher home has two sets of kitchenware: meat and dairy — pots, pans, plates, cutlery, cutting boards, knives, as well as sponges, towels, and drying racks. The sink is either divided (two basins) or separate tubs or racks are used. Often dishes are marked with colors — for example, red for meat and blue for dairy; this is a convenient custom, not law. Many keep a third set — for parve."
+    },
+    {
+     "type": "p",
+     "text": "It is forbidden to place meat and dairy on one table where two people who know each other are eating, one eating meat and the other cheese, without a noticeable dividing sign (*eiker*): a separate tablecloth or placemat, or an object between the plates (Shulchan Aruch, Yoreh Deah 88).",
+     "minLevel": "orthodox"
+    },
+    {
+     "type": "p",
+     "text": "For the same reason the Sages forbade baking bread with milk or butter unless it has an unusual shape or is baked in a very small quantity — so that it not be eaten by mistake with meat (Shulchan Aruch, Yoreh Deah 97). Therefore ordinary challah is parve.",
+     "minLevel": "orthodox"
+    },
+    {
+     "type": "h",
+     "text": "How long to wait after meat"
+    },
+    {
+     "type": "p",
+     "text": "After a meat meal, dairy is not eaten right away. The source of the custom is the words of the Sage Mar Ukva in the Talmud (Chullin 105a): his father, after eating meat, would not eat cheese until the next day, while he himself waited until the next meal. Rambam explains the waiting by the fact that shreds of meat get stuck between the teeth; Rashi — by the fact that the fat of meat leaves an aftertaste in the mouth for a long time."
+    },
+    {
+     "type": "list",
+     "items": [
+      "**6 hours** — the custom of most communities, Ashkenazi and Sephardi (Rambam; Shulchan Aruch, Yoreh Deah 89:1). Some consider it sufficient for more than five hours to pass, that is, \"for the sixth hour to begin.\"",
+      "**3 hours** — the custom of many Jews of German origin and a number of other communities.",
+      "**1 hour** — the custom of Dutch Jews, based on the words of the Rema (Yoreh Deah 89:1): wait an hour and recite the grace after meals."
+     ]
+    },
+    {
+     "type": "note",
+     "text": "Usually a person follows the custom of his family. A person who has completed giyur chooses the custom together with his rabbi — most often this is the custom of the community he joins."
+    },
+    {
+     "type": "p",
+     "minLevel": "orthodox",
+     "text": "The count runs from the end of the meat meal to the beginning of the dairy meal. The waiting is observed also after meat dishes without meat itself (for example, potatoes stewed with meat); by widespread custom — also by children from a certain age, on the rabbi's instruction. If a person merely tasted a meat dish and spat it out, no waiting is needed, but the mouth must be rinsed."
+    },
+    {
+     "type": "h",
+     "text": "After dairy"
+    },
+    {
+     "type": "p",
+     "text": "After dairy, meat may be eaten much sooner. It is enough to rinse the mouth, eat something neutral (for example, a piece of bread), wash the hands, and change the tablecloth and dishes (Shulchan Aruch, Yoreh Deah 89:2). Many Ashkenazim by custom wait another half an hour or an hour."
+    },
+    {
+     "type": "p",
+     "minLevel": "orthodox",
+     "text": "The exception is **hard aged cheese**. The Rema (Yoreh Deah 89:2) cites the custom of the strict to wait after hard cheese as long as after meat. Hard usually means cheese aged six months or more (for example, Parmesan); the specific boundaries should be clarified with a rabbi."
+    },
+    {
+     "type": "h",
+     "text": "Parve, fish, and accidental mixtures"
+    },
+    {
+     "type": "p",
+     "text": "A parve product cooked in a meat pot takes on the status of the cookware — meat; prepared in a dairy pot — dairy. Therefore packages bear not only \"parve\" but also, for example, \"made on dairy equipment.\""
+    },
+    {
+     "type": "p",
+     "minLevel": "orthodox",
+     "text": "Fish is not cooked or eaten together with meat — not because of the meat-and-milk prohibition, but for health reasons mentioned in the Talmud (Pesachim 76b; Shulchan Aruch, Yoreh Deah 116:2). Between fish and meat one rinses the mouth or eats a piece of bread. Ashkenazim eat fish with dairy freely (herring with sour cream), while some Sephardi communities by custom avoid this combination as well."
+    },
+    {
+     "type": "p",
+     "minLevel": "orthodox",
+     "text": "If a drop of milk accidentally gets into a meat dish, do not rush to throw out the food and the dishes. In many cases the rule of **bitul be-shishim** applies: an accidental admixture that makes up less than one sixtieth loses significance (Shulchan Aruch, Yoreh Deah 98). But the decision in each case is made by the rabbi — describe to him what got where, in what quantity, and whether the products were hot."
+    },
+    {
+     "type": "p",
+     "text": "The prohibition of meat with milk is one of the most recognizable marks of the kosher way of life. Even those who keep kashrut only partially often begin with it: they do not eat cheeseburgers, do not add cream to coffee after a meat lunch.",
+     "differs": [
+      {
+       "level": "reform",
+       "text": "In Reform Judaism, the separation of meat and dairy is a personal choice. Many Reform families who observe it do not keep two sets of dishes and do not observe the waiting times; they simply do not mix meat with milk in one dish."
+      }
+     ]
+    }
+   ],
+   "cards": [
+    {
+     "id": "kashrut-4-c1",
+     "front": "Where in the Torah is \"You shall not cook a kid in its mother's milk\" said?",
+     "back": "Three times: Shemot 23:19, Shemot 34:26, Devarim 14:21.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-4-c2",
+     "front": "What three prohibitions are derived from the three repetitions?",
+     "back": "One may not cook meat with milk, eat such a mixture, or derive benefit from it (Chullin 115b).",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-4-c3",
+     "front": "Does the prohibition apply to chicken?",
+     "back": "Yes, by decree of the Sages; by Torah law the prohibition applies to the meat of domestic cattle.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-4-c4",
+     "front": "May fish be eaten with dairy?",
+     "back": "Yes, fish is parve. Ashkenazim eat it with dairy freely; some Sephardim avoid it by custom.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-4-c5",
+     "front": "What are basari, chalavi, and parve?",
+     "back": "Meat, dairy, and neutral.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-4-c6",
+     "front": "Which foods are parve?",
+     "back": "Vegetables, fruits, grains, eggs, fish, water, sugar, salt.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-4-c7",
+     "front": "Why does a kosher kitchen have two sets of dishes?",
+     "back": "Hot dishes absorb flavor; meat and dairy dishes must not mix.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-4-c8",
+     "front": "Where does the custom of waiting after meat come from?",
+     "back": "Mar Ukva (Chullin 105a): his father waited until the next day, and he himself — until the next meal.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-4-c9",
+     "front": "How long does one wait after meat according to the Shulchan Aruch?",
+     "back": "6 hours (Yoreh Deah 89:1); this is the custom of most communities.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-4-c10",
+     "front": "Who has the custom of waiting 3 hours? 1 hour?",
+     "back": "3 hours — many Jews of German origin; 1 hour — the Dutch custom (according to the Rema).",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-4-c11",
+     "front": "What does one do after dairy before meat?",
+     "back": "Rinse the mouth, eat something parve (bread), wash the hands; many Ashkenazim wait another 30–60 minutes.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-4-c12",
+     "front": "How long does one wait after hard aged cheese?",
+     "back": "By the custom of the strict (Rema, Yoreh Deah 89:2) — as after meat.",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-4-c13",
+     "front": "Why is fish not eaten together with meat?",
+     "back": "For health reasons mentioned in the Talmud (Pesachim 76b; Yoreh Deah 116:2).",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-4-c14",
+     "front": "What is bitul be-shishim?",
+     "back": "An accidental admixture of less than 1/60 loses significance; the decision in each case rests with the rabbi.",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-4-c15",
+     "front": "Why is bread usually baked parve?",
+     "back": "The Sages forbade dairy bread of ordinary shape, so that it not be eaten with meat (Yoreh Deah 97).",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-4-c16",
+     "front": "May two people eat meat and cheese at one table?",
+     "back": "Only with a noticeable divider (eiker): a separate tablecloth, an object between the plates (Yoreh Deah 88).",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-4-n1",
+     "front": "Does the prohibition \"do not cook a kid\" apply only to a kid?",
+     "back": "No: \"kid\" is an example. By Torah law, the meat of any kosher domestic animal with the milk of any kosher animal is forbidden.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-4-n2",
+     "front": "What moral interpretation is given to the prohibition of meat with milk?",
+     "back": "One must not mix the source of life (a mother's milk) with the death of an animal; this cultivates mercy.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-4-n3",
+     "front": "How do Rambam and Rashi explain the waiting after meat?",
+     "back": "Rambam: shreds of meat get stuck in the teeth. Rashi: the fat of meat leaves an aftertaste in the mouth for a long time.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-4-n4",
+     "front": "What does \"the sixth hour has begun\" mean?",
+     "back": "The opinion that after meat it is sufficient for more than five hours to have passed.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-4-n5",
+     "front": "Must one wait if a meat dish was merely tasted and spat out?",
+     "back": "No waiting is needed, but the mouth must be rinsed.",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-4-n6",
+     "front": "Does one wait after potatoes stewed with meat?",
+     "back": "By widespread custom — yes: one waits after meat dishes even if there is no piece of meat left on the plate.",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-4-n7",
+     "front": "Red dishes for meat, blue for dairy — is this a law?",
+     "back": "No, a convenient custom. Many keep a third set as well — for parve.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-4-n8",
+     "front": "What happens to parve cooked in a dairy pot?",
+     "back": "As taught in this lesson, it takes on the dairy status of the cookware. Therefore packages may bear the note \"made on dairy equipment.\"",
+     "minLevel": "reform"
+    }
+   ]
+  },
+  {
+   "id": "kashrut-5",
+   "title": "Utensils and the Kitchen",
+   "minLevel": "reform",
+   "minutes": 9,
+   "sourceRefs": [
+    "tanakh",
+    "ksa",
+    "chabad-ru",
+    "toldot",
+    "masorti",
+    "donin",
+    "ccar",
+    "mcpj",
+    "reform-spb"
+   ],
+   "citations": [
+    "Bamidbar 31:21–23",
+    "Vayikra 6:21",
+    "Pesachim 30b",
+    "Avodah Zarah 75b",
+    "Shulchan Aruch, Orach Chaim 451:26 (with Rema)",
+    "Shulchan Aruch, Yoreh Deah 112, 113, 115, 120, 121",
+    "Kitzur Shulchan Aruch 37",
+    "Shulchan Aruch, Orach Chaim 603:1"
+   ],
+   "keyIdeas": [
+    "When heated, a vessel absorbs flavor. Koshering follows the rule \"as it absorbed, so it expels\": boiling water for what was boiled, fire for what was roasted.",
+    "The source is the purification of the Midianite vessels (Bamidbar 31:23). Methods: hagalah, iruy, libun gamur, and libun kal.",
+    "Porcelain and ceramics cannot be koshered. About glass, Sephardi and Ashkenazi customs differ; before koshering one waits 24 hours.",
+    "Metal and glass utensils from a non-Jew are immersed in a mikveh: tevilat keilim brings them into a Jewish home; it does not purge absorbed flavor.",
+    "The Sages forbade bishul akum, pat akum, chalav akum, and cheese without supervision. The kitchen is koshered before giyur together with the rabbi."
+   ],
+   "blocks": [
+    {
+     "type": "h",
+     "text": "As it absorbed, so it expels"
+    },
+    {
+     "type": "note",
+     "text": "Any candidate must know the classical rules of utensils and koshering: this is the language of the Jewish kitchen and a subject of questions in study. How exactly you arrange your home depends on the movement and the beit din. Reform kitchen practice is discussed separately at the end of the lesson — not as a hint that \"this is optional.\""
+    },
+    {
+     "type": "p",
+     "text": "The laws of utensils rest on a simple observation: when heated, a vessel absorbs the flavor of food and then imparts it to other food. If treif meat was cooked in a pot, the pot itself becomes \"treif,\" and so does everything prepared in it. Hence the main principle of koshering: **\"as it absorbed, so it expels\"** — a vessel is purged by the same means by which the flavor entered it: what absorbed through boiling water is koshered with boiling water; what absorbed directly through fire — by fire (Pesachim 30b)."
+    },
+    {
+     "type": "hebrew",
+     "he": "כְּבוֹלְעוֹ כָּךְ פּוֹלְטוֹ",
+     "translit": "Ke-vol'o kakh polto",
+     "ru": "As it absorbs, so it expels",
+     "ref": "Principle of koshering utensils (Pesachim 30b)"
+    },
+    {
+     "type": "p",
+     "text": "The source in the Torah is the account of the spoils after the war with Midian. Moshe and Elazar the kohen ordered the metal vessels to be purified: \"whatever passes through fire, pass through fire, and it will be clean… and whatever does not pass through fire, pass through water.\""
+    },
+    {
+     "type": "hebrew",
+     "he": "כָּל דָּבָר אֲשֶׁר יָבֹא בָאֵשׁ תַּעֲבִירוּ בָאֵשׁ וְטָהֵר",
+     "translit": "Kol davar asher yavo va-esh ta'aviru va-esh ve-taher",
+     "ru": "Whatever passes through fire, pass through fire, and it will be clean",
+     "ref": "Bamidbar 31:23"
+    },
+    {
+     "type": "p",
+     "text": "Cold contact usually does not transfer flavor: if cold cheese was placed on a clean meat plate, it is enough to wash the plate thoroughly. It is more complicated if the product was sharp (for example, if an onion was cut with a meat knife) or lay in the dish for a long time — in such cases one asks the rabbi."
+    },
+    {
+     "type": "h",
+     "text": "Methods of koshering"
+    },
+    {
+     "type": "list",
+     "items": [
+      "**Hagalah** (הַגְעָלָה) — immersion in boiling water. Metal pots, cutlery, and ladles are koshered this way — that is, whatever absorbed flavor through hot liquid. After hagalah the vessel is rinsed with cold water.",
+      "**Iruy** — pouring boiling water over. Applied to metal sinks and stone or metal countertops — to surfaces on which hot liquid was poured or hot things set down.",
+      "**Libun gamur** (לִבּוּן) — heating with fire until red-hot. Grill grates, skewers, and baking sheets on which food was roasted directly over fire without liquid are koshered this way.",
+      "**Libun kal** — \"light\" heating: heating to the degree that paper touching the other side scorches. Used in some cases instead of hagalah, or for ovens."
+     ]
+    },
+    {
+     "type": "p",
+     "text": "Before koshering, the vessel is cleaned thoroughly: rust, burnt-on residue, and food remnants are removed. Usually it is not used for 24 hours (the vessel ceases to be *ben yomo* — \"used the same day\"): after this the absorbed flavor is considered spoiled, and koshering goes more easily."
+    },
+    {
+     "type": "h",
+     "text": "What cannot be koshered"
+    },
+    {
+     "type": "p",
+     "text": "Earthenware, faience, and porcelain cannot be koshered: the Torah speaks of an earthenware vessel in which the meat of a sacrifice was cooked, saying that it must be broken (Vayikra 6:21) — hence clay does not give back what it absorbed. About **glass** customs differ. According to the Shulchan Aruch (Orach Chaim 451:26), glass does not absorb at all, and it is enough to wash it — this is what many Sephardim do. The Rema writes in the same place that Ashkenazim do not kosher glass (at least for Pesach). For plastic, Teflon, enamel, and ceramic cooktops opinions differ, so their status should be clarified with a rabbi."
+    },
+    {
+     "type": "note",
+     "text": "Koshering a kitchen is serious work: the oven, the stove, the sink, the dishwasher, and the microwave are koshered by separate rules. Before giyur the kitchen is usually koshered together with a rabbi or an experienced member of the community. Some of the old dishes will have to be replaced — that is cheaper and more reliable."
+    },
+    {
+     "type": "h",
+     "text": "Tevilat keilim — immersion of dishes",
+     "minLevel": "orthodox"
+    },
+    {
+     "type": "p",
+     "minLevel": "orthodox",
+     "text": "Metal dishes for food, made by or bought from a non-Jew, are immersed in a mikveh or a natural source (a river, the sea, a spring) before first use. This is a mitzvah — **tevilat keilim**; it is derived from the same passage about the vessels of Midyan (Bamidbar 31:23; Avodah Zarah 75b). Immersion does not purify a vessel from a non-kosher taste — it is done even with brand-new dishes; it is as if it transfers the item \"into holiness\" of a Jewish home. Glass dishes are immersed by enactment of the sages, because glass, like metal, can be re-melted (Shulchan Aruch, Yoreh Deah 120; Kitzur Shulchan Aruch 37)."
+    },
+    {
+     "type": "list",
+     "minLevel": "orthodox",
+     "items": [
+      "First the dishes are washed and the stickers and glue are removed: nothing must come between the water and the surface.",
+      "The item is immersed fully, in one motion, so that the water touches all of its surfaces; it is held loosely, not squeezed.",
+      "Before the immersion a blessing is said: for one item — \"al tevilat keli\", for several — \"al tevilat keilim\".",
+      "Wooden, plastic, and paper dishes and unglazed clay are, by the basic rule, not immersed; regarding glazed ceramics, disposable aluminum dishes, and electrical appliances customs differ — with no blessing, or with no immersion at all."
+     ]
+    },
+    {
+     "type": "hebrew",
+     "minLevel": "orthodox",
+     "he": "בָּרוּךְ אַתָּה ה׳ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו וְצִוָּנוּ עַל טְבִילַת כְּלִי",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, asher kidshanu bemitzvotav, vetzivanu al tevilat keli",
+     "ru": "Blessed are You, L-rd our G-d, King of the universe, who sanctified us with His mitzvot and commanded us concerning the immersion of a vessel",
+     "ref": "Shulchan Aruch, Yoreh Deah 120:3"
+    },
+    {
+     "type": "h",
+     "text": "Food prepared by a non-Jew",
+     "minLevel": "orthodox"
+    },
+    {
+     "type": "p",
+     "minLevel": "orthodox",
+     "text": "The sages instituted several prohibitions on food that in itself consists of kosher ingredients but is prepared by a non-Jew. Their purpose is to preserve the separateness of the Jewish community and to prevent intermarriage, as well as to guard against mistakes in kashrut (Avodah Zarah 35b–38a)."
+    },
+    {
+     "type": "list",
+     "minLevel": "orthodox",
+     "items": [
+      "**Bishul akum** (בִּשּׁוּל עַכּוּ״ם, \"cooked by a non-Jew\"; Yoreh Deah 113). The prohibition concerns dishes that are not eaten raw and that are worthy of a \"royal table\" (for example, meat, fish, eggs, potatoes). For food to count as \"bishul Yisrael\", a Jew must take part in the cooking: by Ashkenazi custom (Rema) it is enough for a Jew to light the fire; by Sephardi custom (Shulchan Aruch) — that he himself put the food on the fire or stirred it. That is why in kosher restaurants the fire is lit by the mashgiach.",
+      "**Pat akum** (Yoreh Deah 112). Bread baked by a non-Jew at home is forbidden. Bread from a bakery (*pat palter*) with kosher ingredients many authorities permit when there is no Jewish-baked bread (*pat Yisrael*). During the Ten Days of Repentance even those who are lenient in this customarily eat only pat Yisrael (Orach Chaim 603:1).",
+      "**Chalav akum** (Yoreh Deah 115). Milk milked without a Jew present was prohibited by the sages for fear of admixture of milk from non-kosher animals. Some authorities (in particular, R. Moshe Feinstein) permitted milk under strict government supervision, but many observe **chalav Yisrael**.",
+      "**Gevinat akum** — cheese made without Jewish supervision is forbidden, in particular because of rennet from the stomachs of animals not slaughtered according to kashrut."
+     ]
+    },
+    {
+     "type": "note",
+     "text": "Masorti (Conservative Judaism) requires a kosher kitchen with separate dishes and recognizes the laws of koshering; many Conservative communities also practice tevilat keilim. Positions on bishul akum, pat akum, and cheese are more lenient than the Orthodox ones — they should be clarified with the community rabbi."
+    },
+    {
+     "type": "h",
+     "text": "The kitchen in a Reform home"
+    },
+    {
+     "type": "p",
+     "text": "Reform Judaism does not consider obligatory two sets of dishes, separate sinks, tevilat keilim, and full koshering of a kitchen according to the rules of the Shulchan Aruch. This does not mean that the topic of kashrut is empty for a progressive Jew or \"written on a leftover basis\". Kashrut is understood as a discipline of holiness, ethics, and belonging to the people: a person studies the laws, understands their meaning, and consciously takes upon himself the measure he is ready to keep honestly."
+    },
+    {
+     "type": "p",
+     "text": "In practice many Reform families begin with clear, steady steps: they do not eat the animals forbidden by the Torah (pork, seafood without scales and fins), they separate meat and dairy at least at the table or in time, they look for ethically acceptable meat, and they reduce cruelty and wastefulness. Some, over time, acquire separate dishes or a fully kosher kitchen — as a personal path, not as a condition of \"real\" Jewishness. Some keep a stricter order at home and a freer one outside it. The main thing is not to confuse ignorance with choice and not to pass off convenience as principle."
+    },
+    {
+     "type": "p",
+     "text": "In progressive communities people increasingly speak also of **ethical kashrut**: working conditions, ecology, treatment of animals, eating habits that do not debase the image of G-d in man and in the world. This is not a replacement for the Torah's mitzvot about permitted animals, but an additional layer of responsibility. In the giyur school of the Russian Union of Progressive Jewish Communities (ROOPI), kashrut is usually included in the program; specific home requirements are clarified by the community rabbi."
+    },
+    {
+     "type": "note",
+     "text": "At a Reform beit din you are more likely to be asked: what exactly do you eat and not eat, how your kitchen is arranged, what changed over the year of study, and why you chose this order. \"I observe nothing because in Reform you may\" is a weak answer. \"I studied the laws, in our family we keep this, and this is where I am heading\" is a strong and honest one."
+    }
+   ],
+   "cards": [
+    {
+     "id": "kashrut-5-c1",
+     "front": "What is the main principle of koshering dishes?",
+     "back": "\"As it absorbed, so it gives off\" (kevole'o kach polto): a vessel is purged by the same means by which the taste entered it.",
+     "minLevel": "conservative"
+    },
+    {
+     "id": "kashrut-5-c2",
+     "front": "Where in the Torah is the source of the laws of koshering dishes?",
+     "back": "The vessels taken from Midyan: \"through fire… through water\" (Bamidbar 31:21–23).",
+     "minLevel": "conservative"
+    },
+    {
+     "id": "kashrut-5-c3",
+     "front": "What is hag'alah?",
+     "back": "Koshering by immersion in boiling water — for metal pots and utensils.",
+     "minLevel": "conservative"
+    },
+    {
+     "id": "kashrut-5-c4",
+     "front": "What is libun gamur?",
+     "back": "Heating until red-hot in fire — for grill grates, skewers, and baking trays.",
+     "minLevel": "conservative"
+    },
+    {
+     "id": "kashrut-5-c5",
+     "front": "What is iruy?",
+     "back": "Pouring boiling water over — for sinks and countertops.",
+     "minLevel": "conservative"
+    },
+    {
+     "id": "kashrut-5-c6",
+     "front": "Can porcelain and ceramic be koshered?",
+     "back": "No: earthenware does not release what it absorbed (Vayikra 6:21).",
+     "minLevel": "conservative"
+    },
+    {
+     "id": "kashrut-5-c7",
+     "front": "How do Sephardim and Ashkenazim regard the koshering of glass?",
+     "back": "Shulchan Aruch: glass does not absorb, washing suffices; Rema: Ashkenazim do not kosher glass (OC 451:26).",
+     "minLevel": "conservative"
+    },
+    {
+     "id": "kashrut-5-c8",
+     "front": "What does \"ben yomo\" mean?",
+     "back": "A vessel used within the last 24 hours; before koshering one usually waits a day.",
+     "minLevel": "conservative"
+    },
+    {
+     "id": "kashrut-5-c9",
+     "front": "Which dishes must be immersed in a mikveh (tevilat keilim)?",
+     "back": "Metal and glass dishes for food, made by or purchased from a non-Jew.",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-5-c10",
+     "front": "What blessing is said when immersing a single item?",
+     "back": "\"…vetzivanu al tevilat keli\"; for several — \"al tevilat keilim\".",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-5-c11",
+     "front": "Must wooden and plastic dishes be immersed?",
+     "back": "By the basic rule — no.",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-5-c12",
+     "front": "What is bishul akum?",
+     "back": "Food prepared by a non-Jew, if it is not eaten raw and is worthy of a \"royal table\" (Yoreh Deah 113).",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-5-c13",
+     "front": "How is food made \"bishul Yisrael\"?",
+     "back": "Ashkenazim: a Jew lights the fire; Sephardim: a Jew puts the food on the fire or takes part in the cooking.",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-5-c14",
+     "front": "What is pat palter?",
+     "back": "Bread from a non-Jewish bakery with kosher ingredients; many permit it when there is no pat Yisrael.",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-5-c15",
+     "front": "When do even those lenient toward pat palter eat only pat Yisrael?",
+     "back": "During the Ten Days of Repentance (Orach Chaim 603:1).",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-5-c16",
+     "front": "What is chalav Yisrael?",
+     "back": "Milk milked in the presence of a Jew (Yoreh Deah 115).",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-5-n1",
+     "front": "Are plastic, Teflon, and enamel koshered?",
+     "back": "Authorities' opinions differ, so the status of such dishes is clarified with a rabbi.",
+     "minLevel": "conservative"
+    },
+    {
+     "id": "kashrut-5-n2",
+     "front": "What is libun kal?",
+     "back": "\"Light\" heating: heating at which paper held against the other side scorches; sometimes done instead of hag'alah, or for ovens.",
+     "minLevel": "conservative"
+    },
+    {
+     "id": "kashrut-5-n3",
+     "front": "What is done with a dish immediately after hag'alah?",
+     "back": "It is rinsed in cold water.",
+     "minLevel": "conservative"
+    },
+    {
+     "id": "kashrut-5-n4",
+     "front": "When does even cold contact with a dish require asking a rabbi?",
+     "back": "If the food is sharp (an onion cut with a meat knife) or lay in the dish for a long time.",
+     "minLevel": "conservative"
+    },
+    {
+     "id": "kashrut-5-n5",
+     "front": "How is a dish properly immersed in a mikveh?",
+     "back": "Remove the stickers and glue, immerse it fully in one motion, holding it loosely, so that the water touches all of its surfaces.",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-5-n6",
+     "front": "Does tevilat keilim purify from a non-kosher taste?",
+     "back": "No: it is done even with new dishes; it brings the item into the holiness of a Jewish home.",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-5-n7",
+     "front": "Why is cheese without Jewish supervision (gevinat akum) forbidden?",
+     "back": "In particular because of rennet from the stomachs of animals not slaughtered according to kashrut.",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-5-n8",
+     "front": "Why did the sages prohibit food prepared by a non-Jew?",
+     "back": "To preserve the community's separateness, prevent intermarriage, and guard against mistakes in kashrut (Avodah Zarah 35b–38a).",
+     "minLevel": "orthodox"
+    }
+   ]
+  },
+  {
+   "id": "kashrut-6",
+   "title": "Hechsher, wine, and kashrut across the movements",
+   "minLevel": "reform",
+   "minutes": 9,
+   "sourceRefs": [
+    "chabad-ru",
+    "toldot",
+    "eee",
+    "telushkin",
+    "masorti",
+    "reform-spb",
+    "mcpj",
+    "giyur-denominations"
+   ],
+   "citations": [
+    "Shulchan Aruch, Yoreh Deah 123:1–3",
+    "Avodah Zarah 29b, 36b",
+    "Devarim 32:38",
+    "Pittsburgh Platform (1885)",
+    "Pittsburgh \"Principles of Reform Judaism\" (1999)"
+   ],
+   "keyIdeas": [
+    "Processed foods need a hechsher: they can contain gelatin, carmine, whey, wine, and shared production lines with non-kosher products.",
+    "Read the symbol by the organization (OU, badatz, and others) and by the markings: D — dairy, P — kosher for Pesach. A single letter K is not reliable.",
+    "Wine for kiddush is special: yayin nesech and stam yeynam are forbidden; mevushal does not become prohibited through a non-Jew's touch.",
+    "For the Orthodox, kashrut is obligatory in full; Masorti considers it halacha but is more lenient on particulars. For Reform Jews it is a personal choice.",
+    "As a guest of those who do not observe kashrut, act tactfully: your own food, disposable dishes, products with a hechsher — without humiliating relatives."
+   ],
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Why a hechsher is needed"
+    },
+    {
+     "type": "p",
+     "text": "A hundred years ago the housewife herself knew what her dinner was made of. Today a pack of cookies can contain dozens of ingredients: gelatin (usually from pig skin or the bones of animals not slaughtered according to kashrut), glycerin and emulsifiers of animal origin, carmine from insects, whey (dairy!), wine or grape juice, flavorings of unknown composition. In addition, a kosher product may be made on the same line as a non-kosher one. That is why processed foods need a **hechsher** — certification from a kashrut organization that has checked the recipe, the raw materials, and the production."
+    },
+    {
+     "type": "term",
+     "term": "Hechsher",
+     "he": "הֶכְשֵׁר",
+     "text": "\"permission\": a kashrut certificate and a mark on the packaging attesting that the product is kosher under the supervision of a particular organization or rabbi."
+    },
+    {
+     "type": "term",
+     "term": "Mashgiach",
+     "he": "מַשְׁגִּיחַ",
+     "text": "\"overseer\": a kashrut specialist who supervises a production facility, a restaurant, or a kitchen."
+    },
+    {
+     "type": "h",
+     "text": "How to read the labeling"
+    },
+    {
+     "type": "list",
+     "items": [
+      "**OU** (the letter U in a circle) — the Orthodox Union (USA), one of the largest kashrut systems in the world.",
+      "**OK** (the letter K in a circle), **Star-K** (a K in a star) — large American organizations.",
+      "**KLBD** — kashrut of the London beit din (United Kingdom).",
+      "**Badatz** (בד״ץ, \"beit din tzedek\") — supervision by rabbinical courts, usually strict; for example, the Badatz of the Eda HaChareidit in Jerusalem.",
+      "In Israel — certificates of the Chief Rabbinate and of local rabbinates; \"mehadrin\" means a higher level of stringency.",
+      "In Russia and the CIS countries kashrut is certified by the rabbinates of major Jewish organizations; they also publish lists of checked products from ordinary stores."
+     ]
+    },
+    {
+     "type": "list",
+     "items": [
+      "**D**, Dairy, חָלָבִי — dairy; **DE** — made on dairy equipment.",
+      "**M**, Meat, בְּשָׂרִי — meat.",
+      "**Pareve**, פַּרְוֶה — neutral.",
+      "**P** next to the symbol or “כָּשֵׁר לְפֶסַח” — kosher for Pesach. Attention: here “P” does not mean “pareve”!"
+     ]
+    },
+    {
+     "type": "note",
+     "text": "A single letter \"K\" on the packaging is not a protected mark: any manufacturer can print it. Look at which organization stands behind the symbol. Different communities recognize different hechshers — ask your rabbi which ones may be relied upon."
+    },
+    {
+     "type": "h",
+     "text": "Wine: a special case"
+    },
+    {
+     "type": "p",
+     "text": "Wine in Jewish life is not just a drink. Kiddush and havdalah are said over it, it is drunk at weddings and brit milah, and the four cups at the Pesach seder. That is why wine has its own blessing."
+    },
+    {
+     "type": "hebrew",
+     "he": "בָּרוּךְ אַתָּה ה׳ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם בּוֹרֵא פְּרִי הַגָּפֶן",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, borei pri hagafen",
+     "ru": "Blessed are You, L-rd our G-d, King of the universe, who creates the fruit of the vine",
+     "ref": "Siddur; Berachot 35a"
+    },
+    {
+     "type": "p",
+     "minLevel": "orthodox",
+     "text": "In ancient times wine was poured out as a libation to idols. Wine intended for idol worship — **yayin nesech** — is forbidden by the Torah (tradition connects the prohibition with Devarim 32:38). The sages extended the prohibition to **stam yeynam** — any wine produced by a non-Jew, as well as kosher wine that a non-Jew touched or moved in an open vessel — in order to distance Jews from idol worship and from closeness that leads to intermarriage (Avodah Zarah 29b, 36b; Shulchan Aruch, Yoreh Deah 123). The prohibition extends to grape juice, and also to cognac and brandy made from grapes."
+    },
+    {
+     "type": "p",
+     "minLevel": "orthodox",
+     "text": "That is why kosher wine — from the grape harvest to the sealing of the bottle — is handled only by Jews who observe Shabbat. The exception is **mevushal** wine (\"boiled\"; today, pasteurized): according to halacha it does not become forbidden if a non-Jew touches it (Yoreh Deah 123:3). That is why at banquets and in restaurants, where wine is poured by non-Jewish waiters, mevushal is served. Opinions differ about the temperature required for the heating. In Israel, products of vegetable origin are additionally checked for compliance with the agricultural mitzvot — terumot and maasrot, orlah, and shemittah."
+    },
+    {
+     "type": "h",
+     "text": "Kashrut in practice"
+    },
+    {
+     "type": "p",
+     "text": "A kosher restaurant must display a valid certificate (*teudat kashrut*) with a date and the name of the organization. As a guest in the home of friends who do not observe kashrut, you may respectfully offer to bring your own food, eat on disposable dishes, or limit yourself to fresh fruit and packaged products with a hechsher. When traveling, kosher stores, community centers, and product lists help. It is important to remember tact: kashrut must not become an occasion to humiliate relatives who do not observe it. If your parents are not Jewish, explain to them why you act this way, and together find a way to preserve family meals."
+    },
+    {
+     "type": "h",
+     "text": "Orthodox Judaism"
+    },
+    {
+     "type": "p",
+     "text": "For Orthodox Judaism, kashrut is obligatory halacha in its fullness: both the laws of the Torah and the enactments of the sages. A giyur candidate must run a fully kosher home, buy only products with a recognized hechsher, and know the laws of meat and dairy, checking products, and koshering dishes. The beit din asks about kashrut in detail, and sometimes a mentor or rabbi comes to see how the kitchen is arranged."
+    },
+    {
+     "type": "h",
+     "text": "Conservative Judaism (Masorti)"
+    },
+    {
+     "type": "p",
+     "text": "The Conservative movement considers kashrut obligatory halacha. Its decisions are made by the Committee on Jewish Law and Standards (CJLS) of the Rabbinical Assembly. Community members are expected to keep a kosher home: meat only from shechitah, separate dishes, abstaining from forbidden products. On a number of particular questions the CJLS has adopted more lenient rulings than the Orthodox authorities — for example, on wine made by non-Jews and on certain cheeses. In practice, many Conservative Jews eat dairy or vegetarian food in non-kosher restaurants away from home; the movement does not consider this ideal. Masorti also pays attention to the ethics of food production: in the 2000s the movement launched the \"Magen Tzedek\" initiative — an ethical mark in addition to the hechsher.",
+     "differs": [
+      {
+       "level": "conservative",
+       "text": "The Conservative movement (CJLS) does not apply the prohibition of stam yeynam to wine produced by non-Jews without idolatrous rites, and is more lenient than the Orthodox on questions of cheeses and food prepared by non-Jews."
+      }
+     ]
+    },
+    {
+     "type": "h",
+     "text": "Reform Judaism"
+    },
+    {
+     "type": "p",
+     "text": "Early American Reform Judaism declared the laws of food non-obligatory, born of an era alien to modernity, in the Pittsburgh Platform of 1885. Later the approach changed: the \"Principles of Reform Judaism\" of 1999 call for studying the mitzvot and fulfilling those that sanctify life, and the Central Conference of American Rabbis (CCAR) published a book on Jewish food ethics, \"The Sacred Table\" (2011). Today Reform Judaism regards kashrut as a **conscious personal choice**."
+    },
+    {
+     "type": "list",
+     "items": [
+      "Many Reform Jews observe \"Torah kashrut\": they do not eat pork and seafood.",
+      "Many do not mix meat with milk, especially at home or at community events.",
+      "\"Ethical kashrut\": care for animals (tzaar baalei chaim), fair labor for workers, ecology, rejection of wastefulness; some people become vegetarians for these reasons.",
+      "In Reform giyur schools (for example, in progressive Jewish communities in Russia) the candidate studies the traditional laws and, together with a rabbi, decides which practices to adopt in his or her life."
+     ],
+     "differs": [
+      {
+       "level": "reform",
+       "text": "A Reform rabbi does not require a kosher kitchen from the candidate; the candidate is expected to know the laws of kashrut and to have a well-considered personal decision about how to observe them."
+      }
+     ]
+    },
+    {
+     "type": "note",
+     "text": "At any beit din you may be asked: \"What does kashrut mean to you?\" Answer honestly, based on what you actually do, and explain how kashrut is connected for you with holiness, discipline, and belonging to the Jewish people."
+    },
+    {
+     "type": "p",
+     "text": "A conscious choice here is not a synonym for arbitrariness. Reform rabbis ask the candidate to know the classical categories (permitted animals, blood, meat and dairy, hechsher), to be able to explain why the Jewish tradition connects food with holiness at all, and to show an already living practice, not only the intention \"someday\". The measure of expectations differs from country to country: in some North American communities the emphasis is on study and ethics, while ROOPI communities and many Israeli progressive communities treat home kashrut more attentively. Always ask your rabbi, and speak his language, not a borrowed one."
+    }
+   ],
+   "cards": [
+    {
+     "id": "kashrut-6-c1",
+     "front": "What is a hechsher?",
+     "back": "A kashrut certificate and a mark on the packaging attesting to the supervision of a particular organization.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-6-c2",
+     "front": "Who is a mashgiach?",
+     "back": "A specialist who supervises the kashrut of a production facility, restaurant, or kitchen.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-6-c3",
+     "front": "Why do processed foods need a hechsher?",
+     "back": "They can contain hidden non-kosher ingredients (gelatin, carmine, whey, wine) and shared production lines.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-6-c4",
+     "front": "What does the OU symbol mean?",
+     "back": "Kashrut of the Orthodox Union (USA) — one of the largest certification systems.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-6-c5",
+     "front": "What is a badatz?",
+     "back": "Beit din tzedek — supervision by a rabbinical court, usually strict (for example, the Eda HaChareidit).",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-6-c6",
+     "front": "What do the markings D, DE, and P next to a kashrut symbol mean?",
+     "back": "D — dairy; DE — dairy equipment; P — kosher for Pesach (not \"pareve\"!).",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-6-c7",
+     "front": "Can one rely on a single letter \"K\" on the packaging?",
+     "back": "No: it is not a protected mark; what matters is which organization stands behind the symbol.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-6-c8",
+     "front": "What is stam yeynam?",
+     "back": "Wine made or opened by a non-Jew; forbidden by the sages (Yoreh Deah 123).",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-6-c9",
+     "front": "What is mevushal wine?",
+     "back": "\"Boiled\" (pasteurized) wine; it does not become forbidden through a non-Jew's touch (Yoreh Deah 123:3).",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-6-c10",
+     "front": "What blessing is said over wine?",
+     "back": "\"Borei pri hagafen\" — \"who creates the fruit of the vine\".",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-6-c11",
+     "front": "What is a teudat kashrut?",
+     "back": "A kashrut certificate of a restaurant or establishment, with a date and the name of the supervising organization.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-6-c12",
+     "front": "Which body makes halachic decisions in the Conservative movement?",
+     "back": "The Committee on Jewish Law and Standards (CJLS) of the Rabbinical Assembly.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-6-c13",
+     "front": "How does the Conservative movement regard kashrut?",
+     "back": "As obligatory halacha: kosher home, shechitah, separate dishes; on particular questions more lenient than the Orthodox.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-6-c14",
+     "front": "What did the Pittsburgh Platform of 1885 declare about kashrut?",
+     "back": "That the laws of food are not obligatory and are alien to modernity.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-6-c15",
+     "front": "What is \"ethical kashrut\"?",
+     "back": "An approach that takes into account care for animals, fair labor, ecology, and moderation in consumption.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-6-c16",
+     "front": "What does an Orthodox beit din expect from a candidate on the question of kashrut?",
+     "back": "A fully kosher home, products with a recognized hechsher, and knowledge of the basic laws.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-6-n1",
+     "front": "What is yayin nesech?",
+     "back": "Wine intended for idol worship; forbidden by the Torah (tradition connects it with Devarim 32:38).",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-6-n2",
+     "front": "What does the KLBD symbol mean?",
+     "back": "Kashrut of the London beit din (United Kingdom).",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-6-n3",
+     "front": "What is the “Magen Tzedek”?",
+     "back": "An initiative of the Masorti movement in the 2000s: an ethical seal in addition to the hechsher.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-6-n4",
+     "front": "What is “The Sacred Table”?",
+     "back": "A book on Jewish food ethics published by the CCAR (Reform rabbis) in 2011.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-6-n5",
+     "front": "What do the 1999 “Principles of Reform Judaism” call for?",
+     "back": "To study the mitzvot and to observe those that sanctify life.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-6-n6",
+     "front": "What does “mehadrin” mean on an Israeli certificate?",
+     "back": "A heightened level of kashrut stringency.",
+     "minLevel": "reform"
+    },
+    {
+     "id": "kashrut-6-n7",
+     "front": "What else is checked in Israel for plant products?",
+     "back": "Observance of the agricultural mitzvot: terumot and maasrot, orlah, shemitah.",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "kashrut-6-n8",
+     "front": "Who makes kosher wine?",
+     "back": "From the grape harvest to the sealing of the bottles — only Jews who observe Shabbat.",
+     "minLevel": "orthodox"
+    }
+   ]
+  }
+ ],
+ "questions": [
+  {
+   "id": "kashrut-q1",
+   "lessonId": "kashrut-1",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "What does the word “kosher” literally mean?",
+   "options": [
+    "Pure",
+    "Fit, suitable",
+    "Holy",
+    "Permitted by the sages"
+   ],
+   "answer": 1,
+   "explanation": "The root כ-ש-ר means “fit, suitable”; this is what everything that is fit according to halacha is called.",
+   "source": "Esther 8:5; EJE, article “Kashrut”",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-q2",
+   "lessonId": "kashrut-1",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "In which chapters of the Torah are the main signs of permitted animals set out?",
+   "options": [
+    "Bereshit 1 and Shemot 12",
+    "Vayikra 11 and Devarim 14",
+    "Shemot 20 and Devarim 5",
+    "Vayikra 19 and Bamidbar 15"
+   ],
+   "answer": 1,
+   "explanation": "The signs of animals and fish, the list of birds and insects — in Vayikra 11 and Devarim 14:3–21.",
+   "source": "Vayikra 11; Devarim 14:3–21",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-q3",
+   "lessonId": "kashrut-1",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "To which category of mitzvot do the sages assign most of the laws of kashrut?",
+   "options": [
+    "Mishpatim — laws intelligible to reason",
+    "Edot — commandments that testify",
+    "Chukim — decrees without explanation in the Torah",
+    "Mitzvot given to all descendants of Noah"
+   ],
+   "answer": 2,
+   "explanation": "The Torah does not explain the reasons for kashrut, so it is considered the classic example of a chok.",
+   "source": "Rashi on Vayikra 20:26 (Sifra)",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q4",
+   "lessonId": "kashrut-1",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "Which food prohibition is binding on non-Jews as well (descendants of Noah)?",
+   "options": [
+    "The prohibition of pork",
+    "The prohibition of meat with milk",
+    "The prohibition of a limb from a living animal (eiver min ha-chai)",
+    "The prohibition of the blood of fish"
+   ],
+   "answer": 2,
+   "explanation": "Of the food laws, only the prohibition of eiver min ha-chai was given to the descendants of Noah.",
+   "source": "Bereshit 9:4",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q5",
+   "lessonId": "kashrut-1",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "In the Guide for the Perplexed, Rambam explained forbidden food, among other things, by harm to health.",
+   "answer": true,
+   "explanation": "Rambam gives a medical explanation, though other authors (for example, Abarbanel) disputed it.",
+   "source": "Rambam, Guide for the Perplexed 3:48",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q6",
+   "lessonId": "kashrut-1",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "According to Sifre, the ideal Jew should feel disgust at pork.",
+   "answer": false,
+   "explanation": "On the contrary: one should say “I would like to, but my Father in Heaven has forbidden it” — observance for the sake of the mitzvah, not out of disgust.",
+   "source": "Sifra; Rashi on Vayikra 20:26",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-q7",
+   "lessonId": "kashrut-1",
+   "minLevel": "reform",
+   "format": "match",
+   "prompt": "Match the term and its meaning.",
+   "pairs": [
+    [
+     "Kasher",
+     "Fit according to halacha"
+    ],
+    [
+     "Treifa",
+     "Torn; non-kosher"
+    ],
+    [
+     "Nevelah",
+     "Carrion, an animal without shechitah"
+    ],
+    [
+     "Chok",
+     "A commandment-decree without explanation"
+    ]
+   ],
+   "explanation": "These are the basic terms of the section on kashrut.",
+   "source": "Shemot 22:30; Devarim 14:21",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q8",
+   "lessonId": "kashrut-1",
+   "minLevel": "reform",
+   "format": "typed",
+   "prompt": "What is the name of the section of the Shulchan Aruch that collects the laws of kashrut?",
+   "answer": "Yoreh Deah",
+   "accept": [
+    "yoreh deah",
+    "yore deah",
+    "yoreh deiah",
+    "yore-deah"
+   ],
+   "explanation": "The Shulchan Aruch is divided into four parts; the laws of food are in Yoreh Deah.",
+   "source": "Shulchan Aruch, Yoreh Deah",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q9",
+   "lessonId": "kashrut-1",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "A member of the beit din asks: “The Torah does not explain the reasons for kashrut. Why do you observe it?” Answer.",
+   "modelAnswer": "Kashrut is a chok, a commandment-decree, and I observe it above all because the Almighty commanded it, not because of taste or diet; the Sifra teaches us to say: “I would like to, but my Father in Heaven has forbidden it.” The Torah itself connects the laws of food with holiness: “Sanctify yourselves and be holy, for I am holy” (Vayikra 11:44). The commentators saw in kashrut the training of character and self-discipline: every meal becomes a choice. Kashrut connects me with the Jewish people, makes my home open to any Jew, and my table a likeness of the altar.",
+   "keyPoints": [
+    "Kashrut is a chok, performed as a mitzvah",
+    "Sifra: “I want to, but my Father in Heaven has forbidden it”",
+    "Holiness (Vayikra 11:44)",
+    "Discipline and character",
+    "Bond with the people, a kosher home, the table as an altar"
+   ],
+   "explanation": "The beit din checks whether the candidate understands the religious meaning of kashrut.",
+   "source": "Vayikra 11:44; Rashi on Vayikra 20:26; Berachot 55a",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-q10",
+   "lessonId": "kashrut-2",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "Which animal has split hooves but does not chew the cud, and is therefore forbidden?",
+   "options": [
+    "Camel",
+    "Hare",
+    "Pig",
+    "Hyrax"
+   ],
+   "answer": 2,
+   "explanation": "The pig is the only one of the four animals named by the Torah that has split hooves but does not chew the cud.",
+   "source": "Vayikra 11:7",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-q11",
+   "lessonId": "kashrut-2",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "Which of these fish is non-kosher?",
+   "options": [
+    "Carp",
+    "Salmon",
+    "Catfish",
+    "Herring"
+   ],
+   "answer": 2,
+   "explanation": "The catfish has no scales, so it is forbidden; carp, salmon and herring are kosher.",
+   "source": "Vayikra 11:9–12; Shulchan Aruch, Yoreh Deah 83",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q12",
+   "lessonId": "kashrut-2",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "Why do we eat only birds that have a mesorah (tradition)?",
+   "options": [
+    "The Torah gives only one sign for birds",
+    "The names of the forbidden birds in the Torah cannot always be reliably identified",
+    "All birds except the chicken are forbidden by the Torah",
+    "Birds do not require shechitah"
+   ],
+   "answer": 1,
+   "explanation": "The Torah lists the forbidden birds, but their identification is uncertain, so people rely on tradition.",
+   "source": "Mishnah Chullin 3:6; Shulchan Aruch, Yoreh Deah 82:2 (Rema)",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-q13",
+   "lessonId": "kashrut-2",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "Why is honey kosher even though the bee is a non-kosher insect?",
+   "options": [
+    "Honey is pareve",
+    "The bee is not on the list of forbidden insects",
+    "Honey is not produced by the bee's body; it is only gathered by it",
+    "Honey is permitted only in Israel"
+   ],
+   "answer": 2,
+   "explanation": "The Talmud explains that honey is flower nectar merely stored in the bee's body.",
+   "source": "Bechorot 7b",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-q14",
+   "lessonId": "kashrut-2",
+   "minLevel": "orthodox",
+   "format": "mc",
+   "prompt": "Which method of checking leafy greens for insects is common in Orthodox homes?",
+   "options": [
+    "It is enough to boil the greens",
+    "Soak them in water with detergent, rinse under running water and inspect in the light",
+    "Check one leaf from the bunch",
+    "Salt them and leave for an hour"
+   ],
+   "answer": 1,
+   "explanation": "Insects visible to the eye are forbidden, so greens are soaked, rinsed and inspected.",
+   "source": "Shulchan Aruch, Yoreh Deah 84; Makkot 16b",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q15",
+   "lessonId": "kashrut-2",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "Every fish that has scales also has fins.",
+   "answer": true,
+   "explanation": "So says the Mishnah, so in practice the scales are checked.",
+   "source": "Mishnah Niddah 6:9",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q16",
+   "lessonId": "kashrut-2",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "Mare's milk is permitted because milk is not meat.",
+   "answer": false,
+   "explanation": "The products of non-kosher animals are forbidden: “what comes from the impure is impure.”",
+   "source": "Mishnah Bechorot 1:2",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-q17",
+   "lessonId": "kashrut-2",
+   "minLevel": "reform",
+   "format": "match",
+   "prompt": "Match the product and its status.",
+   "pairs": [
+    [
+     "Beef (after shechitah)",
+     "Kosher"
+    ],
+    [
+     "Shrimp",
+     "Forbidden: no fins and scales"
+    ],
+    [
+     "Rabbit meat",
+     "Forbidden: no split hooves"
+    ],
+    [
+     "Turkey",
+     "Kosher by tradition (mesorah)"
+    ]
+   ],
+   "explanation": "The signs of kashrut differ for mammals, fish and birds.",
+   "source": "Vayikra 11; Shulchan Aruch, Yoreh Deah 79–83",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q18",
+   "lessonId": "kashrut-2",
+   "minLevel": "reform",
+   "format": "typed",
+   "prompt": "What is the name of the unbroken tradition on the basis of which a particular bird is considered kosher?",
+   "answer": "Mesorah",
+   "accept": [
+    "mesorah",
+    "mesora",
+    "massorah",
+    "messorah"
+   ],
+   "explanation": "Without a mesorah a bird is not eaten, even if it seems suitable by its signs.",
+   "source": "Shulchan Aruch, Yoreh Deah 82:2 (Rema)",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q19",
+   "lessonId": "kashrut-2",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "Explain how to determine whether a mammal, a fish and a bird are kosher. Give examples.",
+   "modelAnswer": "A mammal is kosher if it has split hooves and chews the cud — both signs are needed (Vayikra 11:3); therefore the cow, sheep and goat are permitted, while the pig, camel and hare are not. A fish is kosher if it has fins and scales that can be removed (Vayikra 11:9): salmon and carp are permitted, while catfish, eel and all seafood are not. For birds the Torah lists the forbidden species, and in practice only birds with a tradition (mesorah) are eaten: chicken, turkey, duck, goose. In addition, meat and poultry are kosher only after shechitah and the removal of the blood.",
+   "keyPoints": [
+    "Two signs for mammals",
+    "Fins and scales for fish",
+    "Birds — by mesorah",
+    "Examples of permitted and forbidden",
+    "Shechitah is needed"
+   ],
+   "explanation": "Basic knowledge checked at every beit din.",
+   "source": "Vayikra 11:3–19; Mishnah Chullin 3:6",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-q20",
+   "lessonId": "kashrut-3",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "How does the Talmud derive that the laws of shechitah were transmitted to Moshe orally?",
+   "options": [
+    "From the words “as I have commanded you” (Devarim 12:21)",
+    "From the story of Avraham's offering",
+    "From the prohibition of gid ha-nashe",
+    "From the laws of Pesach"
+   ],
+   "answer": 0,
+   "explanation": "The method of slaughter is not described in the Written Torah, but it says “as I have commanded you.”",
+   "source": "Devarim 12:21; Chullin 28a",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-q21",
+   "lessonId": "kashrut-3",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "What must the knife for shechitah (chalaf) be like?",
+   "options": [
+    "Serrated, to cut faster",
+    "Very sharp, with an absolutely smooth blade",
+    "Necessarily new for each animal",
+    "Made of stone, as in ancient times"
+   ],
+   "answer": 1,
+   "explanation": "The slightest nick makes the shechitah invalid, so the knife is checked before and after slaughter.",
+   "source": "Shulchan Aruch, Yoreh Deah 18",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q22",
+   "lessonId": "kashrut-3",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "Why is the sciatic nerve (gid ha-nashe) forbidden?",
+   "options": [
+    "It is harmful to health",
+    "In memory of Yaakov's struggle with the angel",
+    "It was brought on the altar",
+    "Because of the prohibition of blood"
+   ],
+   "answer": 1,
+   "explanation": "The Torah directly connects the prohibition with the injury to Yaakov's hip.",
+   "source": "Bereshit 32:33",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-q23",
+   "lessonId": "kashrut-3",
+   "minLevel": "orthodox",
+   "format": "mc",
+   "prompt": "Which of the following is NOT one of the five violations that render shechitah invalid?",
+   "options": [
+    "Shegiyah — pausing",
+    "Derasah — pressing",
+    "Chaladah — concealing the knife",
+    "Melichah — salting"
+   ],
+   "answer": 3,
+   "explanation": "Melichah is the removal of blood after shechitah, not a violation; the fifth violation is hagramah or ikur.",
+   "source": "Chullin 9a; Shulchan Aruch, Yoreh Deah 23–24",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-q24",
+   "lessonId": "kashrut-3",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "The prohibition of chelev applies to the meat of chicken and deer.",
+   "answer": false,
+   "explanation": "Chelev is forbidden only in domestic cattle — the ox, sheep and goat.",
+   "source": "Vayikra 7:23; Shulchan Aruch, Yoreh Deah 64",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q25",
+   "lessonId": "kashrut-3",
+   "minLevel": "orthodox",
+   "format": "tf",
+   "prompt": "Liver is koshered by ordinary salting, like the rest of the meat.",
+   "answer": false,
+   "explanation": "Because of its abundance of blood, liver is koshered only by roasting over fire.",
+   "source": "Shulchan Aruch, Yoreh Deah 73",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-q26",
+   "lessonId": "kashrut-3",
+   "minLevel": "reform",
+   "format": "match",
+   "prompt": "Match the term and its meaning.",
+   "pairs": [
+    [
+     "Shochet",
+     "Slaughterer"
+    ],
+    [
+     "Chelev",
+     "Forbidden fat of cattle"
+    ],
+    [
+     "Gid ha-nashe",
+     "Sciatic nerve"
+    ],
+    [
+     "Sirchot",
+     "Adhesions on the lungs"
+    ]
+   ],
+   "explanation": "Key concepts of the lesson on shechitah.",
+   "source": "Vayikra 7:23; Bereshit 32:33; Shulchan Aruch, Yoreh Deah 39",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q27",
+   "lessonId": "kashrut-3",
+   "minLevel": "orthodox",
+   "format": "typed",
+   "prompt": "What is the name, in Yiddish, for meat from an animal with completely smooth lungs, without adhesions?",
+   "answer": "Glatt",
+   "accept": [
+    "glatt",
+    "glat",
+    "glatt kosher",
+    "glat kosher"
+   ],
+   "explanation": "“Glatt” means smooth; Sephardim eat only such meat (according to the Beit Yosef).",
+   "source": "Shulchan Aruch, Yoreh Deah 39",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q28",
+   "lessonId": "kashrut-3",
+   "minLevel": "orthodox",
+   "format": "mc",
+   "prompt": "What is the correct order of salting meat?",
+   "options": [
+    "Salt it, soak for half an hour, rinse",
+    "Soak for half an hour, salt on all sides, leave for an hour, rinse",
+    "Salt with fine salt and cook at once",
+    "Freeze, then salt and rinse once"
+   ],
+   "answer": 1,
+   "explanation": "Soaking, salting for an hour on a rack and thorough rinsing — this is the basic order of melichah.",
+   "source": "Kitzur Shulchan Aruch 36; Shulchan Aruch, Yoreh Deah 69",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-q29",
+   "lessonId": "kashrut-3",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "Why does a kosher breed of animal still not make the meat kosher? List what must happen before the meat reaches the table.",
+   "modelAnswer": "A kosher animal must be slaughtered by shechitah: a trained shochet makes a quick, continuous cut with a smooth knife; otherwise the meat is considered nevelah. After the shechitah the organs, especially the lungs, are checked: an animal with a serious defect is treif. Then the forbidden fat (chelev) and the sciatic nerve (gid ha-nashe) are removed. Finally the blood is removed by salting or roasting, because the Torah forbids blood: “the blood is the life.” Therefore meat is bought only with a reliable hechsher.",
+   "keyPoints": [
+    "Shechitah by a trained shochet",
+    "Checking for treifot",
+    "Removal of chelev and gid ha-nashe",
+    "Removal of blood (salting)",
+    "Buy with a hechsher"
+   ],
+   "explanation": "The candidate must understand the whole chain by which kosher meat is produced.",
+   "source": "Devarim 12:21–23; Vayikra 7:23; Bereshit 32:33; Kitzur Shulchan Aruch 36",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-q30",
+   "lessonId": "kashrut-4",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "How many times does the Torah repeat the prohibition “do not cook a kid in its mother's milk”?",
+   "options": [
+    "Once",
+    "Twice",
+    "Three times",
+    "Seven times"
+   ],
+   "answer": 2,
+   "explanation": "Shemot 23:19, Shemot 34:26 and Devarim 14:21; from this three prohibitions are derived.",
+   "source": "Shemot 23:19; 34:26; Devarim 14:21; Chullin 115b",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-q31",
+   "lessonId": "kashrut-4",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "Which three prohibitions are derived from the threefold repetition of the verse?",
+   "options": [
+    "Cooking, eating and deriving benefit",
+    "Cooking, frying and salting",
+    "Eating, selling and storing in one refrigerator",
+    "Cooking, eating and looking"
+   ],
+   "answer": 0,
+   "explanation": "It is forbidden to cook meat with milk, to eat such a mixture and to derive benefit from it.",
+   "source": "Chullin 115b",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q32",
+   "lessonId": "kashrut-4",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "Which product is pareve?",
+   "options": [
+    "Butter",
+    "Chicken broth",
+    "Egg",
+    "Cheese"
+   ],
+   "answer": 2,
+   "explanation": "The eggs of kosher birds are a neutral food; butter and cheese are dairy, broth is meat.",
+   "source": "Shulchan Aruch, Yoreh Deah 87",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-q33",
+   "lessonId": "kashrut-4",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "Which waiting period after meat is accepted by most communities according to the Shulchan Aruch?",
+   "options": [
+    "1 hour",
+    "3 hours",
+    "6 hours",
+    "24 hours"
+   ],
+   "answer": 2,
+   "explanation": "Six hours — the opinion of Rambam and the Shulchan Aruch; 3 and 1 hour are customs of individual communities.",
+   "source": "Shulchan Aruch, Yoreh Deah 89:1",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-q34",
+   "lessonId": "kashrut-4",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "According to the Torah, the prohibition of meat with milk also applies to fish.",
+   "answer": false,
+   "explanation": "Fish is pareve; the Mishnah explicitly excludes fish and locusts.",
+   "source": "Mishnah Chullin 8:1",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q35",
+   "lessonId": "kashrut-4",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "The prohibition of eating chicken with milk was instituted by the sages, not directly by the Torah.",
+   "answer": true,
+   "explanation": "By Torah law the prohibition concerns the meat of domestic cattle; the sages extended it to birds and wild animals.",
+   "source": "Mishnah Chullin 8:1, 8:4",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q36",
+   "lessonId": "kashrut-4",
+   "minLevel": "reform",
+   "format": "match",
+   "prompt": "Match the waiting custom after meat and the community.",
+   "pairs": [
+    [
+     "6 hours",
+     "Most communities (Shulchan Aruch)"
+    ],
+    [
+     "3 hours",
+     "Many Jews of German origin"
+    ],
+    [
+     "1 hour",
+     "Dutch Jews (according to the Rema)"
+    ]
+   ],
+   "explanation": "Customs differ; a person follows the custom of his family or community.",
+   "source": "Shulchan Aruch, Yoreh Deah 89:1 and Rema ad loc.",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q37",
+   "lessonId": "kashrut-4",
+   "minLevel": "reform",
+   "format": "typed",
+   "prompt": "What is the Hebrew name for neutral food — neither meat nor dairy?",
+   "answer": "Parve",
+   "accept": [
+    "pareve",
+    "pareveh",
+    "parve",
+    "parev"
+   ],
+   "explanation": "Pareve can be eaten with both meat and dairy.",
+   "source": "Shulchan Aruch, Yoreh Deah 87",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q38",
+   "lessonId": "kashrut-4",
+   "minLevel": "orthodox",
+   "format": "mc",
+   "prompt": "A drop of milk falls into a pot of hot meat soup. What is the right thing to do?",
+   "options": [
+    "Throw out the soup and the pot at once",
+    "Do nothing: a drop does not count",
+    "Consult a rabbi, saying how much milk fell into what volume",
+    "Add more meat so the mixture becomes meat"
+   ],
+   "answer": 2,
+   "explanation": "Often the rule of 1/60 (bitul be-shishim) applies, but the decision is made by the rabbi; deliberately “diluting” a prohibition is not allowed.",
+   "source": "Shulchan Aruch, Yoreh Deah 98–99",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-q39",
+   "lessonId": "kashrut-4",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "Describe how a kosher home separates meat and dairy — in the kitchen and at the table.",
+   "modelAnswer": "In a kosher home there are two sets of dishes — meat and dairy: pots, pans, plates, cutlery, cutting boards, as well as sponges and towels; they are often marked with colors. The sink is divided or separate basins are used. Meat and dairy are not cooked or eaten together, and pareve products take on the status of the dishes in which they were prepared. After meat one waits before dairy — by custom six, three or one hour; after dairy one rinses the mouth, eats something neutral and washes the hands. Fish and eggs, being pareve, can be eaten with any food, although fish is not eaten together with meat.",
+   "keyPoints": [
+    "Two sets of dishes",
+    "Separate sink/sponges",
+    "Waiting after meat according to custom",
+    "What to do after dairy",
+    "Pareve status"
+   ],
+   "explanation": "A practical question about how the candidate runs his kitchen.",
+   "source": "Shulchan Aruch, Yoreh Deah 87–89",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-q40",
+   "lessonId": "kashrut-5",
+   "minLevel": "conservative",
+   "format": "mc",
+   "prompt": "How is a metal pot in which non-kosher soup was cooked koshered?",
+   "options": [
+    "Libun gamur — by heating until red-hot",
+    "Hagalah — by immersion in boiling water",
+    "With cold water and soap",
+    "It cannot be koshered"
+   ],
+   "answer": 1,
+   "explanation": "The pot absorbed flavor through a hot liquid, so it is koshered with boiling water.",
+   "source": "Bamidbar 31:23; Pesachim 30b",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-q41",
+   "lessonId": "kashrut-5",
+   "minLevel": "conservative",
+   "format": "mc",
+   "prompt": "Which dishes cannot be koshered under any conditions?",
+   "options": [
+    "Stainless steel",
+    "Silver spoons",
+    "Porcelain and ceramic dishes",
+    "Cast-iron grill grate"
+   ],
+   "answer": 2,
+   "explanation": "Earthenware does not give up what it has absorbed (Vayikra 6:21).",
+   "source": "Vayikra 6:21; Shulchan Aruch, Orach Chaim 451",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-q42",
+   "lessonId": "kashrut-5",
+   "minLevel": "orthodox",
+   "format": "mc",
+   "prompt": "Which utensils bought in an ordinary store must be immersed in a mikveh before use?",
+   "options": [
+    "Wooden cutting board",
+    "Metal pot",
+    "Plastic container",
+    "Paper plates"
+   ],
+   "answer": 1,
+   "explanation": "Tevilat keilim is obligatory for metal (and, by rabbinic decree, glass) utensils from a non-Jew.",
+   "source": "Bamidbar 31:23; Shulchan Aruch, Yoreh Deah 120; Kitzur Shulchan Aruch 37",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q43",
+   "lessonId": "kashrut-5",
+   "minLevel": "orthodox",
+   "format": "mc",
+   "prompt": "According to the Ashkenazi custom (Rema), what is sufficient for food cooked by a non-Jewish cook not to count as bishul akum?",
+   "options": [
+    "A Jew must taste the dish",
+    "A Jew must light the fire",
+    "A Jew must buy the ingredients",
+    "Nothing: bishul akum does not apply to Ashkenazim"
+   ],
+   "answer": 1,
+   "explanation": "According to the Rema it is enough for a Jew to light the fire; according to the Shulchan Aruch a Jew must place the food on the fire.",
+   "source": "Shulchan Aruch, Yoreh Deah 113:7 and Rema ad loc.",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-q44",
+   "lessonId": "kashrut-5",
+   "minLevel": "conservative",
+   "format": "tf",
+   "prompt": "According to the Shulchan Aruch (the custom of many Sephardim), glass dishes need only a thorough washing, while according to the Ashkenazi Rema glass cannot be koshered.",
+   "answer": true,
+   "explanation": "This is a classic example of the difference between Ashkenazi and Sephardi customs.",
+   "source": "Shulchan Aruch, Orach Chaim 451:26 and Rema ad loc.",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-q45",
+   "lessonId": "kashrut-5",
+   "minLevel": "orthodox",
+   "format": "tf",
+   "prompt": "Tevilat keilim is needed only for old utensils in which non-kosher food was cooked.",
+   "answer": false,
+   "explanation": "New utensils are also immersed: this is not a cleansing from absorbed flavor, but a separate mitzvah.",
+   "source": "Avodah Zarah 75b; Shulchan Aruch, Yoreh Deah 120",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q46",
+   "lessonId": "kashrut-5",
+   "minLevel": "conservative",
+   "format": "match",
+   "prompt": "Match the item and the method of koshering.",
+   "pairs": [
+    [
+     "Metal cutlery",
+     "Hagalah (boiling water)"
+    ],
+    [
+     "Grill grate",
+     "Libun gamur (fire until red-hot)"
+    ],
+    [
+     "Metal sink",
+     "Iruy (pouring boiling water)"
+    ],
+    [
+     "Porcelain plate",
+     "Cannot be koshered"
+    ]
+   ],
+   "explanation": "The principle: “as it absorbed, so it gives out.”",
+   "source": "Pesachim 30b; Vayikra 6:21; Shulchan Aruch, Orach Chaim 451",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q47",
+   "lessonId": "kashrut-5",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "You are about to kosher your kitchen before giyur. Tell how you will proceed.",
+   "modelAnswer": "I will do it together with a rabbi or an experienced member of the community. First I will scrub everything thoroughly and not use for 24 hours the utensils I want to kosher. Metal pots and cutlery I will kosher by hagalah — immersion in boiling water; grates and baking sheets by heating (libun); the sink and countertops by pouring boiling water over them. Porcelain and ceramics, which cannot be koshered, I will replace, and about glass and plastic I will ask the rabbi. Then I will set up separate sets for meat and dairy and, as instructed by the rabbi, immerse the new metal and glass utensils in the mikveh.",
+   "keyPoints": [
+    "With a rabbi",
+    "Cleaning and 24 hours",
+    "Hagalah, libun, iruy",
+    "Replacing ceramics",
+    "Separate sets, tevilat keilim"
+   ],
+   "explanation": "The beit din wants to see that the candidate understands practice, not only theory.",
+   "source": "Bamidbar 31:21–23; Shulchan Aruch, Orach Chaim 451; Yoreh Deah 120–121",
+   "difficulty": "hard",
+   "differs": [
+    {
+     "level": "reform",
+     "text": "In Reform practice, fully koshering the kitchen and two sets of dishes are usually not required. Tell what order of food and dishes you already keep, what of the classical laws you know, and what standard you consciously take upon yourself. If you are just now setting up a stricter kitchen — describe the steps in your own words."
+    }
+   ]
+  },
+  {
+   "id": "kashrut-q48",
+   "lessonId": "kashrut-6",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "What does the letter “P” next to the kashrut symbol on an American product mean?",
+   "options": [
+    "Parve",
+    "Kosher for Pesach",
+    "Product under rabbinical supervision",
+    "Has been pasteurized"
+   ],
+   "answer": 1,
+   "explanation": "“P” stands for Passover; pareve is written as the word “Pareve”.",
+   "source": "Labeling of OU and other kashrut agencies",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q49",
+   "lessonId": "kashrut-6",
+   "minLevel": "orthodox",
+   "format": "mc",
+   "prompt": "Why is mevushal wine served at banquets with non-Jewish waiters?",
+   "options": [
+    "It is cheaper",
+    "It does not become forbidden through a non-Jew's touch",
+    "It is non-alcoholic",
+    "No blessing is needed over it"
+   ],
+   "answer": 1,
+   "explanation": "Cooked (pasteurized) wine is not subject to the prohibition of stam yayinam.",
+   "source": "Shulchan Aruch, Yoreh Deah 123:3",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q50",
+   "lessonId": "kashrut-6",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "Which statement correctly describes the position of the Conservative movement (Masorti)?",
+   "options": [
+    "Kashrut is a personal choice without obligations",
+    "Kashrut is binding halacha; decisions are made by the CJLS, and in private matters it is more lenient than the Orthodox",
+    "Kashrut is obligatory only in Israel",
+    "Conservatives recognize only the laws of kashrut written in the Torah"
+   ],
+   "answer": 1,
+   "explanation": "Masorti considers halacha, including kashrut, binding and interprets it through the Committee on Jewish Law and Standards.",
+   "source": "Rabbinical Assembly / CJLS; overview of the movement (Derakhim)",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q51",
+   "lessonId": "kashrut-6",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "The letter “K” on a package by itself is a reliable guarantee of kashrut.",
+   "answer": false,
+   "explanation": "“K” is not a protected mark; what matters is which organization stands behind the symbol.",
+   "source": "Practice of kashrut organizations (OU, OK, Star-K)",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q52",
+   "lessonId": "kashrut-6",
+   "minLevel": "reform",
+   "format": "typed",
+   "prompt": "What is the certificate or symbol certifying a product's kashrut called?",
+   "answer": "Hechsher",
+   "accept": [
+    "hechsher",
+    "hekhsher",
+    "hechshir",
+    "hekshar"
+   ],
+   "explanation": "A hechsher is issued by an organization or a rabbi who supervise the production.",
+   "source": "EJE, article “Kashrut”",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-q53",
+   "lessonId": "kashrut-6",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "How does Reform Judaism approach kashrut, and what have you decided to do yourself?",
+   "modelAnswer": "Early Reform Judaism (the Pittsburgh Platform of 1885) declared the laws of food non-binding. Today Reform Judaism sees kashrut as a conscious personal choice: having studied the tradition, a person decides which practices will make his life holy. Many do not eat pork and seafood, do not mix meat with milk, and also keep “ethical kashrut” — concern for animals, honest labor and the environment. I, for example, have decided not to eat the animals forbidden by the Torah and not to mix meat with dairy at home, because this connects me with the Jewish people.",
+   "keyPoints": [
+    "Pittsburgh 1885 — non-bindingness",
+    "Conscious choice after study",
+    "Torah kashrut, meat/dairy",
+    "Ethical kashrut",
+    "A personal decision with justification"
+   ],
+   "explanation": "A Reform beit din expects a considered personal answer.",
+   "source": "Pittsburgh Platform (1885); “Principles of Reform Judaism” (1999); reformspb.ru/giura",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-q54",
+   "lessonId": "kashrut-6",
+   "minLevel": "orthodox",
+   "format": "open",
+   "prompt": "Explain what stam yayinam is and why kosher wine is made only by Jews who observe Shabbat.",
+   "modelAnswer": "The Torah forbids yayin nesach — wine poured out to idols. The sages extended the prohibition to stam yayinam — any wine made by a non-Jew or touched by him while open — in order to keep Jews away from idolatry and from socializing that leads to intermarriage. Therefore kosher wine is produced, from the pressing of the grapes to the sealing of the bottles, by Jews who observe Shabbat. Mevushal (pasteurized) wine does not become forbidden through a non-Jew's touch, so it is served where waiters pour. The prohibition also applies to grape juice and brandy.",
+   "keyPoints": [
+    "Yayin nesach — Torah prohibition",
+    "Stam yayinam — rabbinic decree",
+    "Reasons: idolatry and intermarriage",
+    "Production by observant Jews",
+    "Mevushal"
+   ],
+   "explanation": "An Orthodox beit din often asks about wine for kiddush.",
+   "source": "Avodah Zarah 29b, 36b; Shulchan Aruch, Yoreh Deah 123",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-q55",
+   "lessonId": "kashrut-6",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "Your relatives, who do not keep kashrut, have invited you to a family dinner. What will you do?",
+   "modelAnswer": "In advance, and with respect, I will explain that I keep kashrut and why it matters to me, so that no one is offended. I will offer to bring my own food or kosher products with a hechsher; I can eat off disposable dishes, as well as fresh fruit and vegetables and sealed kosher products. The main thing is to preserve warm relations with my family: kashrut must not become a cause of conflict or arrogance. If anything is unclear, I will consult my rabbi.",
+   "keyPoints": [
+    "Explain in advance, tactfully",
+    "Own food / disposable dishes",
+    "Products with a hechsher",
+    "Respect for the family",
+    "A rabbi's advice"
+   ],
+   "explanation": "The beit din checks how the candidate will combine kashrut with family life.",
+   "source": "R. Ch. Donin, “To Be a Jew,” chapter on kashrut; ru.chabad.org — articles on kashrut",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-bd1",
+   "lessonId": "kashrut-1",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "How will kashrut enter your everyday life? If your home is not yet fully kosher, where will you begin?",
+   "modelAnswer": "For me, kashrut is not a diet and not a matter of taste, but a mitzvah: I give up certain foods because the Almighty so commanded, not because I find them repugnant. While I am preparing for giyur, this is learning; after giyur, the laws of food will become an obligation. Together with my mentor I will start with a clear step: not eating pork, seafood, and other clearly forbidden foods, then separating meat from dairy. Next I will move on to products with a hechsher and, when I am ready, I will kasher the kitchen with a rabbi. Thus every meal will become a choice and a part of the holiness of which the Torah speaks.",
+   "keyPoints": [
+    "Kashrut is a chok, a mitzvah of the Almighty, not a diet or an aversion",
+    "Before giyur it is preparation; after giyur it is an obligation",
+    "Order: forbidden animals, then meat and dairy, hechsher, kitchen",
+    "A meal is bound up with holiness"
+   ],
+   "explanation": "The beit din looks to see whether the candidate has an honest, workable plan, not just knowledge of definitions.",
+   "source": "Vayikra 11:44; Rashi on Vayikra 20:26 (Sifra)",
+   "differs": [
+    {
+     "level": "reform",
+     "text": "In Reform Judaism kashrut is not obligatory: the candidate describes a thoughtful personal choice made after studying the tradition, rather than a complete transition to a kosher kitchen as a duty."
+    }
+   ],
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-bd2",
+   "lessonId": "kashrut-2",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "As a guest you are offered pork, shrimp, and fish fillet without skin. What will you choose, and why?",
+   "modelAnswer": "I will not take the pork: a pig has cloven hooves but does not chew the cud, and the Torah requires both signs at once. I will not take the shrimp either: they have neither fins nor scales, like other seafood. Fish fillet without skin I cannot check, so I will decline it or ask for a whole fish, with skin or with a reliable hechsher — so the scales are visible, as on salmon or carp. It is important to me to be able to apply the signs to ordinary food, not just to recite them.",
+   "keyPoints": [
+    "The pig has only one of the two signs and is forbidden",
+    "Seafood without fins and scales is forbidden",
+    "Fillet without skin cannot be checked: skin, a whole fish, or a hechsher is needed",
+    "The answer rests on the Torah's signs, not on taste"
+   ],
+   "explanation": "The beit din checks whether the candidate can apply the signs of kashrut to real food.",
+   "source": "Vayikra 11:3–8; Vayikra 11:9–12",
+   "differs": [
+    {
+     "level": "reform",
+     "text": "In Reform Judaism these prohibitions are not obligatory: many, after studying the tradition, decide for themselves not to eat pork and seafood."
+    }
+   ],
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-bd3",
+   "lessonId": "kashrut-3",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "You are told that shechitah is cruelty and that it would be simpler to buy ordinary meat. What will you answer about shechitah and about the prohibition of blood?",
+   "modelAnswer": "The Torah says that blood is the soul: a person may eat meat, but not the life of the animal, so the blood of mammals and birds is forbidden. For me shechitah is not cruelty but a mitzvah: the shochet, with one swift cut of a smooth knife, lets the blood flow out, and tradition sees in this a prohibition against causing the animal unnecessary suffering. If the animal died on its own or was killed in another way, it is a nevelah, and I do not eat such meat even when the species is kosher. The Written Torah does not describe the method of slaughter, but the words “as I have commanded you” show that the laws of shechitah were transmitted orally.",
+   "keyPoints": [
+    "Blood is the soul: one may eat meat, but not the life of the animal",
+    "Shechitah — a swift cut with a smooth knife, tied to the prohibition of unnecessary suffering",
+    "Another method of slaughter or a natural death — a nevelah",
+    "The laws of shechitah were transmitted orally: “as I have commanded you”"
+   ],
+   "explanation": "The beit din listens to whether the candidate can calmly explain the meaning of blood and shechitah, not just recite a list of terms.",
+   "source": "Devarim 12:23; Devarim 12:21; Devarim 14:21",
+   "differs": [
+    {
+     "level": "reform",
+     "text": "Reform Judaism does not consider shechitah obligatory: the candidate may explain the tradition and choose kosher meat, vegetarianism, or meat with ethical labeling."
+    }
+   ],
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-bd4",
+   "lessonId": "kashrut-4",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "May one cook meat with milk if you will not eat it yourself, but will feed it to an animal or sell it?",
+   "modelAnswer": "No, that is not permitted. The verse “do not cook a kid in its mother's milk” is repeated three times in the Torah, and the Sages derive three prohibitions: not to cook meat with milk, not to eat such a mixture, and not to benefit from it. Benefit includes, for example, selling the mixture or feeding it to one's own animal, so the words “I won't eat it myself” do not remove the prohibition. By Torah law this concerns the meat of domestic cattle; the Sages extended the prohibition to poultry, while fish does not fall under it. The Torah does not explain the reason — this is a chok; commentators see mercy in it, but I keep the prohibition because the Almighty so commanded.",
+   "keyPoints": [
+    "Three prohibitions: cooking, eating, and benefiting",
+    "Benefit includes selling and feed for one's own animal",
+    "By Torah law — meat of domestic cattle; the Sages extended the prohibition to poultry",
+    "This is a chok: the interpretation about mercy does not replace the prohibition itself"
+   ],
+   "explanation": "The beit din checks whether the candidate understands that the prohibition is broader than “not eating meat and milk from one plate.”",
+   "source": "Shemot 23:19; Shemot 34:26; Devarim 14:21; Chullin 115b",
+   "differs": [
+    {
+     "level": "reform",
+     "text": "In Reform Judaism the separation of meat and dairy is a personal choice: many simply do not mix them in one dish and do not treat the prohibition of benefit as an obligation."
+    }
+   ],
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-bd5",
+   "lessonId": "kashrut-5",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "Cold cheese was placed on a clean meat plate, and non-kosher soup was once cooked in a metal pot. What will you do in each case?",
+   "modelAnswer": "If cold cheese was placed on a clean meat plate, taste is usually not transferred, and it is enough to wash the plate well. It is a different matter with a pot in which non-kosher soup was cooked: it absorbed the forbidden taste through the boiling liquid. Kashering follows the rule “as it absorbed, so it gives out”: metal that absorbed taste through liquid is immersed in boiling water — this is hagalah — while what was roasted over fire is heated until glowing. Before that the dishes are thoroughly cleaned and usually left unused for a day. If a case is doubtful — for example, a sharp onion was cut with a meat knife, or food lay in a dish for a long time — I do not decide on my own but ask a rabbi.",
+   "keyPoints": [
+    "Cold contact usually transfers no taste: wash the plate",
+    "Hot liquid is absorbed: kasher by the same method",
+    "Hagalah — boiling water for pots; fire — for what was roasted over fire",
+    "Sharp foods, long soaking, and doubtful cases — a question for the rabbi"
+   ],
+   "explanation": "The beit din checks whether the candidate distinguishes an ordinary cold contact from absorption of taste and does not kasher everything at random.",
+   "source": "Pesachim 30b; Bamidbar 31:23",
+   "difficulty": "medium",
+   "differs": [
+    {
+     "level": "reform",
+     "text": "In Reform practice, fully koshering the kitchen and two sets of dishes are usually not required. Tell what order of food and dishes you already keep, what of the classical laws you know, and what standard you consciously take upon yourself. If you are just now setting up a stricter kitchen — describe the steps in your own words."
+    }
+   ]
+  },
+  {
+   "id": "kashrut-n1",
+   "lessonId": "kashrut-1",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "According to the Talmud, what atones for a person now that there is no Temple and no altar?",
+   "options": [
+    "A person's table",
+    "Fasting on Monday and Thursday",
+    "A candle lit in the synagogue",
+    "A donation toward repairing the synagogue"
+   ],
+   "answer": 0,
+   "explanation": "The Talmud says: as long as the Temple stood, the altar atoned; now “a person's table atones for him.” Kashrut, blessings, and words of Torah turn a meal into service.",
+   "source": "Berachot 55a",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-n2",
+   "lessonId": "kashrut-1",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "In halacha, what is the word “kosher” applied to?",
+   "options": [
+    "Only to meat slaughtered by shechitah",
+    "To everything fit according to the law: food, a Torah scroll, a mezuzah, a shofar, and a mikveh",
+    "Only to products bearing a rabbi's seal",
+    "Only to dishes after kashering"
+   ],
+   "answer": 1,
+   "explanation": "In halacha, everything fit for use according to the law is called “kosher”: not only food, but also a Torah scroll, a mezuzah, a shofar, and a mikveh.",
+   "source": "Lesson: What Is Kashrut and Why Is It Needed",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-n3",
+   "lessonId": "kashrut-1",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "Why is salt traditionally placed on the bread at a meal?",
+   "options": [
+    "So that the bread stays fresh longer",
+    "To tell a meat meal from a dairy one",
+    "This is required by the law of salting meat",
+    "In memory of the sacrifices in the Temple, which were salted"
+   ],
+   "answer": 3,
+   "explanation": "The table is likened to the altar, and the sacrifices in the Temple were salted (Vayikra 2:13), so salt is placed on the bread.",
+   "source": "Lesson: What Is Kashrut and Why Is It Needed (Vayikra 2:13)",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-n4",
+   "lessonId": "kashrut-1",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "Who objected to explaining kashrut by hygiene alone, saying that otherwise the Torah would be a medical book?",
+   "options": [
+    "Rashi",
+    "Ramban",
+    "Abarbanel",
+    "Mar Ukva"
+   ],
+   "answer": 2,
+   "explanation": "Rambam wrote in the Guide for the Perplexed (3:48) about the harm forbidden food does to the body, and Abarbanel and others objected: if it were only a matter of hygiene, the Torah would be a medical book.",
+   "source": "Lesson: What Is Kashrut and Why Is It Needed; Rambam, Guide for the Perplexed 3:48",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-n5",
+   "lessonId": "kashrut-1",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "According to Pirkei Avot, three who ate at one table and spoke words of Torah are as though they ate from the table of the Almighty.",
+   "answer": true,
+   "explanation": "Thus the lesson conveys the words of Pirkei Avot 3:3 (in some editions 3:4): words of Torah at a meal liken one's table to the table of the Almighty.",
+   "source": "Pirkei Avot 3:3",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-n6",
+   "lessonId": "kashrut-1",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "Ramban explains the prohibition of birds of prey by the fact that their meat is harmful to health.",
+   "answer": false,
+   "explanation": "Ramban speaks of the education of character: the predatory nature of such birds may pass to the one who eats them and breed cruelty. The argument about health is given by Rambam.",
+   "source": "Ramban on Vayikra 11:13",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-n7",
+   "lessonId": "kashrut-1",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "The laws of shechitah and forbidden foods are discussed in detail in the Talmudic tractate “Berachot.”",
+   "answer": false,
+   "explanation": "They are discussed in detail in the tractate Chullin; they were then codified by Rambam in the Mishneh Torah and in the Shulchan Aruch, in the section Yoreh Deah. Berachot 55a in this lesson is about a person's table, not a code of slaughtering laws.",
+   "source": "Lesson: What Is Kashrut and Why Is It Needed",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-n8",
+   "lessonId": "kashrut-1",
+   "minLevel": "reform",
+   "format": "match",
+   "prompt": "Match the group of mitzvot with its description.",
+   "pairs": [
+    [
+     "Mishpatim",
+     "Understood by reason: the prohibitions of theft and murder"
+    ],
+    [
+     "Edot",
+     "They recall events of history: the holidays"
+    ],
+    [
+     "Chukim",
+     "Decrees without an explanation: the red heifer"
+    ]
+   ],
+   "explanation": "The Sages divide the mitzvot into mishpatim, edot, and chukim; kashrut largely belongs to the chukim.",
+   "source": "Lesson: What Is Kashrut and Why Is It Needed",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-n9",
+   "lessonId": "kashrut-1",
+   "minLevel": "reform",
+   "format": "typed",
+   "prompt": "What is the name of the prohibition of mixing wool and linen — a classic chok alongside kashrut?",
+   "answer": "Shaatnez",
+   "accept": [
+    "shaatnez",
+    "shatnes",
+    "shatnez"
+   ],
+   "explanation": "In the lesson, shaatnez is named among the classic chukim together with the law of the red heifer and the laws of kashrut.",
+   "source": "Lesson: What Is Kashrut and Why Is It Needed",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-n10",
+   "lessonId": "kashrut-1",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "A member of the beit din asks: “Why do people say that a person's table is like the altar? What does that look like in your home?”",
+   "modelAnswer": "I know the words of the Talmud: after the destruction of the Temple, a person's table atones in its place, as the altar once did. For me this means that dinner is not just food. I eat only kosher food, say blessings before and after eating, wash my hands before bread, and place salt on the bread, as the sacrifices were salted. I try to make words of Torah heard at the table — as Pirkei Avot says of three who spoke words of Torah at a meal.",
+   "keyPoints": [
+    "Berachot 55a: the table atones, like the altar",
+    "Kashrut, blessings, washing of hands",
+    "Salt on the bread in memory of the sacrifices",
+    "Words of Torah at the table (Avot 3:3)"
+   ],
+   "explanation": "The lesson shows how kashrut, together with blessings and words of Torah, turns a meal into service.",
+   "source": "Berachot 55a; Pirkei Avot 3:3",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-n11",
+   "lessonId": "kashrut-1",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "A member of the beit din asks: “Is kashrut just a list of animals? What other topics do these laws include?”",
+   "modelAnswer": "No, the list of animals is only the beginning. Kashrut includes shechitah and the post-slaughter inspection, the prohibitions of blood, chelev, and the gid hanasheh, the prohibition of mixing meat with milk, and the laws of dishes. The laws about wine, bread, and food cooked by a non-Jew stand apart: these are mainly enactments of the Sages. The Written Torah gives the foundation, and the Oral Torah explains how to fulfill it — the tractate Chullin, Rambam, and Yoreh Deah.",
+   "keyPoints": [
+    "Not only animals: shechitah, blood, chelev, gid hanasheh",
+    "Meat with milk and dishes",
+    "Wine, bread, and food of non-Jews — mainly from the Sages",
+    "Details — in Chullin and Yoreh Deah"
+   ],
+   "explanation": "The lesson lists the makeup of the laws of kashrut: from the signs of animals to the enactments of the Sages about wine and food cooked by a non-Jew.",
+   "source": "Lesson: What Is Kashrut and Why Is It Needed",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-n12",
+   "lessonId": "kashrut-2",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "Why is the camel not kosher?",
+   "options": [
+    "It is a predator",
+    "It chews the cud, but its hooves are not cloven",
+    "It has cloven hooves, but it does not chew the cud",
+    "It lives in the desert, not in a herd"
+   ],
+   "answer": 1,
+   "explanation": "The camel, like the hyrax and the hare, chews the cud but does not have cloven hooves, and both signs are required at once.",
+   "source": "Vayikra 11:3–8",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-n13",
+   "lessonId": "kashrut-2",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "Which caviar is kosher (with supervision of production)?",
+   "options": [
+    "Black sturgeon caviar",
+    "Catfish caviar",
+    "Eel caviar",
+    "Red salmon caviar"
+   ],
+   "answer": 3,
+   "explanation": "Salmon is a kosher fish, so its roe is kosher; the sturgeon is not kosher by the Orthodox position, and what comes from a non-kosher creature is non-kosher.",
+   "source": "Lesson: Permitted animals, birds, and fish",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-n14",
+   "lessonId": "kashrut-2",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "How do the Torah's laws about birds differ from the laws about mammals and fish?",
+   "options": [
+    "The Torah gives no signs but lists the forbidden species",
+    "The Torah permits all birds except birds of prey",
+    "For birds the Torah gives three signs instead of two",
+    "Birds do not require shechitah"
+   ],
+   "answer": 0,
+   "explanation": "For animals and fish the Torah names signs, while for birds it only lists the forbidden species (Vayikra 11:13–19; Devarim 14:11–20).",
+   "source": "Vayikra 11:13–19",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-n15",
+   "lessonId": "kashrut-2",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "How many impure species of birds does the Talmud count?",
+   "options": [
+    "10",
+    "18",
+    "24",
+    "36"
+   ],
+   "answer": 2,
+   "explanation": "The Talmud (Chullin 63b) counts 24 non-kosher species; among them are the eagle, the hawk, the owl, the raven, the stork, and the ostrich.",
+   "source": "Chullin 63b",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-n16",
+   "lessonId": "kashrut-2",
+   "minLevel": "orthodox",
+   "format": "mc",
+   "prompt": "Which small creatures in food does the prohibition of insects apply to in halacha?",
+   "options": [
+    "Any, even those visible only under a microscope",
+    "Only those larger than a centimeter",
+    "Only live ones at the moment of eating",
+    "Those visible to the naked eye"
+   ],
+   "answer": 3,
+   "explanation": "What is visible to the naked eye is forbidden; microscopic organisms, discernible only under magnification, are not forbidden.",
+   "source": "Lesson: Permitted animals, birds, and fish",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-n17",
+   "lessonId": "kashrut-2",
+   "minLevel": "orthodox",
+   "format": "tf",
+   "prompt": "An egg with a blood spot may be used if the spot is small.",
+   "answer": false,
+   "explanation": "An egg with blood is not used. Therefore eggs are cracked one at a time into a transparent glass and each is checked (Shulchan Aruch, Yoreh Deah 66).",
+   "source": "Shulchan Aruch, Yoreh Deah 66",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-n18",
+   "lessonId": "kashrut-2",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "The dye carmine (E120) is kosher because it is obtained from plants.",
+   "answer": false,
+   "explanation": "Carmine is obtained from cochineal insects, so products containing it are not kosher; this is one of the reasons to buy ready-made products with a hechsher.",
+   "source": "Lesson: Permitted animals, birds, and fish",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-n19",
+   "lessonId": "kashrut-2",
+   "minLevel": "reform",
+   "format": "match",
+   "prompt": "Match the sign from Mishnah Chullin 3:6 with its meaning.",
+   "pairs": [
+    [
+     "A bird of prey",
+     "Not kosher according to the Mishnah"
+    ],
+    [
+     "Hind toe",
+     "The extra toe of a kosher bird"
+    ],
+    [
+     "Crop",
+     "Must be present in a kosher bird"
+    ],
+    [
+     "Gizzard lining",
+     "Comes off easily by hand"
+    ]
+   ],
+   "explanation": "The Mishnah names the signs of a kosher bird, but in practice they are not sufficient: only birds with a mesorah are eaten. The question checks the signs themselves.",
+   "source": "Mishnah Chullin 3:6",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-n20",
+   "lessonId": "kashrut-2",
+   "minLevel": "reform",
+   "format": "typed",
+   "prompt": "Four species of which insect does the Torah permit as food?",
+   "answer": "Locusts",
+   "accept": [
+    "locusts",
+    "locust",
+    "grasshopper"
+   ],
+   "explanation": "The exception to the prohibition of insects is four species of locusts (Vayikra 11:22); the tradition of identifying them has been preserved only in the Yemenite and some North African communities.",
+   "source": "Vayikra 11:20–23, 41–44",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-n21",
+   "lessonId": "kashrut-2",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "The Torah names four species of locusts as permitted. Why do most communities still not eat locusts?",
+   "modelAnswer": "Vayikra 11:22 permits four species of locusts, and this is the only exception to the prohibition of insects. But these species can be identified only through an unbroken tradition. It has been preserved in the Yemenite and some North African communities. The others have no such tradition, so they do not eat locusts, while all other insects the Torah forbids outright.",
+   "keyPoints": [
+    "The Torah's exception is four species of locusts (Vayikra 11:22)",
+    "The tradition was preserved in the Yemenite and some North African communities",
+    "Without the tradition, locusts are not eaten"
+   ],
+   "explanation": "The Torah's permission applies where the tradition of identification has been preserved; most communities do not have it.",
+   "source": "Vayikra 11:22",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-n22",
+   "lessonId": "kashrut-2",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "A member of the beit din asks: “Besides meat, which products of animal origin do you check for kashrut, and why?”",
+   "modelAnswer": "I remember the rule: what comes out of a non-kosher creature is non-kosher. Therefore mare's or camel's milk, eggs of non-kosher birds, and roe of non-kosher fish are forbidden to me. I buy red salmon roe only with supervision, and I do not eat black sturgeon caviar. I eat honey without worry: the bee does not produce it with its body but only gathers it.",
+   "keyPoints": [
+    "What comes out of a non-kosher creature is non-kosher (Mishnah Bechorot 1:2)",
+    "Milk, eggs, and roe of non-kosher species are forbidden",
+    "Honey is an exception (Bechorot 7b)"
+   ],
+   "explanation": "The lesson explains the rule about products of non-kosher animals and the exception for honey.",
+   "source": "Mishnah Bechorot 1:2; Bechorot 7b",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-n23",
+   "lessonId": "kashrut-3",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "What is cut in shechitah?",
+   "options": [
+    "Only the carotid artery",
+    "The spine at the base of the skull",
+    "The trachea and esophagus: most of both in cattle, most of one in poultry",
+    "The heart artery through the chest"
+   ],
+   "answer": 2,
+   "explanation": "Shechitah is one unbroken cut across the throat. The halachic landmarks are the trachea and esophagus: in cattle most of both are cut, in poultry most of one is enough. The carotid arteries and jugular veins are severed together with them.",
+   "source": "Lesson: Shechitah, blood, chelev, and gid hanasheh",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-n24",
+   "lessonId": "kashrut-3",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "What reason for the prohibition of blood does the verse of the Torah itself give?",
+   "options": [
+    "Blood spoils the taste of meat",
+    "Blood is the soul",
+    "Blood belongs to the kohanim",
+    "Blood is dangerous to health"
+   ],
+   "answer": 1,
+   "explanation": "“Only be firm not to eat the blood, for the blood is the soul”: a person is allowed to eat meat, but not the life of the animal.",
+   "source": "Devarim 12:23",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-n25",
+   "lessonId": "kashrut-3",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "On which animals does the prohibition of the sciatic nerve (gid hanasheh) apply?",
+   "options": [
+    "To domestic and wild animals, but not to birds",
+    "Only to the ox, the sheep, and the goat",
+    "To all animals and birds",
+    "Only to wild animals"
+   ],
+   "answer": 0,
+   "explanation": "Unlike chelev, which is forbidden only in domestic cattle, the gid hanasheh is forbidden in both domestic and wild animals, but not in birds.",
+   "source": "Bereshit 32:33",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-n26",
+   "lessonId": "kashrut-3",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "What is shuman and what is its status?",
+   "options": [
+    "Forbidden fat near the kidneys; it is removed during nikur",
+    "Fat of birds, forbidden by the Sages",
+    "Ordinary fat interspersed in the meat — it is permitted",
+    "Fat that was burned on the altar in the Temple"
+   ],
+   "answer": 2,
+   "explanation": "Chelev is the special fat around the stomach, kidneys, and intestines that was offered on the altar; ordinary fat within the meat (shuman) is permitted.",
+   "source": "Lesson: Shechitah, blood, chelev, and gid hanasheh; Vayikra 7:23",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-n27",
+   "lessonId": "kashrut-3",
+   "minLevel": "orthodox",
+   "format": "mc",
+   "prompt": "How can meat that was not salted and not rinsed within 72 hours after shechitah be kashered?",
+   "options": [
+    "By double salting",
+    "By soaking for a day",
+    "It can no longer be kashered",
+    "Only by roasting over fire"
+   ],
+   "answer": 3,
+   "explanation": "Meat not salted and not rinsed within 72 hours after shechitah can be kashered only by roasting over fire.",
+   "source": "Kitzur Shulchan Aruch 36; Shulchan Aruch, Yoreh Deah 69",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-n28",
+   "lessonId": "kashrut-3",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "Fish and locusts do not require shechitah.",
+   "answer": true,
+   "explanation": "The lesson states directly: shechitah is needed for kosher animals and birds, while fish and locusts do not require it.",
+   "source": "Lesson: Shechitah, blood, chelev, and gid hanasheh",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-n29",
+   "lessonId": "kashrut-3",
+   "minLevel": "orthodox",
+   "format": "tf",
+   "prompt": "In the strict sense, the term “glatt” applies only to the lungs of large cattle.",
+   "answer": true,
+   "explanation": "“Glatt” means that the animal's lungs are smooth, free of adhesions; the label “glatt kosher” on chicken or cheese is merely an advertising way of saying “strict kashrut.”",
+   "source": "Shulchan Aruch, Yoreh Deah 39",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-n30",
+   "lessonId": "kashrut-3",
+   "minLevel": "orthodox",
+   "format": "match",
+   "prompt": "Match the term with its meaning.",
+   "pairs": [
+    [
+     "Nikur",
+     "Removal of chelev and the sciatic nerve"
+    ],
+    [
+     "Melichah",
+     "Salting of meat to remove the blood"
+    ],
+    [
+     "Kisuy hadam",
+     "Covering the blood of birds and game with earth"
+    ],
+    [
+     "Tzaar baalei chayim",
+     "The prohibition of causing animals unnecessary suffering"
+    ]
+   ],
+   "explanation": "Nikur is the removal of chelev and the sciatic nerve, melichah is salting against blood. Kisuy hadam is done after the shechitah of a bird or a wild animal, not of domestic cattle. Tzaar baalei chayim is the prohibition of causing animals unnecessary suffering.",
+   "source": "Lesson: Shechitah, blood, chelev, and gid hanasheh; Vayikra 17:13",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-n31",
+   "lessonId": "kashrut-3",
+   "minLevel": "reform",
+   "format": "typed",
+   "prompt": "What is the name of the special Jewish method of slaughter, without which even a cow or a chicken is forbidden as food?",
+   "answer": "Shechitah",
+   "accept": [
+    "shechitah",
+    "shehita",
+    "shechita"
+   ],
+   "explanation": "Even an animal kosher in species is forbidden if it was not slaughtered by shechitah; otherwise it is a nevelah.",
+   "source": "Devarim 12:21",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-n32",
+   "lessonId": "kashrut-3",
+   "minLevel": "reform",
+   "format": "typed",
+   "prompt": "What is the name of the punishment of “cutting off of the soul” that the Torah assigns for the intentional consumption of blood?",
+   "answer": "Karet",
+   "accept": [
+    "karet",
+    "kareit"
+   ],
+   "explanation": "For the intentional violation of the prohibition of blood the Torah assigns karet (Vayikra 7:27).",
+   "source": "Vayikra 7:27",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-n33",
+   "lessonId": "kashrut-3",
+   "minLevel": "orthodox",
+   "format": "open",
+   "prompt": "Explain why an animal can turn out to be treif even after a proper shechitah, and what “glatt” means for Sephardim and Ashkenazim.",
+   "modelAnswer": "After shechitah the internal organs are inspected. If a defect is found because of which the animal would not have lived out the year — for example, a perforated organ — it is treif even if the shechitah was proper; the main defects are listed in Mishnah Chullin 3:1. In cattle the lungs must be checked for adhesions — sirchot. “Glatt” means the lungs are completely smooth: Sephardim by the Beit Yosef eat only such meat, while Ashkenazim by the Rema allow some easily removable adhesions, though many today also buy “glatt.” I will buy meat with a reliable hechsher and follow the custom I determine with my rabbi.",
+   "keyPoints": [
+    "A defect with which it would not have lived out the year — treif",
+    "Checking the lungs for sirchot",
+    "Sephardim — only glatt (Beit Yosef)",
+    "Ashkenazim by the Rema are more lenient"
+   ],
+   "explanation": "The lesson distinguishes the correctness of shechitah from the inspection of organs and explains the different customs about “glatt.”",
+   "source": "Mishnah Chullin 3:1; Shulchan Aruch, Yoreh Deah 39",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-n34",
+   "lessonId": "kashrut-4",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "According to the Shulchan Aruch, what is it sufficient to do after dairy food before eating meat?",
+   "options": [
+    "Rinse the mouth, eat something pareve, wash the hands, and change the tablecloth and dishes",
+    "Wait six hours",
+    "Wait until the next day",
+    "Nothing: meat may be eaten right after dairy"
+   ],
+   "answer": 0,
+   "explanation": "According to the Shulchan Aruch (Yoreh Deah 89:2), after dairy one rinses the mouth, eats something neutral, washes the hands, and changes the tablecloth and dishes. Many Ashkenazim by custom wait another half an hour or an hour. The exception is hard aged cheese.",
+   "source": "Shulchan Aruch, Yoreh Deah 89:2",
+   "difficulty": "easy",
+   "differs": [
+    {
+     "level": "reform",
+     "text": "In Reform Judaism, many families that separate meat and dairy do not observe these rules of transition and waiting times."
+    }
+   ]
+  },
+  {
+   "id": "kashrut-n35",
+   "lessonId": "kashrut-4",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "May two people who know each other eat meat and cheese at the same table if there is no divider between them?",
+   "options": [
+    "Yes, if each has his own plate",
+    "No: a noticeable divider is needed — a separate tablecloth or an object between them",
+    "No: they may not even be in the same room",
+    "Yes: the prohibition concerns only cooking in one pot"
+   ],
+   "answer": 1,
+   "explanation": "If two people who know each other eat together, one eating meat and the other cheese, a noticeable dividing sign (*eiker*) is needed: a separate tablecloth, a placemat, or an object between the plates (Shulchan Aruch, Yoreh Deah 88).",
+   "source": "Shulchan Aruch, Yoreh Deah 88",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-n36",
+   "lessonId": "kashrut-4",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "How does the Rambam explain why one must wait after meat before eating dairy?",
+   "options": [
+    "The fat of meat leaves an aftertaste in the mouth for a long time",
+    "Meat takes a long time to digest in the stomach",
+    "Shreds of meat get stuck between the teeth",
+    "That is how offerings were separated in the Temple"
+   ],
+   "answer": 2,
+   "explanation": "According to the Rambam, shreds of meat get stuck between the teeth; the explanation about the aftertaste of fat is the opinion of Rashi.",
+   "source": "Lesson: Meat and Dairy (Rambam; Rashi; Chullin 105a)",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-n37",
+   "lessonId": "kashrut-4",
+   "minLevel": "orthodox",
+   "format": "mc",
+   "prompt": "After which dairy product, by the custom of the strict cited by the Rema, does one wait as long as after meat?",
+   "options": [
+    "After sour cream",
+    "After butter",
+    "After fresh cottage cheese",
+    "After hard cheese aged six months or more"
+   ],
+   "answer": 3,
+   "explanation": "The Rema (Yoreh Deah 89:2) cites the custom of waiting after hard aged cheese as after meat; hard usually means cheese aged six months or more.",
+   "source": "Rema on Yoreh Deah 89:1–2",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-n38",
+   "lessonId": "kashrut-4",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "Halacha requires marking meat dishes red and dairy dishes blue.",
+   "answer": false,
+   "explanation": "Color coding is a convenient custom, not a law.",
+   "source": "Lesson: Meat and Dairy",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-n39",
+   "lessonId": "kashrut-4",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "Fish may not be eaten together with meat under the same prohibition as meat with dairy.",
+   "answer": false,
+   "explanation": "Fish does not fall under the meat-and-dairy prohibition. It is not eaten or cooked together with meat for another reason: the Talmud speaks of a health hazard (Pesachim 76b; Yoreh Deah 116:2). Between fish and meat one rinses the mouth or eats a piece of bread.",
+   "source": "Pesachim 76b; Shulchan Aruch, Yoreh Deah 116:2",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-n40",
+   "lessonId": "kashrut-4",
+   "minLevel": "orthodox",
+   "format": "tf",
+   "prompt": "The waiting hours after meat are counted from the beginning of the meat meal.",
+   "answer": false,
+   "explanation": "The count runs from the end of the meat meal to the beginning of the dairy meal.",
+   "source": "Shulchan Aruch, Yoreh Deah 89:1",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-n41",
+   "lessonId": "kashrut-4",
+   "minLevel": "reform",
+   "format": "match",
+   "prompt": "Match the word with its meaning.",
+   "pairs": [
+    [
+     "Basari",
+     "Meat (Hebrew)"
+    ],
+    [
+     "Chalavi",
+     "Dairy (Hebrew)"
+    ],
+    [
+     "Fleishik",
+     "Meat (Yiddish)"
+    ],
+    [
+     "Milchik",
+     "Dairy (Yiddish)"
+    ]
+   ],
+   "explanation": "Basari and chalavi are the Hebrew names for meat and dairy; fleishik and milchik are their names in Yiddish.",
+   "source": "Lesson: Meat and Dairy",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-n42",
+   "lessonId": "kashrut-4",
+   "minLevel": "reform",
+   "format": "typed",
+   "prompt": "What was the name of the Talmudic sage whose account of his father and of himself became the source of the custom of waiting after meat?",
+   "answer": "Mar Ukva",
+   "accept": [
+    "mar ukva",
+    "mar-ukva",
+    "mar ukba"
+   ],
+   "explanation": "Mar Ukva related that his father, after eating meat, would not eat cheese until the next day, while he himself waited until the next meal (Chullin 105a).",
+   "source": "Chullin 105a",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-n43",
+   "lessonId": "kashrut-4",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "A beit din member asks: “How long will you wait after meat, and how did you choose this custom?”",
+   "modelAnswer": "I know that there are different customs: most communities wait six hours, many Jews of German origin wait three hours, and Dutch Jews wait one hour. A person usually follows the custom of his family, and I have no such family tradition. Therefore I discussed this with a rabbi and adopted the custom of the community I am joining. I count from the end of the meat meal, and after dairy I rinse my mouth, eat a piece of bread, and wash my hands.",
+   "keyPoints": [
+    "Customs of 6, 3, and 1 hour",
+    "A ger chooses together with a rabbi",
+    "Usually — the custom of one's own community"
+   ],
+   "explanation": "The lesson says that one who has undergone giyur chooses the waiting custom together with a rabbi, most often according to the custom of his community.",
+   "source": "Shulchan Aruch, Yoreh Deah 89:1",
+   "difficulty": "medium",
+   "differs": [
+    {
+     "level": "reform",
+     "text": "In Reform Judaism many do not keep the waiting hours, but only avoid mixing meat and milk in one dish; this is a personal choice."
+    }
+   ]
+  },
+  {
+   "id": "kashrut-n44",
+   "lessonId": "kashrut-5",
+   "minLevel": "conservative",
+   "format": "mc",
+   "prompt": "What is the main principle of koshering dishes?",
+   "options": [
+    "Any dishes need only be washed with soap",
+    "Dishes are kashered only by fire",
+    "As it absorbed, so it expels",
+    "New dishes are always kosher"
+   ],
+   "answer": 2,
+   "explanation": "Dishes are cleaned by the same method through which the taste entered them: what absorbed taste through boiling water is kashered with boiling water, and what absorbed it through fire — by fire.",
+   "source": "Pesachim 30b",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-n45",
+   "lessonId": "kashrut-5",
+   "minLevel": "conservative",
+   "format": "mc",
+   "prompt": "From which account in the Torah are the laws of kashering dishes derived?",
+   "options": [
+    "About the spoils after the war with Midian",
+    "About the Exodus from Egypt",
+    "About the building of the Mishkan (Tabernacle)",
+    "About the Flood and Noah's ark"
+   ],
+   "answer": 0,
+   "explanation": "Moshe and Elazar the kohen ordered the metal vessels of Midian to be passed through fire or through water.",
+   "source": "Bamidbar 31:21–23",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-n46",
+   "lessonId": "kashrut-5",
+   "minLevel": "orthodox",
+   "format": "mc",
+   "prompt": "Why is glassware bought from a non-Jew immersed in a mikveh?",
+   "options": [
+    "Glass absorbs more taste than metal",
+    "By enactment of the sages: glass, like metal, can be re-melted",
+    "The Torah says so directly about the vessels of Midian",
+    "To remove traces of non-kosher food"
+   ],
+   "answer": 1,
+   "explanation": "Metal dishes are immersed by a mitzvah of the Torah, and glass ones by enactment of the sages, because glass, like metal, can be re-melted.",
+   "source": "Avodah Zarah 75b; Shulchan Aruch, Yoreh Deah 120",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-n47",
+   "lessonId": "kashrut-5",
+   "minLevel": "orthodox",
+   "format": "mc",
+   "prompt": "What reason does the lesson give for the prohibition of cheese made without Jewish supervision (gevinat akum)?",
+   "options": [
+    "The concern that milk of non-kosher animals might be mixed in",
+    "Cheese may not be eaten raw",
+    "Cheese is made on Shabbat",
+    "Rennet from the stomachs of animals not slaughtered according to kashrut"
+   ],
+   "answer": 3,
+   "explanation": "Gevinat akum is forbidden, in particular because of rennet from the stomachs of animals not slaughtered according to kashrut; the concern about the admixture of non-kosher milk is the reason for the prohibition of chalav akum.",
+   "source": "Lesson: Vessels and the Kitchen; Shulchan Aruch, Yoreh Deah 115",
+   "difficulty": "hard",
+   "differs": [
+    {
+     "level": "conservative",
+     "text": "Masorti is more lenient than Orthodoxy on the question of cheeses; the specific rules should be clarified with the community rabbi."
+    }
+   ]
+  },
+  {
+   "id": "kashrut-n48",
+   "lessonId": "kashrut-5",
+   "minLevel": "conservative",
+   "format": "tf",
+   "prompt": "Before kashering, dishes are usually cleaned thoroughly and not used for 24 hours.",
+   "answer": true,
+   "explanation": "Dishes are cleaned of rust, burnt-on residue, and food remains, and usually left unused for a day so that they cease to be “ben yomo.”",
+   "source": "Lesson: Vessels and the Kitchen",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-n49",
+   "lessonId": "kashrut-5",
+   "minLevel": "orthodox",
+   "format": "tf",
+   "prompt": "R. Moshe Feinstein prohibited any milk for which no Jew was present at the milking, even under strict government supervision.",
+   "answer": false,
+   "explanation": "Some authorities, in particular R. Moshe Feinstein, permitted milk under strict government supervision, although many observe chalav Yisrael.",
+   "source": "Lesson: Vessels and the Kitchen; Shulchan Aruch, Yoreh Deah 115",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-n50",
+   "lessonId": "kashrut-5",
+   "minLevel": "orthodox",
+   "format": "match",
+   "prompt": "Match the enactment of the sages with what it concerns.",
+   "pairs": [
+    [
+     "Bishul akum",
+     "A dish cooked by a non-Jew"
+    ],
+    [
+     "Pat akum",
+     "Bread baked by a non-Jew at home"
+    ],
+    [
+     "Pat palter",
+     "Bread from a non-Jewish bakery"
+    ],
+    [
+     "Chalav akum",
+     "Milk for whose milking no Jew was present"
+    ]
+   ],
+   "explanation": "The lesson lists these enactments about food that consists of kosher products but is prepared by a non-Jew.",
+   "source": "Shulchan Aruch, Yoreh Deah 112, 113, 115",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-n51",
+   "lessonId": "kashrut-5",
+   "minLevel": "orthodox",
+   "format": "typed",
+   "prompt": "What is the immersion in a mikveh of dishes made by or bought from a non-Jew called?",
+   "answer": "Tevilat keilim",
+   "accept": [
+    "tevilat keilim",
+    "tevilat keylim",
+    "tevilat keli"
+   ],
+   "explanation": "This is the mitzvah of tevilat keilim: it is derived from the passage about the vessels of Midian, and it brings the item into the holiness of a Jewish home.",
+   "source": "Bamidbar 31:21–23; Avodah Zarah 75b",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-n52",
+   "lessonId": "kashrut-5",
+   "minLevel": "orthodox",
+   "format": "open",
+   "prompt": "You bought new metal pots and glass cups at an ordinary store. What will you do before first use?",
+   "modelAnswer": "New dishes have absorbed no non-kosher taste, but metal and glass dishes from a non-Jew must be immersed in a mikveh — this is tevilat keilim. First I will wash them and remove all stickers and glue, so that nothing separates the water from the surface. Before the immersion I will say the blessing “al tevilat keilim,” because there are several items. Each item I will immerse completely in one motion, holding it loosely, so that the water touches every surface.",
+   "keyPoints": [
+    "Metal and glass from a non-Jew are immersed even when new",
+    "Remove the stickers and glue",
+    "The blessing “al tevilat keilim”",
+    "Complete immersion in one motion"
+   ],
+   "explanation": "The lesson describes the order of tevilat keilim and stresses that even new dishes require immersion.",
+   "source": "Shulchan Aruch, Yoreh Deah 120:3; Kitzur Shulchan Aruch 37",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-n53",
+   "lessonId": "kashrut-5",
+   "minLevel": "orthodox",
+   "format": "open",
+   "prompt": "Why did the sages prohibit food cooked by a non-Jew (bishul akum) if all the products in it are kosher? What will you do?",
+   "modelAnswer": "The sages enacted these prohibitions in order to preserve the separateness of the Jewish community, to prevent intermarriage, and to guard against mistakes in kashrut. Bishul akum concerns dishes that are not eaten raw and that are fit for “a king's table” — for example, meat, fish, eggs, potatoes. For food to be “bishul Yisrael,” a Jew must take part in the cooking: by Ashkenazi custom it is enough to light the fire, by Sephardi custom — to place the food on the fire or to stir it. Therefore I eat in restaurants where the fire is lit by the mashgiach, and at home I cook myself and clarify my custom with a rabbi.",
+   "keyPoints": [
+    "Purpose: the community's separateness, protection from intermarriage and mistakes",
+    "Dishes that are not eaten raw and are fit for “a king's table”",
+    "Ashkenazim: a Jew lights the fire; Sephardim: he places it on the fire",
+    "Clarify the custom with a rabbi"
+   ],
+   "explanation": "The lesson explains the purpose of the sages' enactments and the difference between the Ashkenazi and Sephardi customs regarding bishul akum.",
+   "source": "Avodah Zarah 35b–38a; Shulchan Aruch, Yoreh Deah 113",
+   "difficulty": "hard",
+   "differs": [
+    {
+     "level": "conservative",
+     "text": "Masorti is more lenient than Orthodoxy on questions of food cooked by a non-Jew; the position should be clarified with the community rabbi."
+    }
+   ]
+  },
+  {
+   "id": "kashrut-n54",
+   "lessonId": "kashrut-6",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "How does the blessing over wine end?",
+   "options": [
+    "…borei pri ha-etz",
+    "…borei pri ha-adamah",
+    "…borei minei mezonot",
+    "…borei pri ha-gafen"
+   ],
+   "answer": 3,
+   "explanation": "Over wine one says “borei pri ha-gafen” — “Who creates the fruit of the vine.”",
+   "source": "Siddur; Berachot 35a",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-n55",
+   "lessonId": "kashrut-6",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "Why might an ordinary-looking cookie without a hechsher turn out to be non-kosher?",
+   "options": [
+    "It may have been baked on a weekday",
+    "It may contain gelatin, whey, carmine, or wine",
+    "Any baked goods require shechitah",
+    "Cookies are always considered meat"
+   ],
+   "answer": 1,
+   "explanation": "Ready-made products can contain hidden ingredients — gelatin, carmine, whey, wine — and they may be produced on the same line as non-kosher food.",
+   "source": "Lesson: Hechsher, Wine, and Kashrut Across the Movements",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-n56",
+   "lessonId": "kashrut-6",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "What does the marking “DE” next to a kashrut symbol mean?",
+   "options": [
+    "The product was made on dairy equipment",
+    "The product is kosher for Pesach",
+    "The product is meat",
+    "The product is certified in Germany"
+   ],
+   "answer": 0,
+   "explanation": "D means dairy, and DE means the product was made on dairy equipment; this matters for those who eat it after meat.",
+   "source": "Lesson: Hechsher, Wine, and Kashrut Across the Movements",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-n57",
+   "lessonId": "kashrut-6",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "What is the “Magen Tzedek”?",
+   "options": [
+    "The Israeli kashrut level “mehadrin”",
+    "A Reform book on food ethics",
+    "The ethical symbol of the Masorti movement as a supplement to the hechsher",
+    "Supervision of the Eda HaChareidit rabbinical court"
+   ],
+   "answer": 2,
+   "explanation": "In the 2000s the initiative “Magen Tzedek” appeared in the Masorti movement — an ethical symbol as a supplement to the hechsher.",
+   "source": "Lesson: Hechsher, Wine, and Kashrut Across the Movements",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-n58",
+   "lessonId": "kashrut-6",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "A kosher restaurant must display a valid kashrut certificate with the date and the name of the organization.",
+   "answer": true,
+   "explanation": "The lesson says that a kosher restaurant displays a valid teudat kashrut with the date and the name of the organization.",
+   "source": "Lesson: Hechsher, Wine, and Kashrut Across the Movements",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-n59",
+   "lessonId": "kashrut-6",
+   "minLevel": "orthodox",
+   "format": "tf",
+   "prompt": "In Israel a plant product needs only a hechsher on the ingredients: terumot, maasrot, orlah, and shemitah are not checked separately.",
+   "answer": false,
+   "explanation": "The lesson says that in Israel products of plant origin are also checked for the agricultural mitzvot: terumah and maaser, orlah, and shemitah. An ordinary list of ingredients is not enough for this.",
+   "source": "Lesson: Hechsher, Wine, and Kashrut Across the Movements",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-n60",
+   "lessonId": "kashrut-6",
+   "minLevel": "reform",
+   "format": "match",
+   "prompt": "Match the kashrut designation with its meaning.",
+   "pairs": [
+    [
+     "OU",
+     "Orthodox Union (USA)"
+    ],
+    [
+     "KLBD",
+     "London Beth Din"
+    ],
+    [
+     "Badatz",
+     "Supervision by a rabbinical court (beit din tzedek)"
+    ],
+    [
+     "Mehadrin",
+     "A higher level of stringency in Israel"
+    ]
+   ],
+   "explanation": "The lesson explains these designations; it is important to look at which organization stands behind the symbol.",
+   "source": "Lesson: Hechsher, Wine, and Kashrut Across the Movements",
+   "difficulty": "hard"
+  },
+  {
+   "id": "kashrut-n61",
+   "lessonId": "kashrut-6",
+   "minLevel": "reform",
+   "format": "typed",
+   "prompt": "What is the specialist who supervises kashrut at a production site, in a restaurant, or in a kitchen called?",
+   "answer": "Mashgiach",
+   "accept": [
+    "mashgiach",
+    "mashgiah",
+    "mashgih"
+   ],
+   "explanation": "Mashgiach — “one who supervises,” a kashrut specialist.",
+   "source": "Lesson: Hechsher, Wine, and Kashrut Across the Movements",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-n62",
+   "lessonId": "kashrut-6",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "A beit din member asks: “How do you choose products in an ordinary supermarket?”",
+   "modelAnswer": "I buy ready-made products only with a hechsher, because they can contain gelatin, carmine, whey, or wine, and production may run on the same line as non-kosher food. A single letter “K” is not enough for me: I look at which organization stands behind the symbol and rely on those approved by my rabbi. I check the markings: D means dairy, and P means kosher for Pesach, not “pareve.” I also use lists of checked products published by rabbinates.",
+   "keyPoints": [
+    "Ready-made products need a hechsher",
+    "A single letter “K” is no guarantee",
+    "Read the markings D, DE, P",
+    "Hechshers recognized by one's own rabbi"
+   ],
+   "explanation": "The lesson explains why a hechsher is needed and how to read the markings.",
+   "source": "Lesson: Hechsher, Wine, and Kashrut Across the Movements",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-n63",
+   "lessonId": "kashrut-6",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "How do the approaches of Orthodox, Conservative, and Reform Judaism to kashrut differ?",
+   "modelAnswer": "For Orthodox Judaism kashrut is obligatory halacha in its full scope, both the laws of the Torah and the enactments of the sages; the candidate keeps a fully kosher home with a recognized hechsher. The Conservative movement also considers kashrut obligatory halacha and expects a kosher home, but its Committee on Jewish Law and Standards (CJLS) is more lenient on particular questions, for example about wine from non-Jews and some cheeses. Reform Judaism, in the Pittsburgh Platform of 1885, declared the laws of food non-obligatory, and today sees in kashrut a conscious personal choice and “ethical kashrut.” I understand which approach is accepted in my community and am ready to live by it.",
+   "keyPoints": [
+    "Orthodoxy: everything is obligatory, including the enactments of the sages",
+    "Masorti: halacha, but CJLS decisions are more lenient in particulars",
+    "Reform: from Pittsburgh 1885 to a conscious choice",
+    "Ethical kashrut"
+   ],
+   "explanation": "The lesson describes the attitude to kashrut in the three movements and its history among Reform Jews.",
+   "source": "Pittsburgh Platform (1885); “Statement of Principles of Reform Judaism” (1999)",
+   "difficulty": "hard",
+   "differs": [
+    {
+     "level": "reform",
+     "text": "A Reform rabbi does not require a kosher kitchen, but expects knowledge of the laws and a thoughtful personal decision."
+    },
+    {
+     "level": "conservative",
+     "text": "Masorti expects a kosher home, but on wine, cheeses, and food cooked by a non-Jew the decisions of the CJLS are more lenient than the Orthodox ones."
+    }
+   ]
+  },
+  {
+   "id": "kashrut-q56",
+   "lessonId": "kashrut-5",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "Which of the following best describes the kitchen of a Reform home?",
+   "options": [
+    "Two sets of dishes are not required; what matters is knowledge of the laws, an honest measure of practice, and often the ethical side of food",
+    "The kitchen must be fully kosher according to the Shulchan Aruch, otherwise the giyur is invalid",
+    "Reform Jews are forbidden to have any dishes at home at all",
+    "Kashrut is not a topic of conversation in a Reform home"
+   ],
+   "answer": 0,
+   "explanation": "The Reform path asks for knowledge and an honest measure, not obligatory double sinks. “I observe nothing because it is permitted” is a weak answer.",
+   "source": "Lesson “Vessels and the Kitchen,” section on the Reform home",
+   "difficulty": "medium"
+  },
+  {
+   "id": "kashrut-n64",
+   "lessonId": "kashrut-5",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "It is enough for a Reform candidate to say “kashrut is not obligatory for us,” without studying the laws of permitted animals, blood, and mixing meat with milk.",
+   "answer": false,
+   "explanation": "A conscious choice begins with knowledge of the classical categories. Ignorance does not replace a principle.",
+   "source": "Lesson on the kitchen; lesson on kashrut across the movements",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-z1",
+   "lessonId": "kashrut-1",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "The food laws of the Torah remain in force: they cannot be declared annulled by a new teaching.",
+   "answer": true,
+   "explanation": "Kashrut consists of the mitzvot of the Torah. No prophet has the right to annul them (Devarim 13:1; Rambam, Foundations of the Torah 9:1).",
+   "source": "Devarim 13:1; Vayikra 11; Rambam, Foundations of the Torah 9:1",
+   "difficulty": "easy"
+  },
+  {
+   "id": "kashrut-z2",
+   "lessonId": "kashrut-1",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "Why is kashrut not considered “no longer needed” once a person has “believed in” a new teaching?",
+   "options": [
+    "Because the Torah is eternal, and its mitzvot are not annulled",
+    "Because kashrut was invented only in the Middle Ages",
+    "Because kashrut is needed only in the Land of Israel",
+    "Because it is purely medical advice"
+   ],
+   "answer": 0,
+   "explanation": "The Rambam's ninth principle and Devarim 13:1: the Torah is not replaced and not diminished.",
+   "source": "Devarim 13:1; Rambam, ninth principle",
+   "difficulty": "medium"
+  }
+ ]
+}

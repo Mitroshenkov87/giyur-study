@@ -62,7 +62,10 @@ where
 #[cfg(windows)]
 fn windows_error(err: &windows::core::Error) -> GeoError {
     let code = err.code().0 as u32;
-    GeoError::Unavailable(format!("код Windows 0x{code:08X}"))
+    GeoError::Unavailable(crate::trf!(
+        "код Windows 0x{code:08X}",
+        "Windows code 0x{code:08X}"
+    ))
 }
 
 /// Waits for Windows' permission decision, then reads a city-level fix.

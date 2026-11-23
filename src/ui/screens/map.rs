@@ -8,6 +8,7 @@ use iced::{Alignment, Background, Border, Color, Element, Length};
 
 use crate::content::{self, Library, SectionMeta};
 use crate::game;
+use crate::i18n::tr;
 use crate::ui::app::{Action, Ctx, Deck, Route};
 use crate::ui::{fonts, theme, widgets};
 use crate::util;
@@ -766,7 +767,7 @@ impl Screen {
         if !ctx.lib.sections.iter().any(|s| s.available) {
             page = page.push(notice(
                 icons::Kind::Book,
-                "Материалы ещё готовятся. Разделы появятся после сборки содержания.",
+                tr("Материалы ещё готовятся. Разделы появятся после сборки содержания."),
                 p,
             ));
         }
@@ -809,7 +810,7 @@ impl Screen {
 
         if !state.settings.unlock_all && !crate::reviewer::active(state) {
             page = page.push(
-                txt("Следующий раздел открывается, когда прочитаны все уроки и тест сдан на 80% и выше. Свободный режим — в настройках.")
+                txt(tr("Следующий раздел открывается, когда прочитаны все уроки и тест сдан на 80% и выше. Свободный режим — в настройках."))
                     .size(theme::text::SMALL)
                     .color(p.muted)
                     .align_x(Alignment::Center)
@@ -838,12 +839,15 @@ fn header<'a>(ctx: &'a Ctx, p: theme::Palette) -> Element<'a, Msg> {
 
     let chip = button(
         row![
-            txt(format!("{} уровень", lvl.title).to_uppercase())
-                .size(theme::text::KICKER)
-                .font(fonts::SANS_BOLD)
-                .color(p.gold2),
+            txt(
+                crate::trf!("{title} уровень", "{title} level", title = tr(lvl.title))
+                    .to_uppercase()
+            )
+            .size(theme::text::KICKER)
+            .font(fonts::SANS_BOLD)
+            .color(p.gold2),
             icons::icon(icons::Kind::ChevronDown, 14.0, p.gold2),
-            txt("сменить").size(12.0).color(p.muted),
+            txt(tr("сменить")).size(12.0).color(p.muted),
         ]
         .spacing(6)
         .align_y(Alignment::Center),
@@ -862,7 +866,7 @@ fn header<'a>(ctx: &'a Ctx, p: theme::Palette) -> Element<'a, Msg> {
     })
     .on_press(Msg::Go(Route::Level { reopened: true }));
 
-    let left = column![chip, widgets::heading("Уроки", 1)]
+    let left = column![chip, widgets::heading(tr("Уроки"), 1)]
         .spacing(10)
         .align_x(Alignment::Start);
 
@@ -910,9 +914,9 @@ fn stats<'a>(ctx: &'a Ctx, p: theme::Palette) -> Element<'a, Msg> {
                     .size(theme::text::SMALL + 1.0)
                     .font(fonts::SANS_BOLD),
                 txt(if done {
-                    "цель дня выполнена"
+                    tr("цель дня выполнена")
                 } else {
-                    "цель дня"
+                    tr("цель дня")
                 })
                 .size(theme::text::SMALL)
                 .color(p.muted),
@@ -926,9 +930,11 @@ fn stats<'a>(ctx: &'a Ctx, p: theme::Palette) -> Element<'a, Msg> {
     );
 
     // Streak (→ Прогресс).
-    let mut streak_small = row![txt(format!(
-        "{} подряд",
-        util::plural(streak, &["день", "дня", "дней"])
+    let mut streak_small = row![txt(crate::trf!(
+        "{n} {word} подряд",
+        "{n} {word} in a row",
+        n = streak,
+        word = util::plural_l(streak, &["день", "дня", "дней"], &["day", "days"])
     ))
     .size(theme::text::SMALL)
     .color(p.muted),]
@@ -973,9 +979,15 @@ fn stats<'a>(ctx: &'a Ctx, p: theme::Palette) -> Element<'a, Msg> {
                 txt(due.to_string())
                     .size(theme::text::BODY)
                     .font(fonts::SANS_BOLD),
-                txt(format!(
-                    "{} на сегодня",
-                    util::plural(due, &["карточка", "карточки", "карточек"])
+                txt(crate::trf!(
+                    "{n} {word} на сегодня",
+                    "{n} {word} due today",
+                    n = due,
+                    word = util::plural_l(
+                        due,
+                        &["карточка", "карточки", "карточек"],
+                        &["card", "cards"]
+                    )
                 ))
                 .size(theme::text::SMALL)
                 .color(p.muted),
@@ -1037,7 +1049,7 @@ fn reminders<'a>(ctx: &'a Ctx, p: theme::Palette) -> Element<'a, Msg> {
         if r.href.is_some() {
             content = content
                 .push(space::horizontal())
-                .push(widgets::pill("Повторить", widgets::Pill::Cta));
+                .push(widgets::pill(tr("Повторить"), widgets::Pill::Cta));
         }
         let boxed = button(content.width(Length::Fill))
             .width(Length::Fill)
@@ -1082,18 +1094,20 @@ fn timed_cta<'a>(_p: theme::Palette) -> Element<'a, Msg> {
         row![
             icons::icon(icons::Kind::Ladder, 26.0, tq.gold2),
             column![
-                txt("Маалот — лестница знаний")
+                txt(tr("Маалот — лестница знаний"))
                     .size(theme::text::BODY)
                     .font(fonts::SANS_BOLD)
                     .color(tq.text),
-                txt("15 ступеней от лёгких вопросов к трудным, три подсказки")
-                    .size(theme::text::SMALL)
-                    .color(tq.muted),
+                txt(tr(
+                    "15 ступеней от лёгких вопросов к трудным, три подсказки"
+                ))
+                .size(theme::text::SMALL)
+                .color(tq.muted),
             ]
             .spacing(2)
             .width(Length::Fill),
             container(
-                txt("Подняться")
+                txt(tr("Подняться"))
                     .size(theme::text::SMALL)
                     .font(fonts::SANS_BOLD)
                     .color(tq.on_gold)
@@ -1145,21 +1159,41 @@ fn interview_cta<'a>(ctx: &'a Ctx) -> Element<'a, Msg> {
     let p = theme::current();
     let st = crate::interview::stats(&ctx.state, ctx.today());
     let sub = if st.practiced == 0 {
-        format!(
-            "{} вопросов раввинов: что они проверяют, как ответить честно, репетиция собеседования",
-            st.total
+        crate::trf!(
+            "{n} {q}: что они проверяют, как ответить честно, репетиция собеседования",
+            "{n} {q}: what the rabbis check, how to answer honestly, and an interview rehearsal",
+            n = st.total,
+            q = util::plural_l(
+                st.total as i64,
+                &["вопрос раввинов", "вопроса раввинов", "вопросов раввинов"],
+                &["question from the rabbis", "questions from the rabbis"]
+            ),
         )
     } else {
-        format!(
-            "Отработано {} из {} вопросов · готов {} · репетиций {}",
-            st.practiced, st.total, st.ready, st.runs
+        crate::trf!(
+            "Отработано {practiced} из {total} {questions} · готов {ready} · {runs} {rehearsals}",
+            "Practiced {practiced} of {total} {questions} · {ready} ready · {runs} {rehearsals}",
+            practiced = st.practiced,
+            total = st.total,
+            ready = st.ready,
+            runs = st.runs,
+            questions = util::plural_l(
+                st.total as i64,
+                &["вопроса", "вопросов", "вопросов"],
+                &["question", "questions"]
+            ),
+            rehearsals = util::plural_l(
+                st.runs as i64,
+                &["репетиция", "репетиции", "репетиций"],
+                &["rehearsal", "rehearsals"]
+            ),
         )
     };
     button(
         row![
             icons::icon(icons::Kind::Scales, 26.0, p.gold2),
             column![
-                txt("Тренажёр собеседования с бейт-дином")
+                txt(tr("Тренажёр собеседования с бейт-дином"))
                     .size(theme::text::BODY)
                     .font(fonts::SANS_BOLD)
                     .color(p.text),
@@ -1167,7 +1201,7 @@ fn interview_cta<'a>(ctx: &'a Ctx) -> Element<'a, Msg> {
             ]
             .spacing(2)
             .width(Length::Fill),
-            widgets::pill("Готовиться", widgets::Pill::Cta),
+            widgets::pill(tr("Готовиться"), widgets::Pill::Cta),
         ]
         .spacing(14)
         .align_y(Alignment::Center),
@@ -1259,15 +1293,16 @@ fn path_item<'a>(
     );
     match state {
         ItemState::Soon => {
-            text_col = text_col.push(row![widgets::tag("Скоро")].align_y(Alignment::Center));
+            text_col = text_col.push(row![widgets::tag(tr("Скоро"))].align_y(Alignment::Center));
         }
         ItemState::Locked => {
             text_col = text_col.push(
                 row![
                     icons::icon(icons::Kind::Lock, 12.0, p.muted),
-                    txt(format!(
-                        "Закрыт: пройдите раздел {}",
-                        prev_available.unwrap_or(1)
+                    txt(crate::trf!(
+                        "Закрыт: пройдите раздел {n}",
+                        "Locked: complete section {n}",
+                        n = prev_available.unwrap_or(1)
                     ))
                     .size(theme::text::SMALL)
                     .font(fonts::SANS_BOLD)
@@ -1280,20 +1315,29 @@ fn path_item<'a>(
         ItemState::Open | ItemState::Done => {
             let s = stats.expect("open/done sections have stats");
             let best = s.best.map(fmt_pct).unwrap_or_else(|| "—".to_string());
-            let mut status = row![
-                txt(format!("{}/{} уроков · тест {}", s.read, s.lessons, best))
-                    .size(theme::text::SMALL)
-                    .color(muted_color)
-            ]
+            let mut status = row![txt(crate::trf!(
+                "{read}/{lessons} {word} · тест {best}",
+                "{read}/{lessons} {word} · test {best}",
+                read = s.read,
+                lessons = s.lessons,
+                word = util::plural_l(
+                    s.lessons as i64,
+                    &["урок", "урока", "уроков"],
+                    &["lesson", "lessons"]
+                ),
+                best = best,
+            ))
+            .size(theme::text::SMALL)
+            .color(muted_color)]
             .spacing(10)
             .align_y(Alignment::Center);
             if is_cur {
                 let started = s.read > 0 || s.best.is_some();
                 status = status.push(widgets::pill(
                     if started {
-                        "Продолжить"
+                        tr("Продолжить")
                     } else {
-                        "Начать"
+                        tr("Начать")
                     },
                     widgets::Pill::Cta,
                 ));
@@ -1432,14 +1476,14 @@ fn eretz_cta<'a>() -> Element<'a, Msg> {
                 .height(Length::Fixed(148.0))
                 .clip(true),
             column![
-                txt("Эрец-Исраэль")
+                txt(tr("Эрец-Исраэль"))
                     .size(theme::text::BODY)
                     .font(fonts::SANS_BOLD)
                     .color(p.text),
-                txt("Вся Земля: Иудея и Шомрон, Голан, Аза и единый Иерусалим. Слой границ по Торе.")
+                txt(tr("Вся Земля: Иудея и Шомрон, Голан, Аза и единый Иерусалим. Слой границ по Торе."))
                     .size(theme::text::SMALL)
                     .color(p.muted),
-                widgets::pill("Открыть карту", widgets::Pill::Cta),
+                widgets::pill(tr("Открыть карту"), widgets::Pill::Cta),
             ]
             .spacing(8)
             .width(Length::Fill),
@@ -1493,13 +1537,17 @@ fn object_of_the_day<'a>(
     let card = card::card(
         ctx,
         model,
-        Some("Предмет дня"),
+        Some(tr("Предмет дня")),
         captions.contains(&model),
         card::Msgs {
             ready: Msg::Model3dReady,
             toggle_caption: Msg::ToggleCaption(model),
             link: Some((
-                format!("Раздел «{}»", info.section_title),
+                crate::trf!(
+                    "Раздел «{title}»",
+                    "Section: {title}",
+                    title = tr(info.section_title)
+                ),
                 Msg::Go(Route::Section(info.section.to_string())),
             )),
         },
@@ -1514,24 +1562,24 @@ fn object_of_the_day<'a>(
         .unwrap_or(0)
         + 1) as i64;
     let browse = widgets::reviewer_jumps(
-        "Любой «Предмет дня» из всех, что сменяются по дням.",
+        tr("Любой «Предмет дня» из всех, что сменяются по дням."),
         0,
         0,
         |_| Msg::ShiftDay(0),
         vec![
             widgets::btn(
-                "‹ Предыдущий",
+                tr("‹ Предыдущий"),
                 widgets::Btn::Ghost,
                 widgets::BtnSize::Sm,
                 Some(Msg::ShiftDay(-1)),
             )
             .into(),
-            txt(format!("{pos} из {n}"))
+            txt(crate::trf!("{pos} из {n}", "{pos} of {n}"))
                 .size(theme::text::SMALL)
                 .color(theme::current().muted)
                 .into(),
             widgets::btn(
-                "Следующий ›",
+                tr("Следующий ›"),
                 widgets::Btn::Ghost,
                 widgets::BtnSize::Sm,
                 Some(Msg::ShiftDay(1)),

@@ -9,6 +9,7 @@ use iced::{Alignment, Background, Element, Length, Subscription};
 
 use crate::content::{self, Block, Differs, Lesson, SectionMeta};
 use crate::game;
+use crate::i18n::tr;
 use crate::storage::Level;
 use crate::study;
 use crate::ui::app::{Action, Ctx, Deck, ExamSpec, Route};
@@ -85,8 +86,13 @@ impl Screen {
             .lesson(&lesson_id)
             .filter(|(_, _)| guard.is_none())
             .and_then(|(lesson, _)| {
-                (!lesson.citations.is_empty())
-                    .then(|| format!("**Ссылки:** {}", lesson.citations.join("; ")))
+                (!lesson.citations.is_empty()).then(|| {
+                    crate::trf!(
+                        "**Ссылки:** {}",
+                        "**Sources:** {}",
+                        lesson.citations.join("; ")
+                    )
+                })
             });
         let kicker = match guard {
             Some(_) => String::new(),
@@ -95,8 +101,9 @@ impl Screen {
                 let user = content::Library::user_level(&ctx.state);
                 let lessons = ctx.lib.lessons(sec, user);
                 let pos = lessons.iter().position(|l| l.id == lesson.id).unwrap_or(0);
-                format!(
+                crate::trf!(
                     "Урок {} из {} · {} мин",
+                    "Lesson {} of {} · {} min",
                     pos + 1,
                     lessons.len(),
                     lesson.minutes.unwrap_or(5)
@@ -120,7 +127,7 @@ impl Screen {
                 let today = ctx.today_key();
                 ctx.state.lessons_read.insert(self.lesson_id.clone(), today);
                 ctx.activity();
-                ctx.toast("Урок отмечен прочитанным", "", "✓");
+                ctx.toast(tr("Урок отмечен прочитанным"), "", "✓");
                 ctx.award(game::XP.lesson);
                 ctx.sync_collection();
                 Action::None
@@ -177,7 +184,7 @@ impl Screen {
         let bar = widgets::step_bar::<Msg>(1, 1);
 
         let header = header(
-            &sec.title,
+            tr(&sec.title),
             Msg::Go(Route::Section(sec.id.clone())),
             &self.kicker,
             lesson.title.as_deref().unwrap_or(""),
@@ -221,7 +228,7 @@ impl Screen {
         let has_check = !study::self_check_ids(&ctx.lib, sec, &lesson.id, &ctx.state).is_empty();
         let actions: Element<Msg> = if read {
             let p = palette();
-            let mut r = row![txt("✓ Прочитано")
+            let mut r = row![txt(tr("✓ Прочитано"))
                 .size(theme::text::BODY)
                 .font(SANS_BOLD)
                 .color(p.ok),]
@@ -229,14 +236,14 @@ impl Screen {
             .align_y(Alignment::Center);
             if has_check {
                 r = r.push(widgets::btn(
-                    "Самопроверка",
+                    tr("Самопроверка"),
                     widgets::Btn::Primary,
                     widgets::BtnSize::Lg,
                     Some(Msg::SelfCheck),
                 ));
             }
             r = r.push(widgets::btn(
-                "К карточкам урока",
+                tr("К карточкам урока"),
                 if has_check {
                     widgets::Btn::Secondary
                 } else {
@@ -248,7 +255,7 @@ impl Screen {
             r.into()
         } else {
             row![widgets::btn(
-                "Отметить прочитанным",
+                tr("Отметить прочитанным"),
                 widgets::Btn::Primary,
                 widgets::BtnSize::Lg,
                 Some(Msg::MarkRead),
@@ -267,9 +274,12 @@ impl Screen {
             let p = palette();
             let title = next.title.clone().unwrap_or_default();
             let link = button(
-                txt(format!("Следующий урок: {title} →"))
-                    .size(theme::text::BODY)
-                    .color(p.gold2),
+                txt(crate::trf!(
+                    "Следующий урок: {title} →",
+                    "Next lesson: {title} →"
+                ))
+                .size(theme::text::BODY)
+                .color(p.gold2),
             )
             .padding([6.0, 10.0])
             .style(move |_, s| theme::button_ghost(&p, s))
@@ -301,7 +311,7 @@ fn header<'a>(back_label: &'a str, back: Msg, kicker: &'a str, title: &'a str) -
         row![
             widgets::kicker(kicker),
             Space::new().width(Length::Fill),
-            widgets::chip::<Msg>("Требует проверки раввином"),
+            widgets::chip::<Msg>(tr("Требует проверки раввином")),
         ]
         .align_y(Alignment::Center),
         widgets::heading(title, 1),
@@ -315,7 +325,7 @@ fn header<'a>(back_label: &'a str, back: Msg, kicker: &'a str, title: &'a str) -
 fn key_ideas_card<'a>(ideas: &'a [String]) -> Element<'a, Msg> {
     let p = palette();
     let mut col = Column::new().spacing(8).width(Length::Fill);
-    col = col.push(widgets::kicker("Главное"));
+    col = col.push(widgets::kicker(tr("Главное")));
     for (i, idea) in ideas.iter().enumerate() {
         col = col.push(
             row![
@@ -342,11 +352,13 @@ fn interview_card<'a>(
 ) -> Element<'a, Msg> {
     let p = palette();
     let mut col = Column::new().spacing(12).width(Length::Fill);
-    col = col.push(widgets::kicker("Что спрашивают на бейт-дине"));
+    col = col.push(widgets::kicker(tr("Что спрашивают на бейт-дине")));
     col = col.push(
-        txt("Сначала ответьте вслух своими словами, потом сверьтесь с образцом.")
-            .size(theme::text::SMALL)
-            .color(p.muted),
+        txt(tr(
+            "Сначала ответьте вслух своими словами, потом сверьтесь с образцом.",
+        ))
+        .size(theme::text::SMALL)
+        .color(p.muted),
     );
     for q in qs {
         let content::Question::Open {
@@ -372,20 +384,20 @@ fn interview_card<'a>(
         );
         item = item.push(widgets::btn(
             if open {
-                "Скрыть образец ответа"
+                tr("Скрыть образец ответа")
             } else {
-                "Показать образец ответа"
+                tr("Показать образец ответа")
             },
             widgets::Btn::Ghost,
             widgets::BtnSize::Sm,
             Some(Msg::Reveal(common.id.clone())),
         ));
         if open {
-            item = item.push(widgets::note_block("Образец ответа", model_answer));
+            item = item.push(widgets::note_block(tr("Образец ответа"), model_answer));
             if !key_points.is_empty() {
                 let mut kp = Column::new().spacing(4);
                 kp = kp.push(
-                    txt("Ключевые пункты")
+                    txt(tr("Ключевые пункты"))
                         .size(theme::text::SMALL)
                         .font(SANS_BOLD),
                 );
@@ -401,10 +413,7 @@ fn interview_card<'a>(
                 item = item.push(kp);
             }
             for d in common.differs.iter().filter(|d| d.level == user) {
-                item = item.push(widgets::differs_note(
-                    content::level_info(d.level).differs_label,
-                    &d.text,
-                ));
+                item = item.push(movement_note(d.level, &d.text));
             }
         }
         col = col.push(
@@ -492,7 +501,7 @@ fn block_view<'a>(block: &'a Block, translit: bool) -> Option<Element<'a, Msg>> 
             ref_.as_deref(),
         )),
         Block::Quote { text, ref_, .. } => Some(widgets::quote_block(text, ref_.as_deref())),
-        Block::Note { text, .. } => Some(widgets::note_block("Совет", text)),
+        Block::Note { text, .. } => Some(widgets::note_block(tr("Совет"), text)),
         Block::Term { term, he, text, .. } => Some(widgets::term_block(
             term,
             he.as_deref(),
@@ -519,17 +528,14 @@ fn differs_view<'a>(
 
     let mut col = Column::new().spacing(8).width(Length::Fill);
     for d in &mine {
-        col = col.push(widgets::differs_note(
-            content::level_info(d.level).differs_label,
-            &d.text,
-        ));
+        col = col.push(movement_note(d.level, &d.text));
     }
     if !other.is_empty() {
         let id = *group;
         *group += 1;
         let expanded = open.contains(&id);
         let summary = button(
-            txt("Как в других течениях")
+            txt(tr("Как в других течениях"))
                 .size(theme::text::SMALL)
                 .font(SANS_BOLD)
                 .color(p.muted),
@@ -540,14 +546,52 @@ fn differs_view<'a>(
         col = col.push(summary);
         if expanded {
             for d in &other {
-                col = col.push(widgets::differs_note(
-                    content::level_info(d.level).differs_label,
-                    &d.text,
-                ));
+                col = col.push(movement_note(d.level, &d.text));
             }
         }
     }
     Some(col.into())
+}
+
+/// Movement-difference note. `widgets::differs_note` picks the accent by
+/// matching Russian stems in the label, so the colour comes from the level
+/// and the label is translated here.
+fn movement_note<'a>(level: Level, body: &'a str) -> Element<'a, Msg> {
+    let p = palette();
+    let movement = match level {
+        Level::Reform => theme::Movement::Reform,
+        Level::Conservative => theme::Movement::Conservative,
+        Level::Orthodox => theme::Movement::Orthodox,
+    };
+    let (accent, _) = movement.accent_colors(&p);
+    let label = tr(content::level_info(level).differs_label);
+    let bar = iced::widget::rule::vertical(3).style(move |_theme| iced::widget::rule::Style {
+        color: accent,
+        radius: 2.0.into(),
+        fill_mode: iced::widget::rule::FillMode::Full,
+        snap: true,
+    });
+    let inner = row![
+        bar,
+        container(
+            column![
+                txt(label)
+                    .size(theme::text::BODY)
+                    .font(SANS_BOLD)
+                    .color(accent),
+                widgets::rich_paragraph(body),
+            ]
+            .spacing(6)
+            .width(Length::Fill)
+        )
+        .padding([10.0, 14.0])
+        .width(Length::Fill),
+    ]
+    .width(Length::Fill);
+    container(inner)
+        .width(Length::Fill)
+        .style(move |_| theme::differs(&palette(), movement))
+        .into()
 }
 
 fn movement_short(movement: Option<&str>) -> Option<&'static str> {
@@ -579,7 +623,7 @@ fn sources_footer<'a>(
             .style(move |_| theme::fillet(&palette())),
     );
     col = col.push(
-        txt("Источники")
+        txt(tr("Источники"))
             .size(theme::text::H3)
             .font(crate::ui::fonts::SERIF_BOLD)
             .color(p.gold2),
@@ -609,7 +653,7 @@ fn sources_footer<'a>(
             }
         }
         if let Some(short) = movement_short(s.movement.as_deref()) {
-            item = item.push(widgets::tag::<Msg>(short));
+            item = item.push(widgets::tag::<Msg>(tr(short)));
         }
         col = col.push(item);
     }
@@ -623,11 +667,11 @@ fn sources_footer<'a>(
 fn not_found_view(guard: &Guard) -> Element<'static, Msg> {
     let p = palette();
     let (title, message) = match guard {
-        Guard::NotFound => ("Не найдено", "Урок не найден."),
-        Guard::Locked => ("Раздел закрыт", "Этот раздел пока закрыт."),
+        Guard::NotFound => (tr("Не найдено"), tr("Урок не найден.")),
+        Guard::Locked => (tr("Раздел закрыт"), tr("Этот раздел пока закрыт.")),
     };
     column![
-        widgets::back_button("Уроки", Msg::Go(Route::Map)),
+        widgets::back_button(tr("Уроки"), Msg::Go(Route::Map)),
         widgets::heading(title, 1),
         widgets::card(
             column![
@@ -640,7 +684,7 @@ fn not_found_view(guard: &Guard) -> Element<'static, Msg> {
                     .color(p.muted)
                     .align_x(Horizontal::Center),
                 widgets::btn(
-                    "К урокам",
+                    tr("К урокам"),
                     widgets::Btn::Primary,
                     widgets::BtnSize::Lg,
                     Some(Msg::Go(Route::Map)),

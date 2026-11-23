@@ -17,8 +17,9 @@ use windows::Win32::System::Registry::{
 use windows::Win32::UI::Shell::{IShellLinkW, ShellLink};
 
 use super::{
-    current_version, install_dir_in, is_inside, uninstall_values, Installed, Options, RegValue,
-    Status, Support, Uninstalled, DISPLAY_NAME, EXE_NAME, LINK_NAME, UNINSTALL_KEY,
+    current_version, install_dir_in, is_inside, os_display_name, os_link_name, os_tagline,
+    uninstall_values, Installed, Options, RegValue, Status, Support, Uninstalled, EXE_NAME,
+    LINK_NAMES, UNINSTALL_KEY,
 };
 
 const CREATE_NO_WINDOW: u32 = 0x0800_0000;
@@ -32,15 +33,30 @@ fn install_dir() -> Option<PathBuf> {
     dirs::data_local_dir().map(|d| install_dir_in(&d))
 }
 
+fn start_menu_dir() -> Option<PathBuf> {
+    dirs::data_dir().map(|d| d.join(r"Microsoft\Windows\Start Menu\Programs"))
+}
+
 fn start_menu_link() -> Option<PathBuf> {
-    dirs::data_dir().map(|d| {
-        d.join(r"Microsoft\Windows\Start Menu\Programs")
-            .join(LINK_NAME)
-    })
+    start_menu_dir().map(|d| d.join(os_link_name()))
 }
 
 fn desktop_link() -> Option<PathBuf> {
-    dirs::desktop_dir().map(|d| d.join(LINK_NAME))
+    dirs::desktop_dir().map(|d| d.join(os_link_name()))
+}
+
+fn all_start_menu_links() -> Vec<PathBuf> {
+    start_menu_dir()
+        .into_iter()
+        .flat_map(|d| LINK_NAMES.iter().map(move |n| d.join(n)))
+        .collect()
+}
+
+fn all_desktop_links() -> Vec<PathBuf> {
+    dirs::desktop_dir()
+        .into_iter()
+        .flat_map(|d| LINK_NAMES.iter().map(move |n| d.join(n)))
+        .collect()
 }
 
 fn read_value(name: &str) -> Option<String> {
@@ -85,14 +101,23 @@ pub fn status() -> Status {
         support: Support::Supported,
         installed,
         running_installed,
-        desktop_link: desktop_link().is_some_and(|l| l.exists()),
+        desktop_link: all_desktop_links().iter().any(|l| l.exists()),
     }
 }
 
 pub fn install(opts: Options) -> Result<PathBuf, String> {
-    let me = std::env::current_exe().map_err(|e| format!("Не найден исполняемый файл: {e}"))?;
-    let dir = install_dir().ok_or("Не найдена папка %LOCALAPPDATA%")?;
-    std::fs::create_dir_all(&dir).map_err(|e| format!("Не удалось создать папку: {e}"))?;
+    let me = std::env::current_exe().map_err(|e| {
+        crate::trf!(
+            "Не найден исполняемый файл: {e}",
+            "Could not find the program file: {e}"
+        )
+    })?;
+    let dir = install_dir().ok_or_else(|| {
+        crate::i18n::tr("Не найдена папка %LOCALAPPDATA%").to_string()
+    })?;
+    std::fs::create_dir_all(&dir).map_err(|e| {
+        crate::trf!("Не удалось создать папку: {e}", "Could not create the folder: {e}")
+    })?;
     let target = dir.join(EXE_NAME);
     if !is_inside(&me, &dir) {
         // A running installed copy cannot be overwritten, but it can be
@@ -101,11 +126,19 @@ pub fn install(opts: Options) -> Result<PathBuf, String> {
         let _ = std::fs::remove_file(&old);
         if target.exists() {
             std::fs::rename(&target, &old)
-                .map_err(|e| format!("Не удалось заменить установленную копию: {e}"))?;
+                .map_err(|e| {
+                    crate::trf!(
+                        "Не удалось заменить установленную копию: {e}",
+                        "Could not replace the installed copy: {e}"
+                    )
+                })?;
         }
         if let Err(e) = std::fs::copy(&me, &target) {
             let _ = std::fs::rename(&old, &target);
-            return Err(format!("Не удалось скопировать программу: {e}"));
+            return Err(crate::trf!(
+                "Не удалось скопировать программу: {e}",
+                "Could not copy the program: {e}"
+            ));
         }
         let _ = std::fs::remove_file(&old);
     }
@@ -121,8 +154,16 @@ pub fn install(opts: Options) -> Result<PathBuf, String> {
         if let Some(l) = desktop_link() {
             links.push(l);
         }
-    } else if let Some(l) = desktop_link().filter(|l| l.exists()) {
-        let _ = std::fs::remove_file(l);
+    }
+    // Drop the leftover shortcut of the other language (and a desktop
+    // shortcut the user turned off).
+    for l in all_start_menu_links()
+        .into_iter()
+        .chain(all_desktop_links())
+    {
+        if !links.contains(&l) && l.exists() {
+            let _ = std::fs::remove_file(l);
+        }
     }
     make_links(&target, &dir, &links)?;
 
@@ -147,9 +188,11 @@ fn make_links(target: &Path, dir: &Path, links: &[PathBuf]) -> Result<(), String
                 let sl: IShellLinkW = CoCreateInstance(&ShellLink, None, CLSCTX_INPROC_SERVER)?;
                 sl.SetPath(&HSTRING::from(target.as_os_str()))?;
                 sl.SetWorkingDirectory(&HSTRING::from(dir.as_os_str()))?;
-                sl.SetDescription(&HSTRING::from(
-                    "Шорашим — основы иудаизма и подготовка к гиюру",
-                ))?;
+                sl.SetDescription(&HSTRING::from(format!(
+                    "{} — {}",
+                    os_display_name(),
+                    os_tagline()
+                )))?;
                 sl.SetIconLocation(&HSTRING::from(target.as_os_str()), 0)?;
                 let pf: IPersistFile = sl.cast()?;
                 pf.Save(&HSTRING::from(link.as_os_str()), true)?;
@@ -159,10 +202,15 @@ fn make_links(target: &Path, dir: &Path, links: &[PathBuf]) -> Result<(), String
         if init.is_ok() {
             CoUninitialize();
         }
-        res.map_err(|e| format!("Не удалось создать ярлык: {e}"))
+        res.map_err(|e| {
+            crate::trf!(
+                "Не удалось создать ярлык: {e}",
+                "Could not create the shortcut: {e}"
+            )
+        })
     })
     .join()
-    .map_err(|_| "Не удалось создать ярлык".to_string())?
+    .map_err(|_| crate::i18n::tr("Не удалось создать ярлык").to_string())?
 }
 
 fn write_uninstall_entry(dir: &Path, size_kb: u32) -> Result<(), String> {
@@ -181,7 +229,11 @@ fn write_uninstall_entry(dir: &Path, size_kb: u32) -> Result<(), String> {
         )
     };
     if rc != ERROR_SUCCESS {
-        return Err(format!("Не удалось записать в реестр (код {})", rc.0));
+        return Err(crate::trf!(
+            "Не удалось записать в реестр (код {})",
+            "Could not write to the registry (code {})",
+            rc.0
+        ));
     }
     let mut result = Ok(());
     for (name, value) in uninstall_values(dir, current_version(), size_kb) {
@@ -202,8 +254,9 @@ fn write_uninstall_entry(dir: &Path, size_kb: u32) -> Result<(), String> {
             },
         };
         if rc != ERROR_SUCCESS {
-            result = Err(format!(
+            result = Err(crate::trf!(
                 "Не удалось записать {name} в реестр (код {})",
+                "Could not write {name} to the registry (code {})",
                 rc.0
             ));
             break;
@@ -222,8 +275,11 @@ pub fn uninstall() -> Result<Uninstalled, String> {
         .as_ref()
         .map(|i| i.dir.clone())
         .or_else(install_dir)
-        .ok_or("Не найдена папка установки")?;
-    for l in [start_menu_link(), desktop_link()].into_iter().flatten() {
+        .ok_or_else(|| crate::i18n::tr("Не найдена папка установки").to_string())?;
+    for l in all_start_menu_links()
+        .into_iter()
+        .chain(all_desktop_links())
+    {
         if l.exists() {
             let _ = std::fs::remove_file(l);
         }
@@ -237,7 +293,12 @@ pub fn uninstall() -> Result<Uninstalled, String> {
     } else {
         if dir.exists() {
             std::fs::remove_dir_all(&dir)
-                .map_err(|e| format!("Не удалось удалить папку программы: {e}"))?;
+                .map_err(|e| {
+                    crate::trf!(
+                        "Не удалось удалить папку программы: {e}",
+                        "Could not delete the program folder: {e}"
+                    )
+                })?;
         }
         Ok(Uninstalled::Done)
     }
@@ -257,7 +318,12 @@ fn schedule_removal(dir: &Path) -> Result<(), String> {
         .creation_flags(CREATE_NO_WINDOW | DETACHED_PROCESS)
         .spawn()
         .map(|_| ())
-        .map_err(|e| format!("Не удалось запланировать удаление папки: {e}"))
+        .map_err(|e| {
+            crate::trf!(
+                "Не удалось запланировать удаление папки: {e}",
+                "Could not schedule deletion of the folder: {e}"
+            )
+        })
 }
 
 pub fn cleanup_after_update() {
@@ -270,24 +336,32 @@ pub fn cleanup_after_update() {
 
 /// `--uninstall` from «Приложения и возможности»: confirm, uninstall, report.
 pub fn cli_uninstall(quiet: bool) {
+    crate::i18n::apply_os_lang();
     let data_dir = dirs::config_dir()
         .map(|d| d.join(crate::storage::DATA_DIR).display().to_string())
         .unwrap_or_default();
     if !quiet {
+        let name = os_display_name();
+        let ask = crate::i18n::with_lang(
+            crate::i18n::env_override().unwrap_or_else(crate::i18n::detect_system),
+            || {
+                crate::trf!(
+                    "Удалить «{name}» с этого компьютера?\n\nБудут удалены программа, ярлыки и запись в «Приложениях». Ваш прогресс останется в папке:\n{data_dir}",
+                    "Remove {name} from this computer?\n\nThe program, shortcuts and the Apps & features entry will be deleted. Your progress stays in:\n{data_dir}"
+                )
+            },
+        );
+        let remove = crate::i18n::tr_or("Удалить", "Remove").to_string();
+        let cancel = crate::i18n::tr_or("Отмена", "Cancel").to_string();
         let ok = rfd::MessageDialog::new()
-            .set_title(DISPLAY_NAME)
+            .set_title(name)
             .set_level(rfd::MessageLevel::Warning)
-            .set_description(format!(
-                "Удалить «Шорашим» с этого компьютера?\n\nБудут удалены программа, ярлыки и запись в «Приложениях». Ваш прогресс останется в папке:\n{data_dir}"
-            ))
-            .set_buttons(rfd::MessageButtons::OkCancelCustom(
-                "Удалить".into(),
-                "Отмена".into(),
-            ))
+            .set_description(ask)
+            .set_buttons(rfd::MessageButtons::OkCancelCustom(remove.clone(), cancel))
             .show();
         let confirmed = match ok {
             rfd::MessageDialogResult::Ok => true,
-            rfd::MessageDialogResult::Custom(s) => s == "Удалить",
+            rfd::MessageDialogResult::Custom(s) => s == remove || s == "Удалить" || s == "Remove",
             _ => false,
         };
         if !confirmed {
@@ -299,8 +373,16 @@ pub fn cli_uninstall(quiet: bool) {
         return;
     }
     report(res.map(|_| {
-        "«Шорашим» удалён. Прогресс сохранён — он вернётся, если установить программу снова."
-            .to_string()
+        let name = os_display_name();
+        crate::i18n::with_lang(
+            crate::i18n::env_override().unwrap_or_else(crate::i18n::detect_system),
+            || {
+                crate::trf!(
+                    "«{name}» удалён. Прогресс сохранён — он вернётся, если установить программу снова.",
+                    "{name} was removed. Your progress is kept and will return if you install the app again."
+                )
+            },
+        )
     }));
 }
 
@@ -311,7 +393,7 @@ pub fn report(res: Result<String, String>) {
         Err(e) => (rfd::MessageLevel::Error, e),
     };
     rfd::MessageDialog::new()
-        .set_title(DISPLAY_NAME)
+        .set_title(os_display_name())
         .set_level(level)
         .set_description(text)
         .set_buttons(rfd::MessageButtons::Ok)

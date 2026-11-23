@@ -44,18 +44,25 @@ fn read_u64(r: &mut impl Read) -> std::io::Result<u64> {
 
 /// Unpack the payload appended to `setup` into `dir`.
 pub fn unpack(setup: &Path, dir: &Path) -> Result<Unpacked, String> {
-    let bad = |e: std::io::Error| format!("Установщик повреждён ({e}). Скачайте его заново.");
+    let bad = |e: std::io::Error| {
+        crate::trf!(
+            "Установщик повреждён ({e}). Скачайте его заново.",
+            "The installer is damaged ({e}). Please download it again."
+        )
+    };
     let mut f = File::open(setup).map_err(bad)?;
     let len = f.metadata().map_err(bad)?.len();
     if len < 16 {
-        return Err("Установщик повреждён. Скачайте его заново.".into());
+        return Err(crate::i18n::tr("Установщик повреждён. Скачайте его заново.").into());
     }
     f.seek(SeekFrom::Start(len - 16)).map_err(bad)?;
     let payload_len = read_u64(&mut f).map_err(bad)?;
     let mut magic = [0u8; 8];
     f.read_exact(&mut magic).map_err(bad)?;
     if &magic != MAGIC || payload_len > len - 16 {
-        return Err("В установщике нет файлов программы. Скачайте его заново.".into());
+        return Err(
+            crate::i18n::tr("В установщике нет файлов программы. Скачайте его заново.").into(),
+        );
     }
     let start = len - 16 - payload_len;
     f.seek(SeekFrom::Start(start)).map_err(bad)?;
@@ -69,18 +76,25 @@ pub fn unpack(setup: &Path, dir: &Path) -> Result<Unpacked, String> {
         };
         let mut pb = vec![0u8; plen];
         r.read_exact(&mut pb).map_err(bad)?;
-        let path = String::from_utf8(pb).map_err(|_| "Установщик повреждён.".to_string())?;
+        let path = String::from_utf8(pb)
+            .map_err(|_| crate::i18n::tr("Установщик повреждён.").to_string())?;
         let size = read_u64(&mut r).map_err(bad)?;
         let packed = read_u64(&mut r).map_err(bad)?;
         if !safe(&path) {
-            return Err(format!("Установщик повреждён: неверный путь «{path}»."));
+            return Err(crate::trf!(
+                "Установщик повреждён: неверный путь «{path}».",
+                "The installer is damaged: invalid path “{path}”."
+            ));
         }
         let mut data = Vec::with_capacity(size.min(1 << 28) as usize);
         flate2::read::ZlibDecoder::new((&mut r).take(packed))
             .read_to_end(&mut data)
             .map_err(bad)?;
         if data.len() as u64 != size {
-            return Err(format!("Установщик повреждён: файл «{path}» неполный."));
+            return Err(crate::trf!(
+                "Установщик повреждён: файл «{path}» неполный.",
+                "The installer is damaged: the file “{path}” is incomplete."
+            ));
         }
         if path == INFO {
             info = serde_json::from_slice(&data).unwrap_or_default();
@@ -88,11 +102,18 @@ pub fn unpack(setup: &Path, dir: &Path) -> Result<Unpacked, String> {
         }
         let out = dir.join(&path);
         if let Some(p) = out.parent() {
-            std::fs::create_dir_all(p).map_err(|e| format!("Не удалось распаковать: {e}"))?;
+            std::fs::create_dir_all(p).map_err(|e| {
+                crate::trf!("Не удалось распаковать: {e}", "Could not unpack: {e}")
+            })?;
         }
         File::create(&out)
             .and_then(|mut o| o.write_all(&data))
-            .map_err(|e| format!("Не удалось распаковать «{path}»: {e}"))?;
+            .map_err(|e| {
+                crate::trf!(
+                    "Не удалось распаковать «{path}»: {e}",
+                    "Could not unpack “{path}”: {e}"
+                )
+            })?;
     }
     let s = |k: &str| info[k].as_str().unwrap_or("").to_string();
     Ok(Unpacked {

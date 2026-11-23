@@ -18,12 +18,14 @@ use iced::{Alignment, Background, Border, Color, Element, Length, Shadow, Subscr
 
 use crate::calendar::{days, geo, hebrew, parasha, prefs, texts, times};
 use crate::content;
+use crate::i18n::tr;
 use crate::storage::Level;
 use crate::ui::app::{Action, Ctx, Route};
 use crate::ui::fonts::{HEBREW, SANS, SANS_BOLD, SERIF_BOLD};
 use crate::ui::screens::map::{heading_owned, txt};
 use crate::ui::theme::{self, Palette};
 use crate::ui::widgets;
+use crate::util::plural_l;
 
 /// Which tab is shown.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
@@ -215,6 +217,7 @@ impl Screen {
                     Ok((lat, lon)) => {
                         self.prefs.location_mode = prefs::LocationMode::System;
                         self.prefs.place = Some(prefs::Place {
+                            // Russian on purpose: translated in display_place_name.
                             name: "Примерное местоположение".into(),
                             lat,
                             lon,
@@ -225,28 +228,30 @@ impl Screen {
                         self.geo_note = None;
                         self.store(ctx);
                         ctx.toast(
-                            "Местоположение определено",
-                            "Координаты округлены примерно до города.",
+                            tr("Местоположение определено"),
+                            tr("Координаты округлены примерно до города."),
                             "✓",
                         );
                     }
                     Err(geo::GeoError::Denied) => {
                         self.geo_note = Some(
-                            "Windows не разрешила доступ. Его можно изменить в Параметры → Конфиденциальность и безопасность → Расположение, затем запросить снова. Или выберите город ниже. Сохранённое место не меняется."
-                                .into(),
+                            tr("Windows не разрешила доступ. Его можно изменить в Параметры → Конфиденциальность и безопасность → Расположение, затем запросить снова. Или выберите город ниже. Сохранённое место не меняется.")
+                                .to_string(),
                         );
                         self.store(ctx);
                     }
                     Err(geo::GeoError::Unsupported) => {
                         self.geo_note = Some(
-                            "На этой системе автоматическое определение недоступно — выберите город или введите координаты."
-                                .into(),
+                            tr("На этой системе автоматическое определение недоступно — выберите город или введите координаты.")
+                                .to_string(),
                         );
                         self.store(ctx);
                     }
                     Err(geo::GeoError::Unavailable(why)) => {
-                        self.geo_note =
-                            Some(format!("Не удалось определить местоположение: {why}. Выберите город ниже. Сохранённое место не меняется."));
+                        self.geo_note = Some(trf!(
+                            "Не удалось определить местоположение: {why}. Выберите город ниже. Сохранённое место не меняется.",
+                            "Could not determine the location: {why}. Choose a city below. The saved place is unchanged."
+                        ));
                         self.store(ctx);
                     }
                 }
@@ -300,22 +305,23 @@ impl Screen {
                 let (Some(lat), Some(lon)) = (parse(&self.lat_input), parse(&self.lon_input))
                 else {
                     self.coord_error = Some(
-                        "Введите широту и долготу числами, например 31,78 и 35,23 (Иерусалим)."
-                            .into(),
+                        tr("Введите широту и долготу числами, например 31,78 и 35,23 (Иерусалим).")
+                            .to_string(),
                     );
                     return Action::None;
                 };
                 if !(-90.0..=90.0).contains(&lat) {
-                    self.coord_error = Some("Широта должна быть от −90 до 90.".into());
+                    self.coord_error = Some(tr("Широта должна быть от −90 до 90.").to_string());
                     return Action::None;
                 }
                 if !(-180.0..=180.0).contains(&lon) {
-                    self.coord_error = Some("Долгота должна быть от −180 до 180.".into());
+                    self.coord_error = Some(tr("Долгота должна быть от −180 до 180.").to_string());
                     return Action::None;
                 }
                 self.geo_pending = None;
                 self.prefs.location_mode = prefs::LocationMode::Manual;
                 self.prefs.place = Some(prefs::Place {
+                    // Russian on purpose: translated in display_place_name.
                     name: "Координаты вручную".into(),
                     lat,
                     lon,
@@ -353,7 +359,7 @@ impl Screen {
     pub fn view<'a>(&'a self, ctx: &'a Ctx) -> Element<'a, Msg> {
         let p = palette();
         let base: Element<'a, Msg> = column![
-            widgets::page_header("Еврейский календарь", None),
+            widgets::page_header(tr("Еврейский календарь"), None),
             self.tabs_bar(),
             match self.tab {
                 Tab::Today => self.today_tab(ctx, p),
@@ -374,15 +380,20 @@ impl Screen {
     }
 
     fn tabs_bar<'a>(&self) -> Element<'a, Msg> {
-        seg_row(&[
-            ("Сегодня", self.tab == Tab::Today, Msg::Tab(Tab::Today)),
-            ("Месяц", self.tab == Tab::Month, Msg::Tab(Tab::Month)),
-            (
-                "Настройки",
+        // «Месяц» is also the 30-day streak badge (tr → "One month"). The tab
+        // says "Month", so its English stays in trf! and out of the catalog.
+        let month = trf!("Месяц", "Month");
+        row![
+            seg_button(tr("Сегодня"), self.tab == Tab::Today, Msg::Tab(Tab::Today)),
+            seg_button(month, self.tab == Tab::Month, Msg::Tab(Tab::Month)),
+            seg_button(
+                tr("Настройки"),
                 self.tab == Tab::Settings,
                 Msg::Tab(Tab::Settings),
             ),
-        ])
+        ]
+        .spacing(4)
+        .into()
     }
 
     // ---- «Сегодня» ----------------------------------------------------------
@@ -409,18 +420,18 @@ impl Screen {
 
     fn day_nav<'a>(&'a self, date: NaiveDate, today: NaiveDate, p: Palette) -> Element<'a, Msg> {
         let today_btn = if date == today {
-            btn_ghost("Сегодня", Msg::Today)
+            btn_ghost(tr("Сегодня"), Msg::Today)
         } else {
-            btn_secondary("Сегодня", Msg::Today)
+            btn_secondary(tr("Сегодня"), Msg::Today)
         };
         row![
             nav_arrow("‹", Msg::PrevDay),
             column![
-                txt(hebrew::format_gregorian_ru(date))
+                txt(format_gregorian(date))
                     .size(theme::text::H3)
                     .font(SERIF_BOLD)
                     .color(p.text),
-                txt(hebrew::HebrewDate::from_gregorian(date).format_ru())
+                txt(format_hebrew_date(hebrew::HebrewDate::from_gregorian(date)))
                     .size(theme::text::SMALL)
                     .color(p.muted),
             ]
@@ -439,16 +450,12 @@ impl Screen {
         let d = info.date;
         container(
             column![
-                txt(format!(
-                    "{}, {}",
-                    hebrew::weekday_ru(d),
-                    hebrew::format_gregorian_ru(d)
-                ))
-                .size(theme::text::H2)
-                .font(SERIF_BOLD)
-                .color(p.text)
-                .width(Length::Fill),
-                txt(info.hebrew.format_ru())
+                txt(weekday_and_gregorian(d))
+                    .size(theme::text::H2)
+                    .font(SERIF_BOLD)
+                    .color(p.text)
+                    .width(Length::Fill),
+                txt(format_hebrew_date(info.hebrew))
                     .size(theme::text::H3)
                     .color(p.gold2)
                     .width(Length::Fill),
@@ -477,7 +484,7 @@ impl Screen {
         p: Palette,
     ) -> Element<'a, Msg> {
         let mut col = Column::new().spacing(12).width(Length::Fill);
-        col = col.push(widgets::heading("Что за день", 3));
+        col = col.push(widgets::heading(tr("Что за день"), 3));
 
         for ev in &info.events {
             let (accent, _) = kind_tint(&p, ev.kind);
@@ -492,7 +499,7 @@ impl Screen {
 
         if !info.events.iter().any(|e| e.is_notable()) {
             col = col.push(
-                txt("Будний день")
+                txt(tr("Будний день"))
                     .size(theme::text::BODY)
                     .font(SANS_BOLD)
                     .color(p.text),
@@ -508,8 +515,9 @@ impl Screen {
                     .day(f.id)
                     .and_then(|d| d.fast_note.as_deref())
                     .filter(|s| !s.is_empty());
+                let title = f.title.as_str();
                 col = col.push(banner(
-                    format!("Сегодня пост: {}", f.title),
+                    trf!("Сегодня пост: {title}", "Fast today: {title}"),
                     note,
                     p.bad,
                     p.bad_soft,
@@ -517,17 +525,18 @@ impl Screen {
             }
             None => {
                 col = col.push(
-                    txt("Сегодня поста нет")
+                    txt(tr("Сегодня поста нет"))
                         .size(theme::text::SMALL)
                         .color(p.muted),
                 );
                 let tomorrow = days::day_info(info.date + Duration::days(1), info.diaspora);
                 let major = tomorrow.fast().filter(|f| f.kind == days::Kind::MajorFast);
                 if let Some(f) = major {
+                    let title = f.title.as_str();
                     col = col.push(
-                        txt(format!(
-                            "Завтра пост — {} — начинается сегодня вечером на закате",
-                            f.title
+                        txt(trf!(
+                            "Завтра пост — {title} — начинается сегодня вечером на закате",
+                            "Tomorrow is a fast — {title} — it begins this evening at sunset"
                         ))
                         .size(theme::text::SMALL + 0.5)
                         .color(p.flame)
@@ -538,16 +547,20 @@ impl Screen {
         }
 
         if let Some(n) = info.omer {
+            let path = omer_breakdown(n);
             col = col.push(
                 column![
-                    txt(format!("Счёт омера: сегодня вечером — {} омера", nth(n as u32)))
+                    txt(trf!(
+                        "Счёт омера: сегодня вечером — {n}-й день омера",
+                        "Omer count: tonight is day {n} of the Omer"
+                    ))
                         .size(theme::text::BODY)
                         .font(SANS_BOLD)
                         .color(p.gold2)
                         .width(Length::Fill),
-                    txt(format!(
-                        "{} пути от Песаха до Шавуота. Счёт произносят на закате, который начинает этот день.",
-                        omer_breakdown(n)
+                    txt(trf!(
+                        "{path} пути от Песаха до Шавуота. Счёт произносят на закате, который начинает этот день.",
+                        "{path} of the journey from Pesach to Shavuot. The count is said at sunset, which begins the day."
                     ))
                     .size(theme::text::SMALL)
                     .color(p.muted)
@@ -600,11 +613,11 @@ impl Screen {
                 .align_y(Alignment::Center),
             );
             if !d.meaning.is_empty() {
-                col = col.push(block_label("Смысл", p));
+                col = col.push(block_label(tr("Смысл"), p));
                 col = col.push(widgets::rich_paragraph(&d.meaning));
             }
             if !d.customs.is_empty() {
-                col = col.push(block_label("Обычаи", p));
+                col = col.push(block_label(tr("Обычаи"), p));
                 for c in &d.customs {
                     col = col.push(
                         row![
@@ -617,7 +630,7 @@ impl Screen {
                 }
             }
             if !d.idea.is_empty() {
-                col = col.push(block_label("Мысль дня", p));
+                col = col.push(block_label(tr("Мысль дня"), p));
                 col = col.push(widgets::rich_paragraph(&d.idea));
             }
             if let Some(mv) = &d.movements {
@@ -653,7 +666,7 @@ impl Screen {
             for id in &d.lessons {
                 if let Some(el) = lesson_link(ctx, id) {
                     if !pushed_label {
-                        col = col.push(block_label("Уроки в приложении", p));
+                        col = col.push(block_label(tr("Уроки в приложении"), p));
                         pushed_label = true;
                     }
                     col = col.push(el);
@@ -674,25 +687,27 @@ impl Screen {
         let diaspora = self.prefs.diaspora;
         let (sat, reading, next) = parasha::weekly(date, diaspora);
         let mut col = Column::new().spacing(12).width(Length::Fill);
-        col = col.push(widgets::heading("Недельная глава", 3));
+        col = col.push(widgets::heading(tr("Недельная глава"), 3));
+        let sat_s = format_gregorian(sat);
         col = col.push(
-            txt(format!("Шаббат, {}", hebrew::format_gregorian_ru(sat)))
+            txt(trf!("Шаббат, {date}", "Shabbat, {date}", date = sat_s))
                 .size(theme::text::SMALL)
                 .color(p.muted),
         );
         if reading == parasha::Reading::Festival {
             col = col.push(
-                txt("В этот Шаббат читают праздничный отрывок")
+                txt(tr("В этот Шаббат читают праздничный отрывок"))
                     .size(theme::text::BODY)
                     .color(p.text)
                     .width(Length::Fill),
             );
             if let Some((next_sat, next_reading)) = next {
+                let name = reading_name(next_reading);
+                let date = format_gregorian(next_sat);
                 col = col.push(
-                    txt(format!(
-                        "Следующая регулярная глава: {} — {}",
-                        next_reading.name_ru(),
-                        hebrew::format_gregorian_ru(next_sat)
+                    txt(trf!(
+                        "Следующая регулярная глава: {name} — {date}",
+                        "Next regular portion: {name} — {date}"
                     ))
                     .size(theme::text::SMALL + 0.5)
                     .color(p.muted)
@@ -700,7 +715,7 @@ impl Screen {
                 );
             }
         } else {
-            let mut title = row![txt(reading.name_ru())
+            let mut title = row![txt(reading_name(reading))
                 .size(theme::text::H3)
                 .font(SERIF_BOLD)
                 .color(p.text)]
@@ -726,10 +741,13 @@ impl Screen {
                     }
                     if !pt.theme.is_empty() {
                         col = col.push(
-                            txt(format!("Тема: {}", pt.theme))
-                                .size(theme::text::SMALL + 0.5)
-                                .color(p.muted)
-                                .width(Length::Fill),
+                            txt({
+                                let theme = pt.theme.as_str();
+                                trf!("Тема: {theme}", "Theme: {theme}")
+                            })
+                            .size(theme::text::SMALL + 0.5)
+                            .color(p.muted)
+                            .width(Length::Fill),
                         );
                     }
                 }
@@ -752,7 +770,7 @@ impl Screen {
                         .and_then(|pt| pt.daily.get(wd))
                         .filter(|s| !s.is_empty());
                     if let Some(idea) = idea {
-                        col = col.push(block_label("Тема дня из Торы", p));
+                        col = col.push(block_label(tr("Тема дня из Торы"), p));
                         col = col.push(widgets::rich_paragraph(idea));
                         break;
                     }
@@ -764,7 +782,7 @@ impl Screen {
                     for id in &pt.lessons {
                         if let Some(el) = lesson_link(ctx, id) {
                             if !pushed_label {
-                                col = col.push(block_label("Уроки в приложении", p));
+                                col = col.push(block_label(tr("Уроки в приложении"), p));
                                 pushed_label = true;
                             }
                             col = col.push(el);
@@ -778,25 +796,26 @@ impl Screen {
 
     fn times_card<'a>(&'a self, date: NaiveDate, p: Palette) -> Element<'a, Msg> {
         let mut col = Column::new().spacing(12).width(Length::Fill);
-        col = col.push(widgets::heading("Время свечей и постов", 3));
+        col = col.push(widgets::heading(tr("Время свечей и постов"), 3));
         match self.prefs.active_place() {
             None => {
                 col = col.push(
-                    txt("Чтобы показывать время зажигания свечей, авдалы и начала и конца постов, нужно примерное местоположение — город или координаты.")
+                    txt(tr("Чтобы показывать время зажигания свечей, авдалы и начала и конца постов, нужно примерное местоположение — город или координаты."))
                         .size(theme::text::SMALL + 0.5)
                         .color(p.muted)
                         .width(Length::Fill),
                 );
                 col = col.push(
-                    txt("Укажите место один раз на вкладке «Настройки» — время будет показано автоматически.")
+                    txt(tr("Укажите место один раз на вкладке «Настройки» — время будет показано автоматически."))
                         .size(theme::text::SMALL)
                         .color(p.gold2)
                         .width(Length::Fill),
                 );
             }
             Some(place) => {
+                let name = display_place_name(&place.name);
                 col = col.push(
-                    txt(format!("Место: {}", place.name))
+                    txt(trf!("Место: {name}", "Place: {name}"))
                         .size(theme::text::SMALL)
                         .color(p.muted)
                         .width(Length::Fill),
@@ -822,7 +841,7 @@ impl Screen {
                     );
                 }
                 col = col.push(
-                    txt(times::CAVEAT)
+                    txt(tr(times::CAVEAT))
                         .size(theme::text::SMALL - 1.0)
                         .color(p.muted)
                         .width(Length::Fill),
@@ -838,16 +857,20 @@ impl Screen {
         let h = hebrew::HebrewDate::from_gregorian(d);
         Some(widgets::card(
             column![
-                widgets::heading("Ближайшее", 3),
-                txt(format!("До {}: {}", ev.title, plural_days(n)))
-                    .size(theme::text::BODY)
-                    .font(SANS_BOLD)
-                    .color(p.gold2)
-                    .width(Length::Fill),
+                widgets::heading(tr("Ближайшее"), 3),
+                txt({
+                    let title = ev.title.as_str();
+                    let when = plural_days(n);
+                    trf!("До {title}: {when}", "{when} until {title}")
+                })
+                .size(theme::text::BODY)
+                .font(SANS_BOLD)
+                .color(p.gold2)
+                .width(Length::Fill),
                 txt(format!(
                     "{} — {}",
-                    hebrew::format_gregorian_ru(d),
-                    h.format_ru()
+                    format_gregorian(d),
+                    format_hebrew_date(h)
                 ))
                 .size(theme::text::SMALL)
                 .color(p.muted)
@@ -877,7 +900,7 @@ impl Screen {
             row![
                 nav_arrow("‹", Msg::PrevMonth),
                 column![
-                    heading_owned(format!("{} {}", hebrew::month_name_ru(y, m), y), 2),
+                    heading_owned(hebrew_month_heading(y, m), 2),
                     txt(he_title)
                         .size(theme::text::H3)
                         .font(HEBREW)
@@ -903,7 +926,7 @@ impl Screen {
             .enumerate()
         {
             head = head.push(
-                txt(*w)
+                txt(tr(*w))
                     .size(theme::text::SMALL)
                     .font(if i == 6 { SANS_BOLD } else { SANS })
                     .color(if i == 6 { p.gold2 } else { p.muted })
@@ -912,10 +935,12 @@ impl Screen {
             );
         }
         col = col.push(
-            txt("В клетке слева — еврейская дата (буквами и цифрой), справа — обычная дата.")
-                .size(theme::text::SMALL)
-                .color(p.muted)
-                .width(Length::Fill),
+            txt(tr(
+                "В клетке слева — еврейская дата (буквами и цифрой), справа — обычная дата.",
+            ))
+            .size(theme::text::SMALL)
+            .color(p.muted)
+            .width(Length::Fill),
         );
         col = col.push(head);
 
@@ -946,12 +971,12 @@ impl Screen {
 
         let mut legend = Row::new().spacing(14);
         for (color, label) in [
-            (p.gold2, "Шаббат"),
-            (p.gold, "Йом тов"),
-            (p.flame, "Холь а-моэд / канун"),
-            (p.bad, "Пост"),
-            (p.info, "Рош Ходеш"),
-            (p.violet, "Малый праздник или особый день"),
+            (p.gold2, tr("Шаббат")),
+            (p.gold, tr("Йом тов")),
+            (p.flame, tr("Холь а-моэд / канун")),
+            (p.bad, tr("Пост")),
+            (p.info, tr("Рош Ходеш")),
+            (p.violet, tr("Малый праздник или особый день")),
         ] {
             legend = legend.push(
                 row![
@@ -969,7 +994,7 @@ impl Screen {
         if let Some(mt) = t.month(y, m).filter(|mt| !mt.idea.is_empty()) {
             col = col.push(widgets::card(
                 column![
-                    widgets::heading("Об этом месяце", 3),
+                    widgets::heading(tr("Об этом месяце"), 3),
                     widgets::rich_paragraph(&mt.idea),
                 ]
                 .spacing(10),
@@ -1004,7 +1029,7 @@ impl Screen {
         } else {
             p.text
         };
-        let greg_month = GREG_MONTHS_ABBR[date.month0() as usize];
+        let greg_month = tr(GREG_MONTHS_ABBR[date.month0() as usize]);
 
         let mut dots = Row::new().spacing(3).height(Length::Fixed(6.0));
         let mut seen: Vec<Color> = Vec::new();
@@ -1058,16 +1083,9 @@ impl Screen {
         let diaspora = self.prefs.diaspora;
         let info = days::day_info(date, diaspora);
         let mut col = Column::new().spacing(10).width(Length::Fill);
-        col = col.push(heading_owned(
-            format!(
-                "{} — {}",
-                hebrew::weekday_ru(date),
-                hebrew::format_gregorian_ru(date)
-            ),
-            3,
-        ));
+        col = col.push(heading_owned(weekday_dash_gregorian(date), 3));
         col = col.push(
-            txt(info.hebrew.format_ru())
+            txt(format_hebrew_date(info.hebrew))
                 .size(theme::text::SMALL + 0.5)
                 .color(p.gold2),
         );
@@ -1086,18 +1104,24 @@ impl Screen {
         }
         if let Some(f) = info.fast() {
             col = col.push(
-                txt(format!("Пост: {}", f.title))
-                    .size(theme::text::SMALL + 0.5)
-                    .font(SANS_BOLD)
-                    .color(p.bad),
+                txt({
+                    let title = f.title.as_str();
+                    trf!("Пост: {title}", "Fast: {title}")
+                })
+                .size(theme::text::SMALL + 0.5)
+                .font(SANS_BOLD)
+                .color(p.bad),
             );
         }
         if date.weekday() == Weekday::Sat {
             let (_, reading, _) = parasha::weekly(date, diaspora);
             col = col.push(
-                txt(format!("Глава: {}", reading.name_ru()))
-                    .size(theme::text::SMALL + 0.5)
-                    .color(p.gold2),
+                txt({
+                    let name = reading_name(reading);
+                    trf!("Глава: {name}", "Portion: {name}")
+                })
+                .size(theme::text::SMALL + 0.5)
+                .color(p.gold2),
             );
         }
         if self.prefs.active_place().is_some() {
@@ -1119,7 +1143,7 @@ impl Screen {
             }
         }
         col = col.push(widgets::btn(
-            "Открыть день",
+            tr("Открыть день"),
             widgets::Btn::Primary,
             widgets::BtnSize::Md,
             Some(Msg::OpenDay(date)),
@@ -1135,7 +1159,7 @@ impl Screen {
         p: Palette,
     ) -> Element<'a, Msg> {
         let mut col = Column::new().spacing(10).width(Length::Fill);
-        col = col.push(widgets::heading("Праздники и посты этого месяца", 3));
+        col = col.push(widgets::heading(tr("Праздники и посты этого месяца"), 3));
         let mut seen: Vec<&str> = Vec::new();
         let mut any = false;
         for day in 1..=hebrew::days_in_month(y, m) {
@@ -1153,7 +1177,7 @@ impl Screen {
                         txt(format!(
                             "{} {}",
                             date.day(),
-                            GREG_MONTHS_ABBR[date.month0() as usize]
+                            tr(GREG_MONTHS_ABBR[date.month0() as usize])
                         ))
                         .size(theme::text::SMALL)
                         .color(p.muted)
@@ -1168,7 +1192,7 @@ impl Screen {
         }
         if !any {
             col = col.push(
-                txt("В этом месяце нет праздников и постов.")
+                txt(tr("В этом месяце нет праздников и постов."))
                     .size(theme::text::SMALL)
                     .color(p.muted),
             );
@@ -1184,7 +1208,7 @@ impl Screen {
         col = col.push(self.where_card(p));
 
         col = col.push(
-            txt("Всё хранится только на этом компьютере.")
+            txt(tr("Всё хранится только на этом компьютере."))
                 .size(theme::text::SMALL)
                 .color(p.muted),
         );
@@ -1194,14 +1218,14 @@ impl Screen {
     fn where_card<'a>(&'a self, p: Palette) -> Element<'a, Msg> {
         widgets::card(
             column![
-                widgets::heading("Порядок праздников", 3),
-                txt("Выбирается по месту автоматически. В диаспоре многие праздники длятся два дня, и порядок недельных глав иногда иной.")
+                widgets::heading(tr("Порядок праздников"), 3),
+                txt(tr("Выбирается по месту автоматически. В диаспоре многие праздники длятся два дня, и порядок недельных глав иногда иной."))
                     .size(theme::text::SMALL)
                     .color(p.muted)
                     .width(Length::Fill),
                 seg_row(&[
-                    ("Диаспора", self.prefs.diaspora, Msg::SetDiaspora(true)),
-                    ("Израиль", !self.prefs.diaspora, Msg::SetDiaspora(false)),
+                    (tr("Диаспора"), self.prefs.diaspora, Msg::SetDiaspora(true)),
+                    (tr("Израиль"), !self.prefs.diaspora, Msg::SetDiaspora(false)),
                 ]),
             ]
             .spacing(12),
@@ -1210,11 +1234,15 @@ impl Screen {
 
     fn location_card<'a>(&'a self, p: Palette) -> Element<'a, Msg> {
         let status = match self.prefs.active_place() {
-            Some(pl) => format!("{}: {}", mode_title(self.prefs.location_mode), pl.name),
-            None => "Место не выбрано — время свечей и постов не показывается".to_string(),
+            Some(pl) => {
+                let mode = mode_title(self.prefs.location_mode);
+                let place = display_place_name(&pl.name);
+                format!("{mode}: {place}")
+            }
+            None => tr("Место не выбрано — время свечей и постов не показывается").to_string(),
         };
         let mut col = Column::new().spacing(8).width(Length::Fill);
-        col = col.push(widgets::heading("Местоположение для времени", 3));
+        col = col.push(widgets::heading(tr("Местоположение для времени"), 3));
         col = col.push(
             txt(status)
                 .size(theme::text::BODY)
@@ -1223,18 +1251,18 @@ impl Screen {
                 .width(Length::Fill),
         );
         col = col.push(
-            txt("Хранится только на этом компьютере, с точностью до города. Разрешение на доступ спрашивает сама Windows.")
+            txt(tr("Хранится только на этом компьютере, с точностью до города. Разрешение на доступ спрашивает сама Windows."))
                 .size(theme::text::SMALL)
                 .color(p.muted)
                 .width(Length::Fill),
         );
         if cfg!(windows) {
             let label = if self.geo_pending.is_some() {
-                "Ожидаем ответ Windows…"
+                tr("Ожидаем ответ Windows…")
             } else if self.prefs.consent_asked {
-                "Запросить у Windows снова"
+                tr("Запросить у Windows снова")
             } else {
-                "Определить через Windows"
+                tr("Определить через Windows")
             };
             col = col.push(widgets::btn(
                 label,
@@ -1244,25 +1272,27 @@ impl Screen {
             ));
         } else {
             col = col.push(
-                txt("На этой системе выберите город или введите координаты ниже.")
-                    .size(theme::text::SMALL)
-                    .color(p.muted)
-                    .width(Length::Fill),
+                txt(tr(
+                    "На этой системе выберите город или введите координаты ниже.",
+                ))
+                .size(theme::text::SMALL)
+                .color(p.muted)
+                .width(Length::Fill),
             );
         }
         if self.prefs.active_place().is_some() {
             col = col.push(widgets::btn(
-                "Удалить сохранённое место",
+                tr("Удалить сохранённое место"),
                 widgets::Btn::Ghost,
                 widgets::BtnSize::Sm,
                 Some(Msg::LocationOff),
             ));
         }
         if let Some(note) = &self.geo_note {
-            col = col.push(widgets::note_block("Местоположение", note));
+            col = col.push(widgets::note_block(tr("Местоположение"), note));
             if cfg!(windows) {
                 col = col.push(widgets::btn(
-                    "Открыть параметры расположения Windows",
+                    tr("Открыть параметры расположения Windows"),
                     widgets::Btn::Ghost,
                     widgets::BtnSize::Sm,
                     Some(Msg::OpenLocationSettings),
@@ -1272,12 +1302,12 @@ impl Screen {
 
         col = col.push(divider(p));
         col = col.push(
-            txt("Город из встроенного списка")
+            txt(tr("Город из встроенного списка"))
                 .size(theme::text::BODY)
                 .font(SANS_BOLD),
         );
         col = col.push(
-            text_input("Найти город", &self.city_query)
+            text_input(tr("Найти город"), &self.city_query)
                 .on_input(Msg::CityQuery)
                 .padding(12)
                 .style(move |_t, s| theme::text_input(&palette(), s)),
@@ -1296,18 +1326,18 @@ impl Screen {
 
         col = col.push(divider(p));
         col = col.push(
-            txt("Или введите координаты вручную")
+            txt(tr("Или введите координаты вручную"))
                 .size(theme::text::BODY)
                 .font(SANS_BOLD),
         );
         col = col.push(
             row![
-                text_input("Широта, например 31,78", &self.lat_input)
+                text_input(tr("Широта, например 31,78"), &self.lat_input)
                     .on_input(Msg::LatEdit)
                     .padding(12)
                     .width(Length::Fill)
                     .style(move |_t, s| theme::text_input(&palette(), s)),
-                text_input("Долгота, например 35,23", &self.lon_input)
+                text_input(tr("Долгота, например 35,23"), &self.lon_input)
                     .on_input(Msg::LonEdit)
                     .padding(12)
                     .width(Length::Fill)
@@ -1323,7 +1353,7 @@ impl Screen {
                     .width(Length::Fill),
             );
         }
-        col = col.push(btn_secondary("Сохранить координаты", Msg::SaveCoords));
+        col = col.push(btn_secondary(tr("Сохранить координаты"), Msg::SaveCoords));
         col = col.push(divider(p));
         col = col.push(self.calculation_rules(p));
         widgets::card(col)
@@ -1332,14 +1362,18 @@ impl Screen {
     /// Reference, not a quiz: display the actual saved calculation rules.
     fn calculation_rules<'a>(&'a self, p: Palette) -> Element<'a, Msg> {
         let havdalah = match self.prefs.havdalah_minutes {
-            0 => "по выходу звёзд (Солнце на 8,5° ниже горизонта)".to_string(),
-            n => format!("через {n} мин после заката"),
+            0 => tr("по выходу звёзд (Солнце на 8,5° ниже горизонта)").to_string(),
+            n => trf!("через {n} мин после заката", "{n} min after sunset"),
         };
+        let mins = self.prefs.candle_minutes;
         column![
-            txt("Расчёт времени").size(theme::text::BODY).font(SANS_BOLD),
-            txt(format!("Свечи — за {} мин до заката. Авдала — {havdalah}.", self.prefs.candle_minutes))
+            txt(tr("Расчёт времени")).size(theme::text::BODY).font(SANS_BOLD),
+            txt(trf!(
+                "Свечи — за {mins} мин до заката. Авдала — {havdalah}.",
+                "Candles — {mins} min before sunset. Havdalah — {havdalah}."
+            ))
                 .size(theme::text::SMALL).color(p.gold2).width(Length::Fill),
-            txt("Обычай выбирается по месту: в Иерусалиме за 40 мин, в остальных местах за 18 мин. Начало малого поста — рассвет, большого — закат накануне; конец — выход звёзд. Местный обычай уточните у раввина.")
+            txt(tr("Обычай выбирается по месту: в Иерусалиме за 40 мин, в остальных местах за 18 мин. Начало малого поста — рассвет, большого — закат накануне; конец — выход звёзд. Местный обычай уточните у раввина."))
                 .size(theme::text::SMALL).color(p.muted).width(Length::Fill),
         ].spacing(6).into()
     }
@@ -1561,36 +1595,67 @@ fn cell_style(
 
 fn mode_title(mode: prefs::LocationMode) -> &'static str {
     match mode {
-        prefs::LocationMode::Off => "Не выбрано",
-        prefs::LocationMode::System => "Определено Windows",
-        prefs::LocationMode::Manual => "Выбрано вручную",
+        prefs::LocationMode::Off => tr("Не выбрано"),
+        prefs::LocationMode::System => tr("Определено Windows"),
+        prefs::LocationMode::Manual => tr("Выбрано вручную"),
     }
 }
 
-/// Russian plural: `plural(3, "день", "дня", "дней")` → «3 дня».
-fn plural(n: i64, one: &str, few: &str, many: &str) -> String {
-    let rem100 = n.unsigned_abs() % 100;
-    let word = if rem100 % 10 == 1 && rem100 != 11 {
-        one
-    } else if (2..=4).contains(&(rem100 % 10)) && !(12..=14).contains(&rem100) {
-        few
-    } else {
-        many
-    };
-    format!("{n} {word}")
+/// Civil date. `format_gregorian_ru` already switches language.
+fn format_gregorian(d: NaiveDate) -> String {
+    hebrew::format_gregorian_ru(d)
+}
+
+/// Hebrew date. `format_ru` already switches language.
+fn format_hebrew_date(h: hebrew::HebrewDate) -> String {
+    h.format_ru()
+}
+
+fn hebrew_month_heading(y: i32, m: u8) -> String {
+    format!("{} {}", hebrew::month_name_ru(y, m), y)
+}
+
+fn weekday_and_gregorian(d: NaiveDate) -> String {
+    format!(
+        "{}, {}",
+        hebrew::weekday_ru(d),
+        hebrew::format_gregorian_ru(d)
+    )
+}
+
+fn weekday_dash_gregorian(d: NaiveDate) -> String {
+    format!(
+        "{} — {}",
+        hebrew::weekday_ru(d),
+        hebrew::format_gregorian_ru(d)
+    )
+}
+
+fn reading_name(reading: parasha::Reading) -> String {
+    reading.name_ru()
+}
+
+/// Synthetic place labels are stored in Russian (so the saved value stays a
+/// stable key) and translated here. City names from the list stay as stored:
+/// they are content text and the text the city search matches.
+fn display_place_name(name: &str) -> String {
+    if name == "Примерное местоположение" {
+        return tr("Примерное местоположение").to_string();
+    }
+    if name == "Координаты вручную" {
+        return tr("Координаты вручную").to_string();
+    }
+    name.to_string()
 }
 
 fn plural_days(n: i64) -> String {
-    plural(n, "день", "дня", "дней")
+    let word = plural_l(n, &["день", "дня", "дней"], &["day", "days"]);
+    format!("{n} {word}")
 }
 
 fn plural_weeks(n: i64) -> String {
-    plural(n, "неделя", "недели", "недель")
-}
-
-/// «3-й день».
-fn nth(n: u32) -> String {
-    format!("{n}-й день")
+    let word = plural_l(n, &["неделя", "недели", "недель"], &["week", "weeks"]);
+    format!("{n} {word}")
 }
 
 /// «1 неделя и 5 дней» (zero parts omitted).
@@ -1600,7 +1665,11 @@ fn omer_breakdown(n: u8) -> String {
     match (w, d) {
         (0, _) => plural_days(d),
         (_, 0) => plural_weeks(w),
-        _ => format!("{} и {}", plural_weeks(w), plural_days(d)),
+        _ => {
+            let weeks = plural_weeks(w);
+            let days = plural_days(d);
+            trf!("{weeks} и {days}", "{weeks} and {days}")
+        }
     }
 }
 
@@ -1641,7 +1710,7 @@ fn leading_blanks(year: i32, month: u8) -> usize {
 fn gregorian_span(y: i32, m: u8) -> String {
     let first = hebrew::HebrewDate::new(y, m, 1).to_gregorian();
     let last = hebrew::HebrewDate::new(y, m, hebrew::days_in_month(y, m)).to_gregorian();
-    let name = |d: NaiveDate| GREG_MONTHS_NOM[d.month0() as usize];
+    let name = |d: NaiveDate| tr(GREG_MONTHS_NOM[d.month0() as usize]);
     if first.year() != last.year() {
         format!(
             "{} {} — {} {}",

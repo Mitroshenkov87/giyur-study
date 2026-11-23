@@ -41,6 +41,8 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit 1 }
       - name: Course content is valid (content/<lang>/, read at run time)
         run: target/release/shorashim-ctl.exe validate-content content
+      - name: Language content parity (content/en vs content/ru; skip if en is absent)
+        run: target/release/shorashim-ctl.exe validate-parity content
       - name: Package Shorashim-Setup.exe (stub + app + content/ + music)
         shell: pwsh
         run: |
@@ -91,5 +93,7 @@ jobs:
         run: cargo build --release
       - name: Course content is valid (content/<lang>/, read at run time)
         run: target/release/shorashim-ctl validate-content content
+      - name: Language content parity (content/en vs content/ru; skip if en is absent)
+        run: target/release/shorashim-ctl validate-parity content
       - name: Automation smoke (release binary, headless script)
         run: target/release/shorashim --headless --script tests/scripts/01-navigate.jsonl --today 2026-11-22

@@ -12,6 +12,8 @@ use iced::theme::Palette as IcedPalette;
 use iced::widget::{button, container, progress_bar as pb, rule, text_input as ti};
 use iced::{Background, Border, Color, Gradient, Radians, Shadow, Theme, Vector};
 
+use crate::i18n::tr;
+
 // ---------------------------------------------------------------------------
 // Palettes
 // ---------------------------------------------------------------------------
@@ -238,8 +240,8 @@ impl ThemeKind {
     /// Label used in settings.
     pub fn title(self) -> &'static str {
         match self {
-            ThemeKind::Dark => "Тёмная",
-            ThemeKind::Leather => "Кожа",
+            ThemeKind::Dark => tr("Тёмная"),
+            ThemeKind::Leather => tr("Кожа"),
         }
     }
 
@@ -880,13 +882,13 @@ pub enum Movement {
 }
 
 impl Movement {
-    /// Russian label shown before the note text (§T.8).
+    /// Label shown before the note text (§T.8).
     pub fn label(self) -> &'static str {
         match self {
-            Movement::Reform => "В реформистском иудаизме иначе:",
-            Movement::Conservative => "В консервативном иудаизме иначе:",
-            Movement::Orthodox => "В ортодоксальном иудаизме иначе:",
-            Movement::Other => "В других течениях иначе:",
+            Movement::Reform => tr("В реформистском иудаизме иначе:"),
+            Movement::Conservative => tr("В консервативном иудаизме иначе:"),
+            Movement::Orthodox => tr("В ортодоксальном иудаизме иначе:"),
+            Movement::Other => tr("В других течениях иначе:"),
         }
     }
 

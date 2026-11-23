@@ -6,6 +6,7 @@ use std::time::{Duration, Instant};
 use iced::widget::{button, column, container, image, row, scrollable, stack, text, Column};
 use iced::{Alignment, Element, Font, Length, Subscription, Task, Theme};
 
+use shorashim::i18n::tr;
 use shorashim::storage;
 use shorashim::ui::app::{Action, Ctx, Deck, Route};
 use shorashim::ui::screens::{self, Current};
@@ -76,8 +77,11 @@ impl App {
         if let shorashim::install::Offer::Update { from, to } = shorashim::install::status().offer()
         {
             ctx.toast(
-                &format!("Установлена версия {from}"),
-                &format!("Эта копия новее ({to}). Обновить установленную можно в «Настройках»."),
+                &shorashim::trf!("Установлена версия {from}", "Version {from} is installed"),
+                &shorashim::trf!(
+                    "Эта копия новее ({to}). Обновить установленную можно в «Настройках».",
+                    "This copy is newer ({to}). You can update the installed copy in Settings."
+                ),
                 "",
             );
         }
@@ -191,6 +195,16 @@ impl App {
                     theme::set_current(theme_kind(&self.ctx));
                     self.sync_music();
                 }
+                Action::LanguageChanged => {
+                    theme::set_current(theme_kind(&self.ctx));
+                    self.sync_music();
+                    self.history.clear();
+                    self.pending_nav = None;
+                    let home = self.ctx.home_route();
+                    let t = self.go(home);
+                    self.history.clear();
+                    return t;
+                }
                 Action::Quit => {
                     self.music.set_enabled(false);
                     return iced::exit();
@@ -218,8 +232,8 @@ impl App {
             Message::ReviewerOff => {
                 self.ctx.set_reviewer(false, false);
                 self.ctx.toast(
-                    "Открытый режим рецензента выключен",
-                    "Ваш прогресс — в точности как до включения.",
+                    tr("Открытый режим рецензента выключен"),
+                    tr("Ваш прогресс — в точности как до включения."),
                     "",
                 );
                 // Rebuild the screen: its gates are back.
@@ -264,8 +278,8 @@ impl App {
             && self.ctx.music_available
         {
             self.ctx.toast(
-                "Фоновая музыка",
-                "В «Настройках» можно включить тихие инструментальные мелодии. По умолчанию она выключена.",
+                tr("Фоновая музыка"),
+                tr("В «Настройках» можно включить тихие инструментальные мелодии. По умолчанию она выключена."),
                 "",
             );
             self.ctx.state.settings.music_hint_seen = true;
@@ -305,8 +319,14 @@ impl App {
                 .width(36)
                 .height(36),
                 column![
-                    text("Шорашим").font(fonts::SERIF_BOLD).size(18),
-                    text("основы иудаизма").size(12).color(p.muted),
+                    text(shorashim::i18n::app_name())
+                        .font(fonts::SERIF_BOLD)
+                        .size(18)
+                        .shaping(text::Shaping::Advanced),
+                    text(tr("основы иудаизма"))
+                        .size(12)
+                        .color(p.muted)
+                        .shaping(text::Shaping::Advanced),
                 ]
             ]
             .spacing(10)
@@ -374,8 +394,10 @@ impl App {
                 None => iced::widget::space().width(box_px).height(box_px).into(),
             };
             let label = column![
-                text(item.label).size(15).shaping(text::Shaping::Advanced),
-                text(item.subtitle)
+                text(nav::label(item))
+                    .size(15)
+                    .shaping(text::Shaping::Advanced),
+                text(nav::subtitle(item))
                     .size(11.5)
                     .color(p.muted)
                     .shaping(text::Shaping::Advanced),
@@ -417,7 +439,7 @@ impl App {
         let hint: Element<'_, Message> = match self.nav_hover.and_then(|i| nav::ITEMS.get(i)) {
             Some(item) => container(
                 container(
-                    text(item.tooltip)
+                    text(nav::tooltip(item))
                         .size(12.5)
                         .color(main_p.text)
                         .shaping(text::Shaping::Advanced),
@@ -461,7 +483,7 @@ impl App {
     /// рецензента» is on, with a quick «Выключить».
     fn reviewer_banner(&self, p: theme::Palette) -> Element<'_, Message> {
         let off = button(
-            text("Выключить")
+            text(tr("Выключить"))
                 .size(12.5)
                 .font(fonts::SANS_BOLD)
                 .shaping(text::Shaping::Advanced),
@@ -471,12 +493,12 @@ impl App {
         .on_press(Message::ReviewerOff);
         let strip = row![
             text("◆").size(12).color(p.gold),
-            text(shorashim::reviewer::TITLE)
+            text(tr(shorashim::reviewer::TITLE))
                 .size(13)
                 .font(fonts::SANS_BOLD)
                 .color(p.gold2)
                 .shaping(text::Shaping::Advanced),
-            text("Открыто всё: разделы, уроки, ступени, предметы, экзамены. Прогресс не засчитывается.")
+            text(tr("Открыто всё: разделы, уроки, ступени, предметы, экзамены. Прогресс не засчитывается."))
                 .size(12.5)
                 .color(p.muted)
                 .shaping(text::Shaping::Advanced)
@@ -712,8 +734,8 @@ impl App {
                 layers = layers.push(iced::widget::opaque(widgets::confirm_modal(
                     g.title,
                     g.body,
-                    "Продолжить",
-                    "Выйти",
+                    tr("Продолжить"),
+                    tr("Выйти"),
                     Message::LeaveAnswer(false),
                     Message::LeaveAnswer(true),
                 )));
@@ -764,7 +786,7 @@ impl App {
     }
 
     fn title(&self) -> String {
-        "Шорашим — основы иудаизма и подготовка к гиюру".to_string()
+        shorashim::i18n::window_title()
     }
 }
 
@@ -852,6 +874,15 @@ impl shorashim::automation::Host for GuiHost<'_> {
     fn settings_changed(&mut self) {
         theme::set_current(theme_kind(&self.app.ctx));
     }
+    fn language_changed(&mut self) {
+        theme::set_current(theme_kind(&self.app.ctx));
+        self.app.history.clear();
+        self.app.pending_nav = None;
+        let home = self.app.ctx.home_route();
+        let t = self.app.go(home);
+        self.app.history.clear();
+        self.tasks.push(t);
+    }
     fn windowed(&self) -> bool {
         true
     }
@@ -869,8 +900,10 @@ fn main() -> iced::Result {
     }
     shorashim::install::cleanup_after_update();
     // Course content is read from `content/<lang>/` beside the exe; when it
-    // is missing or broken, a calm window names the file instead.
-    if let Err(e) = shorashim::content_store::init(shorashim::content_store::DEFAULT_LANG) {
+    // is missing or broken, a calm window names the file instead. First
+    // launch uses the OS language (Russian only on a Russian Windows);
+    // SHORASHIM_LANG overrides without writing the profile.
+    if let Err(e) = shorashim::content_store::start_os(None) {
         return shorashim::ui::content_error::run(e);
     }
     // Screenshot hook: `SHORASHIM_WINDOW_SIZE=1440x900`.

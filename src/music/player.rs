@@ -163,7 +163,9 @@ impl Engine {
         if on {
             self.stopping_from = None;
             if self.bag.is_empty() {
-                self.publish(Some("Файлы музыки не найдены.".to_string()));
+                self.publish(Some(
+                    crate::i18n::tr("Файлы музыки не найдены.").to_string(),
+                ));
                 return;
             }
             if self.current.is_none() && self.incoming.is_none() {
@@ -253,17 +255,27 @@ impl Engine {
             .bag
             .next(&mut self.rng)
             .cloned()
-            .ok_or_else(|| "Файлы музыки не найдены.".to_string())?;
+            .ok_or_else(|| crate::i18n::tr("Файлы музыки не найдены.").to_string())?;
         if self.stream.is_none() {
-            let sink = DeviceSinkBuilder::open_default_sink()
-                .map_err(|e| format!("Нет звукового устройства: {e}"))?;
+            let sink = DeviceSinkBuilder::open_default_sink().map_err(|e| {
+                crate::trf!("Нет звукового устройства: {e}", "No audio device: {e}")
+            })?;
             self.stream = Some(sink);
         }
         let mixer = self.stream.as_ref().expect("stream just opened").mixer();
-        let file = File::open(&track.path)
-            .map_err(|e| format!("Не удалось открыть «{}»: {e}", track.title))?;
-        let decoder = Decoder::try_from(file)
-            .map_err(|e| format!("Не удалось прочитать «{}»: {e}", track.title))?;
+        let title = crate::i18n::tr(&track.title).to_string();
+        let file = File::open(&track.path).map_err(|e| {
+            crate::trf!(
+                "Не удалось открыть «{title}»: {e}",
+                "Could not open “{title}”: {e}"
+            )
+        })?;
+        let decoder = Decoder::try_from(file).map_err(|e| {
+            crate::trf!(
+                "Не удалось прочитать «{title}»: {e}",
+                "Could not read “{title}”: {e}"
+            )
+        })?;
         let duration = track
             .duration
             .or_else(|| decoder.total_duration())
@@ -331,7 +343,7 @@ impl Engine {
                 .incoming
                 .as_ref()
                 .or(self.current.as_ref())
-                .map(|t| t.track.title.clone());
+                .map(|t| crate::i18n::tr(&t.track.title).to_string());
             s.error = error;
             s.available = !self.bag.is_empty();
             s.track_count = self.bag.len();

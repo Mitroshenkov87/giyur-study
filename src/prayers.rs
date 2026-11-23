@@ -9,6 +9,7 @@
 
 use serde::{Deserialize, Serialize};
 
+use crate::i18n::tr;
 use crate::storage::State;
 
 /// One block of a prayer: the same words in three forms.
@@ -141,10 +142,10 @@ impl Display {
 
     pub fn label(self) -> &'static str {
         match self {
-            Display::All => "Всё вместе",
-            Display::Ru => "Русский",
-            Display::He => "Иврит",
-            Display::Translit => "Транслитерация",
+            Display::All => tr("Всё вместе"),
+            Display::Ru => tr("Русский"),
+            Display::He => tr("Иврит"),
+            Display::Translit => tr("Транслитерация"),
         }
     }
 

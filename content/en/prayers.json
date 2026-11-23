@@ -1,0 +1,749 @@
+{
+ "version": 1,
+ "reviewStatus": "requires review by a rabbi",
+ "nusach": "Ashkenaz",
+ "sources": [
+  {
+   "id": "metsudah",
+   "title": "The Metsudah Siddur (1981), Hebrew — via Sefaria",
+   "license": "CC-BY",
+   "url": "https://www.sefaria.org/Siddur_Ashkenaz"
+  },
+  {
+   "id": "daat",
+   "title": "Siddur Daat (daat.ac.il), Hebrew — via Sefaria",
+   "license": "Public Domain",
+   "url": "http://www.daat.ac.il/daat/sidurim/tohen3.htm"
+  },
+  {
+   "id": "own",
+   "title": "Russian translation and transliteration — “Shorashim,” an original work",
+   "license": "Apache-2.0",
+   "url": null
+  }
+ ],
+ "groups": [
+  {
+   "id": "morning",
+   "title": "Morning",
+   "hint": "after waking"
+  },
+  {
+   "id": "day",
+   "title": "Day",
+   "hint": "The Amidah and the blessings of the day"
+  },
+  {
+   "id": "evening",
+   "title": "Evening",
+   "hint": "The Shema, and before sleep"
+  },
+  {
+   "id": "food",
+   "title": "Food",
+   "hint": "before and after eating"
+  },
+  {
+   "id": "shabbat",
+   "title": "Shabbat",
+   "hint": "candles and kiddush"
+  },
+  {
+   "id": "special",
+   "title": "Special occasions",
+   "hint": "the road, what is new, and what is joyful"
+  }
+ ],
+ "notes": [
+  {
+   "id": "language",
+   "title": "You may pray in a language you understand",
+   "text": "The Mishnah (Sotah 7:1) lists what may be said in any language: the Shema, the prayer (the Amidah), and Birkat Hamazon. The Shulchan Aruch rules the same way (Orach Chaim 62:2, 101:4, 185:1). The conditions are: you understand the language, and the translation is accurate. It is better to pray with understanding than without understanding. Hebrew is still preferable: the whole Jewish people prays in it, and a translation inevitably loses part of the meaning. Many halachic authorities advise saying at least the first line of the Shema in Hebrew. Begin with Russian, and add Hebrew gradually, line by line.",
+   "rabbi": false,
+   "ref": "Mishnah Sotah 7:1; Shulchan Aruch, Orach Chaim 62:2, 101:4, 185:1"
+  },
+  {
+   "id": "name",
+   "title": "The Name of G-d in the text",
+   "text": "In the Hebrew, the Name of G-d is written as it is in the siddurim: יְיָ. In prayer, and in a blessing said for its actual purpose, it is pronounced “Adonai.” When you are learning a blessing and not saying it for its actual purpose, the custom is to say “HaShem” instead of “Adonai” and “Elokeinu” instead of “Eloheinu,” so as not to pronounce the Name in vain.",
+   "rabbi": false,
+   "ref": "Shulchan Aruch, Orach Chaim 215:4"
+  },
+  {
+   "id": "candidate",
+   "title": "Before giyur: check with a rabbi",
+   "text": "Until a candidate has completed giyur, the mitzvot of Israel do not yet rest upon the candidate, and some words of the prayers are said only by a Jew. For example, blessings with the words “asher kid’shanu b’mitzvotav v’tzivanu” (“who has sanctified us with His mitzvot and commanded us”), the blessing “shelo asani goy,” and the kiddush “You have chosen us.” Many rabbis advise, before giyur, omitting the Name of G-d in them, saying them without the blessing, or only listening and answering “amen”; others permit more. Praise, thanksgiving, the Shema, the blessings over food, and personal prayer can usually be said already now. Each prayer has a note, “Before giyur” — be sure to check all of this with a rabbi: the decisions depend on the community and the beit din.",
+   "rabbi": true,
+   "ref": "Sanhedrin 58b; Rambam, Laws of Kings 10:9–10"
+  },
+  {
+   "id": "reform-siddur",
+   "title": "Siddurim of the Reform movement",
+   "text": "The texts in this section follow nusach Ashkenaz (the Hebrew is from Metsudah and Daat, via Sefaria). Reform communities use their own siddurim. In North America the principal one today is Mishkan T'filah (“Mishkan T’filah,” CCAR Press, 2007), which replaced Gates of Prayer (“Gates of Prayer,” 1975); for the Days of Awe the machzor Mishkan HaNefesh has been published. In them Hebrew and the translation stand side by side; the matriarchs are often included in the Amidah, and some blessings offer alternative wordings. Prayer in a language one understands is a deliberate principle of the movement, not a replacement for Hebrew: the sacred language of the people continues to be studied and heard in the service. In many progressive synagogues instrumental music is heard on Shabbat, and men and women lead the service equally. In Russian-speaking communities of ROOPI (the Religious Association of Progressive Jewish Communities) the siddur may differ in its contents from the North American one. If the wording in your book differs from the text in the app, pray from your community’s siddur and check with your rabbi.",
+   "rabbi": true,
+   "ref": "Mishkan T'filah, CCAR Press, 2007; Mishkan HaNefesh; the practice of ROOPI communities"
+  },
+  {
+   "id": "face-jerusalem",
+   "title": "Facing Jerusalem",
+   "text": "The standing prayer, the Amidah, is customarily said facing Jerusalem, the eternal capital of the Jewish people. The Amidah itself contains requests for the ingathering of the exiles and for the return to the city of David. In this way the daily prayer keeps the bond with the Land of Israel, even if a person still lives in the Diaspora. One turns, in doing so, only to the Almighty, directly, with no intermediary.",
+   "rabbi": true,
+   "ref": "Shulchan Aruch, Orach Chaim 94; the siddur, the Amidah"
+  }
+ ],
+ "prayers": [
+  {
+   "id": "modeh-ani",
+   "groups": [
+    "morning"
+   ],
+   "title": "Modeh Ani",
+   "heTitle": "מוֹדֶה אֲנִי",
+   "subtitle": "Gratitude upon waking",
+   "when": "Right after waking, still in bed, before washing the hands.",
+   "how": "Briefly, sitting or lying down. This sentence has no Name of G-d, so it is said even before washing the hands. A woman says “Modah ani” (מוֹדָה אֲנִי).",
+   "about": "The first words of the day are gratitude. The Sages call sleep “one-sixtieth of death” (Berachot 57b), and every morning G-d returns the soul, as a faithful guardian returns a pledge: “great is Your faithfulness” (Eichah 3:23). This formula appeared in the siddurim later than the Talmud (the 16th–17th centuries).",
+   "parts": [
+    {
+     "he": "מוֹדֶה אֲנִי לְפָנֶיךָ מֶלֶךְ חַי וְקַיָּם שֶׁהֶחֱזַרְתָּ בִּי נִשְׁמָתִי בְּחֶמְלָה, רַבָּה אֱמוּנָתֶךָ:",
+     "translit": "Modeh ani lefanecha, melech chai v'kayam, shehechezarta bi nishmati b'chemlah, rabbah emunatecha.",
+     "ru": "I thank You, living and eternal King, that in mercy You have returned my soul to me. Great is Your faithfulness."
+    }
+   ],
+   "candidate": "“Modeh ani” has neither the Name of G-d nor the words “commanded us,” so it is usually said even before giyur. Check with a rabbi.",
+   "source": "Metsudah Siddur (1981), Hebrew, CC-BY, via Sefaria",
+   "ref": "Berachot 57b; Eichah 3:23"
+  },
+  {
+   "id": "netilat-yadayim",
+   "groups": [
+    "morning"
+   ],
+   "title": "Netilat yadayim (in the morning)",
+   "heTitle": "נְטִילַת יָדַיִם",
+   "subtitle": "Washing the hands after sleep",
+   "when": "In the morning, soon after waking, before the morning blessings.",
+   "how": "Fill a cup with water and pour it in turn over the right hand and the left, three times on each (this is the custom among Ashkenazim and among many Sephardim in the morning). Then dry your hands and say the blessing. Many say it together with “Asher Yatzar.”",
+   "about": "The morning washing prepares a person for the new day and for prayer, as the priest washed his hands before the service in the Temple (Shulchan Aruch, Orach Chaim 4). Before a meal with bread the hands are washed again, with its own order (see the section “Food”).",
+   "parts": [
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו וְצִוָּנוּ עַל נְטִילַת יָדָיִם:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, asher kid'shanu b'mitzvotav v'tzivanu al netilat yadayim.",
+     "ru": "Blessed are You, L-rd our G-d, King of the universe, who has sanctified us with His mitzvot and commanded us to wash the hands."
+    }
+   ],
+   "candidate": "The words “v’tzivanu” (“and commanded us”) are said by one upon whom the mitzvot already rest. Before giyur, many rabbis advise washing the hands without the blessing, or saying it without the Name of G-d; others permit it in full. Check with a rabbi.",
+   "source": "Metsudah Siddur (1981), Hebrew, CC-BY, via Sefaria",
+   "ref": "Shulchan Aruch, Orach Chaim 4"
+  },
+  {
+   "id": "birkot-hashachar",
+   "groups": [
+    "morning"
+   ],
+   "title": "Birkot HaShachar (short)",
+   "heTitle": "בִּרְכוֹת הַשַּׁחַר",
+   "subtitle": "The morning blessings",
+   "when": "In the morning, after washing the hands and “Asher Yatzar.” They may be said at home, before coming to the synagogue.",
+   "how": "Each blessing is gratitude for what we usually do not notice: sight, clothing, the ability to stand and to walk. Say them without hurrying, understanding the words. Here is a short order: “Elohai Neshamah” and fifteen short blessings; in a full siddur the blessings of the Torah and the reading of passages come next.",
+   "about": "The blessings are listed in the Talmud (Berachot 60b): when a person wakes, hears the rooster, opens the eyes, gets dressed, and stands up, each act has its own blessing. Later they came to be said all together at the beginning of the morning prayer.",
+   "parts": [
+    {
+     "he": "אֱלֹהַי נְשָׁמָה שֶׁנָּתַתָּ בִּי טְהוֹרָה הִיא אַתָּה בְרָאתָהּ אַתָּה יְצַרְתָּהּ אַתָּה נְפַחְתָּהּ בִּי וְאַתָּה מְשַׁמְּרָהּ בְּקִרְבִּי וְאַתָּה עָתִיד לִטְּלָהּ מִמֶּנִּי וּלְהַחֲזִירָהּ בִּי לֶעָתִיד לָבֹא, כָּל זְמַן שֶׁהַנְּשָׁמָה בְקִרְבִּי מוֹדֶה אֲנִי לְפָנֶיךָ יְיָ אֱלֹהַי וֵאלֹהֵי אֲבוֹתַי רִבּוֹן כָּל הַמַּעֲשִׂים אֲדוֹן כָּל הַנְּשָׁמוֹת: בָּרוּךְ אַתָּה יְיָ הַמַּחֲזִיר נְשָׁמוֹת לִפְגָרִים מֵתִים:",
+     "translit": "Elohai, neshamah shenatata bi tehorah hi. Atah veratah, Atah yetzartah, Atah nefachtah bi, ve'Atah meshamrah bekirbi, ve'Atah atid litlah mimeni ulehachazirah bi le'atid lavo. Kol zman shehaneshamah bekirbi, modeh ani lefanecha, Adonai Elohai veilohei avotai, Ribbon kol hama'asim, Adon kol haneshamot. Baruch atah Adonai, hamachazir neshamot lifgarim metim.",
+     "ru": "My G-d, the soul that You have given me is pure. You created it, You formed it, You breathed it into me, You keep it within me, and one day You will take it from me and return it to me in the time to come. All the time that the soul is within me, I thank You, L-rd, my G-d and G-d of my fathers, Master of all creations, Lord of all souls. Blessed are You, L-rd, who returns souls to lifeless bodies.",
+     "label": "Elohai Neshamah — “The soul that You have given me”"
+    },
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, אֲשֶׁר נָתַן לַשֶּׂכְוִי בִינָה לְהַבְחִין בֵּין יוֹם וּבֵין לָיְלָה:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, asher natan lasechvi binah lehavchin bein yom uvein lailah.",
+     "ru": "Blessed are You, L-rd our G-d, King of the universe, who gave the heart (and the rooster) understanding to distinguish day from night."
+    },
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, שֶׁלֹּא עָשַׂנִי גּוֹי:\nבָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, שֶׁלֹּא עָשַׂנִי עָבֶד:\nבָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, שֶׁלֹּא עָשַׂנִי אִשָּׁה: (אִשָּׁה אוֹמֶרֶת: שֶׁעָשַׂנִי כִּרְצוֹנוֹ:)",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, shelo asani goy.\nBaruch atah Adonai, Eloheinu melech ha'olam, shelo asani aved.\nBaruch atah Adonai, Eloheinu melech ha'olam, shelo asani ishah. (Ishah omeret: she'asani kirtzono.)",
+     "ru": "Blessed are You, L-rd our G-d, King of the universe, who has not made me a non-Jew.\nBlessed are You, L-rd our G-d, King of the universe, who has not made me a slave.\nBlessed are You, L-rd our G-d, King of the universe, who has not made me a woman. (A woman says: “who has made me according to His will.”)",
+     "label": "Three blessings about one’s own station"
+    },
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, פּוֹקֵחַ עִוְרִים:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, pokeach ivrim.",
+     "ru": "Blessed are You, L-rd our G-d, King of the universe, who opens the eyes of the blind."
+    },
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, מַלְבִּישׁ עֲרֻמִּים:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, malbish arumim.",
+     "ru": "Blessed are You, L-rd our G-d, King of the universe, who clothes the naked."
+    },
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, מַתִּיר אֲסוּרִים:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, matir asurim.",
+     "ru": "Blessed are You, L-rd our G-d, King of the universe, who frees the bound."
+    },
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, זוֹקֵף כְּפוּפִים:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, zokef kefufim.",
+     "ru": "Blessed are You, L-rd our G-d, King of the universe, who straightens the bowed."
+    },
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, רוֹקַע הָאָרֶץ עַל הַמָּיִם:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, roka ha'aretz al hamayim.",
+     "ru": "Blessed are You, L-rd our G-d, King of the universe, who spread the earth over the waters."
+    },
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, שֶׁעָשָׂה לִי כָּל צָרְכִּי:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, she'asah li kol tzorki.",
+     "ru": "Blessed are You, L-rd our G-d, King of the universe, who has given me all that I need."
+    },
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, הַמֵּכִין מִצְעֲדֵי גָבֶר:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, hamechin mitzadei gaver.",
+     "ru": "Blessed are You, L-rd our G-d, King of the universe, who guides a person’s steps."
+    },
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, אוֹזֵר יִשְׂרָאֵל בִּגְבוּרָה:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, ozer Yisrael bigvurah.",
+     "ru": "Blessed are You, L-rd our G-d, King of the universe, who girds Israel with strength."
+    },
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, עוֹטֵר יִשְׂרָאֵל בְּתִפְאָרָה:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, oter Yisrael betifarah.",
+     "ru": "Blessed are You, L-rd our G-d, King of the universe, who crowns Israel with glory."
+    },
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, הַנּוֹתֵן לַיָּעֵף כֹּחַ:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, hanoten laya'ef koach.",
+     "ru": "Blessed are You, L-rd our G-d, King of the universe, who gives strength to the weary."
+    },
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם הַמַּעֲבִיר שֵׁנָה מֵעֵינָי וּתְנוּמָה מֵעַפְעַפָּי: וִיהִי רָצוֹן מִלְּפָנֶיךָ יְיָ אֱלֹהֵינוּ וֵאלֹהֵי אֲבוֹתֵינוּ שֶׁתַּרְגִּילֵנוּ בְּתוֹרָתֶךָ וְדַבְּקֵנוּ בְּמִצְוֹתֶיךָ, וְאַל תְּבִיאֵנוּ לֹא לִידֵי חֵטְא וְלֹא לִידֵי עֲבֵרָה וְעָוֹן וְלֹא לִידֵי נִסָּיוֹן וְלֹא לִידֵי בִזָּיוֹן וְאַל יִשְׁלֹט בָּנוּ יֵצֶר הָרָע וְהַרְחִיקֵנוּ מֵאָדָם רָע וּמֵחָבֵר רָע וְדַבְּקֵנוּ בְּיֵצֶר הַטּוֹב וּבְמַעֲשִׂים טוֹבִים וְכוֹף אֶת־יִצְרֵנוּ לְהִשְׁתַּעְבֶּד־לָךְ וּתְנֵנוּ הַיּוֹם וּבְכָל־יוֹם לְחֵן וּלְחֶסֶד וּלְרַחֲמִים בְּעֵינֶיךָ וּבְעֵינֵי כָל־רוֹאֵינוּ וְתִגְמְלֵנוּ חֲסָדִים טוֹבִים: בָּרוּךְ אַתָּה יְיָ גּוֹמֵל חֲסָדִים טוֹבִים לְעַמּוֹ יִשְׂרָאֵל:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, hama'avir sheinah me'einai utnumah me'afapai. Vihi ratzon milfanecha, Adonai Eloheinu veilohei avoteinu, shetargilenu b'toratecha v'dabkenu b'mitzvotecha, v'al tevi'enu lo lidei chet, v'lo lidei averah ve'avon, v'lo lidei nisayon, v'lo lidei bizayon. V'al yishlot banu yetzer hara, v'harhikenu me'adam ra ume'chaver ra, v'dabkenu b'yetzer hatov uv'ma'asim tovim, v'chof et yitzrenu l'hishta'abed lach. Utnenu hayom uv'chol yom l'chen ul'chesed ul'rachamim b'einecha uv'einei kol ro'einu, v'tigmelenu chasadim tovim. Baruch atah Adonai, gomel chasadim tovim l'amo Yisrael.",
+     "ru": "Blessed are You, L-rd our G-d, King of the universe, who removes sleep from my eyes and slumber from my eyelids. May it be Your will, L-rd our G-d and G-d of our fathers, to accustom us to Your Torah and to draw us near to Your mitzvot. Do not bring us to sin, nor to transgression and guilt, nor to trial, nor to disgrace. Do not let the evil inclination rule over us; keep us far from an evil person and an evil companion; draw us near to the good inclination and to good deeds, and bend our inclination to serve You. Grant us today and every day to find favor, love, and compassion in Your eyes and in the eyes of all who see us, and bestow good kindnesses upon us. Blessed are You, L-rd, who bestows good kindnesses upon His people Israel.",
+     "label": "HaMa’avir sheinah — “Who removes sleep”"
+    }
+   ],
+   "candidate": "Before giyur, a candidate does not say the blessing “shelo asani goy” (“who has not made me a non-Jew”). After giyur, opinions differ: some omit it, others say “she’asani ger” (“who has made me a ger”). The other blessings are praise, and many rabbis permit them even before giyur. Check with a rabbi.",
+   "source": "Metsudah Siddur (1981), Hebrew, CC-BY, via Sefaria",
+   "ref": "Berachot 60b; Shulchan Aruch, Orach Chaim 46"
+  },
+  {
+   "id": "shma",
+   "groups": [
+    "morning",
+    "evening"
+   ],
+   "title": "Shema Yisrael",
+   "heTitle": "שְׁמַע יִשְׂרָאֵל",
+   "subtitle": "The central declaration of faith, the first paragraph",
+   "when": "Twice a day: in the morning (before the end of the first quarter of the daylight hours; the exact time is in the “Calendar”) and in the evening, after the stars come out. Once more — before sleep.",
+   "how": "The first line is said aloud, the eyes covered with the right hand, with the thought of accepting the sovereignty of Heaven. The second line (“Baruch shem…”) is said in a whisper. One who prays without a minyan adds, by Ashkenaz custom, “El melech ne’eman” (“G-d, the faithful King”) at the beginning. If it is still difficult, begin with the first two lines and the first paragraph.",
+   "about": "The first line and the first paragraph are Torah, Devarim 6:4–9: the unity of G-d, love for Him, teaching the Torah to children, tefillin, and the mezuzah. Reading the Shema in the morning and in the evening is a mitzvah of the Torah (Berachot 1:1–3). The full Shema in the siddur includes two further paragraphs: Devarim 11:13–21 and Bamidbar 15:37–41. The word “echad” in the first line speaks of the unity of G-d: He is one, and is not made up of parts and “persons”; these words are taken upon oneself every day.",
+   "parts": [
+    {
+     "he": "שְׁמַע יִשְׂרָאֵל יְיָ אֱלֹהֵינוּ יְיָ אֶחָד:",
+     "translit": "Shema Yisrael, Adonai Eloheinu, Adonai echad.",
+     "ru": "Hear, O Israel: the L-rd is our G-d, the L-rd is One.",
+     "label": "Aloud"
+    },
+    {
+     "he": "בָּרוּךְ שֵׁם כְּבוֹד מַלְכוּתוֹ לְעוֹלָם וָעֶד:",
+     "translit": "Baruch shem kevod malchuto le'olam va'ed.",
+     "ru": "Blessed is the name of the glory of His kingdom for ever and ever.",
+     "label": "In a whisper"
+    },
+    {
+     "he": "וְאָהַבְתָּ אֵת יְיָ אֱלֹהֶיךָ בְּכָל־לְבָבְךָ וּבְכָל־נַפְשְׁךָ וּבְכָל־מְאֹדֶךָ: וְהָיוּ הַדְּבָרִים הָאֵלֶּה אֲשֶׁר אָנֹכִי מְצַוְּךָ הַיּוֹם עַל־לְבָבֶךָ: וְשִׁנַּנְתָּם לְבָנֶיךָ וְדִבַּרְתָּ בָּם בְּשִׁבְתְּךָ בְּבֵיתֶךָ וּבְלֶכְתְּךָ בַדֶּרֶךְ וּבְשָׁכְבְּךָ וּבְקוּמֶךָ: וּקְשַׁרְתָּם לְאוֹת עַל־יָדֶךָ וְהָיוּ לְטֹטָפֹת בֵּין עֵינֶיךָ: וּכְתַבְתָּם עַל־מְזֻזוֹת בֵּיתֶךָ וּבִשְׁעָרֶיךָ:",
+     "translit": "Ve'ahavta et Adonai Elohecha bechol levavcha uvchol nafshecha uvchol me'odecha. Vehayu hadevarim ha'eleh asher anochi metzavecha hayom al levavecha. Veshinantam levanecha vedibarta bam beshivtecha beveitecha uvlechtecha vaderech uvshochbecha uvkumecha. Ukshartam le'ot al yadecha, vehayu letotafot bein einecha. Uchtavtam al mezuzot beitecha uvish'arecha.",
+     "ru": "Love the L-rd your G-d with all your heart, with all your soul, and with all your substance. Let these words, which I command you today, be upon your heart. Repeat them to your children and speak of them when you sit in your house and when you walk on the way, when you lie down and when you rise. Bind them as a sign upon your hand, and let them be a band above your eyes. And write them on the doorposts of your house and on your gates.",
+     "label": "Ve’ahavta — the first paragraph"
+    }
+   ],
+   "candidate": "Anyone may read the Shema, and many rabbis advise a candidate to read it every day: it is part of the preparation. It becomes the obligation of the mitzvah of the Shema after giyur. Check with a rabbi.",
+   "source": "Metsudah Siddur (1981), Hebrew, CC-BY, via Sefaria",
+   "ref": "Devarim 6:4–9; Mishnah Berachot 1:1–3"
+  },
+  {
+   "id": "asher-yatzar",
+   "groups": [
+    "day",
+    "morning"
+   ],
+   "title": "Asher Yatzar",
+   "heTitle": "אֲשֶׁר יָצַר",
+   "subtitle": "Thanks for a healthy body",
+   "when": "Every time after using the bathroom and washing your hands, including in the morning.",
+   "how": "Wash your hands (without the blessing for washing) and say it outside the bathroom.",
+   "about": "A blessing from the Talmud (Berachot 60b). It teaches us to see the miracle in the most ordinary things: if even one of the body’s “openings” were to close or open at the wrong time, a person could not survive even for an hour.",
+   "parts": [
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם אֲשֶׁר יָצַר אֶת־הָאָדָם בְּחָכְמָה וּבָרָא בוֹ נְקָבִים נְקָבִים חֲלוּלִים חֲלוּלִים גָּלוּי וְיָדוּעַ לִפְנֵי כִסֵּא כְבוֹדֶךָ שֶׁאִם יִפָּתֵחַ אֶחָד מֵהֶם אוֹ יִסָּתֵם אֶחָד מֵהֶם אִי אֶפְשַׁר לְהִתְקַיֵּם וְלַעֲמֹד לְפָנֶיךָ אֲפִילוּ שָׁעָה אֶחָת. בָּרוּךְ אַתָּה יְיָ רוֹפֵא כָל־בָּשָׂר וּמַפְלִיא לַעֲשׂוֹת:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, asher yatzar et ha'adam bechochmah, uvara vo nekavim nekavim, chalulim chalulim. Galui veyadua lifnei chisei chevodecha, she'im yipatei'ach echad mehem, o yisatem echad mehem, i efshar lehitkayem vela'amod lefanecha afilu sha'ah echat. Baruch atah Adonai, rofei chol basar umafli la'asot.",
+     "ru": "Blessed are You, Lord, our G-d, King of the universe, who formed man with wisdom and created within him many openings and many hollows. It is revealed and known before the throne of Your glory that if one of them were to be opened or one of them were to be closed, it would be impossible to survive and stand before You even for one hour. Blessed are You, Lord, who heals all flesh and acts wondrously."
+    }
+   ],
+   "candidate": "This blessing does not contain the words “who commanded us”; it is an expression of thanks. Many rabbis permit saying it even before giyur. Check with your rabbi.",
+   "source": "Metsudah Siddur (1981), Hebrew, CC-BY, via Sefaria",
+   "ref": "Berachot 60b; Shulchan Aruch, Orach Chaim 6"
+  },
+  {
+   "id": "amida-short",
+   "groups": [
+    "day"
+   ],
+   "title": "The short Amidah with “Havinenu”",
+   "heTitle": "תְּפִלַּת הֲבִינֵנוּ",
+   "subtitle": "The central prayer in abbreviated form",
+   "when": "The Amidah is said three times a day: in the morning (Shacharit), in the afternoon (Minchah) and in the evening (Maariv). The sages permitted the short form when there is no time or strength: while traveling, when ill, or in a hurry. For a beginner it helps in learning the order of the prayer.",
+   "how": "Stand with your feet together, facing Jerusalem. Before beginning, take three steps back and three steps forward. Read quietly, but moving your lips, so that you can hear yourself. You bow four times: at the beginning and at the end of the first blessing, and at the beginning and at the end of “Modim”: at “Baruch” you bend your knees, at “Atah” you bow forward, and by “Adonai” you stand straight again. At the end, at “Oseh shalom”, you take three steps back and bow to the left, to the right and forward. In the blessing “Shome'a tefillah” and at the end, after “Yihyu leratzon”, you may add your own request in your own words, in any language.",
+   "about": "The full weekday Amidah consists of nineteen blessings: three of praise, thirteen of requests and three of thanks. Shmuel in the Talmud (Berachot 29a) composed “Havinenu”, a single blessing that briefly contains the thirteen middle ones. The first three and the last three blessings remain in full. Restrictions: “Havinenu” is not said in winter, during the season of the prayer for rain, nor at the conclusion of Shabbat and festivals (Shulchan Aruch, Orach Chaim 110:1); on Shabbat and festivals the Amidah is different. Check with your rabbi. The direction of prayer is Jerusalem, the eternal capital; the middle blessings of the full Amidah include requests for the ingathering of the exiles and for the city of David.",
+   "parts": [
+    {
+     "he": "אֲדֹנָי שְׂפָתַי תִּפְתָּח וּפִי יַגִּיד תְּהִלָּתֶךָ:",
+     "translit": "Adonai sefatai tiftach, ufi yagid tehilatecha.",
+     "ru": "Lord, open my lips, and my mouth will declare Your praise.",
+     "label": "Introduction"
+    },
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ וֵאלֹהֵי אֲבוֹתֵינוּ אֱלֹהֵי אַבְרָהָם אֱלֹהֵי יִצְחָק וֵאלֹהֵי יַעֲקֹב הָאֵל הַגָּדוֹל הַגִּבּוֹר וְהַנּוֹרָא אֵל עֶלְיוֹן גּוֹמֵל חֲסָדִים טוֹבִים וְקוֹנֵה הַכֹּל וְזוֹכֵר חַסְדֵי אָבוֹת וּמֵבִיא גוֹאֵל לִבְנֵי בְנֵיהֶם לְמַעַן שְׁמוֹ בְּאַהֲבָה: מֶלֶךְ עוֹזֵר וּמוֹשִׁיעַ וּמָגֵן: בָּרוּךְ אַתָּה יְיָ מָגֵן אַבְרָהָם:",
+     "translit": "Baruch atah Adonai, Eloheinu vElohei avoteinu, Elohei Avraham, Elohei Yitzchak vElohei Yaakov, ha'El hagadol hagibor vehanora, El elyon, gomel chasadim tovim vekoneh hakol, vezocher chasdei avot, umevi go'el livnei veneihem lema'an shemo be'ahavah. Melech ozer umoshia umagen. Baruch atah Adonai, magen Avraham.",
+     "ru": "Blessed are You, Lord, our G-d and G-d of our fathers, G-d of Avraham, G-d of Yitzchak and G-d of Yaakov, the great, mighty and awesome G-d, G-d Most High, who bestows good kindnesses and possesses all, who remembers the devotion of the fathers and brings a redeemer to their children’s children for the sake of His Name, with love. King, Helper, Savior and Shield. Blessed are You, Lord, Shield of Avraham.",
+     "label": "1. Avot: “Fathers”"
+    },
+    {
+     "he": "אַתָּה גִבּוֹר לְעוֹלָם אֲדֹנָי מְחַיֵּה מֵתִים אַתָּה רַב לְהוֹשִׁיעַ: (בַּקַּיִץ: מוֹרִיד הַטָּל | בַּחֹרֶף: מַשִּׁיב הָרוּחַ וּמוֹרִיד הַגֶּשֶׁם:) מְכַלְכֵּל חַיִּים בְּחֶסֶד מְחַיֵּה מֵתִים בְּרַחֲמִים רַבִּים סוֹמֵךְ נוֹפְלִים וְרוֹפֵא חוֹלִים וּמַתִּיר אֲסוּרִים וּמְקַיֵּם אֱמוּנָתוֹ לִישֵׁנֵי עָפָר, מִי כָמוֹךָ בַּעַל גְּבוּרוֹת וּמִי דּוֹמֶה לָּךְ מֶלֶךְ מֵמִית וּמְחַיֵּה וּמַצְמִיחַ יְשׁוּעָה: וְנֶאֱמָן אַתָּה לְהַחֲיוֹת מֵתִים: בָּרוּךְ אַתָּה יְיָ מְחַיֵּה הַמֵּתִים:",
+     "translit": "Atah gibor le'olam Adonai, mechayeh metim atah, rav lehoshia. (In summer: morid hatal. In winter: mashiv haruach umorid hageshem.) Mechalkel chayim bechesed, mechayeh metim berachamim rabim, somech noflim, verofei cholim, umatir asurim, umekayem emunato lishenei afar. Mi chamocha ba'al gevurot umi domeh lach, melech memit umechayeh umatzmiach yeshuah. Vene'eman atah lehachayot metim. Baruch atah Adonai, mechayeh hametim.",
+     "ru": "You are mighty forever, Lord; You revive the dead, You are great in saving. (In summer: who sends down the dew. In winter: who makes the wind blow and brings down the rain.) In kindness You sustain the living, in great mercy You revive the dead, You support the falling, heal the sick, free the captives and keep Your faith with those who sleep in the dust. Who is like You, Master of mighty deeds, and who can compare to You, King who brings death and restores life and causes salvation to flourish! And You are faithful to revive the dead. Blessed are You, Lord, who revives the dead.",
+     "label": "2. Gevurot: “Might”"
+    },
+    {
+     "he": "אַתָּה קָדוֹשׁ וְשִׁמְךָ קָדוֹשׁ וּקְדוֹשִׁים בְּכָל־יוֹם יְהַלְלוּךָ סֶּלָה. בָּרוּךְ אַתָּה יְיָ הָאֵל הַקָּדוֹשׁ:",
+     "translit": "Atah kadosh veshimcha kadosh, ukedoshim bechol yom yehalelucha selah. Baruch atah Adonai, ha'El hakadosh.",
+     "ru": "You are holy and Your Name is holy, and holy ones praise You every day forever. Blessed are You, Lord, the holy G-d.",
+     "label": "3. Kedushat HaShem: “Holiness of the Name”"
+    },
+    {
+     "he": "הֲבִינֵנוּ יְיָ אֱלֹהֵינוּ לָדַעַת דְּרָכֶיךָ, וּמוֹל אֶת לְבָבֵנוּ לְיִרְאָתֶךָ, וְתִסְלַח לָנוּ לִהְיוֹת גְּאוּלִים, וְרַחֲקֵנוּ מִמַּכְאוֹב, וְדַשְּׁנֵנוּ בִּנְאוֹת אַרְצֶךָ, וּנְפוּצוֹתֵינוּ מֵאַרְבַּע תְּקַבֵּץ, וְהַתּוֹעִים עַל דַּעְתְּךָ יִשָּׁפֵטוּ, וְעַל הָרְשָׁעִים תָּנִיף יָדֶךָ, וְיִשְׂמְחוּ צַדִּיקִים בְּבִנְיַן עִירֶךָ וּבְתִקּוּן הֵיכָלֶךָ, וּבִצְמִיחַת קֶרֶן לְדָוִד עַבְדֶּךָ, וּבַעֲרִיכַת נֵר לְבֶן יִשַׁי מְשִׁיחֶךָ. טֶרֶם נִקְרָא אַתָּה תַעֲנֶה. בָּרוּךְ אַתָּה יְיָ, שׁוֹמֵעַ תְּפִלָּה:",
+     "translit": "Havinenu Adonai Eloheinu lada'at derachecha, umol et levavenu leyir'atecha, vetislach lanu lihyot ge'ulim, verachakenu mimachov, vedashenenu bine'ot artzecha, unefutzoteinu me'arba tekabetz, vehato'im al da'atcha yishafetu, ve'al haresha'im tanif yadecha, veyismechu tzadikim bevinyan irecha uvetikun heichalecha, uvitzmichat keren leDavid avdecha, uva'arichat ner leven Yishai meshichecha. Terem nikra atah ta'aneh. Baruch atah Adonai, shome'a tefillah.",
+     "ru": "Grant us understanding, Lord, our G-d, to know Your ways, and open our hearts to the awe of You. Forgive us so that we may be redeemed, keep us far from suffering, satisfy us from the pastures of Your land, and gather our scattered ones from the four corners of the earth. Let those who stray be judged according to Your wisdom, and raise Your hand against the wicked. And let the righteous rejoice in the rebuilding of Your city and the restoration of Your Temple, in the flourishing of the strength of David, Your servant, and in the lamp prepared for the son of Yishai, Your anointed. Before we call, You will answer. Blessed are You, Lord, who hears prayer.",
+     "label": "Havinenu: in place of the thirteen middle blessings"
+    },
+    {
+     "he": "רְצֵה יְיָ אֱלֹהֵינוּ בְּעַמְּךָ יִשְׂרָאֵל וּבִתְפִלָּתָם וְהָשֵׁב אֶת הָעֲבוֹדָה לִדְבִיר בֵּיתֶךָ וְאִשֵּׁי יִשְׂרָאֵל וּתְפִלָּתָם בְּאַהֲבָה תְקַבֵּל בְּרָצוֹן וּתְהִי לְרָצוֹן תָּמִיד עֲבוֹדַת יִשְׂרָאֵל עַמֶּךָ: וְתֶחֱזֶינָה עֵינֵינוּ בְּשׁוּבְךָ לְצִיּוֹן בְּרַחֲמִים: בָּרוּךְ אַתָּה יְיָ הַמַּחֲזִיר שְׁכִינָתוֹ לְצִיּוֹן:",
+     "translit": "Retzeh Adonai Eloheinu be'amcha Yisrael uvitefilatam, vehashev et ha'avodah lidvir beitecha, ve'ishei Yisrael utefilatam be'ahavah tekabel beratzon, utehi leratzon tamid avodat Yisrael amecha. Vetechezenah eineinu beshuvcha leTziyon berachamim. Baruch atah Adonai, hamachazir shechinato leTziyon.",
+     "ru": "Be favorable, Lord, our G-d, toward Your people Israel and their prayer. Restore the service to the inner sanctuary of Your House; accept the fire-offerings of Israel and their prayer with love and favor, and may the service of Israel, Your people, always be pleasing to You. May our eyes behold Your merciful return to Zion. Blessed are You, Lord, who restores His Presence to Zion.",
+     "label": "4. Avodah: “Service”"
+    },
+    {
+     "he": "מוֹדִים אֲנַחְנוּ לָךְ שָׁאַתָּה הוּא יְיָ אֱלֹהֵינוּ וֵאלֹהֵי אֲבוֹתֵינוּ לְעוֹלָם וָעֶד צוּר חַיֵּינוּ מָגֵן יִשְׁעֵנוּ אַתָּה הוּא לְדוֹר וָדוֹר נוֹדֶה לְּךָ וּנְסַפֵּר תְּהִלָּתֶךָ עַל־חַיֵּינוּ הַמְּסוּרִים בְּיָדֶךָ וְעַל נִשְׁמוֹתֵינוּ הַפְּקוּדוֹת לָךְ וְעַל נִסֶּיךָ שֶׁבְּכָל יוֹם עִמָּנוּ וְעַל נִפְלְאוֹתֶיךָ וְטוֹבוֹתֶיךָ שֶׁבְּכָל עֵת עֶרֶב וָבֹקֶר וְצָהֳרָיִם הַטּוֹב כִּי לֹא כָלוּ רַחֲמֶיךָ וְהַמְרַחֵם כִּי לֹא תַמּוּ חֲסָדֶיךָ מֵעוֹלָם קִוִּינוּ לָךְ: וְעַל־כֻּלָּם יִתְבָּרַךְ וְיִתְרוֹמַם שִׁמְךָ מַלְכֵּנוּ תָּמִיד לְעוֹלָם וָעֶד: וְכֹל הַחַיִּים יוֹדוּךָ סֶּלָה וִיהַלְלוּ אֶת־שִׁמְךָ בֶּאֱמֶת הָאֵל יְשׁוּעָתֵנוּ וְעֶזְרָתֵנוּ סֶלָה: בָּרוּךְ אַתָּה יְיָ הַטּוֹב שִׁמְךָ וּלְךָ נָאֶה לְהוֹדוֹת:",
+     "translit": "Modim anachnu lach, sha'atah hu Adonai Eloheinu vElohei avoteinu le'olam va'ed. Tzur chayeinu, magen yishenu, atah hu ledor vador. Nodeh lecha unesaper tehilatecha, al chayeinu hamesurim beyadecha, ve'al nishmoteinu hapekudot lach, ve'al nisecha shebechol yom imanu, ve'al nifle'otecha vetovotecha shebechol et, erev vavoker vetzohorayim. Hatov ki lo chalu rachamecha, vehamerachem ki lo tamu chasadecha, me'olam kivinu lach. Ve'al kulam yitbarach veyitromam shimcha malkenu tamid le'olam va'ed. Vechol hachayim yoducha selah, vihalelu et shimcha be'emet, ha'El yeshuatenu ve'ezratenu selah. Baruch atah Adonai, hatov shimcha ulecha na'eh lehodot.",
+     "ru": "We thank You, for You are the Lord, our G-d and G-d of our fathers, forever and ever. Rock of our lives, Shield of our salvation, You are He from generation to generation. We thank You and declare Your praise for our lives, which are entrusted to Your hand, for our souls, which are in Your keeping, for Your miracles that are with us every day, and for Your wonders and favors at all times: evening, morning and noon. The Good One, for Your mercy has not ceased; the Merciful One, for Your kindnesses have not ended; we have always placed our hope in You. And for all these may Your Name be blessed and exalted, our King, continually, forever and ever. And all the living will thank You, selah, and praise Your Name sincerely, G-d, our salvation and our help, selah. Blessed are You, Lord, whose Name is the Good One, and to whom it is fitting to give thanks.",
+     "label": "5. Modim: “We thank”"
+    },
+    {
+     "he": "שִׂים שָׁלוֹם טוֹבָה וּבְרָכָה חֵן וָחֶסֶד וְרַחֲמִים עָלֵינוּ וְעַל כָּל־יִשְׂרָאֵל עַמֶּךָ. בָּרְכֵנוּ אָבִינוּ כֻּלָּנוּ כְּאֶחָד בְּאוֹר פָּנֶיךָ. כִּי בְאוֹר פָּנֶיךָ נָתַתָּ לָּנוּ יְיָ אֱלֹהֵינוּ תּוֹרַת חַיִּים וְאַהֲבַת חֶסֶד וּצְדָקָה וּבְרָכָה וְרַחֲמִים וְחַיִּים וְשָׁלוֹם. וְטוֹב בְּעֵינֶיךָ לְבָרֵךְ אֶת עַמְּךָ יִשְׂרָאֵל בְּכָל־עֵת וּבְכָל־שָׁעָה בִּשְׁלוֹמֶךָ: בָּרוּךְ אַתָּה יְיָ הַמְבָרֵךְ אֶת־עַמּוֹ יִשְׂרָאֵל בַּשָּׁלוֹם:",
+     "translit": "Sim shalom tovah uverachah, chen vachesed verachamim aleinu ve'al kol Yisrael amecha. Barchenu avinu kulanu ke'echad be'or panecha, ki ve'or panecha natata lanu Adonai Eloheinu torat chayim ve'ahavat chesed, utzedakah uverachah verachamim vechayim veshalom. Vetov be'einecha levarech et amcha Yisrael bechol et uvechol sha'ah bishlomecha. Baruch atah Adonai, hamevarech et amo Yisrael bashalom.",
+     "ru": "Grant peace, goodness and blessing, grace, kindness and mercy to us and to all Israel, Your people. Bless us, our Father, all of us as one, with the light of Your countenance, for by the light of Your countenance You gave us, Lord, our G-d, the Torah of life and a love of kindness, righteousness, blessing, mercy, life and peace. And may it be good in Your eyes to bless Your people Israel at every time and at every hour with Your peace. Blessed are You, Lord, who blesses His people Israel with peace.",
+     "label": "6. Sim Shalom: “Grant peace”"
+    },
+    {
+     "he": "יִהְיוּ לְרָצוֹן אִמְרֵי פִי וְהֶגְיוֹן לִבִּי לְפָנֶיךָ יְיָ צוּרִי וְגוֹאֲלִי:\nעֹשֶׂה שָׁלוֹם בִּמְרוֹמָיו הוּא יַעֲשֶׂה שָׁלוֹם עָלֵינוּ וְעַל כָּל־יִשְׂרָאֵל וְאִמְרוּ אָמֵן:",
+     "translit": "Yihyu leratzon imrei fi vehegyon libi lefanecha, Adonai tzuri vego'ali.\nOseh shalom bimromav, hu ya'aseh shalom aleinu ve'al kol Yisrael, ve'imru amen.",
+     "ru": "May the words of my mouth and the meditations of my heart be pleasing to You, Lord, my Rock and my Redeemer.\nHe who makes peace in His heights, may He make peace for us and for all Israel, and say: Amen.",
+     "label": "Conclusion"
+    }
+   ],
+   "candidate": "A ger says “G-d of our fathers” just like every Jew: Avraham is the father of all gerim (Rambam, letter to Ovadiah the Ger). Before giyur many rabbis advise praying the Amidah as a personal prayer and learning its order, but opinions differ as to exactly how. Check with your rabbi.",
+   "source": "Metsudah Siddur (1981), Hebrew, CC-BY, via Sefaria; “Havinenu”: Siddur Da'at (daat.ac.il), Hebrew, public domain, via Sefaria",
+   "ref": "Berachot 29a; Shulchan Aruch, Orach Chaim 110:1"
+  },
+  {
+   "id": "shma-al-hamita",
+   "groups": [
+    "evening"
+   ],
+   "title": "The bedtime Shema",
+   "heTitle": "קְרִיאַת שְׁמַע עַל הַמִּטָּה",
+   "subtitle": "Forgiveness, “HaMapil” and the Shema",
+   "when": "Before going to sleep, already in bed or beside it.",
+   "how": "First, you may forgive everyone who hurt you during the day. Then comes the Shema (the first line and the first paragraph, see “Shema Yisrael”). Many say the blessing “HaMapil” last, right before falling asleep, and do not speak after it. If you are afraid of falling asleep before finishing, say “HaMapil” without G-d’s Name. The last lines are from the hymn “Adon Olam”.",
+   "about": "The Talmud (Berachot 60b) cites the blessing “HaMapil” and teaches that one should read the Shema before sleep: it protects a person at night. Forgiving those who wronged you before going to sleep is a custom based on the Talmud’s words that whoever forgives has his own sins forgiven (Megillah 28a).",
+   "parts": [
+    {
+     "he": "רִבּוֹנוֹ שֶׁל עוֹלָם הֲרֵינִי מוֹחֵל לְכָל־מִי שֶׁהִכְעִיס וְהִקְנִיט אוֹתִי אוֹ שֶׁחָטָא כְנֶגְדִּי בֵּין בְּגוּפִי בֵּין בְּמָמוֹנִי בֵּין בִּכְבוֹדִי בֵּין בְּכָל־אֲשֶׁר לִי בֵּין בְּאוֹנֶס בֵּין בְּרָצוֹן בֵּין בְּשׁוֹגֵג בֵּין בְּמֵזִיד בֵּין בְּדִבּוּר בֵּין בְּמַעֲשֶׂה בֵּין בְּמַחֲשָׁבָה בֵּין בְּהַרְהוֹר בֵּין בְּגִלְגּוּל זֶה בֵּין בְּגִלְגּוּל אַחֵר לְכָל־בַּר יִשְׂרָאֵל וְלֹא יֵעָנֵשׁ שׁוּם אָדָם בְּסִבָּתִי: יְהִי רָצוֹן מִלְּפָנֶיךָ יְיָ אֱלֹהַי וֵאלֹהֵי אֲבוֹתַי שֶׁלֹא אֶחֱטָא עוֹד וּמַה־שֶּׁחָטָאתִי לְפָנֶיךָ מְחוֹק בְּרַחֲמֶיךָ הָרַבִּים אֲבָל לֹא עַל־יְדֵי יִסּוֹרִים וָחֳלָיִים רָעִים: יִהְיוּ לְרָצוֹן אִמְרֵי־פִי וְהֶגְיוֹן לִבִּי לְפָנֶיךָ יְיָ צוּרִי וְגֹאֲלִי:",
+     "translit": "Ribono shel olam, hareini mochel lechol mi shehich'is vehiknit oti o shechata kenegdi, bein begufi, bein bemamoni, bein bichvodi, bein bechol asher li, bein be'ones, bein beratzon, bein beshogeg, bein bemezid, bein bedibur, bein bema'aseh, bein bemachshavah, bein behirhur, bein begilgul zeh, bein begilgul acher, lechol bar Yisrael, velo ye'anesh shum adam besibati. Yehi ratzon milfanecha Adonai Elohai vElohei avotai, shelo echeta od, umah shechatati lefanecha mechok berachamecha harabim, aval lo al yedei yisurim vacholayim ra'im. Yihyu leratzon imrei fi vehegyon libi lefanecha, Adonai tzuri vego'ali.",
+     "ru": "Master of the world, I hereby forgive anyone who angered or provoked me or sinned against me, whether against my body, my property, my honor or anything that is mine, whether under compulsion or willingly, by mistake or intentionally, in word, in deed, in thought or in fancy, in this life or in another; any member of Israel, and let no one be punished on my account. May it be Your will, Lord, my G-d and G-d of my fathers, that I sin no more, and whatever sins I have committed before You, wipe them away in Your great mercy, but not through suffering and grievous illnesses. May the words of my mouth and the meditations of my heart be pleasing to You, Lord, my Rock and my Redeemer.",
+     "label": "Forgiveness"
+    },
+    {
+     "he": "שְׁמַע יִשְׂרָאֵל יְיָ אֱלֹהֵינוּ יְיָ אֶחָד:\nבָּרוּךְ שֵׁם כְּבוֹד מַלְכוּתוֹ לְעוֹלָם וָעֶד:",
+     "translit": "Shema Yisrael, Adonai Eloheinu, Adonai echad.\nBaruch shem kevod malchuto le'olam va'ed.",
+     "ru": "Hear, O Israel: the Lord is our G-d, the Lord is One.\nBlessed is the Name of the glory of His kingdom forever and ever.",
+     "label": "Shema (followed by the first paragraph, “Ve'ahavta”)"
+    },
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם הַמַּפִּיל חֶבְלֵי שֵׁנָה עַל עֵינָי וּתְנוּמָה עַל עַפְעַפָּי: וִיהִי רָצוֹן מִלְּפָנֶיךָ יְיָ אֱלֹהַי וֵאלֹהֵי אֲבוֹתַי שֶׁתַּשְׁכִּיבֵנִי לְשָׁלוֹם וְתַעֲמִידֵנִי לְשָׁלוֹם וְאַל יְבַהֲלוּנִי רַעְיוֹנַי וַחֲלוֹמוֹת רָעִים וְהַרְהוֹרִים רָעִים וּתְהֵא מִטָּתִי שְׁלֵמָה לְפָנֶיךָ וְהָאֵר עֵינַי פֶּן אִישַׁן הַמָּוֶת כִּי אַתָּה הַמֵּאִיר לְאִישׁוֹן בַּת עָיִן: בָּרוּךְ אַתָּה יְיָ הַמֵּאִיר לָעוֹלָם כֻּלּוֹ בִּכְבוֹדוֹ:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, hamapil chevlei shenah al einai utenumah al af'apai. Vihi ratzon milfanecha Adonai Elohai vElohei avotai, shetashkiveni leshalom veta'amideni leshalom, ve'al yevahaluni ra'ayonai vachalomot ra'im vehirhurim ra'im, utehei mitati shelemah lefanecha, vehaer einai pen ishan hamavet, ki atah hame'ir le'ishon bat ayin. Baruch atah Adonai, hame'ir la'olam kulo bichvodo.",
+     "ru": "Blessed are You, Lord, our G-d, King of the universe, who casts the bonds of sleep upon my eyes and slumber upon my eyelids. May it be Your will, Lord, my G-d and G-d of my fathers, to let me lie down in peace and to raise me up in peace. Let my thoughts, bad dreams and bad imaginings not trouble me, and may my bed be perfect before You (that is, my children). Give light to my eyes, lest I sleep the sleep of death, for it is You who give light to the pupil of the eye. Blessed are You, Lord, who illuminates the whole world with His glory.",
+     "label": "HaMapil"
+    },
+    {
+     "he": "בְּיָדוֹ אַפְקִיד רוּחִי, בְּעֵת אִישַׁן וְאָעִירָה:\nוְעִם רוּחִי גְּוִיָּתִי, יְיָ לִי וְלֹא אִירָא:",
+     "translit": "Beyado afkid ruchi, be'et ishan ve'a'irah.\nVe'im ruchi geviyati, Adonai li velo ira.",
+     "ru": "Into His hand I entrust my spirit, when I go to sleep and when I awake.\nAnd with my spirit, my body too. The Lord is with me, and I shall not fear.",
+     "label": "From “Adon Olam”"
+    }
+   ],
+   "candidate": "The forgiveness, the Shema and the lines of “Adon Olam” may be said even before giyur. As for saying the blessing “HaMapil” with G-d’s Name before giyur, check with your rabbi.",
+   "source": "Metsudah Siddur (1981), Hebrew, CC-BY, via Sefaria",
+   "ref": "Berachot 60b; Megillah 28a; Shulchan Aruch, Orach Chaim 239"
+  },
+  {
+   "id": "netilat-yadayim-bread",
+   "groups": [
+    "food"
+   ],
+   "title": "Netilat yadayim before bread",
+   "heTitle": "נְטִילַת יָדַיִם לִסְעוּדָה",
+   "subtitle": "Washing the hands before a meal with bread",
+   "when": "Before a meal that includes bread (challah, lavash, a roll: anything over which “HaMotzi” is said).",
+   "how": "Take off your rings. Fill a cup and pour water over your right hand, then your left: Ashkenazim customarily pour twice on each hand, while Chabad and many Sephardim pour three times. Raise your hands and say the blessing, then dry them. Do not speak until you have said the blessing over the bread.",
+   "about": "The sages instituted washing before bread in memory of the purity with which the kohanim ate holy food (Chullin 106a). The blessing is the same as in the morning.",
+   "parts": [
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו וְצִוָּנוּ עַל נְטִילַת יָדָיִם:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, asher kid'shanu b'mitzvotav v'tzivanu al netilat yadayim.",
+     "ru": "Blessed are You, L-rd our G-d, King of the universe, who has sanctified us with His mitzvot and commanded us to wash the hands."
+    }
+   ],
+   "candidate": "As in the morning: before giyur many rabbis advise not saying the words “vetzivanu” (“and commanded us”), or saying the blessing without G-d’s Name. Check with your rabbi.",
+   "source": "Siddur Da'at (daat.ac.il), Hebrew, public domain, via Sefaria",
+   "ref": "Chullin 106a; Shulchan Aruch, Orach Chaim 158"
+  },
+  {
+   "id": "hamotzi",
+   "groups": [
+    "food"
+   ],
+   "title": "HaMotzi",
+   "heTitle": "הַמּוֹצִיא",
+   "subtitle": "Over bread",
+   "when": "Before bread made from wheat, barley, spelt, oats or rye (after washing the hands).",
+   "how": "Take the bread in both hands, say the blessing and immediately eat a piece. The blessing over bread covers the whole meal except wine and dessert; according to many opinions, separate blessings are said over those.",
+   "about": "Bread is the foundation of a meal, so it has its own “main” blessing. After a meal with bread, Birkat HaMazon is said.",
+   "parts": [
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, הַמּוֹצִיא לֶחֶם מִן הָאָרֶץ:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, hamotzi lechem min ha'aretz.",
+     "ru": "Blessed are You, Lord, our G-d, King of the universe, who brings forth bread from the earth."
+    }
+   ],
+   "candidate": "Blessings over food are praise; they do not contain the words “who commanded us”. The sages permit a non-Jew to say blessings, and candidates are usually advised to start saying them now. Check with your rabbi.",
+   "source": "Siddur Da'at (daat.ac.il), Hebrew, public domain, via Sefaria",
+   "ref": "Berachot 35a, 38a; Shulchan Aruch, Orach Chaim 167"
+  },
+  {
+   "id": "mezonot",
+   "groups": [
+    "food"
+   ],
+   "title": "Mezonot",
+   "heTitle": "מְזוֹנוֹת",
+   "subtitle": "Over baked goods and grain dishes",
+   "when": "Before baked goods (cookies, pie, cake, pizza, according to many opinions), pasta, and porridges made from the five grains (wheat, barley, spelt, oats, rye).",
+   "how": "Say the blessing while holding the food in your right hand, and eat right away. If porridge or pie is eaten as a full meal, the rules change; check with your rabbi.",
+   "about": "The five grains are satisfying, so they have a special blessing, and after eating, “Al HaMichyah” is said.",
+   "parts": [
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, בּוֹרֵא מִינֵי מְזוֹנוֹת:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, borei minei mezonot.",
+     "ru": "Blessed are You, Lord, our G-d, King of the universe, who creates various kinds of nourishment."
+    }
+   ],
+   "candidate": "Blessings over food are praise; they do not contain the words “who commanded us”. The sages permit a non-Jew to say blessings, and candidates are usually advised to start saying them now. Check with your rabbi.",
+   "source": "Siddur Da'at (daat.ac.il), Hebrew, public domain, via Sefaria",
+   "ref": "Berachot 36b–37b; Shulchan Aruch, Orach Chaim 168, 208"
+  },
+  {
+   "id": "hagafen",
+   "groups": [
+    "food"
+   ],
+   "title": "HaGafen",
+   "heTitle": "הַגָּפֶן",
+   "subtitle": "Over wine and grape juice",
+   "when": "Before wine or grape juice.",
+   "how": "The blessing over wine also covers other drinks consumed at the same time.",
+   "about": "Wine “cheers G-d and people” (Shoftim 9:13), so it has its own blessing, like bread. Kiddush and havdalah are made over wine.",
+   "parts": [
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, בּוֹרֵא פְּרִי הַגָּפֶן:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, borei pri hagafen.",
+     "ru": "Blessed are You, Lord, our G-d, King of the universe, who creates the fruit of the vine."
+    }
+   ],
+   "candidate": "Blessings over food are praise; they do not contain the words “who commanded us”. The sages permit a non-Jew to say blessings, and candidates are usually advised to start saying them now. Check with your rabbi.",
+   "source": "Siddur Da'at (daat.ac.il), Hebrew, public domain, via Sefaria",
+   "ref": "Berachot 35a–35b; Shulchan Aruch, Orach Chaim 202:1"
+  },
+  {
+   "id": "haetz",
+   "groups": [
+    "food"
+   ],
+   "title": "HaEtz",
+   "heTitle": "הָעֵץ",
+   "subtitle": "Over fruit from trees",
+   "when": "Before fruits and berries that grow on trees and bushes that live for many years: apples, pears, grapes, nuts, dates.",
+   "how": "If several fruits are in front of you, the custom is to say the blessing first over one of the seven species of the Land of Israel (olives, dates, grapes, figs, pomegranates).",
+   "about": "The Talmud teaches: enjoying the world without a blessing is like taking something holy without permission (Berachot 35a).",
+   "parts": [
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, בּוֹרֵא פְּרִי הָעֵץ:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, borei pri ha'etz.",
+     "ru": "Blessed are You, Lord, our G-d, King of the universe, who creates the fruit of the tree."
+    }
+   ],
+   "candidate": "Blessings over food are praise; they do not contain the words “who commanded us”. The sages permit a non-Jew to say blessings, and candidates are usually advised to start saying them now. Check with your rabbi.",
+   "source": "Siddur Da'at (daat.ac.il), Hebrew, public domain, via Sefaria",
+   "ref": "Berachot 35a, 40a; Shulchan Aruch, Orach Chaim 202"
+  },
+  {
+   "id": "haadama",
+   "groups": [
+    "food"
+   ],
+   "title": "HaAdamah",
+   "heTitle": "הָאֲדָמָה",
+   "subtitle": "Over vegetables and produce of the ground",
+   "when": "Before vegetables, melons (watermelon, cantaloupe), bananas, strawberries, potatoes.",
+   "how": "If you are not sure whether it is “etz” or “adamah”, say “HaAdamah”: this blessing also works for fruit from trees (Berachot 40a).",
+   "about": "Vegetables grow anew from the ground every year, so their blessing speaks of the “fruit of the ground”.",
+   "parts": [
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, בּוֹרֵא פְּרִי הָאֲדָמָה:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, borei pri ha'adamah.",
+     "ru": "Blessed are You, Lord, our G-d, King of the universe, who creates the fruit of the ground."
+    }
+   ],
+   "candidate": "Blessings over food are praise; they do not contain the words “who commanded us”. The sages permit a non-Jew to say blessings, and candidates are usually advised to start saying them now. Check with your rabbi.",
+   "source": "Siddur Da'at (daat.ac.il), Hebrew, public domain, via Sefaria",
+   "ref": "Berachot 40a; Shulchan Aruch, Orach Chaim 203–206"
+  },
+  {
+   "id": "shehakol",
+   "groups": [
+    "food"
+   ],
+   "title": "Shehakol",
+   "heTitle": "שֶׁהַכֹּל",
+   "subtitle": "Over everything else",
+   "when": "Before meat, fish, dairy, eggs, mushrooms, sweets, water and all drinks except wine and grape juice.",
+   "how": "“Shehakol” is a general blessing: if you do not know which one to say, it works for almost everything (Shulchan Aruch, Orach Chaim 206:2).",
+   "about": "Over things that do not grow directly from the ground, we say “by whose word all things came to be”.",
+   "parts": [
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, שֶׁהַכֹּל נִהְיָה בִּדְבָרוֹ:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, shehakol nihyah bidvaro.",
+     "ru": "Blessed are You, Lord, our G-d, King of the universe, by whose word all things came to be."
+    }
+   ],
+   "candidate": "Blessings over food are praise; they do not contain the words “who commanded us”. The sages permit a non-Jew to say blessings, and candidates are usually advised to start saying them now. Check with your rabbi.",
+   "source": "Siddur Da'at (daat.ac.il), Hebrew, public domain, via Sefaria",
+   "ref": "Berachot 40b; Shulchan Aruch, Orach Chaim 204"
+  },
+  {
+   "id": "birkat-hamazon",
+   "groups": [
+    "food"
+   ],
+   "title": "Birkat HaMazon (short form)",
+   "heTitle": "בִּרְכַּת הַמָּזוֹן",
+   "subtitle": "The blessing after a meal with bread",
+   "when": "After a meal that included bread (at least a kezayit, about 27–30 g), in the same place where you ate.",
+   "how": "The full Birkat HaMazon consists of four blessings; its text is in every siddur and in separate booklets (“benchers”). Here is only the very shortest beginning. “Brich Rachamana” is the minimal form from the Talmud for someone who cannot yet say more. The first blessing, “HaZan”, is best learned in full right away. Agree with your rabbi on how a beginner may shorten it.",
+   "about": "A commandment of the Torah: “And you shall eat and be satisfied, and bless the Lord your G-d” (Devarim 8:10). The Talmud (Berachot 40b) tells of Binyamin the shepherd, who after eating bread would say in Aramaic: “Blessed is the Merciful One, Master of this bread,” and thereby fulfilled the commandment. According to tradition, the first blessing was composed by Moshe when Israel received the manna (Berachot 48b).",
+   "parts": [
+    {
+     "he": "בְּרִיךְ רַחֲמָנָא מַלְכָּא דְעָלְמָא מָרֵיהּ דְּהַאי פִּתָּא:",
+     "translit": "Brich Rachamana, malka de'alma, marei dehai pita.",
+     "ru": "Blessed is the Merciful One, King of the world, Master of this bread.",
+     "label": "Brich Rachamana: the shortest form (in Aramaic)"
+    },
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם הַזָּן אֶת־הָעוֹלָם כֻּלּוֹ בְּטוּבוֹ בְּחֵן בְּחֶסֶד וּבְרַחֲמִים הוּא נוֹתֵן לֶחֶם לְכָל־בָּשָׂר כִּי לְעוֹלָם חַסְדּוֹ וּבְטוּבוֹ הַגָּדוֹל תָּמִיד לֹא־חָסַר לָנוּ וְאַל־יֶחְסַר לָנוּ מָזוֹן לְעוֹלָם וָעֶד בַּעֲבוּר שְׁמוֹ הַגָּדוֹל כִּי הוּא אֵל זָן וּמְפַרְנֵס לַכֹּל וּמֵטִיב לַכֹּל וּמֵכִין מָזוֹן לְכָל־בְּרִיּוֹתָיו אֲשֶׁר בָּרָא: בָּרוּךְ אַתָּה יְיָ הַזָּן אֶת־הַכֹּל:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, hazan et ha'olam kulo betuvo, bechen bechesed uverachamim. Hu noten lechem lechol basar, ki le'olam chasdo. Uvetuvo hagadol tamid lo chasar lanu, ve'al yechsar lanu mazon le'olam va'ed, ba'avur shemo hagadol. Ki hu El zan umefarnes lakol, umetiv lakol, umechin mazon lechol beriyotav asher bara. Baruch atah Adonai, hazan et hakol.",
+     "ru": "Blessed are You, Hashem, our G-d, King of the universe, who nourishes the whole world in His goodness, with grace, with kindness and with compassion. He gives bread to all flesh, for His kindness is everlasting. And through His great goodness we have never lacked food, and may we never lack it, forever and ever — for the sake of His great Name. For He is G-d who nourishes and sustains all, does good to all, and prepares food for all His creatures whom He has created. Blessed are You, Hashem, who nourishes all.",
+     "label": "1. HaZan — “Who Nourishes”"
+    }
+   ],
+   "candidate": "Birkat HaMazon is praise and thanksgiving, and candidates are usually advised to learn it. But the second blessing contains words about the covenant and the Torah “which You have given us” — check with your rabbi how to say them before giyur.",
+   "source": "Metsudah Siddur (1981), Hebrew, CC-BY, via Sefaria; “Brich Rachamana” — Berachot 40b",
+   "ref": "Devarim 8:10; Berachot 40b, 48b; Shulchan Aruch, Orach Chaim 185, 187:1"
+  },
+  {
+   "id": "al-hamichya",
+   "groups": [
+    "food"
+   ],
+   "title": "Al HaMichyah",
+   "heTitle": "עַל הַמִּחְיָה",
+   "subtitle": "After baked goods, wine and fruit of the seven species",
+   "when": "After eating at least a kezayit (about 27–30 g) of baked goods or porridge made from the five grains, drinking at least a revi'it (about 86 ml) of wine, or eating fruit of the seven species: grapes, figs, pomegranates, olives, dates.",
+   "how": "This is a “threefold blessing in one” (Me'ein Shalosh): a single blessing that briefly repeats the first three blessings of Birkat HaMazon. The text here is for baked goods; for wine and fruit the beginning and the end change (see the last part). On Shabbat, before “ki Atah”, you add “uRetzeh vehachalitzenu beyom haShabbat hazeh”.",
+   "about": "These foods are connected with the praise of the Land of Israel (Devarim 8:8), so after them we give thanks both for the land and for Jerusalem (Berachot 44a).",
+   "parts": [
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, עַל הַמִּחְיָה וְעַל הַכַּלְכָּלָה, וְעַל תְּנוּבַת הַשָּׂדֶה, וְעַל אֶרֶץ חֶמְדָּה טוֹבָה וּרְחָבָה שֶׁרָצִיתָ וְהִנְחַלְתָּ לַאֲבוֹתֵינוּ לֶאֱכֹל מִפִּרְיָהּ וְלִשְׂבֹּעַ מִטּוּבָהּ. רַחֵם נָא יְיָ אֱלֹהֵינוּ עַל יִשְׂרָאֵל עַמֶּךָ, וְעַל יְרוּשָׁלַיִם עִירֶךָ, וְעַל צִיּוֹן מִשְׁכַּן כְּבוֹדֶךָ, וְעַל מִזְבְּחֶךָ וְעַל הֵיכָלֶךָ. וּבְנֵה יְרוּשָׁלַיִם עִיר הַקֹּדֶשׁ בִּמְהֵרָה בְיָמֵינוּ, וְהַעֲלֵנוּ לְתוֹכָהּ, וְשַׂמְּחֵנוּ בְּבִנְיָנָהּ, וְנֹאכַל מִפִּרְיָהּ וְנִשְׂבַּע מִטּוּבָהּ, וּנְבָרֶכְךָ עָלֶיהָ בִּקְדֻשָּׁה וּבְטָהֳרָה. כִּי אַתָּה יְיָ טוֹב וּמֵטִיב לַכֹּל, וְנוֹדֶה לְּךָ עַל הָאָרֶץ וְעַל הַמִּחְיָה. בָּרוּךְ אַתָּה יְיָ, עַל הָאָרֶץ וְעַל הַמִּחְיָה:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, al hamichyah ve'al hakalkalah, ve'al tenuvat hasadeh, ve'al eretz chemdah tovah urechavah sheratzita vehinchalta la'avoteinu le'echol mipiryah velisboa mituvah. Rachem na Adonai Eloheinu al Yisrael amecha, ve'al Yerushalayim irecha, ve'al Tziyon mishkan kevodecha, ve'al mizbechecha ve'al heichalecha. Uvneh Yerushalayim ir hakodesh bimherah veyameinu, veha'alenu letochah, vesamchenu bevinyanah, venochal mipiryah venisba mituvah, unevarechecha aleha bikdushah uvtaharah. Ki atah Adonai tov umetiv lakol, venodeh lecha al ha'aretz ve'al hamichyah. Baruch atah Adonai, al ha'aretz ve'al hamichyah.",
+     "ru": "Blessed are You, Hashem, our G-d, King of the universe, for the sustenance and the nourishment, for the produce of the field, and for the desirable, good and spacious land which You were pleased to give as a heritage to our fathers, to eat of its fruit and to be satisfied with its goodness. Have mercy, Hashem our G-d, on Israel Your people, on Jerusalem Your city, on Zion the dwelling place of Your glory, on Your altar and on Your Temple. Rebuild Jerusalem, the holy city, speedily in our days, bring us up into it, gladden us with its rebuilding, and we will eat of its fruit, be satisfied with its goodness and bless You for it in holiness and purity. For You, Hashem, are good and do good to all, and we thank You for the land and for the sustenance. Blessed are You, Hashem, for the land and for the sustenance.",
+     "label": "After baked goods and porridge"
+    },
+    {
+     "he": "עַל הַגֶּפֶן וְעַל פְּרִי הַגֶּפֶן … עַל הָאָרֶץ וְעַל פְּרִי הַגָּפֶן:\nעַל הָעֵץ וְעַל פְּרִי הָעֵץ … עַל הָאָרֶץ וְעַל הַפֵּרוֹת:",
+     "translit": "After wine: al hagefen ve'al pri hagefen… al ha'aretz ve'al pri hagafen.\nAfter fruit: al ha'etz ve'al pri ha'etz… al ha'aretz ve'al haperot.",
+     "ru": "After wine: “for the vine and the fruit of the vine… for the land and for the fruit of the vine.”\nAfter fruit of the seven species: “for the tree and the fruit of the tree… for the land and for the fruits.” In the Land of Israel, for its own wine and fruit one says “pri gafnah” and “peroteha”.",
+     "label": "For wine and fruit"
+    }
+   ],
+   "candidate": "This is thanksgiving, without the words “who commanded us”. Candidates are usually advised to say it already now. Check with your rabbi.",
+   "source": "Siddur Da'at (daat.ac.il), Hebrew, public domain, via Sefaria",
+   "ref": "Devarim 8:8; Berachot 44a; Shulchan Aruch, Orach Chaim 208"
+  },
+  {
+   "id": "bore-nefashot",
+   "groups": [
+    "food"
+   ],
+   "title": "Borei Nefashot",
+   "heTitle": "בּוֹרֵא נְפָשׁוֹת",
+   "subtitle": "After everything else",
+   "when": "After food and drink over which you said “HaEtz” (except the seven species), “HaAdamah” or “Shehakol” beforehand: at least a kezayit of food or a revi'it of drink.",
+   "how": "A single short sentence. If you ate both baked goods and, for example, an apple, you say both “Al HaMichyah” and “Borei Nefashot”.",
+   "about": "Thanks not only for the food, but also for the fact that G-d created living beings together with their needs — both what is needed for life and what simply brings joy.",
+   "parts": [
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, בּוֹרֵא נְפָשׁוֹת רַבּוֹת וְחֶסְרוֹנָן, עַל כָּל מַה שֶּׁבָּרָאתָ לְהַחֲיוֹת בָּהֶם נֶפֶשׁ כָּל חָי. בָּרוּךְ חֵי הָעוֹלָמִים:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, borei nefashot rabot vechesronan, al kol mah shebarata lehachayot bahem nefesh kol chai. Baruch chei ha'olamim.",
+     "ru": "Blessed are You, Hashem, our G-d, King of the universe, who creates many living beings and all that they lack — for all that You have created to sustain the life of every living thing. Blessed is He who lives forever."
+    }
+   ],
+   "candidate": "This is thanksgiving, without the words “who commanded us”. Candidates are usually advised to say it already now. Check with your rabbi.",
+   "source": "Siddur Da'at (daat.ac.il), Hebrew, public domain, via Sefaria",
+   "ref": "Berachot 37a; Shulchan Aruch, Orach Chaim 207"
+  },
+  {
+   "id": "shabbat-candles",
+   "groups": [
+    "shabbat"
+   ],
+   "title": "Candle lighting",
+   "heTitle": "הַדְלָקַת נֵרוֹת",
+   "subtitle": "Shabbat and Yom Tov candles",
+   "when": "On Friday before sunset: usually 18 minutes before, in Jerusalem 40 minutes before (the time for your city is in the “Calendar”). Candles may not be lit after sunset.",
+   "how": "According to Ashkenazi custom, you first light the candles, then cover your eyes with your hands, say the blessing and open your eyes: with the blessing, the woman accepts Shabbat. Many Sephardim say the blessing before lighting. After the blessing it is customary to pray in your own words — for your family, your children, for whatever is on your heart.",
+   "about": "Shabbat candles are a practice established by the Sages for the sake of “peace in the home”, so that the Shabbat evening is bright and joyful (Shabbat 25b). Lighting is first of all the duty of the woman of the house, but if there is none, a man lights.",
+   "parts": [
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו וְצִוָּנוּ לְהַדְלִיק נֵר שֶׁל שַׁבָּת:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, asher kideshanu bemitzvotav vetzivanu lehadlik ner shel Shabbat.",
+     "ru": "Blessed are You, Hashem, our G-d, King of the universe, who has sanctified us with His commandments and commanded us to light the Shabbat lamp.",
+     "label": "On Shabbat"
+    },
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו וְצִוָּנוּ לְהַדְלִיק נֵר שֶׁל שַׁבָּת וְשֶׁל יוֹם טוֹב:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, asher kideshanu bemitzvotav vetzivanu lehadlik ner shel Shabbat veshel Yom Tov.",
+     "ru": "Blessed are You, Hashem, our G-d, King of the universe, who has sanctified us with His commandments and commanded us to light the lamp of Shabbat and of Yom Tov.",
+     "label": "When Yom Tov falls on Shabbat"
+    },
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו וְצִוָּנוּ לְהַדְלִיק נֵר שֶׁל יוֹם טוֹב:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, asher kideshanu bemitzvotav vetzivanu lehadlik ner shel Yom Tov.",
+     "ru": "Blessed are You, Hashem, our G-d, King of the universe, who has sanctified us with His commandments and commanded us to light the Yom Tov lamp.",
+     "label": "On Yom Tov (followed by “Shehecheyanu”, except on the last days of Pesach)"
+    }
+   ],
+   "candidate": "A non-Jew before giyur is not obligated to keep Shabbat, and the Sages held that one should not keep it fully before giyur (Sanhedrin 58b). That is why many rabbis advise candidates to light candles without the blessing or with special qualifications. This is for your rabbi to decide — be sure to check with your rabbi.",
+   "source": "The text of the blessing is the same in all siddurim",
+   "ref": "Shabbat 23b, 25b; Shulchan Aruch, Orach Chaim 263"
+  },
+  {
+   "id": "kiddush",
+   "groups": [
+    "shabbat"
+   ],
+   "title": "Friday night kiddush",
+   "heTitle": "קִדּוּשׁ לֵיל שַׁבָּת",
+   "subtitle": "Sanctifying Shabbat over wine",
+   "when": "On Friday evening, after prayers, before the meal.",
+   "how": "Fill a cup with wine or grape juice (at least a revi'it, about 86 ml). Hold it in your right hand, usually standing (many sit). First say “Vayehi erev vayehi voker” quietly, then continue aloud. Everyone listening answers “amen” and may take a sip. Then comes hand washing and “HaMotzi”.",
+   "about": "“Remember the Shabbat day to keep it holy” (Shemot 20:8): the Sages teach that it is sanctified with words, and they established that these words are said over wine (Pesachim 106a). The first passage is Bereshit 2:1–3, the account of the seventh day of creation.",
+   "parts": [
+    {
+     "he": "וַיְהִי עֶרֶב וַיְהִי בֹקֶר יוֹם הַשִּׁשִּׁי: וַיְכֻלּוּ הַשָּׁמַיִם וְהָאָרֶץ וְכָל־צְבָאָם: וַיְכַל אֱלֹהִים בַּיּוֹם הַשְּׁבִיעִי מְלַאכְתּוֹ אֲשֶׁר עָשָׂה. וַיִּשְׁבֹּת בַּיּוֹם הַשְּׁבִיעִי מִכָּל־מְלַאכְתּוֹ אֲשֶׁר עָשָׂה: וַיְבָרֶךְ אֱלֹהִים אֶת־יוֹם הַשְּׁבִיעִי וַיְקַדֵּשׁ אֹתוֹ. כִּי בוֹ שָׁבַת מִכָּל מְלַאכְתּוֹ אֲשֶׁר־בָּרָא אֱלֹהִים לַעֲשׂוֹת:",
+     "translit": "(Quietly:) Vayehi erev vayehi voker — (aloud:) Yom hashishi. Vaychulu hashamayim veha'aretz vechol tzeva'am. Vaychal Elohim bayom hashevi'i melachto asher asah, vayishbot bayom hashevi'i mikol melachto asher asah. Vayevarech Elohim et yom hashevi'i vaykadesh oto, ki vo shavat mikol melachto asher bara Elohim la'asot.",
+     "ru": "And there was evening and there was morning — the sixth day. The heavens and the earth and all their host were completed. By the seventh day G-d completed His work which He had done, and He rested on the seventh day from all His work which He had done. G-d blessed the seventh day and sanctified it, for on it He rested from all His work which G-d had created to make.",
+     "label": "Vaychulu (Bereshit 2:1–3)"
+    },
+    {
+     "he": "סַבְרִי מָרָנָן וְרַבּוֹתַי:\nבָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם בּוֹרֵא פְּרִי הַגָּפֶן:",
+     "translit": "Savri maranan verabotai!\nBaruch atah Adonai, Eloheinu melech ha'olam, borei pri hagafen.",
+     "ru": "With the permission of my masters and teachers!\nBlessed are You, Hashem, our G-d, King of the universe, who creates the fruit of the vine.",
+     "label": "Over the wine"
+    },
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו וְרָצָה בָנוּ, וְשַׁבַּת קָדְשׁוֹ בְּאַהֲבָה וּבְרָצוֹן הִנְחִילָנוּ, זִכָּרוֹן לְמַעֲשֵׂה בְרֵאשִׁית. (כִּי הוּא יוֹם) תְּחִלָּה לְמִקְרָאֵי קֹדֶשׁ, זֵכֶר לִיצִיאַת מִצְרָיִם. (כִּי בָנוּ בָחַרְתָּ וְאוֹתָנוּ קִדַּשְׁתָּ מִכָּל הָעַמִּים) וְשַׁבַּת קָדְשְׁךָ בְּאַהֲבָה וּבְרָצוֹן הִנְחַלְתָּנוּ. בָּרוּךְ אַתָּה יְיָ, מְקַדֵּשׁ הַשַּׁבָּת:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, asher kideshanu bemitzvotav veratzah vanu, veShabbat kodsho be'ahavah uvratzon hinchilanu, zikaron lema'aseh vereshit. Ki hu yom techilah lemikra'ei kodesh, zecher litziat Mitzrayim. Ki vanu vacharta ve'otanu kidashta mikol ha'amim, veShabbat kodshecha be'ahavah uvratzon hinchaltanu. Baruch atah Adonai, mekadesh haShabbat.",
+     "ru": "Blessed are You, Hashem, our G-d, King of the universe, who has sanctified us with His commandments and has taken pleasure in us, and with love and favor has given us His holy Shabbat as a heritage — a remembrance of the work of creation. For it is the first of the holy days of assembly, a remembrance of the Exodus from Egypt. For You have chosen us and sanctified us among all the nations, and with love and favor You have given us Your holy Shabbat as a heritage. Blessed are You, Hashem, who sanctifies Shabbat.",
+     "label": "Sanctification of the day"
+    }
+   ],
+   "candidate": "It is not customary to say the words “You have chosen us… among all the nations” and “who commanded us” before giyur, and a candidate does not make kiddush on behalf of others. Usually a candidate listens to kiddush and answers “amen”. Check with your rabbi.",
+   "source": "Metsudah Siddur (1981), Hebrew, CC-BY, via Sefaria",
+   "ref": "Shemot 20:8; Bereshit 2:1–3; Pesachim 106a; Shulchan Aruch, Orach Chaim 271"
+  },
+  {
+   "id": "tefilat-haderech",
+   "groups": [
+    "special"
+   ],
+   "title": "Tefilat HaDerech",
+   "heTitle": "תְּפִלַּת הַדֶּרֶךְ",
+   "subtitle": "The traveler's prayer",
+   "when": "When you set out on a journey out of town (by car, train or plane), once you have passed the last houses. Once per day of travel.",
+   "how": "It is best said standing, but in a car or on a plane you may sit; a driver does not stop for it. If you will return the same day, add “vetachzirenu leshalom” (“and return us in peace”).",
+   "about": "The prayer is cited in the Talmud (Berachot 29b–30a). It is said in the plural: the traveler prays for everyone who is on the road.",
+   "parts": [
+    {
+     "he": "יְהִי רָצוֹן מִלְפָנֶיךָ יְיָ אֱלֹהֵינוּ וֵאלֹהֵי אֲבוֹתֵינוּ, שֶׁתּוֹלִיכֵנוּ לְשָׁלוֹם וְתַצְעִידֵנוּ לְשָׁלוֹם וְתַדְרִיכֵנוּ לְשָׁלוֹם, וְתִסְמְכֵנוּ לְשָׁלוֹם, וְתַגִּיעֵנוּ לִמְחוֹז חֶפְצֵנוּ לְחַיִּים וּלְשִׂמְחָה וּלְשָׁלוֹם. (וְתַחְזִירֵנוּ לְשָׁלוֹם) וְתַצִּילֵנוּ מִכַּף כָּל אוֹיֵב וְאוֹרֵב וְלִסְטִים וְחַיּוֹת רָעוֹת בַּדֶּרֶךְ, וּמִכָּל מִינֵי פֻּרְעָנֻיּוֹת הַמִּתְרַגְּשׁוֹת לָבוֹא לָעוֹלָם, וְתִתְּנֵנוּ לְחֵן וּלְחֶסֶד וּלְרַחֲמִים בְּעֵינֶיךָ וּבְעֵינֵי כָל רֹאֵינוּ, כִּי אֵל שׁוֹמֵעַ תְּפִלָּה וְתַחֲנוּן אַתָּה. בָּרוּךְ אַתָּה יְיָ שׁוֹמֵעַ תְּפִלָּה:",
+     "translit": "Yehi ratzon milfanecha, Adonai Eloheinu veElohei avoteinu, shetolichenu leshalom, vetatz'idenu leshalom, vetadrichenu leshalom, vetismechenu leshalom, vetagi'enu limchoz cheftzenu lechayim ulesimchah uleshalom (vetachzirenu leshalom), vetatzilenu mikaf kol oyev ve'orev velistim vechayot ra'ot baderech, umikol minei pur'aniyot hamitragshot lavo la'olam, vetitnenu lechen ulechesed ulerachamim be'eynecha uve'einei chol ro'einu, ki El shome'a tefilah vetachanun atah. Baruch atah Adonai, shome'a tefilah.",
+     "ru": "May it be Your will, Hashem, our G-d and G-d of our fathers, to lead us in peace, to direct our steps in peace, to guide us in peace, to support us in peace, and to bring us to our desired destination — for life, for joy and for peace (and to return us in peace). Rescue us from every enemy and ambush, from bandits and wild beasts along the way, and from all kinds of calamities that rage and come upon the world. Grant us grace, kindness and compassion in Your eyes and in the eyes of all who see us, for You are G-d who hears prayer and supplication. Blessed are You, Hashem, who hears prayer."
+    }
+   ],
+   "candidate": "This is a request, without the words “who commanded us”. Many rabbis allow a candidate to say it. Check with your rabbi.",
+   "source": "Siddur Da'at (daat.ac.il), Hebrew, public domain, via Sefaria",
+   "ref": "Berachot 29b–30a; Shulchan Aruch, Orach Chaim 110:4–7"
+  },
+  {
+   "id": "shehecheyanu",
+   "groups": [
+    "special"
+   ],
+   "title": "Shehecheyanu",
+   "heTitle": "שֶׁהֶחֱיָנוּ",
+   "subtitle": "Thanksgiving for something new and joyful",
+   "when": "When you eat a new fruit for the first time in its season; put on important new clothing; buy a significant item that brings you joy; on the first night of a festival (at candle lighting or at kiddush); before seasonal mitzvot (shofar, lulav, the Chanukah candles on the first night).",
+   "how": "Say the blessing at the moment of joy, before you start eating or using the new item.",
+   "about": "A blessing from the Talmud (Berachot 54a, 59b; Eruvin 40b) — thanks to G-d for letting us live to reach this moment.",
+   "parts": [
+    {
+     "he": "בָּרוּךְ אַתָּה יְיָ אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם, שֶׁהֶחֱיָנוּ וְקִיְּמָנוּ וְהִגִּיעָנוּ לַזְּמַן הַזֶּה:",
+     "translit": "Baruch atah Adonai, Eloheinu melech ha'olam, shehecheyanu vekiymanu vehigi'anu lazman hazeh.",
+     "ru": "Blessed are You, Hashem, our G-d, King of the universe, who has granted us life, sustained us and enabled us to reach this time."
+    }
+   ],
+   "candidate": "This is thanksgiving, without the words “who commanded us”, and many rabbis allow a candidate to say it. Whether to say “Shehecheyanu” after giyur, at the immersion or afterwards — check with your rabbi.",
+   "source": "The text of the blessing is the same in all siddurim",
+   "ref": "Berachot 54a, 59b; Eruvin 40b; Shulchan Aruch, Orach Chaim 223–225"
+  }
+ ]
+}

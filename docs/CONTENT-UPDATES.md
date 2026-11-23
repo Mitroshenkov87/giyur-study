@@ -10,8 +10,8 @@ Rust is not compiled again.
 
 | | Path |
 |---|---|
-| In the repo | `content/ru/…` (a later English version: `content/en/…`, same file names) |
-| On a user's computer | `%LOCALAPPDATA%\Programs\Shorashim\content\ru\…`, beside `shorashim.exe` |
+| In the repo | `content/ru/…` and, when ready, `content/en/…` (same file names, same ids) |
+| On a user's computer | `%LOCALAPPDATA%\Programs\Shorashim\content\<lang>\…`, beside `shorashim.exe` |
 
 ```text
 content/ru/manifest.json            contentVersion, minAppVersion, list of sections
@@ -50,8 +50,34 @@ stay built in.
    On a Windows test laptop, edit the files in
    `%LOCALAPPDATA%\Programs\Shorashim\content\ru\` and restart the app.
 5. Commit and open a PR as usual. CI runs the same check
-   (`validate-content`) and the content tests (`cargo test`: no
-   «Библия / Ветхий Завет» framing, bank sizes, ids, etc.).
+   (`validate-content`, `validate-parity`) and the content tests
+   (`cargo test`: no «Библия / Ветхий Завет» framing, bank sizes, ids, etc.).
+
+## Language parity (`content/en` vs `content/ru`)
+
+English course files may appear gradually. Until `content/en/manifest.json`
+exists, CI prints `SKIP` and exits 0. Once the folder is there, every
+language must keep the **same JSON files**, the **same ids** (sections,
+lessons, cards, questions, prayers, interview items, calendar days and
+parashot — progress is stored under those ids) and the **same JSON shape**:
+a field present in Russian must be present in English, with the same type.
+Array lengths of id-bearing lists must match. Extra English keys are
+allowed. Do not rename, reuse or drop an id; a new card gets a new id.
+
+Check both languages:
+
+```sh
+tools/validate-content.sh content            # Russian (default)
+shorashim-ctl validate-content content --lang en
+shorashim-ctl validate-parity content        # files, ids, fields; SKIP if no en/
+```
+
+A failure names the relative file and the missing id or field, for example
+`ОШИБКА sections/03-shabbat.json: id «s03-l02» is in ru but not in en`.
+Switching the interface language in «Настройки» loads `content/<lang>/`;
+if those files are missing or broken, the previous language and content
+stay. `SHORASHIM_LANG=en|ru` overrides the language for one run
+(screenshots, tests) and does not write the profile.
 
 ## Ship a content fix (installer only)
 

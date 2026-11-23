@@ -8,6 +8,8 @@
 
 use chrono::{Datelike, NaiveDate};
 
+use crate::i18n::tr;
+
 pub const NISAN: u8 = 1;
 pub const IYAR: u8 = 2;
 pub const SIVAN: u8 = 3;
@@ -215,20 +217,20 @@ impl HebrewDate {
 pub fn month_name_ru(year: i32, month: u8) -> &'static str {
     let leap = is_leap(year);
     match month {
-        NISAN => "Нисан",
-        IYAR => "Ияр",
-        SIVAN => "Сиван",
-        TAMMUZ => "Тамуз",
-        AV => "Ав",
-        ELUL => "Элул",
-        TISHREI => "Тишрей",
-        CHESHVAN => "Хешван",
-        KISLEV => "Кислев",
-        TEVET => "Тевет",
-        SHEVAT => "Шват",
-        ADAR if leap => "Адар I",
-        ADAR => "Адар",
-        _ => "Адар II",
+        NISAN => tr("Нисан"),
+        IYAR => tr("Ияр"),
+        SIVAN => tr("Сиван"),
+        TAMMUZ => tr("Тамуз"),
+        AV => tr("Ав"),
+        ELUL => tr("Элул"),
+        TISHREI => tr("Тишрей"),
+        CHESHVAN => tr("Хешван"),
+        KISLEV => tr("Кислев"),
+        TEVET => tr("Тевет"),
+        SHEVAT => tr("Шват"),
+        ADAR if leap => tr("Адар I"),
+        ADAR => tr("Адар"),
+        _ => tr("Адар II"),
     }
 }
 
@@ -236,20 +238,20 @@ pub fn month_name_ru(year: i32, month: u8) -> &'static str {
 pub fn month_name_ru_gen(year: i32, month: u8) -> &'static str {
     let leap = is_leap(year);
     match month {
-        NISAN => "нисана",
-        IYAR => "ияра",
-        SIVAN => "сивана",
-        TAMMUZ => "тамуза",
-        AV => "ава",
-        ELUL => "элула",
-        TISHREI => "тишрея",
-        CHESHVAN => "хешвана",
-        KISLEV => "кислева",
-        TEVET => "тевета",
-        SHEVAT => "швата",
-        ADAR if leap => "адара I",
-        ADAR => "адара",
-        _ => "адара II",
+        NISAN => tr("нисана"),
+        IYAR => tr("ияра"),
+        SIVAN => tr("сивана"),
+        TAMMUZ => tr("тамуза"),
+        AV => tr("ава"),
+        ELUL => tr("элула"),
+        TISHREI => tr("тишрея"),
+        CHESHVAN => tr("хешвана"),
+        KISLEV => tr("кислева"),
+        TEVET => tr("тевета"),
+        SHEVAT => tr("швата"),
+        ADAR if leap => tr("адара I"),
+        ADAR => tr("адара"),
+        _ => tr("адара II"),
     }
 }
 
@@ -318,7 +320,7 @@ pub fn gematria(mut n: u32) -> String {
 
 /// Weekday names in Russian, Monday first (chrono `num_days_from_monday`).
 pub fn weekday_ru(d: NaiveDate) -> &'static str {
-    [
+    tr([
         "понедельник",
         "вторник",
         "среда",
@@ -326,7 +328,7 @@ pub fn weekday_ru(d: NaiveDate) -> &'static str {
         "пятница",
         "суббота",
         "воскресенье",
-    ][d.weekday().num_days_from_monday() as usize]
+    ][d.weekday().num_days_from_monday() as usize])
 }
 
 /// «22 ноября 2026».
@@ -345,5 +347,12 @@ pub fn format_gregorian_ru(d: NaiveDate) -> String {
         "ноября",
         "декабря",
     ];
-    format!("{} {} {}", d.day(), M[d.month0() as usize], d.year())
+    let month = tr(M[d.month0() as usize]);
+    crate::trf!(
+        "{day} {month} {year}",
+        "{month} {day}, {year}",
+        day = d.day(),
+        month = month,
+        year = d.year()
+    )
 }

@@ -5,6 +5,7 @@ use iced::widget::{button, container, row, Column};
 use iced::{Alignment, Element, Length};
 
 use crate::content::{self, Source};
+use crate::i18n::tr;
 use crate::storage::Level;
 use crate::ui::app::{Action, Ctx, Route};
 use crate::ui::screens::map::{heading_owned, icons, txt};
@@ -41,10 +42,10 @@ impl Screen {
         let p = theme::current();
 
         let mut page = Column::new().spacing(14).width(Length::Fill);
-        page = page.push(widgets::back_button("Настройки", Msg::Back));
-        page = page.push(widgets::heading("Источники", 1));
+        page = page.push(widgets::back_button(tr("Настройки"), Msg::Back));
+        page = page.push(widgets::heading(tr("Источники"), 1));
         page = page.push(
-            txt("Книги и сайты, на которые опираются материалы. Ссылки открываются во внешнем браузере (нужен интернет).")
+            txt(tr("Книги и сайты, на которые опираются материалы. Ссылки открываются во внешнем браузере (нужен интернет)."))
                 .size(theme::text::BODY)
                 .color(p.muted)
                 .width(Length::Fill),
@@ -70,9 +71,11 @@ impl Screen {
 
         if !any {
             page = page.push(widgets::card(
-                txt("Список источников появится вместе с материалами разделов.")
-                    .size(theme::text::BODY)
-                    .color(p.muted),
+                txt(tr(
+                    "Список источников появится вместе с материалами разделов.",
+                ))
+                .size(theme::text::BODY)
+                .color(p.muted),
             ));
         }
 
@@ -109,7 +112,7 @@ fn source_row<'a>(src: &'a Source, p: theme::Palette) -> Element<'a, Msg> {
         .align_y(Alignment::Center)
         .height(Length::Fixed(32.0));
     if let Some(short) = src.movement.as_deref().and_then(movement_tag) {
-        line = line.push(widgets::tag(short));
+        line = line.push(widgets::tag(tr(short)));
     }
     // http(s) sources open in the system browser (§13).
     match src.url.as_deref().filter(|_| is_link) {

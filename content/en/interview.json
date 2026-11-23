@@ -1,0 +1,2685 @@
+{
+ "version": 1,
+ "title": "Beit Din Interview Trainer",
+ "intro": "The beit din does not quiz you from a textbook: the judges want to understand who you are, why you have come, and how you already live. Here are collected questions rabbis often ask at the interview, with explanations of what lies behind them. These are not ready-made answers to memorize. The judges can spot a memorized text right away; answer in your own words and about your real life. If you do not know something or do not yet observe something, say so honestly.",
+ "sincerity": "Your answer must be your own and honest. The points below help you remember what to say, but they do not replace your own words.",
+ "topics": [
+  {
+   "id": "motivation",
+   "title": "Motivation",
+   "blurb": "Why you are here and why now"
+  },
+  {
+   "id": "faith",
+   "title": "Faith and the Oneness of G-d",
+   "blurb": "One G-d, the Torah, your previous beliefs"
+  },
+  {
+   "id": "shabbat",
+   "title": "Shabbat",
+   "blurb": "How you bring in Shabbat and see it out"
+  },
+  {
+   "id": "kashrut",
+   "title": "Kashrut",
+   "blurb": "What and how you eat, your kitchen"
+  },
+  {
+   "id": "holidays",
+   "title": "Festivals",
+   "blurb": "The Jewish year in your life"
+  },
+  {
+   "id": "family",
+   "title": "Family and community",
+   "blurb": "Loved ones, children, synagogue, the Jewish people"
+  },
+  {
+   "id": "mitzvot",
+   "title": "Mitzvot and halacha",
+   "blurb": "Commitments and how you understand them"
+  },
+  {
+   "id": "prayer",
+   "title": "Prayer and Hebrew",
+   "blurb": "Prayer, berachot, reading in Hebrew"
+  },
+  {
+   "id": "knowledge",
+   "title": "Knowledge check",
+   "blurb": "Short questions on understanding the basics"
+  }
+ ],
+ "questions": [
+  {
+   "id": "mot-why",
+   "topic": "motivation",
+   "question": "Why do you want to become Jewish?",
+   "purpose": "The main question of the interview (“What did you see?”, Yevamot 47a). The judges check that the decision is your own, well thought out, and connected with the Torah and the Jewish people — not with some external benefit.",
+   "keyPoints": [
+    "Your personal story: what brought you here and when — specific moments, people, books, Shabbats.",
+    "What you found specifically in Judaism: connection with G-d through mitzvot, the Torah, the people.",
+    "Why admiring Judaism from the sidelines is not enough for you (the seven laws of the descendants of Noach).",
+    "How this decision has already changed your life."
+   ],
+   "mistakes": [
+    "Vague words (“I like the culture,” “beautiful traditions”) without personal experience.",
+    "External reasons presented as the main ones: marriage, aliyah, paperwork.",
+    "A long memorized speech that sounds like text from a book."
+   ],
+   "lessons": [
+    "beit-din-3",
+    "beit-din-1",
+    "osnovy-1",
+    "osnovy-6"
+   ],
+   "options": [
+    "Through Shabbats, study and meetings I found a connection with G-d, the Torah and the Jewish people, and it is already changing my life.",
+    "I like Jewish culture and beautiful traditions.",
+    "It is needed for marriage and for the paperwork for aliyah.",
+    "I learned a ready-made answer from the study guide and will repeat it word for word."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "mot-when",
+   "topic": "motivation",
+   "question": "When and how did you first start thinking about giyur?",
+   "purpose": "The judges want to see the path: the decision ripened gradually and stood the test of time, not appearing yesterday on a passing impulse.",
+   "keyPoints": [
+    "An honest chronology: first acquaintance, study, first Shabbat, meeting a rabbi.",
+    "The doubts you had and how you worked through them.",
+    "How long you have already been living Jewishly and studying."
+   ],
+   "mistakes": [
+    "Embellishing your story or inventing a “wonderful” moment.",
+    "Hiding important circumstances (a Jewish partner, Jewish ancestors): the judges will find out anyway."
+   ],
+   "lessons": [
+    "beit-din-2",
+    "beit-din-3"
+   ],
+   "options": [
+    "I will tell the honest chronology: acquaintance, study, first Shabbat, meeting a rabbi, my doubts, and how long I have already been living Jewishly.",
+    "I will invent a vivid “wonderful” moment so the story sounds stronger.",
+    "I will hide that I have a Jewish partner or Jewish ancestors: that is beside the point.",
+    "I will say the decision came yesterday; the details do not matter."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "mot-partner",
+   "topic": "motivation",
+   "question": "Is your decision connected with marriage or with a Jewish partner?",
+   "purpose": "Giyur for the sake of marriage is not in itself considered a sufficient reason. The judges check that you would come to Judaism even without it and that you will keep the mitzvot whatever happens in the relationship.",
+   "keyPoints": [
+    "Do not hide your partner or plans for marriage: honesty matters most here.",
+    "Explain how the interest became your own choice.",
+    "What you do on your own, without your partner: study, prayer, Shabbat, community.",
+    "Does your partner also observe, or is ready to observe? (In an Orthodox beit din this matters.)"
+   ],
+   "mistakes": [
+    "Saying “for the sake of the family” as the only reason.",
+    "Saying your partner does not matter when that is not true."
+   ],
+   "lessons": [
+    "beit-din-3",
+    "semya-3",
+    "semya-4"
+   ],
+   "movements": "Orthodox batei din expect the Jewish partner to observe as well. Conservative and Reform batei din often perform giyur in the context of marriage, but they likewise expect the decision to become your own: study, prayer, Shabbat and community — not only “for a husband's or wife's sake.” In the progressive communities of the Russian Union of Progressive Jewish Communities this is explicitly part of a year of living alongside the community.",
+   "options": [
+    "I'll be honest about my partner and show that this choice has become my own: I study, pray, and observe on my own, regardless of how the relationship turns out.",
+    "I'll say I'm doing this only for the family and the marriage — that is enough.",
+    "I'll deny that my partner has anything to do with the decision, even if that's not true.",
+    "I'll hide my partner: the judges don't need to know about it."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "I'll be honest about my partner and show that my interest has become my own; in an Orthodox beit din it's important that the partner also observes.",
+      "I'll say I'm doing this only for the family and the marriage — that is enough.",
+      "I'll deny that my partner is connected to the decision, even if that's not true.",
+      "I'll hide my partner and won't say whether he observes the mitzvot."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "I'll be honest about my partner. Even if the giyur takes place within a marriage, the judges expect that my interest has become my own choice and that I observe on my own.",
+      "I'll say I'm doing this only for the family and the marriage — that is enough.",
+      "I'll deny that my partner is connected to the decision, even if that's not true.",
+      "I'll hide my partner: a Conservative beit din doesn't ask about this."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "I'll be honest about my partner. A Reform beit din often accompanies giyur within a marriage, but it too expects that my interest has become my own choice.",
+      "I'll say I'm doing this only for the family and the marriage — that is enough.",
+      "I'll deny that my partner is connected to the decision, even if that's not true.",
+      "I'll hide my partner: in a Reform beit din no one checks your personal choice."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "mot-suffering",
+   "topic": "motivation",
+   "question": "Do you know that Jews have been persecuted and are still hated to this day? Why do you want this?",
+   "purpose": "A classic question from the Talmud (Yevamot 47a). The judges check that you understand the price of belonging to this people and don't idealize it.",
+   "keyPoints": [
+    "Yes, I know and understand: antisemitism, the history of persecution, the Shoah.",
+    "I accept the fate of the people together with them (in Rut's words: “Your people shall be my people”).",
+    "This doesn't scare me away, because the decision is based on the truth of the Torah, not on gain."
+   ],
+   "mistakes": [
+    "Brushing it off (“that doesn't matter nowadays”).",
+    "Speaking beautifully about “suffering” without understanding the real consequences for yourself and your children."
+   ],
+   "lessons": [
+    "beit-din-3",
+    "osnovy-5",
+    "beit-din-1"
+   ],
+   "options": [
+    "I know about antisemitism, persecution, and the Shoah, and I accept the fate of the people together with them; the decision is based on the truth of the Torah, not on gain.",
+    "That doesn't matter anymore; there's no need to think about hatred of Jews.",
+    "I'll talk beautifully about “suffering” without delving into what it means for me and my children.",
+    "I hope this never touches me personally, so the question is unnecessary."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "mot-noahide",
+   "topic": "motivation",
+   "question": "A righteous non-Jew also has a share in the World to Come. Why do you want to take on 613 mitzvot?",
+   "purpose": "The judges check that you understand giyur is not needed for “salvation” and that you consciously take on the burden of the mitzvot (kabbalat mitzvot).",
+   "keyPoints": [
+    "I know about the Seven Laws of the Descendants of Noah and that the righteous nations of the world have a share in the World to Come.",
+    "I don't just want to be righteous; I want to be part of the covenant of Israel and observe the mitzvot.",
+    "I understand that after giyur, transgressing the mitzvot will be a sin for me."
+   ],
+   "mistakes": [
+    "Thinking that without giyur a person is “lost.”",
+    "Not knowing about the Seven Laws of the Descendants of Noah."
+   ],
+   "lessons": [
+    "osnovy-6",
+    "osnovy-1",
+    "beit-din-1"
+   ],
+   "options": [
+    "I know the Seven Laws of the Descendants of Noah and that the righteous nations have a share in the World to Come; I want to be in the covenant of Israel and to consciously accept the mitzvot.",
+    "Without giyur a person is lost and has no share in the World to Come.",
+    "Never heard of the Seven Laws of the Descendants of Noah; giyur is needed for “salvation.”",
+    "After giyur you can keep the mitzvot selectively; it changes nothing."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "mot-pressure",
+   "topic": "motivation",
+   "question": "What will you do if the beit din says “not yet, wait”?",
+   "purpose": "A test of steadfastness: tradition pushes the candidate away with the left hand while drawing them close with the right. The judges watch whether you'll abandon the path at the first refusal.",
+   "keyPoints": [
+    "I'll accept it, keep studying, and keep living Jewishly.",
+    "I'll ask what to work on and come back.",
+    "My choice doesn't depend on timelines."
+   ],
+   "mistakes": [
+    "Taking offense, arguing, pressuring the judges.",
+    "Saying you'll then “try somewhere else” for no reason."
+   ],
+   "lessons": [
+    "beit-din-1",
+    "beit-din-2"
+   ],
+   "options": [
+    "I'll accept it, ask what to work on, keep studying and living Jewishly, and come back: my choice doesn't depend on timelines.",
+    "If they don't accept me right away, this path isn't for me, and I'll step away.",
+    "I'll argue with the judges and demand an immediate decision.",
+    "I'll switch to another beit din the next day without changing anything in my life."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "mot-name",
+   "topic": "motivation",
+   "question": "What Jewish name have you chosen, and why?",
+   "purpose": "Your name shows who your role model is. The judges want to hear that your choice is thoughtful.",
+   "keyPoints": [
+    "The name and its meaning.",
+    "A connection to a hero of the Tanakh or a sage whose story is close to you (often Avraham, Sarah, Rut).",
+    "A ger is called “ben/bat Avraham Avinu” (and “Sarah Imeinu”)."
+   ],
+   "mistakes": [
+    "Choosing a name only “because it sounds beautiful” without knowing who bore it."
+   ],
+   "lessons": [
+    "beit-din-5",
+    "beit-din-6"
+   ],
+   "options": [
+    "I'll name the name I chose and explain the connection to the Patriarchs and Matriarchs or the meaning of the name; if I haven't chosen yet, I'll say so honestly and how I plan to choose.",
+    "I'll take the first name that comes along; the meaning doesn't matter.",
+    "I'll keep only my civil name: a Jewish name isn't needed after giyur.",
+    "I'll pick a celebrity's name because it sounds beautiful, with no connection to tradition."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "faith-god",
+   "topic": "faith",
+   "question": "What do you believe? Tell us about G-d as you understand Him.",
+   "purpose": "A check of monotheism: you believe in the One, incorporeal, eternal G-d who gave the Torah, and you have no other beliefs alongside this.",
+   "keyPoints": [
+    "G-d is One, not a body and has no form (Rambam's principles 1–5).",
+    "He alone is prayed to, without intermediaries.",
+    "He gave the Torah to Moshe at Sinai and knows the deeds of people.",
+    "You can say the Shema (“Shema Yisrael”) and what these words mean to you."
+   ],
+   "mistakes": [
+    "A vague “I believe in a higher power.”",
+    "Any notions of G-d in human form or of a “composite” G-d."
+   ],
+   "lessons": [
+    "osnovy-4",
+    "osnovy-8",
+    "osnovy-3",
+    "ivrit-3"
+   ],
+   "options": [
+    "I believe in the one G-d, the Creator of the world, without form or partners; I'll tell how this understanding lives in my prayer and my deeds.",
+    "G-d is more of a beautiful idea or a force of nature, not the Creator to whom one turns.",
+    "You can combine belief in the one G-d with other deities; it doesn't interfere.",
+    "Better not to talk about G-d at the interview: it's personal and has nothing to do with giyur."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "faith-prev",
+   "topic": "faith",
+   "question": "What religion did you practice before? How did you part with it?",
+   "purpose": "The judges check that you have fully left your former beliefs and rituals behind and are not combining them with Judaism.",
+   "keyPoints": [
+    "Name your past honestly: family, upbringing, baptism or rituals, if any.",
+    "Say clearly: you no longer take part in the rituals of your former religion and don't believe in its teachings.",
+    "Explain what specifically in Jewish monotheism became true for you."
+   ],
+   "mistakes": [
+    "Hiding the past.",
+    "Saying that “all religions are about the same thing” or that you still go “just to keep someone company.”",
+    "Speaking about your former religion with hatred: clarity matters, not malice."
+   ],
+   "lessons": [
+    "osnovy-8",
+    "beit-din-3",
+    "osnovy-3"
+   ],
+   "options": [
+    "I'll honestly tell about my former path and how I came to the pure monotheism of the Torah, without mixing former notions with Judaism.",
+    "I'll hide my former beliefs: the judges don't need to know.",
+    "I'll keep my former views alongside Judaism in order to “take the best of different paths.”",
+    "I'll say there was no past, even if that's not true."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "faith-mashiach",
+   "topic": "faith",
+   "question": "Whom does Judaism await as Mashiach, and how?",
+   "purpose": "A check that you have accepted the Jewish understanding of Mashiach and rejected other teachings about him.",
+   "keyPoints": [
+    "Mashiach is a human being, a descendant of King David — not a deity and not an intermediary.",
+    "The signs: he will gather the exiles, restore the Temple, and bring peace and knowledge of G-d (Rambam, Laws of Kings 11).",
+    "Until this has happened, Mashiach has not yet come; there is no “second coming” in Judaism."
+   ],
+   "mistakes": [
+    "Speaking of Mashiach as G-d or an intermediary.",
+    "Saying that Mashiach has already been."
+   ],
+   "lessons": [
+    "osnovy-9",
+    "osnovy-3"
+   ],
+   "options": [
+    "Judaism awaits Mashiach — a human being of David's line who will gather the exiles, restore justice and peace; he is not a deity.",
+    "Mashiach has already come; there is no one left to wait for.",
+    "Mashiach is only an inner state of a person, not the Torah's promise about the end of days.",
+    "You can consider any influential leader of our time to be Mashiach."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "faith-torah",
+   "topic": "faith",
+   "question": "What is the Torah? What is the Oral Torah, and why is it needed?",
+   "purpose": "A check that you recognize the Written Torah and the Oral Torah, not just “the text of a book.”",
+   "keyPoints": [
+    "The Written Torah is the Five Books of Moshe; the Tanakh is the Torah, the Prophets, and the Writings.",
+    "The Oral Torah explains the Written Torah: the Mishnah, the Talmud, halacha.",
+    "The Oral Torah explains how the generations understood the mitzvot (tefillin, Shabbat, kashrut); in the Reform path it is studied as wisdom, not necessarily as a legal code."
+   ],
+   "mistakes": [
+    "Reducing Judaism to reading the Tanakh without the tradition of interpretation.",
+    "Calling the Tanakh by foreign terms instead of Jewish ones."
+   ],
+   "lessons": [
+    "osnovy-2",
+    "osnovy-3"
+   ],
+   "movements": "In Orthodox and Conservative Judaism the Oral Torah is binding as law (for Masorti, a developing one). Reform Judaism sees the Written Torah and the Oral Torah as sacred, historically unfolding revelation: they must be known and loved, but halacha is not accepted as an unchanging legal code. At a Reform beit din, explain this view in your own words and show how the Torah is already changing your life. Don't just say “for us it's not obligatory.”",
+   "options": [
+    "The Torah is the covenant of G-d with Israel: the Written Torah and the Oral Torah, which explains how to fulfill the mitzvot.",
+    "Only the Written Torah is needed; the oral tradition is superfluous.",
+    "The Torah is ancient literature; there's no need to consider it binding.",
+    "The Oral Torah appeared recently and has nothing to do with Sinai."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "The Written Torah and the Oral Torah were given together; the Oral Torah is binding and explains how to fulfill the mitzvot.",
+      "Only the Written Torah is needed; the oral tradition can be rejected.",
+      "The Torah is ancient literature; there's no need to consider it binding.",
+      "The Oral Torah appeared recently and has nothing to do with Sinai."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "The Torah is the covenant of Israel; the Oral Torah and halacha are binding, but the Conservative movement sees in them a living, evolving tradition, and I answer within my own beit din.",
+      "Only the Written Torah is needed; the oral tradition can be set aside.",
+      "In the Conservative movement halacha isn't discussed at all; personal feeling is enough.",
+      "The Oral Torah has nothing to do with the Conservative path; only the Orthodox study it."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "The Torah is the covenant and the foundation of Jewish life; the Reform movement understands the binding nature of the Oral Torah differently, and I answer honestly within my own beit din, knowing the traditional view as well.",
+      "In the Reform movement you can skip studying the Torah: good deeds are enough.",
+      "The Oral Torah isn't needed by Reform Jews, and there's no point knowing it.",
+      "I'll say I accept the Oral Torah as in an Orthodox beit din, even though that's not my movement's position."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "faith-doubt",
+   "topic": "faith",
+   "question": "Do you ever have doubts about faith? What do you do with them?",
+   "purpose": "The judges don't expect perfect faith without questions. What matters to them is honesty, and that your doubts lead you to learning, not away from Judaism.",
+   "keyPoints": [
+    "Yes, questions come up; that's normal.",
+    "I look for answers: I study, ask my rabbi, and read.",
+    "Questions don't cancel my decision to observe the mitzvot."
+   ],
+   "mistakes": [
+    "Saying “I never had doubts” if that's not true.",
+    "Listing doubts about the fundamentals of faith without a readiness to resolve them."
+   ],
+   "lessons": [
+    "osnovy-3",
+    "beit-din-3"
+   ],
+   "options": [
+    "Doubts do come, and I don't hide them: I ask my teacher and community questions and keep studying and living by the mitzvot.",
+    "I've never had doubts and never will.",
+    "If doubts appear, it's better to step away from the path right away.",
+    "Doubts should be hidden from the rabbi and from yourself."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "faith-principles",
+   "topic": "faith",
+   "question": "Name several of Rambam's Thirteen Principles of Faith.",
+   "purpose": "A brief check of basic knowledge about faith and that you accept it.",
+   "keyPoints": [
+    "G-d exists, He is One, incorporeal, eternal; He alone may be prayed to.",
+    "Prophecy; Moshe is the greatest of the prophets; the Torah is from Heaven and unchanging.",
+    "G-d knows people's deeds and rewards them; Mashiach will come; resurrection of the dead."
+   ],
+   "mistakes": [
+    "Reciting them mechanically without understanding.",
+    "Mixing up the order or inventing principles — better to honestly say you don't remember them all."
+   ],
+   "lessons": [
+    "osnovy-3"
+   ],
+   "movements": "Rambam's Thirteen Principles are a common language of faith worth knowing in any stream. Reform Judaism does not require accepting them as mandatory dogma in every formulation (for example, about the literal giving of the Torah or about resurrection); be able to name several principles and calmly say how your path understands them, without argument and without denying tradition.",
+   "options": [
+    "I'll name several of Rambam's Thirteen Principles: the unity of G-d, the Torah from Heaven, reward and punishment, the coming of Mashiach, resurrection of the dead.",
+    "I don't know Rambam's principles; they're not required.",
+    "It's enough to believe “in goodness”; there's no need to learn the list of principles.",
+    "Rambam composed the Ten Commandments; I'll name those."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "I'll name several of Rambam's Thirteen Principles and I accept them: the unity of G-d, the Torah from Heaven, reward and punishment, the coming of Mashiach, resurrection of the dead.",
+      "Knowing Rambam's principles isn't required; general faith is enough.",
+      "You can make up the missing principles as long as the list is complete.",
+      "Rambam composed the Ten Commandments; I'll name those."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "I'll name several of Rambam's principles — a common language of faith; I'll tell how the Conservative path understands them, without denying tradition.",
+      "In the Conservative movement there's no need to learn Rambam's principles.",
+      "I'll recite them mechanically and say the meaning doesn't matter.",
+      "Rambam composed the Ten Commandments; I'll name those."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "I'll name several of Rambam's principles as a common language of tradition and calmly say how the Reform path understands particular formulations, without argument and without denying tradition.",
+      "A Reform Jew has no need to know Rambam's principles; they're “not for us.”",
+      "I'll reject all of Rambam's tradition to emphasize progressiveness.",
+      "I'll say I accept every formulation as a binding dogma, even though that's not my movement's position."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "shab-how",
+   "topic": "shabbat",
+   "question": "How do you observe Shabbat? Tell us about last Shabbat.",
+   "purpose": "One of the main questions about practice. The judges want to hear a concrete, vivid account of a real Shabbat, not a list of rules.",
+   "keyPoints": [
+    "Friday preparation: food, candles before sunset, clothes.",
+    "Evening: prayer, kiddush, challah, the meal, songs.",
+    "Saturday: synagogue, meals, study, rest, havdalah.",
+    "What is still hard for you and what you're working on."
+   ],
+   "mistakes": [
+    "Reciting laws from a book instead of your own experience.",
+    "Claiming you observe everything perfectly if that's not so."
+   ],
+   "lessons": [
+    "shabbat-2",
+    "shabbat-3",
+    "shabbat-5",
+    "shabbat-6"
+   ],
+   "movements": "An Orthodox account includes candles before sunset, kiddush, meals, walking to synagogue, and refraining from melachot. A Reform account is a concrete rhythm: candles, kiddush, a service (often Friday evening), family, abstaining from work and shopping if you have taken that on; driving and electricity are usually permitted. Talk about your own day, not someone else's standard.",
+   "options": [
+    "I'll tell about last Shabbat concretely: candles, kiddush, meals, rest from weekday work, prayer or community — as it really was.",
+    "I'll describe a perfect Shabbat from a book, even if I didn't actually spend it that way.",
+    "Shabbat is just a regular day off for me; there's nothing special about it.",
+    "I'll say in general words “I love Shabbat” without a single example."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "I'll tell about a real Shabbat: candles before sunset, kiddush, meals, walking to synagogue, and refraining from melachot — and what's still hard for me.",
+      "I'll recite laws from a book instead of my own experience.",
+      "I'll say I observe everything perfectly, even if that's not so.",
+      "In an Orthodox account synagogue and refraining from melachot don't matter."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "I'll tell about my real Shabbat in a Conservative community: candles, kiddush, services, family, and how I keep to my synagogue's practice.",
+      "I'll recite a perfect Shabbat from a book, not my own day.",
+      "In the Conservative path Shabbat is just a dinner; you don't need to know about services.",
+      "I'll say in general words “I love Shabbat” without a single example."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "I'll tell about my own rhythm: candles, kiddush, often a Friday-evening service, family, abstaining from work and shopping if I have taken that on; driving and electricity are usually permitted in Reform practice. I talk about my own day, not someone else's standard.",
+      "In the Reform movement you can skip observing Shabbat; it's not required.",
+      "I'll describe the full Orthodox prohibition of melachot, even though that's not my practice.",
+      "I'll say in general words “I love Shabbat” without a single example."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "shab-melacha",
+   "topic": "shabbat",
+   "question": "What is forbidden on Shabbat, and why?",
+   "purpose": "A check of understanding the 39 types of work (melachot) and the meaning of the prohibition, not just the list.",
+   "keyPoints": [
+    "39 types of work connected with building the Mishkan: for example, kindling a fire, writing, cooking, carrying in a public domain.",
+    "From this follow electricity, the car, the phone, money.",
+    "The meaning: to stop creating and to acknowledge the Creator; Shabbat is a sign of the covenant."
+   ],
+   "mistakes": [
+    "Reducing the prohibition to “you can't do your job.”",
+    "Not knowing about the prohibition of carrying and about the eruv."
+   ],
+   "lessons": [
+    "shabbat-4",
+    "shabbat-1"
+   ],
+   "movements": "The Orthodox path accepts the 39 melachot as binding law, including fire, writing, carrying, electricity, and driving. The Conservative movement considers Shabbat binding, but a number of responsa permit electric light and driving to synagogue. Reform Judaism asks you to know the melachot as the language of tradition and to build the day's holiness through rest, prayer, family, and abstaining from weekday work and shopping; driving to services and electricity are not usually considered violations in themselves. Tell us what your Shabbat actually looks like.",
+   "options": [
+    "On Shabbat the 39 types of work connected with the Mishkan are not done: fire, writing, cooking, carrying in a public domain; from this follow electricity, the car, the phone, and money. The meaning is to stop creating and to acknowledge the Creator.",
+    "You just can't go to work; at home everything is allowed.",
+    "The main thing is not to get tired; if the activity is enjoyable, it's not work.",
+    "Shabbat prohibitions apply only to prayer in the synagogue."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "The 39 melachot are not done (fire, writing, cooking, carrying); from this follow electricity, the car, the phone, and money. The meaning is to stop creating and to acknowledge the Creator; I also know about the eruv.",
+      "You just can't go to work; at home everything is allowed.",
+      "The main thing is not to get tired; if the activity is enjoyable, it's not work.",
+      "Knowing about the eruv and the prohibition of carrying isn't required."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "I know the 39 melachot and the meaning of Shabbat as a sign of the covenant; the Conservative movement views driving to synagogue and electricity differently, and I keep to my beit din's position.",
+      "You just can't go to work; at home everything is allowed.",
+      "In the Conservative movement there are no Shabbat prohibitions; it's just a family dinner.",
+      "A Conservative candidate has no need to know about the 39 types of work."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "I know the traditional 39 melachot and the meaning of Shabbat; the Reform movement views driving and electricity differently, and I honestly keep to my community's practice and my beit din's position.",
+      "In the Reform movement you can skip observing Shabbat; it's not required.",
+      "A Reform Jew has no need to know about the 39 types of work.",
+      "I'll say I fully keep the Orthodox prohibitions, even if that's not my practice."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "shab-pikuach",
+   "topic": "shabbat",
+   "question": "What should you do if someone feels unwell on Shabbat?",
+   "purpose": "A check that you know: saving a life (pikuach nefesh) overrides almost all prohibitions.",
+   "keyPoints": [
+    "Calling an ambulance and driving to the hospital are a duty, not a violation.",
+    "Pikuach nefesh overrides the prohibitions of Shabbat.",
+    "You must not delay or ask permission."
+   ],
+   "mistakes": [
+    "Thinking you have to wait until Shabbat ends.",
+    "Not knowing the very concept of pikuach nefesh."
+   ],
+   "lessons": [
+    "shabbat-4"
+   ],
+   "options": [
+    "Saving a life (pikuach nefesh) overrides almost all Shabbat prohibitions: calling an ambulance and driving to the hospital are a duty; you must not delay.",
+    "You have to wait until Shabbat is over, even if the person feels unwell.",
+    "First ask the rabbi for permission and only then call for help.",
+    "Pikuach nefesh applies only to Jews; nobody worries about others on Shabbat."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "shab-candles",
+   "topic": "shabbat",
+   "question": "When and how are the Shabbat candles lit?",
+   "purpose": "A check of knowledge of the practice: timing, the blessing, who lights.",
+   "keyPoints": [
+    "No later than about 18 minutes before sunset (according to local custom).",
+    "At least two candles are lit and the blessing is said (by Ashkenazi custom — first light the candles, cover the eyes, and recite the blessing; many Sephardim say the blessing before lighting).",
+    "Usually the woman of the house lights them; if she isn't there, any adult.",
+    "You check the time in the calendar for your city."
+   ],
+   "mistakes": [
+    "Lighting after sunset.",
+    "Not knowing the text or meaning of the blessing."
+   ],
+   "lessons": [
+    "shabbat-2"
+   ],
+   "movements": "In Orthodox practice the candles are lit before sunset (usually 18 minutes before). In Reform homes and synagogues the candles are often lit at the start of dinner or at the start of the Friday-evening service, even if the sun has already set: the communal welcoming of the day itself becomes the ritual. Name your custom and your community's custom.",
+   "options": [
+    "The candles are lit before sunset, usually by the woman of the house, with a blessing; this is the welcoming of Shabbat, not a table decoration.",
+    "The candles are lit after Shabbat has already begun, when people sit down to dinner.",
+    "Candles are optional; it's enough to turn on the chandelier.",
+    "Only the rabbi in the synagogue may light the candles."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "The candles are lit before sunset, usually 18 minutes before, at least two of them, with a blessing; I check the time in my city's calendar.",
+      "You can light the candles after sunset, when you sit down to dinner.",
+      "Knowing the blessing isn't required; the main thing is fire on the table.",
+      "Only the rabbi in the synagogue may light the candles."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "I'll name the custom of my Conservative community and home: when the candles are lit, who lights them, and which blessing is said.",
+      "In the Conservative path candles aren't lit; that's only an Orthodox custom.",
+      "Timing and the blessing don't matter; any candles at dinner are enough.",
+      "Only the rabbi may light the candles."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "I'll name my custom and my community's custom: in Reform homes and synagogues the candles are often lit at the start of dinner or the Friday-evening service, even if the sun has already set; the communal welcoming of the day itself becomes the ritual.",
+      "A Reform Jew has no need to light candles; that is someone else's custom.",
+      "I will say that I always light them strictly 18 minutes before sunset, even though that is not my custom.",
+      "There is no need to know the berachah or the meaning of the candles."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "shab-work",
+   "topic": "shabbat",
+   "question": "What will you do if your employer requires you to work on Shabbat?",
+   "purpose": "The judges check that keeping Shabbat is not negotiable for you and that you have thought through real-life situations.",
+   "keyPoints": [
+    "I will explain to my employer and arrange another day.",
+    "If that is impossible, I will look for another job.",
+    "If this has already come up at your workplace, tell us how you resolved it."
+   ],
+   "mistakes": [
+    "“It depends on the circumstances.”",
+    "Saying that Shabbat can be set aside for money."
+   ],
+   "lessons": [
+    "shabbat-6",
+    "beit-din-6"
+   ],
+   "options": [
+    "I do not break Shabbat: I will arrange things with work in advance, look for a shift swap or a different position; if there is no choice, I will look for another job rather than break Shabbat.",
+    "If my boss orders it, I will come in on Saturday: work comes first.",
+    "I will decide each time according to my mood.",
+    "I will hide from the beit din that I work on Saturdays."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "shab-community",
+   "topic": "shabbat",
+   "question": "Where do you spend Shabbat? Do you walk to synagogue?",
+   "purpose": "In an Orthodox giyur, a candidate is usually expected to live within walking distance of a synagogue. The judges look at whether your Shabbat is woven into the community.",
+   "keyPoints": [
+    "Where you live relative to the synagogue.",
+    "Whom you share meals with: community families, the rabbi.",
+    "If you live far away, what you plan to do (moving, Shabbat at friends' homes)."
+   ],
+   "mistakes": [
+    "Saying that you drive to synagogue on Shabbat (in an Orthodox beit din).",
+    "Spending Shabbat always alone and not knowing the community."
+   ],
+   "lessons": [
+    "shabbat-6",
+    "beit-din-2"
+   ],
+   "movements": "An Orthodox beit din usually expects walking distance to a synagogue and Shabbatot in observant families. In the Conservative movement, driving to synagogue has historically been permitted so that a person would not be left without a service. In Reform communities, the Friday service is often the main one of the week, and people often drive to it; the judges will ask whether you attend regularly, with whom you welcome Shabbat, and what has already become a rhythm rather than a one-time visit.",
+   "options": [
+    "I will tell them where I welcome Shabbat, which synagogue I attend, and how I get there; the judges care about real practice, not a pretty scheme.",
+    "I will say that I go to synagogue even if it is not true.",
+    "A synagogue is not needed; Shabbat can be spent entirely alone, without a community.",
+    "Where I spend Shabbat is none of the judges' business."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "An Orthodox beit din expects the synagogue to be within walking distance; I will tell them where I live, where I go, and how things actually work.",
+      "I will say that I walk, even if I get there another way.",
+      "It is fine to drive to synagogue on Shabbat; that is usual in an Orthodox community.",
+      "Where I spend Shabbat is none of the judges' business."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "I will tell honestly where I spend Shabbat and how I get there; in the Conservative movement, driving to synagogue has historically been permitted, and I follow my own community's practice.",
+      "I will say that I walk even if it is not true.",
+      "A synagogue is not needed on the Conservative path; a home dinner is enough.",
+      "Where I spend Shabbat is none of the judges' business."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "I will tell honestly where I welcome Shabbat and how I get to the community; in the Reform movement, driving is viewed differently, and I follow my own synagogue's practice.",
+      "I will say that I walk even if it is not true.",
+      "In the Reform movement, a synagogue on Shabbat is optional, and you do not have to know the community.",
+      "Where I spend Shabbat is none of the judges' business."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "kosh-home",
+   "topic": "kashrut",
+   "question": "Is your kitchen kosher? Tell us how it is set up.",
+   "purpose": "A check of practice: the judges want to see that kashrut is already part of your home.",
+   "keyPoints": [
+    "Separate dishes for meat and dairy (and, if you wish, for pareve).",
+    "Products with a reliable hechsher.",
+    "How you kashered the kitchen and who helped."
+   ],
+   "mistakes": [
+    "Speaking vaguely — “I try” — without knowing what exactly you do.",
+    "Not knowing what a hechsher is."
+   ],
+   "lessons": [
+    "kashrut-5",
+    "kashrut-6"
+   ],
+   "movements": "An Orthodox kitchen: kosher products, separation of meat and milk, often two sets of dishes. A Reform one: two sets are usually not required, but knowledge of the laws and an honest standard are expected — for example, avoiding animals forbidden by the Torah, separating meat and dairy, paying attention to the ethics of food. Describe your actual arrangement.",
+   "options": [
+    "I will tell them how the kitchen is actually set up: separate dishes and spots for meat and dairy, what is done about pareve, and how I check products.",
+    "I will say the kitchen is fully kosher, even though meat and milk are not yet separated at home.",
+    "It is enough to buy “something kosher” now and then; how the kitchen is set up does not matter.",
+    "Kashrut applies only to restaurants; at home you can cook as usual."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "I will describe an actual Orthodox kitchen: kosher products with a hechsher, separation of meat and milk, often two sets of dishes, and how we kashered the home.",
+      "I will speak vaguely — “I try” — without knowing what exactly I do.",
+      "There is no need to know what a hechsher is.",
+      "Kashrut applies only to restaurants."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "I will describe my actual routine and my Conservative community's custom: which products I choose, how I treat meat and milk, and what has already become a habit at home.",
+      "I will say vaguely “I try,” with no single rule at home.",
+      "On the Conservative path, kashrut at home is not discussed.",
+      "I will promise two sets of dishes that I have no intention of keeping."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "I will describe my actual routine: a Reform kitchen usually does not require two sets of dishes, but it expects knowledge of the laws and an honest standard — for example, avoiding animals forbidden by the Torah, attention to meat and milk, and to the ethics of food.",
+      "“In Reform, kashrut is not needed, so the kitchen is like everyone else's, and there is no need to know the laws.”",
+      "I will promise a full Orthodox kitchen with two sinks, which I have no intention of keeping.",
+      "I will say vaguely “I try,” without knowing what a hechsher is or which animals are forbidden."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "kosh-meatmilk",
+   "topic": "kashrut",
+   "question": "Why may meat and dairy not be mixed? How long do you wait after meat?",
+   "purpose": "A check of knowledge of one of the main laws of kashrut and its source.",
+   "keyPoints": [
+    "Source: three times in the Torah, “Do not cook a kid in its mother's milk.”",
+    "One may not cook, eat, or benefit from the mixture.",
+    "After meat, one waits by custom: 6 hours, in some communities 3 or 1 hour.",
+    "After dairy, one waits less (by custom) and rinses one's mouth."
+   ],
+   "mistakes": [
+    "Not knowing which waiting custom you follow.",
+    "Considering chicken “not meat.”"
+   ],
+   "lessons": [
+    "kashrut-4"
+   ],
+   "movements": "Orthodox halacha sets waiting hours after meat (usually six, in some customs three or one) and separate dishes and sinks. A Reform home may keep separation at the table or in time, without two sets of dishes; what matters is to explain that you know the classical rule and what standard you have adopted yourself.",
+   "options": [
+    "“Do not cook a kid in its mother's milk”: meat and dairy are not mixed, separate dishes are needed; after meat, one usually waits six hours (by community custom).",
+    "Meat and milk may not be mixed only in the same pot; in different dishes it is fine right away.",
+    "There is no need to wait after meat; rinsing the mouth is enough.",
+    "The prohibition applies only to goat meat; beef with cheese is permitted."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "The source is three times in the Torah, “Do not cook a kid in its mother's milk”; one may not cook, eat, or benefit from the mixture. After meat, one waits by community custom (often six hours).",
+      "Chicken can be counted as “not meat” and eaten with dairy.",
+      "Not knowing which waiting custom I follow and thinking there is no need to wait.",
+      "The prohibition applies only to goat meat."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "I know the source of the prohibition in the Torah and my Conservative community's custom: how meat and milk are separated and how long one waits.",
+      "On the Conservative path, this law is not studied.",
+      "Chicken can always be eaten with cheese; it is not meat.",
+      "I do not know the source of the prohibition, and there is no need to know it."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "I know the source in the Torah and the meaning of the separation; I will tell honestly what standard I have already adopted in Reform practice, without promising someone else's waiting custom.",
+      "“In Reform, meat and milk can always be mixed; there is no need to know the law.”",
+      "I will promise to wait six hours, even though that is neither my practice nor my community's.",
+      "In any case, chicken may be eaten with dairy; it is not meat, and there is no source in the Torah."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "kosh-animals",
+   "topic": "kashrut",
+   "question": "Which animals and fish may be eaten?",
+   "purpose": "A brief check of knowledge about permitted food.",
+   "keyPoints": [
+    "Animals: split hooves and chewing the cud (cow, sheep, goat).",
+    "Fish: fins and scales (no shellfish, shrimp, or catfish).",
+    "Birds: according to tradition (chicken, turkey, duck); birds of prey are forbidden.",
+    "Even a permitted animal must undergo shechitah and inspection."
+   ],
+   "mistakes": [
+    "Thinking that it is enough to “not eat pork.”"
+   ],
+   "lessons": [
+    "kashrut-2",
+    "kashrut-3"
+   ],
+   "options": [
+    "Of land animals — those that chew the cud and have split hooves, slaughtered by shechitah; of fish — only those with fins and scales; birds — of the permitted species, not birds of prey.",
+    "Any meat may be eaten if it is fresh and of good quality.",
+    "Seafood, including shrimp and squid, is kosher, because it is fish.",
+    "Whether an animal is kosher depends only on who prepared it."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "kosh-out",
+   "topic": "kashrut",
+   "question": "How will you eat at relatives' homes or at work?",
+   "purpose": "The judges check that you have thought through difficult everyday situations and that you maintain your relationships with loved ones.",
+   "keyPoints": [
+    "I will explain to my loved ones, bring my own food, or bring kosher products in sealed packaging.",
+    "I do not eat hot food from non-kosher dishes.",
+    "I keep respect for my parents and do not turn the table into a conflict."
+   ],
+   "mistakes": [
+    "“At someone else's home you can skip observance.”",
+    "Cutting off relations with the family over kashrut."
+   ],
+   "lessons": [
+    "kashrut-6",
+    "etika-2",
+    "beit-din-6"
+   ],
+   "options": [
+    "I will plan ahead: my own food, a kosher café, vegetables and fruit, a polite refusal; I will explain to my relatives in advance, without breaking kashrut “out of politeness.”",
+    "At relatives' homes, kashrut may be set aside so as not to offend anyone.",
+    "At work I will eat whatever is served, and at home — kosher food.",
+    "It is better not to visit people at all and not to explain your rules to loved ones."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "kosh-why",
+   "topic": "kashrut",
+   "question": "Why is kashrut needed if modern food is safe?",
+   "purpose": "A check of understanding its meaning: kashrut is not hygiene, but a mitzvah and holiness.",
+   "keyPoints": [
+    "It is a chok — a law whose meaning is not always explained; we keep it as the will of G-d.",
+    "Kashrut sanctifies the everyday: every meal becomes a choice.",
+    "It distinguishes and unites the people."
+   ],
+   "mistakes": [
+    "Explaining kashrut solely in terms of health or hygiene."
+   ],
+   "lessons": [
+    "kashrut-1"
+   ],
+   "movements": "Alongside talk of holiness and self-discipline, Reform Judaism often speaks of ethical kashrut: the treatment of animals, fair labor, ecology. This adds to, rather than cancels, the question of why the Torah singles out permitted food at all.",
+   "options": [
+    "Kashrut is a mitzvah and a path of holiness, not just hygiene; modern food safety does not cancel this mitzvah.",
+    "Kashrut was needed only in antiquity to keep from getting sick; today it is superfluous.",
+    "Kashrut is a health diet, like giving up fat.",
+    "Kashrut is observed in order to be different from those around; it has no other meaning."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "Kashrut is a mitzvah of the Torah and a path of holiness, not just hygiene; modern food safety does not cancel it.",
+      "Kashrut was needed only in antiquity; today it is superfluous.",
+      "Kashrut is a health diet.",
+      "The meaning of kashrut lies only in being different from those around."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "Kashrut is a mitzvah and a Jewish path of holiness; I will tell how the Conservative movement understands it and how I already keep it.",
+      "On the Conservative path, kashrut is considered outdated hygiene.",
+      "Kashrut is just a diet.",
+      "Kashrut has no meaning; it is a habit of the ancestors."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "For me, kashrut is holiness, belonging to the covenant, and often also the ethics of food; it is not just “because it's healthier this way,” and modern safety does not cancel the mitzvah.",
+      "In the Reform movement, kashrut need not be understood: it was abolished long ago.",
+      "Kashrut is nothing but the hygiene of antiquity.",
+      "Its only meaning is to set oneself apart from those around."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "kosh-wine",
+   "topic": "kashrut",
+   "question": "What do you know about kosher wine and products with a hechsher?",
+   "purpose": "Practical knowledge: what to look for in the store.",
+   "keyPoints": [
+    "Wine and grape juice must be kosher (special laws).",
+    "A hechsher is the mark of supervision by an authoritative rabbinate.",
+    "Bread, cheese, meat — only with a reliable hechsher."
+   ],
+   "mistakes": [
+    "Thinking that any “natural” product is kosher."
+   ],
+   "lessons": [
+    "kashrut-6"
+   ],
+   "options": [
+    "Wine and grape juice for the Jewish table require special kosher status; on products one looks for the hechsher — the mark of supervision.",
+    "Any wine from a store is automatically kosher.",
+    "A hechsher is needed only on meat; other products do not have one.",
+    "Kosher wine differs from ordinary wine only in price."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "hol-favorite",
+   "topic": "holidays",
+   "question": "Which holiday is closest to you, and why? How did you spend it?",
+   "purpose": "A personal question: the judges want to hear experience, not an encyclopedia.",
+   "keyPoints": [
+    "A specific holiday and what you did (seder, sukkah, shofar, Chanukah candles).",
+    "What it means to you personally.",
+    "With whom you celebrated it."
+   ],
+   "mistakes": [
+    "Retelling from a textbook without one's own experience.",
+    "Choosing a holiday only for its “atmosphere.”"
+   ],
+   "lessons": [
+    "prazdniki-2",
+    "prazdniki-3",
+    "prazdniki-4",
+    "prazdniki-5"
+   ],
+   "options": [
+    "I will name the holiday that is close to me and tell how I actually spent it: what I did, with whom, which mitzvot I fulfilled.",
+    "I will list all the holidays in a row, without highlighting personal experience.",
+    "I have not yet celebrated the holidays, but I will say that I have, in order to look prepared.",
+    "Jewish holidays mean nothing to me so far; public holidays are enough."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "hol-yomkippur",
+   "topic": "holidays",
+   "question": "What is Yom Kippur, and how is it observed?",
+   "purpose": "A check of knowledge of the holiest day of the year.",
+   "keyPoints": [
+    "The Day of Atonement: a fast of about 25 hours, prayers, repentance (teshuvah).",
+    "Eating, drinking, leather shoes, anointing, and marital relations are forbidden.",
+    "Sins against other people are forgiven only after one has asked the person for forgiveness."
+   ],
+   "mistakes": [
+    "Not knowing that for the sick fasting is not obligatory (pikuach nefesh)."
+   ],
+   "lessons": [
+    "prazdniki-2",
+    "prazdniki-6"
+   ],
+   "options": [
+    "Yom Kippur is the Day of Atonement: fasting, prayer, a ban on work, making peace with people in advance; it is not a “sad day,” but a return to G-d.",
+    "Yom Kippur is a merry holiday with an abundant meal, like Pesach.",
+    "It is enough not to go to work; prayer and fasting are optional.",
+    "Yom Kippur atones even for wrongs between people, even if you have not made peace with those close to you."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "hol-pesach",
+   "topic": "holidays",
+   "question": "Tell us about Pesach: what do you do at home?",
+   "purpose": "A check of practice: chametz, seder, matzah.",
+   "keyPoints": [
+    "Chametz is removed and sold, the home is searched.",
+    "Seder: the Haggadah, the four cups, matzah, maror.",
+    "Seven days (eight in the Diaspora) without chametz."
+   ],
+   "mistakes": [
+    "Not knowing what chametz is."
+   ],
+   "lessons": [
+    "prazdniki-4"
+   ],
+   "movements": "Diaspora Orthodox communities keep eight days and a strict prohibition of chametz; Ashkenazim usually do not eat kitniyot. Many Reform communities celebrate seven days and one seder, and each person adopts the measure of chametz removal consciously. Tell us how you prepare your home and conduct the seder.",
+   "options": [
+    "I remove chametz, eat matzah, hold a seder with the Haggadah, the four cups, and the story of the Exodus — I will tell how it was at my home.",
+    "On Pesach it is enough to eat matzah once; chametz need not be removed.",
+    "A seder is just a family dinner without any special order.",
+    "Pesach is celebrated only in synagogue; nothing is done at home."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "I remove chametz, eat matzah, hold a seder with the Haggadah, the four cups, and the story of the Exodus — as it was at my home.",
+      "On Pesach it is enough to eat matzah once; chametz need not be removed.",
+      "A seder is an ordinary dinner without any order.",
+      "Pesach is celebrated only in synagogue."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "I will tell how chametz is removed, matzah eaten, and the seder conducted in my Conservative family and community — concretely, from my own experience.",
+      "On the Conservative path, a seder is optional.",
+      "Chametz need not be removed; matzah on the table is enough.",
+      "Pesach is celebrated only in synagogue."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "I will tell about my seder and preparation: matzah, the Haggadah, the story of the Exodus, and which arrangement of chametz my Reform community follows — honestly, from my own experience.",
+      "In the Reform movement, Pesach need not be celebrated at home.",
+      "A seder is just a secular dinner without the Haggadah and without the meaning of the Exodus.",
+      "I will promise a full Orthodox sale of chametz, which I have no intention of doing."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "hol-sukkot",
+   "topic": "holidays",
+   "question": "What is a sukkah, and what are the four species?",
+   "purpose": "A brief check of knowledge about Sukkot.",
+   "keyPoints": [
+    "A sukkah is a temporary booth: one eats in it (and many sleep in it too) for seven days.",
+    "The four species: etrog, lulav, myrtle (hadas), willow (aravah).",
+    "A reminder of life in the desert and of G-d's protection."
+   ],
+   "mistakes": [
+    "Confusing Sukkot with other harvest festivals."
+   ],
+   "lessons": [
+    "prazdniki-3"
+   ],
+   "options": [
+    "A sukkah is a booth in which one eats (and, where possible, lives) for seven days; the four species are the lulav, etrog, hadas, and aravah — they are taken together and waved (na'anuim).",
+    "A sukkah is a yard decoration; eating in it is not necessary.",
+    "The four species are any four beautiful plants you can find.",
+    "Sukkot lasts one day and coincides with Simchat Torah."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "hol-calendar",
+   "topic": "holidays",
+   "question": "Why do Jewish holidays fall on different dates every year?",
+   "purpose": "A check of understanding of the Jewish calendar.",
+   "keyPoints": [
+    "The calendar is lunisolar: months follow the moon, and the year is aligned with the sun.",
+    "In a leap year a second Adar is added.",
+    "Days begin in the evening."
+   ],
+   "mistakes": [
+    "Not knowing that the day begins at sunset."
+   ],
+   "lessons": [
+    "prazdniki-1"
+   ],
+   "options": [
+    "The Jewish calendar is lunisolar: months follow the moon, and an extra month is added to adjust the year, so the dates shift relative to the civil calendar.",
+    "The holidays are deliberately moved each year for convenience.",
+    "The Jewish year is reckoned only by the sun, like the civil one.",
+    "The dates change at random; there is no system to it."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "hol-fasts",
+   "topic": "holidays",
+   "question": "Which fasts are there in the Jewish year? What is Tisha B'Av?",
+   "purpose": "A check of knowledge of the memorial days and of mourning over the destruction of the Temple.",
+   "keyPoints": [
+    "Yom Kippur and Tisha B'Av are full fasts.",
+    "Tisha B'Av commemorates the destruction of both Temples and other calamities of the people.",
+    "There are also minor fasts: the Fast of Gedaliah, 10 Tevet, 17 Tammuz, the Fast of Esther.",
+    "Tisha B'Av is also mourning over the exile from the Land and hope for the complete return."
+   ],
+   "mistakes": [
+    "Considering fasts a “diet.”"
+   ],
+   "lessons": [
+    "prazdniki-6"
+   ],
+   "movements": "Orthodox communities keep the full and minor fasts according to the calendar. The Conservative movement recognizes the fasts, though the minor ones depend on the community. In Reform communities many observe Yom Kippur as a full fast, often do not keep the minor fasts, and today frequently mark Tisha B'Av with the reading of Eichah and reflection; fasting remains a personal choice. Tell us your community's practice and your own.",
+   "options": [
+    "The main fasts are Yom Kippur and Tisha B'Av (the destruction of the Temple); there are also shorter ones: the Fast of Gedaliah, the Tenth of Tevet, the Seventeenth of Tammuz, Ta'anit Esther.",
+    "There is only one fast in the Jewish year — Yom Kippur; there are no others.",
+    "Tisha B'Av is a joyful day of the giving of the Torah.",
+    "Fasts concern only rabbis; an ordinary person need not fast."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "The main fasts are Yom Kippur and Tisha B'Av; there are also shorter ones. I will tell which ones I already keep.",
+      "Apart from Yom Kippur there are no fasts.",
+      "Tisha B'Av is a joyful day of the giving of the Torah.",
+      "Fasts concern only rabbis."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "I will name the main fasts and my Conservative community's custom: which days I already observe and how.",
+      "On the Conservative path there are no fasts, except perhaps Yom Kippur, and there is no need to know them.",
+      "Tisha B'Av is a holiday.",
+      "Fasts concern only rabbis."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "I will name Yom Kippur and Tisha B'Av and tell which fasts I already keep in my Reform community; knowing the calendar is needed even where not all days are observed in the same way.",
+      "A Reform Jew has no need to know the fasts: in this movement there are none.",
+      "Tisha B'Av is a holiday of joy.",
+      "I will promise to observe all the minor fasts, even though that is not my practice."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "fam-parents",
+   "topic": "family",
+   "question": "How do your parents and loved ones feel about your decision?",
+   "purpose": "The judges check that you have thought through your relationships with your family and that you maintain respect for your parents.",
+   "keyPoints": [
+    "Honestly: who supports you and who is against it.",
+    "How you explain your decision to them.",
+    "The mitzvah of honoring parents remains, and you keep it."
+   ],
+   "mistakes": [
+    "Saying that after giyur you will break with your family.",
+    "Hiding the conflict, if there is one."
+   ],
+   "lessons": [
+    "etika-2",
+    "beit-din-6",
+    "semya-4"
+   ],
+   "options": [
+    "I will tell honestly how my loved ones reacted: support, arguments, or pain — and how I preserve respect for my parents without abandoning the path.",
+    "I will hide the conflict with my parents so that the story looks smooth.",
+    "After giyur, my parents stop being my family; I can break with them.",
+    "If loved ones are against it, it is better not to pursue giyur, even if the choice is mine."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "fam-children",
+   "topic": "family",
+   "question": "How will you raise your children?",
+   "purpose": "The judges want to hear that your children will grow up Jewish: school, home, mitzvot.",
+   "keyPoints": [
+    "A Jewish home: Shabbat, kashrut, holidays.",
+    "Jewish education, Torah study.",
+    "Brit milah for sons, bar and bat mitzvah."
+   ],
+   "mistakes": [
+    "“Let them decide when they grow up.”"
+   ],
+   "lessons": [
+    "semya-1",
+    "semya-2",
+    "semya-4"
+   ],
+   "movements": "In every movement you will be asked how you will raise your children as Jews. In the Reform movement it is also important to understand the 1983 CCAR decision about a child of one Jewish parent who is raised as a Jew, and the fact that Orthodox and Conservative communities do not accept this rule.",
+   "options": [
+    "I want to raise my children in Torah, mitzvot, and community: Shabbat, holidays, study, a Jewish name, and belonging to the people.",
+    "The children will choose for themselves someday; until then, no Jewish upbringing is needed.",
+    "It is enough to tell them stories now and then, without Shabbat and a community.",
+    "Giyur concerns only me; it does not extend to my children, and there is no need to plan their path."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "I want to raise my children in Torah, mitzvot, and community: Shabbat, holidays, study, a Jewish name, and belonging to the people.",
+      "No Jewish upbringing is needed until adulthood.",
+      "It is enough to tell stories now and then.",
+      "Giyur concerns only me; there is no need to talk about children."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "I want to raise my children in a Conservative community: Shabbat, holidays, study, and belonging to the people — and I discuss their status and path honestly.",
+      "On the Conservative path, raising children is not discussed.",
+      "The children will choose for themselves later; until then, nothing is needed.",
+      "Giyur concerns only me."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "I want to raise the children in a Reform community: Shabbat, the festivals, study, a Jewish name, and the life of the people; I discuss their status honestly, and the path of giyur if it is needed.",
+      "In the Reform movement, children need not be raised in a Jewish way.",
+      "Fairy tales are enough, without a community or festivals.",
+      "Giyur concerns only me; the judges have no need to know about the children."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "fam-kids-existing",
+   "topic": "family",
+   "question": "Do you already have children? Will they undergo giyur?",
+   "purpose": "An important practical question: the giyur of minor children, and how the family will live.",
+   "keyPoints": [
+    "Children before bar/bat mitzvah may undergo giyur together with a parent, by decision of the beit din.",
+    "How the children already take part in Jewish life now.",
+    "If the other parent is not Jewish — how you have agreed."
+   ],
+   "mistakes": [
+    "Not discussing this question with the rabbi in advance."
+   ],
+   "lessons": [
+    "beit-din-2",
+    "beit-din-6",
+    "semya-2"
+   ],
+   "options": [
+    "I will say honestly whether there are children, and how we discuss their path: the giyur of children is a separate decision; it is neither hidden nor put off “until later, without a conversation.”",
+    "I will hide the fact that I have children: the beit din has no need to know.",
+    "The children automatically become Jews together with me; no separate steps are needed.",
+    "This conversation with the children need not be had."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "fam-community",
+   "topic": "family",
+   "question": "Which community do you attend? Who is your rabbi?",
+   "purpose": "The judges check that you are not alone: that there is a community and a mentor you turn to.",
+   "keyPoints": [
+    "The name of the community, and how often you are there.",
+    "Who your rabbi is, and how you study together.",
+    "How you help the community (volunteering, minyan, meals)."
+   ],
+   "mistakes": [
+    "Knowing the community only from the internet."
+   ],
+   "lessons": [
+    "beit-din-2",
+    "beit-din-6"
+   ],
+   "options": [
+    "I will name the community and the rabbi I go to, how often I go, and how I take part; if I do not yet have a community, I will say so honestly, and how I am looking for one.",
+    "I will invent a community and a rabbi's name, so as to look rooted.",
+    "A community is not needed; it is enough to study from books at home.",
+    "I go to different places with no lasting connection, and it is better not to spell that out."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "fam-purity",
+   "topic": "family",
+   "question": "What do you know about the laws of family purity?",
+   "purpose": "For those who are married and those preparing to marry: a check of readiness for the mikveh and the laws of niddah.",
+   "keyPoints": [
+    "The time of separation during the niddah period and after it.",
+    "Immersion in the mikveh before intimacy is resumed.",
+    "You have studied these laws with a mentor or a rabbi."
+   ],
+   "mistakes": [
+    "Treating these laws as “optional.”"
+   ],
+   "lessons": [
+    "semya-5",
+    "beit-din-4"
+   ],
+   "movements": "An Orthodox beit din always asks about the laws of family purity and expects study with a mentor. The Conservative movement keeps the subject as a tradition a family may take on, but rarely makes it a condition of giyur. Reform Judaism does not regard the laws of niddah as obligatory; the mikveh, at the same time, is often alive as a spiritual source of transition — giyur, a wedding, personal milestones. Be able to explain the classical law and to say what place you want to give the mikveh in your family.",
+   "options": [
+    "The laws of family purity (niddah and the mikveh) are part of Jewish family life; I will tell what I already know and what I am still learning.",
+    "These are outdated rules; a modern person does not need them.",
+    "Family purity concerns only kohanim; others have no need to know it.",
+    "It is better to stay silent about this at the interview, even if a judge asks."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "An Orthodox beit din will certainly ask about this: niddah, marital separation on those days, and immersion in the mikveh; I will say what I already know and how I am prepared to observe it.",
+      "These are outdated rules; they are not obligatory for an Orthodox candidate.",
+      "Family purity concerns only kohanim.",
+      "It is better to stay silent about this, even if a judge asks."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "I know the laws of niddah and the mikveh, and my Conservative community's attitude toward them; I will say honestly what I am learning and what I am prepared to take on within the framework of my beit din.",
+      "In the Conservative movement family purity does not exist; there is no need to know it.",
+      "Family purity concerns only kohanim.",
+      "It is better to stay silent about this, even if a judge asks."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "I know what niddah and the mikveh are, and how my Reform community approaches family purity; I will speak about this just as seriously as about the other sides of Jewish family life.",
+      "A Reform candidate has no need to know the laws of family purity; this is “not for us.”",
+      "Family purity concerns only kohanim.",
+      "It is better to stay silent about this, even if a judge asks."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "fam-israel",
+   "topic": "family",
+   "question": "What do Israel and the Jewish people mean to you?",
+   "purpose": "A check of the sense of belonging: giyur is an entry both into the people and into the faith.",
+   "keyPoints": [
+    "The Land of Israel is the land of the covenant; Jerusalem is the eternal and undivided capital.",
+    "The State of Israel is the people's return home; Yom HaAtzmaut is a day of thanksgiving.",
+    "Responsibility for other Jews: all Jews are responsible for one another.",
+    "What you are already doing for the people and, if it is true, for your connection with the Land."
+   ],
+   "mistakes": [
+    "Reducing the answer to politics alone, with no connection to the Torah, prayer, and the people.",
+    "Casting doubt on the people's right to its Land, or speaking of Israel as a “disputed” matter of faith.",
+    "Saying that Israel is the main or the only reason for giyur (paperwork, aliyah)."
+   ],
+   "lessons": [
+    "osnovy-5",
+    "osnovy-10",
+    "beit-din-6"
+   ],
+   "options": [
+    "Israel is the land of the covenant and the home of the Jewish people; I am bound up with it, I follow its life, and I see myself as part of the people, not as an outside observer.",
+    "For me Israel is an ordinary country; it has nothing to do with the Jewish path.",
+    "The people and the land do not matter; personal faith, with no connection to Israel, is enough.",
+    "It is better not to discuss one's attitude to Israel at the interview."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "mitz-accept",
+   "topic": "mitzvot",
+   "question": "Are you prepared to take upon yourself all the mitzvot of the Torah?",
+   "purpose": "This is the essence of giyur — kabbalat mitzvot. Without full acceptance, giyur is not valid (in the Orthodox understanding).",
+   "keyPoints": [
+    "The Orthodox answer: I accept all the mitzvot, including those I do not yet fully observe. The Reform answer: I enter the covenant; I will study and honestly carry the measure of mitzvot I have taken on.",
+    "I understand that I will go on studying and growing.",
+    "Which of the mitzvot you already observe."
+   ],
+   "mistakes": [
+    "Reservations such as “except this one” or “I will see about it later.”",
+    "Promising perfect observance of what you do not yet know."
+   ],
+   "lessons": [
+    "beit-din-1",
+    "osnovy-6"
+   ],
+   "movements": "An Orthodox beit din asks about your readiness to accept all the mitzvot, including those you do not yet fully keep. The Conservative movement also speaks the language of obligation, though halacha is understood as developing. At a Reform beit din you will be asked about entering the covenant: whether you are ready to live as a Jew of your community, to study all your life, and to carry honestly the measure of mitzvot you consciously accept. The answer “I accept everything, though I observe nothing” is just as unconvincing here as the answer “I do not need anything, because in Reform one may.”",
+   "options": [
+    "Yes, I am ready to accept the mitzvot as an obligation for life, understanding that not everything will be easy at once, and that I will study and grow.",
+    "I will accept only those mitzvot that are convenient for me; the rest can be put off forever.",
+    "The mitzvot are advice, not obligations; after giyur nothing changes.",
+    "I will say “yes” for the record, with no intention of changing anything in my life."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "Yes, I am ready to accept all the mitzvot of the Torah (kabbalat mitzvot) as an obligation for life, and to grow in observance.",
+      "I will accept only the convenient mitzvot; the rest can be put off forever.",
+      "The mitzvot are advice, not obligations.",
+      "I will say “yes” for the record, with no intention of changing my life."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "Yes, I am ready to live by the mitzvot within the Conservative understanding of halacha: this is a serious obligation of my beit din, not a set of optional advice.",
+      "In the Conservative movement one need not accept the mitzvot; good intentions are enough.",
+      "The mitzvot are advice, not obligations; after giyur nothing changes.",
+      "I will say “yes” for the record, with no intention of changing my life."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "Yes, I am ready to accept the Jewish way of life and the mitzvot as my Reform movement understands them: this is a serious obligation, not a formality, and I am answerable within the framework of my beit din.",
+      "In the Reform movement one need not accept the mitzvot; it is enough to call oneself a Jew.",
+      "The mitzvot are everyday advice; after giyur nothing changes.",
+      "I will say “yes” as at an Orthodox beit din, though this is not my movement's position and not my practice."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "mitz-hard",
+   "topic": "mitzvot",
+   "question": "Which mitzvah is hardest for you?",
+   "purpose": "A check of self-knowledge and honesty: there are no perfect candidates.",
+   "keyPoints": [
+    "Name a real difficulty.",
+    "Explain what you are doing to overcome it.",
+    "Show that this is not a reason to give up the mitzvah."
+   ],
+   "mistakes": [
+    "“Everything is easy for me.”",
+    "Naming a difficulty and saying that you do not intend to observe it."
+   ],
+   "lessons": [
+    "beit-din-3",
+    "osnovy-6"
+   ],
+   "options": [
+    "I will honestly name what comes harder (Shabbat, kashrut, prayer, or something else), and how I am working on it: the judges value the truth more than a picture of “everything is easy for me.”",
+    "I will say that all the mitzvot come equally easily, even if that is not so.",
+    "A difficult mitzvah can simply go unobserved; the beit din has no need to know about it.",
+    "It is better to name an easy mitzvah, so as not to seem weak."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "mitz-ethics",
+   "topic": "mitzvot",
+   "question": "Which mitzvot between one person and another do you consider important?",
+   "purpose": "Judaism is not only rites. The judges look at whether you understand the ethics of the Torah.",
+   "keyPoints": [
+    "“Love your fellow as yourself,” and love for the ger.",
+    "Tzedakah, chesed, honesty in one's dealings.",
+    "The ethics of speech: the prohibition of evil speech (lashon hara)."
+   ],
+   "mistakes": [
+    "Speaking only about rites."
+   ],
+   "lessons": [
+    "etika-2",
+    "etika-3",
+    "etika-4",
+    "etika-5"
+   ],
+   "options": [
+    "What matters are the mitzvot between a person and their fellow: honesty, tzedakah, the prohibition of evil speech, respect for parents, justice; I will tell how this shows in my life.",
+    "There are no special mitzvot between one person and another; rites are enough.",
+    "Ethics is a general “be kind,” and it is not tied to the Torah.",
+    "With the judges it is better to speak only about the kitchen and Shabbat; about people, it is not worth it."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "mitz-tzedaka",
+   "topic": "mitzvot",
+   "question": "What is tzedakah? Do you give it?",
+   "purpose": "A check of practice: tzedakah is an obligation, not merely charity according to one's mood.",
+   "keyPoints": [
+    "Tzedakah is justice: sharing is obligatory.",
+    "It is customary to give a tenth of one's income (maaser).",
+    "The highest level is to help a person become self-supporting (the Rambam)."
+   ],
+   "mistakes": [
+    "Not knowing that this is an obligation."
+   ],
+   "lessons": [
+    "etika-3"
+   ],
+   "options": [
+    "Tzedakah is the mitzvah of justice: setting aside a portion of one's means for those in need and for the community; I will tell how I already give, even if only a little.",
+    "Tzedakah is a voluntary gesture for the wealthy; an ordinary person does not need it.",
+    "Tzedakah replaces all the other mitzvot; nothing else must be observed.",
+    "After giyur one need not give tzedakah: now I myself, in the community, am “the receiving side.”"
+   ],
+   "answer": 0
+  },
+  {
+   "id": "mitz-ger",
+   "topic": "mitzvot",
+   "question": "What will change in your life after giyur?",
+   "purpose": "A check of your understanding of the ger's new status and of the obligations.",
+   "keyPoints": [
+    "You are a Jew with full rights, and all the mitzvot become an obligation.",
+    "The prohibition on reminding a ger of his past (ona'at ha-ger).",
+    "To go on studying, to live in a community, to keep a Jewish home."
+   ],
+   "mistakes": [
+    "Thinking that after giyur one can “relax.”"
+   ],
+   "lessons": [
+    "beit-din-6",
+    "etika-2"
+   ],
+   "options": [
+    "After giyur I become a Jew in every respect: the mitzvot are obligatory, I am part of the people forever, and both joy and responsibility come with that.",
+    "After giyur life will stay the same; only an entry will appear in the documents.",
+    "Giyur can be “tried out,” and if one wishes one can go back with no consequences.",
+    "After giyur it is enough to appear at synagogue on the festivals; weekdays do not change."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "pray-daily",
+   "topic": "prayer",
+   "question": "Do you pray every day? Which prayers do you know?",
+   "purpose": "The judges check that prayer is part of your day.",
+   "keyPoints": [
+    "Three prayers: Shacharit, Minchah, and Maariv.",
+    "“Modeh Ani” in the morning, the “Shema” in the morning and the evening, and the Amidah.",
+    "What you recite yourself, and in which language."
+   ],
+   "mistakes": [
+    "Saying that you pray “in your own words” and do not know a single prayer."
+   ],
+   "lessons": [
+    "ivrit-4",
+    "ivrit-3",
+    "ivrit-6"
+   ],
+   "movements": "The Orthodox norm is three daily prayers, and the berachot at their proper times. Reform practice often places at the center an understanding of the words, the Friday service, and those daily prayers a person actually keeps: the Shema, Modeh Ani, the blessings over food. Say what you already recite every day, and in which language.",
+   "options": [
+    "I will say honestly which prayers I already recite, and at what time: Shacharit, the Shema, the Amidah, or at least the morning berachot — and what I am still learning.",
+    "I will say that I pray three times a day, even if that is not so.",
+    "Daily prayer is not needed; it is enough to come to synagogue once a year.",
+    "The rabbi recites the prayer for me; there is no need to learn it myself."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "I will say honestly which of the three daily prayers I already recite, whether I know the Shema and the Amidah, and what I am still learning.",
+      "I will say that I pray three times a day, even if that is not so.",
+      "An Orthodox candidate does not need daily prayer.",
+      "The rabbi recites the prayer for me."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "I will say which prayers I already recite, and how my Conservative community prays — honestly, without embellishment.",
+      "I will say that I pray three times a day, even if that is not so.",
+      "On the Conservative path, daily prayer is not needed.",
+      "The rabbi recites the prayer for me."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "I will say honestly which prayers I already recite myself, and how my Reform community prays: my own words, the community's siddur, the Shema — and what I am still learning, without promising someone else's schedule of three prayers.",
+      "In the Reform movement there is no need to pray oneself; it is enough to come once a year.",
+      "I will say that I already recite three full Orthodox tefillot a day, though that is not so.",
+      "The rabbi recites the prayer for me; there is no need to learn the siddur."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "pray-shma",
+   "topic": "prayer",
+   "question": "Read “Shema Yisrael” and explain its meaning.",
+   "purpose": "An almost obligatory question: the “Shema” is the foundation of Jewish faith.",
+   "keyPoints": [
+    "“Shema Yisrael, Adonai Eloheinu, Adonai echad”: Hear, O Israel, the Lord is our G-d, the Lord is One.",
+    "It is the proclamation of the unity of G-d and the acceptance of the yoke of Heaven.",
+    "It is recited in the morning and in the evening, and before sleep."
+   ],
+   "mistakes": [
+    "Being unable to read the first line.",
+    "Not understanding the translation."
+   ],
+   "lessons": [
+    "ivrit-3",
+    "osnovy-4"
+   ],
+   "options": [
+    "“Shema Yisrael” is the acceptance of the one G-d and of the burden of the mitzvot; I will recite what I already know and explain the meaning in my own words, without hiding it if I do not yet know it by heart.",
+    "The Shema is a table song; there is no special meaning in it.",
+    "If I do not know it by heart, it is better to stay silent or to invent a text.",
+    "The Shema is recited only on Yom Kippur; on weekdays it is not needed."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "pray-brachot",
+   "topic": "prayer",
+   "question": "Which berachot do you say before eating?",
+   "purpose": "A check of the daily practice of blessings.",
+   "keyPoints": [
+    "HaMotzi — over bread; Mezonot — over baked goods; HaGafen — over wine.",
+    "HaEtz — over fruit from trees; HaAdamah — over produce of the ground; Shehakol — over everything else.",
+    "Birkat HaMazon after bread."
+   ],
+   "mistakes": [
+    "Knowing the berachot only in theory."
+   ],
+   "lessons": [
+    "ivrit-5"
+   ],
+   "options": [
+    "Before eating, one says a berachah according to the kind of food: “HaMotzi” over bread, “Mezonot” over baked goods, “HaGafen” over wine, “HaEtz,” “HaAdamah,” and “Shehakol”; after a meal with bread — Birkat HaMazon.",
+    "Before eating it is enough to say “thank you” once in one's own words; there is no need to learn the berachot.",
+    "There is one berachah for all food; the kind of food does not matter.",
+    "Berachot are recited only in synagogue; at home they are not said."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "pray-hebrew",
+   "topic": "prayer",
+   "question": "Do you read Hebrew?",
+   "purpose": "The judges check the basic ability to read a siddur (the requirements differ).",
+   "keyPoints": [
+    "Honestly: I read slowly / fluently / I am learning.",
+    "You know the alphabet and the vowel points.",
+    "One may also pray in a language one understands, but learning Hebrew is important."
+   ],
+   "mistakes": [
+    "Claiming that you read fluently if that is not so: you will be asked to read."
+   ],
+   "lessons": [
+    "ivrit-1",
+    "ivrit-2"
+   ],
+   "options": [
+    "I will say honestly at what level I read: the letters, prayers with vowel points, or already without them; and how I go on learning. The judges do not require a scholar, but they expect movement forward.",
+    "I will say that I read Hebrew fluently, even if for now I can only make out the letters.",
+    "Hebrew is not needed for giyur; one can pray one's whole life from an interlinear alone and never learn.",
+    "I will learn Hebrew sometime later; there is no need to begin before giyur."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "pray-objects",
+   "topic": "prayer",
+   "question": "What are tefillin, a tallit, and a mezuzah?",
+   "purpose": "Knowledge of the objects of the mitzvot.",
+   "keyPoints": [
+    "Tefillin are boxes with passages from the Torah; they are put on the arm and the head on weekday mornings.",
+    "A tallit is a prayer shawl with tzitzit.",
+    "A mezuzah is a scroll with the “Shema” on the doorpost."
+   ],
+   "mistakes": [
+    "Confusing the purpose of the objects."
+   ],
+   "lessons": [
+    "ivrit-6"
+   ],
+   "movements": "In Orthodox practice the tallit, tefillin, and the mezuzah are obligatory, each by its own rules (tefillin — on weekdays). In Reform communities the mezuzah is very widespread, a tallit is often worn by everyone who comes up to the Torah, and tefillin are a personal and increasingly common custom, including among women. Describe what you yourself use.",
+   "options": [
+    "Tefillin are boxes with passages from the Torah; they are laid on weekdays. A tallit is a tallit with tzitzit for prayer. A mezuzah is a scroll on the doorpost.",
+    "Tefillin, a tallit, and a mezuzah are ornaments; there is nothing inside them.",
+    "A mezuzah is an amulet hung for good luck; the text inside does not matter.",
+    "These objects are needed only by rabbis; an ordinary person has no need to know them."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "Tefillin are laid on weekdays, a tallit with tzitzit is for prayer, a mezuzah is a scroll on the doorpost; I know that the text of the Torah is inside them, and how this is already entering my life.",
+      "These are ornaments; there is nothing inside them.",
+      "A mezuzah is a good-luck amulet; the text does not matter.",
+      "These objects are needed only by rabbis."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "I know what tefillin, a tallit, and a mezuzah are, and how my Conservative community uses them; I will tell what I already do myself.",
+      "On the Conservative path these objects are not used; there is no need to know them.",
+      "A mezuzah is an amulet; the text does not matter.",
+      "They are needed only by rabbis."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "I know what tefillin, a tallit, and a mezuzah are, and what text is in them; I will tell how my Reform community relates to them and what has already entered my practice, without promising someone else's custom.",
+      "A Reform person has no need to know these objects; this is “not for us.”",
+      "A mezuzah is a good-luck amulet; the text inside does not matter.",
+      "I will promise to lay tefillin every day, though this is not my community's practice and not mine."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "know-avot",
+   "topic": "knowledge",
+   "question": "Who are the patriarchs and matriarchs of the Jewish people?",
+   "purpose": "A basic check of knowledge.",
+   "keyPoints": [
+    "Avraham, Yitzchak, Yaakov.",
+    "Sarah, Rivka, Rachel, Leah.",
+    "Avraham was the first to come to the One G-d; that is why a ger is called a son of Avraham."
+   ],
+   "mistakes": [
+    "Confusing the generations."
+   ],
+   "lessons": [
+    "osnovy-5",
+    "beit-din-5"
+   ],
+   "options": [
+    "The patriarchs are Avraham, Yitzchak, and Yaakov; the matriarchs are Sarah, Rivka, Rachel, and Leah.",
+    "The patriarchs are Moshe, Aharon, and Yehoshua.",
+    "The matriarchs are Miriam, Devorah, and Esther, and the tradition has no patriarchs.",
+    "Only the kohanim of Aharon's line are called the patriarchs."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "know-ruth",
+   "topic": "knowledge",
+   "question": "Who is Ruth, and why is her story important for a ger?",
+   "purpose": "Ruth is the model of giyur. The judges often ask about her.",
+   "keyPoints": [
+    "A Moabite woman who followed her mother-in-law Naomi.",
+    "“Your people shall be my people, and your G-d my G-d” (Rut 1:16).",
+    "The great-grandmother of King David; the Book of Ruth is read on Shavuot."
+   ],
+   "mistakes": [
+    "Not knowing who Ruth is."
+   ],
+   "lessons": [
+    "beit-din-3",
+    "prazdniki-4"
+   ],
+   "options": [
+    "Ruth the Moabite came to the people of Israel (“your people shall be my people, your G-d my G-d”), and became a foremother of the line of David; her path is the model of sincere giyur.",
+    "Ruth was a queen who was born Jewish and was never a giyoret.",
+    "The story of Ruth has nothing to do with a ger; it is simply a family tale.",
+    "Ruth accepted Judaism for the sake of gain and a quick marriage, and that is the example."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "know-613",
+   "topic": "knowledge",
+   "question": "How many mitzvot are there in the Torah? How are they divided?",
+   "purpose": "A check of the basics.",
+   "keyPoints": [
+    "613 mitzvot: 248 positive commandments and 365 prohibitions.",
+    "Between a person and G-d, and between one person and another.",
+    "Some of the mitzvot are connected with the Temple or with the Land of Israel and are not performed now."
+   ],
+   "mistakes": [
+    "Thinking that there are ten mitzvot."
+   ],
+   "lessons": [
+    "osnovy-6"
+   ],
+   "options": [
+    "There are 613 mitzvot in the Torah: 248 positive ones and 365 prohibitions; not all of them apply to each person, but the obligation is accepted as a whole.",
+    "There are ten mitzvot in the Torah, and there are no others.",
+    "There are 613 mitzvot, and every person performs all of them equally at every moment.",
+    "The number 613 is a beautiful symbol; there is no need to count the mitzvot and divide them."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "know-mikveh",
+   "topic": "knowledge",
+   "question": "What is a mikveh, and why does a ger immerse in it?",
+   "purpose": "A check of your understanding of the rite of giyur itself.",
+   "keyPoints": [
+    "A mikveh is a pool of “living” water.",
+    "The immersion of the ger (tevilah) is the completion of giyur before witnesses of the beit din.",
+    "Before the immersion one accepts the mitzvot and says a berachah."
+   ],
+   "mistakes": [
+    "Comparing the immersion with the rites of other religions."
+   ],
+   "lessons": [
+    "beit-din-4"
+   ],
+   "movements": "For Orthodox giyur and, as a rule, for Conservative giyur, tevilah is obligatory. In ROOPI and in Israeli Progressive giyur it is also part of the path; in some North American communities the rabbi may require it, strongly recommend it, or leave it as a strong custom. Explain the meaning of the immersion, and not only “needed / not needed.”",
+   "options": [
+    "A mikveh is a pool of “living” water; the immersion of the ger (tevilah) completes giyur before witnesses of the beit din.",
+    "A mikveh is an ordinary bathtub at home; one can complete giyur in it by oneself.",
+    "Immersion is needed only by women; a man does not need a mikveh.",
+    "A mikveh is a symbolic washing of the hands before prayer."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "A mikveh is a pool of “living” water; tevilah is obligatory and completes giyur before witnesses of the beit din.",
+      "A bathtub at home is enough; a beit din is not needed.",
+      "A man does not need a mikveh.",
+      "A mikveh is the washing of the hands before prayer."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "For Conservative giyur, tevilah is as a rule obligatory: a mikveh with “living” water, and immersion before witnesses.",
+      "In Conservative giyur a mikveh is not needed.",
+      "A bathtub at home is enough.",
+      "A mikveh is the washing of the hands."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "I know the meaning of the immersion, and not only “needed / not needed”: in ROOPI and in Israeli Progressive giyur, tevilah is part of the path; in some North American communities the rabbi may require it, strongly recommend it, or leave it as a strong custom.",
+      "A Reform person has no need to know the mikveh; there is no immersion on this path.",
+      "A bathtub at home is enough; the meaning of “living” water does not matter.",
+      "Immersion is only a women's rite; a man does not need it in any school."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "know-milah",
+   "topic": "knowledge",
+   "question": "What does a man need for giyur besides the mikveh?",
+   "purpose": "A knowledge check for male candidates.",
+   "keyPoints": [
+    "Brit milah is circumcision; if he is already circumcised — hatafat dam brit (a drop of the blood of the covenant).",
+    "Then immersion in the mikveh.",
+    "Kabbalat mitzvot before the beit din."
+   ],
+   "mistakes": [
+    "Thinking that a medical circumcision replaces everything."
+   ],
+   "lessons": [
+    "beit-din-5",
+    "semya-1"
+   ],
+   "movements": "For Orthodox and Conservative giyur, a man needs brit milah or hatafat dam brit. In ROOPI, brit milah is required; in Israeli progressive giyur it usually is as well; in North America it is often expected, although the CCAR resolution of 1892 formally left it to the rabbi's discretion.",
+   "options": [
+    "A man needs brit milah; if he is already circumcised — hatafat dam brit (a drop of the blood of the covenant), then immersion in the mikveh and kabbalat mitzvot.",
+    "A medical circumcision is enough; no other steps are needed.",
+    "The mikveh alone is enough for a man; circumcision is not required for giyur.",
+    "Brit milah is done after giyur, when it is convenient, and can wait for years."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "For Orthodox giyur, a man needs brit milah or hatafat dam brit, then the mikveh and kabbalat mitzvot.",
+      "A medical circumcision is enough; no other steps are needed.",
+      "Circumcision is not required for giyur.",
+      "Brit milah can be postponed for years after giyur."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "For Conservative giyur, a man needs brit milah or hatafat dam brit, then immersion.",
+      "In Conservative giyur, circumcision is not needed.",
+      "A medical circumcision is always enough, without hatafat dam brit.",
+      "This can be postponed for years."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "I know the differences among the schools: in ROOPI, brit milah is required; in Israeli progressive giyur it usually is as well; in North America it is often expected, although the CCAR resolution of 1892 formally left it to the rabbi's discretion. I answer according to the rules of my own school.",
+      "A Reform Jew has no need to know about brit milah; on this path it does not happen.",
+      "A medical circumcision is always enough, and the schools are the same here.",
+      "I will say that brit milah is not needed anywhere in progressive giyur."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "know-movements",
+   "topic": "knowledge",
+   "question": "What movements are there in Judaism, and why did you choose this beit din?",
+   "purpose": "The judges are checking whether you understand which community you are joining, and that recognition of giyur differs.",
+   "keyPoints": [
+    "The Orthodox, Conservative, and Reform movements.",
+    "How they differ in their attitude to halacha.",
+    "Why you chose this particular movement and beit din; whether you know about the recognition of giyur in Israel."
+   ],
+   "mistakes": [
+    "Criticizing the other movements.",
+    "Not knowing which movement your beit din belongs to."
+   ],
+   "lessons": [
+    "osnovy-7",
+    "beit-din-2"
+   ],
+   "movements": "Name the three main movements and explain why you chose this particular beit din — in the language of this movement, and not against the others. For the Reform path: the covenant and informed choice, equality in the community, tikkun olam, the clear rules of your giyur school, and an understanding of how others recognize this giyur.",
+   "options": [
+    "There are Orthodox, Conservative, and Reform movements; they relate to halacha in different ways. I will explain why I chose this particular beit din, and I know how this affects the recognition of giyur.",
+    "All the movements are exactly the same; a beit din can be chosen at random.",
+    "The other movements must be condemned in order to highlight one's own choice.",
+    "I do not know which movement my beit din belongs to; it does not matter."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "I will name the three main movements and explain why I chose this particular Orthodox beit din — in the language of this path, and not against the others; I understand how such a giyur is recognized.",
+      "All the movements are the same; one can choose at random.",
+      "The other movements must be condemned in order to highlight one's own choice.",
+      "I do not know which movement my beit din belongs to."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "I will name the three movements and explain why I chose a Conservative beit din: the attitude to halacha, the community, recognition — without criticizing other paths.",
+      "All the movements are the same.",
+      "The other paths must be condemned.",
+      "I do not know which movement my beit din belongs to."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "I will name the three movements and explain my Reform choice in the language of this path: the covenant and informed choice, equality in the community, tikkun olam, the rules of my giyur school, and an understanding of how others recognize this giyur — not against other paths.",
+      "All the movements are the same; the giyur school does not matter.",
+      "I will choose Reform because “it is easier here,” and I will condemn the Orthodox.",
+      "I do not know the rules of my own giyur school, and I do not know whether others recognize this giyur."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "know-tanakh",
+   "topic": "knowledge",
+   "question": "What parts make up the Tanakh?",
+   "purpose": "A short check that you use Jewish concepts.",
+   "keyPoints": [
+    "Torah (the Five Books of Moses), Nevi'im (Prophets), Ketuvim (Writings).",
+    "Tanakh is an abbreviation of these three words.",
+    "The five books of the Torah: Bereshit, Shemot, Vayikra, Bamidbar, Devarim."
+   ],
+   "mistakes": [
+    "Using non-Jewish names for the parts of the Tanakh."
+   ],
+   "lessons": [
+    "osnovy-2"
+   ],
+   "options": [
+    "The Tanakh is the Torah (the Five Books of Moses), Nevi'im (Prophets), and Ketuvim (Writings); the word itself is an abbreviation of these three parts. The five books of the Torah: Bereshit, Shemot, Vayikra, Bamidbar, Devarim.",
+    "The Tanakh is only the Five Books of Moses; there are no other parts.",
+    "The Tanakh includes the Five Books of Moses and the prayer book; the Prophets are not included.",
+    "It is better to name the parts of the Tanakh as is customary outside the Jewish tradition, and not Torah, Nevi'im, and Ketuvim."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "know-mourning",
+   "topic": "knowledge",
+   "question": "What do you know about Jewish mourning customs?",
+   "purpose": "A knowledge check on the life cycle.",
+   "keyPoints": [
+    "Burial as soon as possible, without cremation.",
+    "Shiva — seven days of mourning; Kaddish.",
+    "A ger continues to honor and mourn their own non-Jewish parents."
+   ],
+   "mistakes": [
+    "Thinking that a ger no longer grieves for their parents."
+   ],
+   "lessons": [
+    "semya-7",
+    "beit-din-6"
+   ],
+   "options": [
+    "Burial as soon as possible, without cremation; shiva — seven days of mourning; Kaddish. A ger still honors and mourns their own non-Jewish parents.",
+    "After giyur, a ger no longer grieves for non-Jewish parents.",
+    "In Judaism cremation is the accepted practice, and there is no shiva.",
+    "Mourning lasts one day, and Kaddish is not recited."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "mot-community-choice",
+   "topic": "motivation",
+   "question": "Why did you choose this particular movement and this community, and not another beit din?",
+   "purpose": "The judges want to hear not criticism of others' paths, but a positive choice: in which community you want to pray, study, mourn, and raise children, and whether you understand the consequences of the recognition of giyur.",
+   "keyPoints": [
+    "Positive reasons: the language of the covenant, prayer, equality, a teacher, the people of the community.",
+    "What has already become your life in this community: services, study, festivals, activities.",
+    "An understanding of how other movements and the State of Israel recognize this giyur.",
+    "Honesty: you are choosing to live here, and you are not looking for the “easiest” court."
+   ],
+   "mistakes": [
+    "Only against others: “I did not go to the Orthodox because it is too strict there.”",
+    "“It is easier in Reform, so that is why I am here.”",
+    "Confusion about the rules of one's own giyur school."
+   ],
+   "lessons": [
+    "osnovy-7",
+    "beit-din-2",
+    "beit-din-7"
+   ],
+   "movements": "The question is asked in every beit din. In a Reform one it is especially important to be able to explain informed choice, equality in the community, and the rules of your own school (ROOPI, IMPJ, or a North American program), without belittling other paths.",
+   "options": [
+    "I will give the positive reasons: the language of the covenant, prayer, a teacher, the people of the community, and what has already become my life here; I understand how others recognize this giyur, and I am not looking for the “easiest” court.",
+    "I did not go to the Orthodox because it is too strict there — that is enough.",
+    "It is easier in Reform, so that is why I am here.",
+    "I do not know the rules of my own giyur school; it does not matter."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "I will explain the positive choice of this Orthodox community and beit din: prayer, study, a teacher, the life of the people — and I understand the consequences of recognition, without belittling other paths.",
+      "I am here only because the other paths are “wrong.”",
+      "I am choosing the court that will accept me sooner, with no connection to a community.",
+      "I do not know the rules of my own beit din."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "I will explain why I want to live, pray, and raise children in this particular Conservative community; I understand the recognition of giyur, and I am not looking for the easiest court.",
+      "I am here because “it is easier this way than with the Orthodox.”",
+      "The other paths must be condemned in order to justify the choice.",
+      "I do not know the rules of my own beit din."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "I will explain the informed choice of a Reform community: the language of the covenant, equality, a teacher, the people, the rules of my school (ROOPI, IMPJ, or a North American program), and how others recognize this giyur — without belittling other paths.",
+      "“It is easier in Reform, so that is why I am here.”",
+      "The only reason I did not go to the Orthodox is that it is too strict there — and that is enough.",
+      "I mix up the rules of my own giyur school, or I do not know them; it does not matter."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "mitz-informed",
+   "topic": "mitzvot",
+   "question": "What does an informed choice of the commandments mean to you, and how are you already applying it in your life?",
+   "purpose": "A question characteristic of a progressive beit din: they check that the principle has not become an excuse for inaction, and that the candidate has a living, honest measure of practice.",
+   "keyPoints": [
+    "First study and the voice of the tradition, then a personal decision.",
+    "Concrete examples: Shabbat, kashrut, prayer, festivals, ethics.",
+    "How this choice differs from arbitrariness and from accepting all of halacha as a code.",
+    "What you are moving toward after giyur, and not only what you already do."
+   ],
+   "mistakes": [
+    "“In Reform one may observe nothing.”",
+    "General words, without a single personal habit.",
+    "Passing off ignorance as a principle."
+   ],
+   "lessons": [
+    "beit-din-7",
+    "osnovy-7",
+    "osnovy-6",
+    "etika-6"
+   ],
+   "movements": "In an Orthodox or Conservative beit din, the same conversation sounds like accepting an obligation according to the halacha of one's own movement. Answer in the language of the court before which you stand.",
+   "options": [
+    "First study and the voice of the tradition, then a personal decision; I will give concrete examples from Shabbat, kashrut, prayer, festivals, and ethics, and I will say what I am moving toward after giyur.",
+    "In Reform one may observe nothing, so there is no question.",
+    "In general words, “I choose,” without a single personal habit.",
+    "Ignorance can be passed off as a principle."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "At an Orthodox beit din this conversation is about accepting an obligation according to halacha: I will tell how I already live by the commandments and what I am preparing for, in the language of this court.",
+      "One may observe only what is convenient; that is what “informed choice” is.",
+      "General words, without a single habit.",
+      "Ignorance can be passed off as a principle."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "In a Conservative beit din I speak of an obligation according to the halacha of my own movement: study, concrete practice, and growth after giyur.",
+      "On the Conservative path, the commandments need not be put into practice.",
+      "General words, without habits.",
+      "Ignorance can be passed off as a principle."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "Informed choice is first study and the voice of the tradition, then a personal decision, and not an excuse for inaction; I will give living examples and say what I am moving toward after giyur.",
+      "“In Reform one may observe nothing.”",
+      "General words, without a single personal habit.",
+      "Passing off ignorance as a principle."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "pray-community",
+   "topic": "prayer",
+   "question": "How is prayer conducted in your community? Which siddur do you use, and which prayers do you already say yourself?",
+   "purpose": "They are checking not for knowledge of rare formulations, but for living participation: the service, the community's siddur, the Shema and the berachot with understanding, Hebrew alongside a language one understands.",
+   "keyPoints": [
+    "What the service looks like: the day of the week, Hebrew and the language of the community, the participation of men and women.",
+    "Which siddur you pray from (in North American communities, often Mishkan T'filah; in ROOPI, the siddur of your own synagogue).",
+    "What you already say yourself: the Shema, Modeh Ani, the berachot over food, parts of the Amidah.",
+    "Understanding the words matters more than a text memorized without its meaning."
+   ],
+   "mistakes": [
+    "“We pray like everyone else,” without a single detail.",
+    "Not knowing which book is in your synagogue.",
+    "Claiming that Hebrew is not needed in Reform prayer."
+   ],
+   "lessons": [
+    "ivrit-6",
+    "ivrit-3",
+    "ivrit-4",
+    "ivrit-5"
+   ],
+   "movements": "Orthodox communities pray according to the traditional nusach, without instrumental music on Shabbat and with separate seating. Reform communities often use their own siddurim, mixed seating, a language one understands, and, in many communities, music. Name your own custom precisely.",
+   "options": [
+    "I will describe how my community prays, which siddur we use, and which prayers I already say myself — honestly, without embellishment.",
+    "I will invent a siddur and customs that I do not know.",
+    "Only the rabbi prays in the synagogue; it is enough for me to be present in silence my whole life.",
+    "There is no need to know the community's custom; prayer is only at home."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "I will describe the traditional nusach of my Orthodox community: no instrumental music on Shabbat, separate seating, and which prayers I already say myself.",
+      "I will invent customs that I do not know.",
+      "It is enough for me to be present in silence; there is no need to learn the nusach.",
+      "Instrumental music on an Orthodox Shabbat is common practice."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "I will describe which siddur and which order of prayer my Conservative community uses, and what I already say myself.",
+      "I will invent a siddur I have never seen.",
+      "There is no need to know the community's custom.",
+      "It is enough for me to sit in silence in the hall my whole life."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "I will describe how my Reform community prays: its own siddur, often mixed seating, sometimes music, and which prayers I already say myself.",
+      "I will invent a siddur and customs that I do not know.",
+      "In a Reform synagogue it is enough to be present in silence; there is no need to learn the siddur.",
+      "I will say that we have separate seating and a ban on music, as in an Orthodox community, even though that is not so."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "faith-covenant",
+   "topic": "faith",
+   "question": "What does the covenant (brit) between G-d and Israel mean to you, and how do you enter it?",
+   "purpose": "The covenant is the shared core of giyur in every movement. On the Reform path it is especially important to be able to formulate it: not as a legal signature under a code, but as a living bond with G-d, the Torah, and the people.",
+   "keyPoints": [
+    "The covenant is the bond between G-d and the people, which a ger enters freely and fully.",
+    "For you this is concrete: the Torah, the community, the mitzvot you carry, responsibility for the people.",
+    "Giyur is not a diploma, but the beginning of life in the covenant."
+   ],
+   "mistakes": [
+    "Only abstract philosophy, with no people and no practice.",
+    "Reducing the covenant to “this is convenient for me.”",
+    "Confusing citizenship of Israel with entering the covenant."
+   ],
+   "lessons": [
+    "osnovy-4",
+    "osnovy-1",
+    "beit-din-1",
+    "beit-din-7"
+   ],
+   "movements": "The Orthodox emphasis is accepting the commandments as the law of the covenant. The Reform emphasis is a conscious entry into the same covenant through study, community, and an honest measure of mitzvot. The meaning of belonging to the people is shared.",
+   "options": [
+    "The covenant is G-d's bond with the people of Israel, which I enter consciously: study, community, and the commandments, and not only a feeling of belonging.",
+    "The covenant is a beautiful word with no obligations.",
+    "After giyur the covenant does not apply to me; it is only about those born Jewish.",
+    "The covenant can be accepted “on a trial basis” and canceled if it becomes difficult."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "I enter the covenant by accepting the commandments as the law of the covenant: it is an obligation for life, and not only a feeling of belonging.",
+      "The covenant is a beautiful word with no obligations.",
+      "After giyur the commandments need not be accepted; a feeling is enough.",
+      "The covenant can be accepted “on a trial basis.”"
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "I enter the same covenant through halacha and life in a Conservative community: it is a serious obligation, not only a feeling.",
+      "A covenant with no obligations.",
+      "After giyur nothing changes.",
+      "The covenant can be canceled if it becomes difficult."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "I consciously enter the same covenant through study, community, and an honest measure of mitzvot: belonging is not only a feeling, and this is serious.",
+      "On the Reform path the covenant is only a feeling, with no study and no mitzvot.",
+      "The covenant does not apply to a ger.",
+      "The covenant can be accepted “on a trial basis” and canceled."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "know-patrilineal",
+   "topic": "knowledge",
+   "question": "How do the different movements define a child's Jewishness? What did the Reform movement rule in 1983, and why does a ger need to know this?",
+   "purpose": "This is a test of maturity, not an invitation to argue. The candidate should calmly distinguish the maternal line from the CCAR resolution of 1983, and understand how this will affect children in different communities.",
+   "keyPoints": [
+    "Orthodox and Conservative Judaism proceed from the mother's Jewishness (or from giyur).",
+    "The CCAR resolution of 1983: a child of one Jewish parent — mother or father — is Jewish if the child is raised as a Jew.",
+    "A ger needs to know this for clarity about the status of children and about recognition in other communities, not for polemics."
+   ],
+   "mistakes": [
+    "Confusing 1983 with the 1892 ruling on the mikveh.",
+    "Claiming that “all Jews think this way.”",
+    "Speaking about this dismissively, toward other movements or toward one's own."
+   ],
+   "lessons": [
+    "osnovy-1",
+    "osnovy-7",
+    "semya-2",
+    "beit-din-7"
+   ],
+   "movements": "The topic is especially important if you are joining a progressive community, or if the family already has children. In an Orthodox or Conservative beit din, the answer about a child's status will be different — speak according to the norm of your own court.",
+   "options": [
+    "I will honestly explain how my movement defines a child's Jewish status, and what this means for my family — in the language of my own beit din, not someone else's.",
+    "In every movement the rules are the same; there is no need to clarify.",
+    "I will hide the fact that the family already has children: this has nothing to do with giyur.",
+    "The children's status can be settled later, and the judges need not be told."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "In an Orthodox beit din, Jewish status follows the mother; if a child is not recognized as Jewish, that child's path is a separate giyur. I speak about this honestly.",
+      "In every movement, a Jew's child is always Jewish, the same through the father or through the mother.",
+      "I will hide the fact that there are children in the family.",
+      "The judges have no need to know the children's status."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "In a Conservative beit din, a child's status is defined differently than in some progressive communities; I will speak honestly about the children and ask which path they need.",
+      "In every movement the rules are the same.",
+      "I will hide the fact that there are children in the family.",
+      "This can be settled later, and the judges need not be told."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "I will explain the rule of my own school: in some progressive communities, when the conditions are met, the paternal line is recognized as well, and I will say honestly what this means for my children; in an Orthodox or Conservative beit din the answer would be different.",
+      "In every movement, patrilineal descent is accepted in the same way.",
+      "I will hide the fact that there are children in the family.",
+      "I do not know the rules of my own school, and there is no need to clarify."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "shab-spirit",
+   "topic": "shabbat",
+   "question": "How is Shabbat holy for you if you do not observe all 39 melachot? What does your day look like in practice?",
+   "purpose": "For candidates on the progressive path and on some Conservative paths: to check that declining the full code of melachot does not mean an empty Saturday, but rests on a living rhythm of rest and holiness.",
+   "keyPoints": [
+    "The meaning of the day: creation, freedom, the covenant, a stop to weekday work.",
+    "A concrete rhythm: candles, kiddush, the service, family, and refraining from work and shopping if you have taken that on.",
+    "You can explain the 39 melachot, even if you do not accept them as a binding code.",
+    "Honestly: what you already keep every week, and what you are still learning."
+   ],
+   "mistakes": [
+    "“Shabbat is holy, but on that day I live as I do on an ordinary Saturday.”",
+    "Being unable to name a single melachah or a single habit of one's own.",
+    "Passing off an Orthodox observance that you do not have."
+   ],
+   "lessons": [
+    "shabbat-1",
+    "shabbat-4",
+    "shabbat-6",
+    "shabbat-2"
+   ],
+   "movements": "At an Orthodox beit din this question is not put this way: there they expect observance of the melachot. If you are standing before an Orthodox court, speak about the full rest of the day, and not about the Reform model.",
+   "options": [
+    "For me, Shabbat is holy rest and a sign of the covenant: I will describe how I already set this day apart from the weekdays, within the frame of my own beit din, and not of someone else's norm.",
+    "Shabbat is an ordinary day off; there is no holiness in it.",
+    "A beautiful thought about rest is enough, without changing anything in the day.",
+    "One may carry another movement's answer into one's own court."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "At an Orthodox beit din I speak about the full rest of the day and observance of the melachot, and not about the Reform wording of “the spirit of Shabbat” in place of the prohibitions.",
+      "A beautiful thought about rest is enough; the melachot need not be observed.",
+      "Shabbat is an ordinary day off.",
+      "I will carry a Reform answer into an Orthodox court."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "I will describe how, in Conservative practice, I set Shabbat apart from the weekdays: rest, the service, meals, and the measure of prohibitions accepted in the community.",
+      "A thought about rest is enough, without changing anything in the day.",
+      "Shabbat is an ordinary day off.",
+      "I will carry someone else's answer into my own court."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "I will describe how I already set Shabbat apart: rest, candles, kiddush, community, and refraining from work and shopping if I have taken that on; it is the holy day of the covenant, and not only a day off.",
+      "On the Reform path, a beautiful thought about rest is enough, without changing anything in the day.",
+      "Shabbat is an ordinary day off; there is no holiness in it.",
+      "I will promise to abstain completely from all the melachot, even though that is not my practice and not the norm of my court."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "kosh-measure",
+   "topic": "kashrut",
+   "question": "What measure of kashrut have you taken on, and why that one? Which of the laws do you know, even if you do not keep all of them?",
+   "purpose": "They check knowledge of the classical categories and honest personal practice, especially in Reform homes and in some Conservative homes, where there are not two sinks but there is a conscious order of eating.",
+   "keyPoints": [
+    "Knowledge: permitted animals, blood, meat and milk, the meaning of a hechsher.",
+    "Your measure: what you already do not eat, how the kitchen is arranged, what you keep at home and away from home.",
+    "Why this is holy for you, and not only “it is more convenient this way.”",
+    "The ethical layer, if it matters to you: animals, labor, ecology — as a supplement, not as a replacement."
+   ],
+   "mistakes": [
+    "“Kashrut is not obligatory, so there is no question.”",
+    "Failing to distinguish pork from the question of dishes.",
+    "Promising a fully Orthodox kitchen that you do not intend to keep."
+   ],
+   "lessons": [
+    "kashrut-1",
+    "kashrut-5",
+    "kashrut-6",
+    "kashrut-2"
+   ],
+   "movements": "An Orthodox beit din expects a kosher kitchen according to halacha. A Reform beit din expects knowledge and an honest measure. Do not carry someone else's answer into someone else's court.",
+   "options": [
+    "I know the classical categories of kashrut and will honestly name my own measure of practice — the one I keep, and not a promise to someone else's court.",
+    "Kashrut is not obligatory, so there is no question.",
+    "I do not distinguish the prohibition of pork from the question of dishes.",
+    "I will promise a fully Orthodox kitchen that I do not intend to keep."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "An Orthodox beit din expects a kosher kitchen according to halacha: I will describe how it is already arranged and what I am preparing for.",
+      "Kashrut is not obligatory; there is no question.",
+      "I do not distinguish pork from the question of dishes.",
+      "I will say “I try,” while having no order at home at all."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "I will tell of my knowledge of the laws and of my honest measure in Conservative practice: what I no longer eat, how the kitchen is arranged, and what I keep at home and outside the home.",
+      "Kashrut is not obligatory; there is no question.",
+      "I do not distinguish pork from the question of dishes.",
+      "I will promise a kitchen I do not intend to keep."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "I know the permitted animals, blood, meat and milk, and the meaning of a hechsher, and I will honestly name my measure: what I no longer eat, how the kitchen is arranged; the ethics of food, if it matters to me, is an addition, not a replacement.",
+      "“Kashrut is not obligatory, so there is no question.”",
+      "I do not distinguish pork from the question of dishes.",
+      "I will promise a fully Orthodox kitchen that I do not intend to keep."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "mitz-tikkun",
+   "topic": "mitzvot",
+   "question": "What is tikkun olam in your life? How is the service of justice connected, for you, with prayer, Shabbat, and belonging to the people?",
+   "purpose": "In progressive Judaism, repairing the world is a religious obligation, not a replacement for the rites. The judges want to see concrete deeds, and an understanding that tikkun olam stands alongside the Torah and the community, not in their place.",
+   "keyPoints": [
+    "Concrete deeds: chesed, tzedakah, justice, care for people and for the world.",
+    "A connection with the Jewish rhythm: this is part of the covenant, not only civic kindness.",
+    "Tikkun olam does not cancel prayer, Shabbat, and study."
+   ],
+   "mistakes": [
+    "General slogans without a single deed.",
+    "“It is enough for me to be a good person; the rest is not needed.”",
+    "A political speech without a Jewish root."
+   ],
+   "lessons": [
+    "etika-6",
+    "etika-3",
+    "etika-2",
+    "beit-din-7"
+   ],
+   "movements": "The subject is close to every movement (tzedakah, chesed, din). In a Reform beit din it is often asked directly, as part of the candidate’s religious life.",
+   "options": [
+    "Tikkun olam is concrete deeds: chesed, tzedakah, justice; it is part of the covenant alongside prayer, Shabbat, and study, not in their place.",
+    "General slogans without a single deed.",
+    "“It is enough for me to be a good person; the rest is not needed.”",
+    "A political speech without a Jewish root."
+   ],
+   "answer": 0,
+   "optionsByLevel": {
+    "orthodox": {
+     "options": [
+      "Tzedakah, chesed, and justice are mitzvot; I will speak of concrete deeds and of how they stand alongside the Torah, prayer, and Shabbat, not in their place.",
+      "It is enough to be a good person; the mitzvot are not needed.",
+      "General slogans without deeds.",
+      "A political speech without a Jewish root."
+     ],
+     "answer": 0
+    },
+    "conservative": {
+     "options": [
+      "I will speak of concrete deeds of justice and compassion, and of how they are connected with life in the Conservative community, with prayer, and with Shabbat.",
+      "It is enough to be a good person; the rest is not needed.",
+      "General slogans without deeds.",
+      "A political speech without a Jewish root."
+     ],
+     "answer": 0
+    },
+    "reform": {
+     "options": [
+      "Tikkun olam in my life is concrete deeds of chesed, tzedakah, and justice, connected with the Torah, prayer, Shabbat, and the people; it is a religious obligation, not a replacement for the rites.",
+      "“It is enough for me to be a good person; prayer and Shabbat are not needed.”",
+      "General slogans without a single deed.",
+      "A political speech without a Jewish root."
+     ],
+     "answer": 0
+    }
+   }
+  },
+  {
+   "id": "faith-oneness-now",
+   "topic": "faith",
+   "question": "If you are told that G-d became a human being, or that He consists of several persons, what will you answer?",
+   "purpose": "The judges want to hear that monotheism is clear and calm for you, with no remnant of former ideas.",
+   "keyPoints": [
+    "G-d is one and indivisible, without body or image (the Shema; Rambam’s principles 1–5).",
+    "One prays only to Him, with no intermediaries.",
+    "A teaching about “persons,” or about G-d who became a human being, is not Judaism."
+   ],
+   "mistakes": [
+    "A vague “G-d can appear however He wishes.”",
+    "Argument and condemnation instead of a clear statement of one’s own faith."
+   ],
+   "lessons": [
+    "osnovy-4",
+    "osnovy-8",
+    "osnovy-3",
+    "osnovy-11"
+   ],
+   "options": [
+    "G-d is one and indivisible, without body or image; I pray only to Him. A teaching about several persons, or about G-d who became a human being, is not Judaism.",
+    "G-d can be both one and in several persons — that is not so important.",
+    "If G-d became a human being, I am ready to accept that, so long as I can keep Jewish customs.",
+    "I do not want to think about this, and I will not answer."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "faith-tanakh-read",
+   "topic": "knowledge",
+   "question": "Someone cites a verse of the Tanakh as “proof” that Mashiach has already come. How will you respond to this?",
+   "purpose": "A check that you read the Tanakh in context and do not take a phrase torn from its place as a decisive argument.",
+   "keyPoints": [
+    "A verse is read in Hebrew, in its chapter, and with the tradition, not as a fragment fitted to a ready-made conclusion.",
+    "Yeshayahu 53 is about the people of Israel; Yeshayahu 7:14 is a sign for Achaz; the criteria of Mashiach have not yet been fulfilled.",
+    "If you do not know the verse, say so and turn to a rabbi; not knowing is not the same as agreeing."
+   ],
+   "mistakes": [
+    "Agreeing because “the verse is written, after all.”",
+    "Arguing alone, without knowing the context."
+   ],
+   "lessons": [
+    "osnovy-9",
+    "osnovy-11",
+    "osnovy-2"
+   ],
+   "options": [
+    "I will read the verse in its chapter, in Hebrew, and with the teachers of the community. A phrase torn from its place is not yet proof; if I do not know, I will ask a rabbi.",
+    "If a verse is cited with confidence, that means Mashiach has already come.",
+    "I will argue alone until I win, even if I do not know the context.",
+    "In such cases it is better not to read the Tanakh at all."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "hol-atzmaut",
+   "topic": "holidays",
+   "question": "What are Yom HaAtzmaut and Yom Yerushalayim for you?",
+   "purpose": "A check of your bond with the Land of Israel and with the rebirth of the state, not only of your knowledge of the dates.",
+   "keyPoints": [
+    "Yom HaAtzmaut is a day of thanksgiving for the State of Israel and for the people’s return to its Land.",
+    "Yom Yerushalayim is the reunification of Jerusalem, the eternal and undivided capital.",
+    "Exactly how one prays in your community can be checked with a rabbi; the attitude to these days is itself part of the path."
+   ],
+   "mistakes": [
+    "Saying that these days are optional for a Jew, or that Jerusalem is “a disputed question.”",
+    "Naming only the date, without the meaning."
+   ],
+   "lessons": [
+    "prazdniki-6",
+    "osnovy-10",
+    "osnovy-5"
+   ],
+   "options": [
+    "These are days of thanksgiving: for the State of Israel and for reunited Jerusalem, the eternal capital of our people.",
+    "These are only civil dates; they do not belong to Judaism.",
+    "Jerusalem is a disputed question for me, and it is better not to observe these days.",
+    "I know the dates exist, but I see no meaning in them."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "fam-shul-choice",
+   "topic": "family",
+   "question": "How do you choose a synagogue and a rabbi? What will you do if a gathering looks Jewish, but the teaching troubles you?",
+   "purpose": "The judges look to see whether you have a living community, and whether you can tell outward signs from the teaching.",
+   "keyPoints": [
+    "A community of a known movement, and a rabbi you trust.",
+    "A kippah and a name are not proof in themselves.",
+    "When in doubt, go to your own rabbi or to the beit din, rather than arguing alone."
+   ],
+   "mistakes": [
+    "“I do not care, so long as it is warm and free.”",
+    "Entering a doubtful gathering “just in case.”"
+   ],
+   "lessons": [
+    "ivrit-6",
+    "beit-din-3",
+    "osnovy-11"
+   ],
+   "options": [
+    "I choose a community of a known movement, and when in doubt I go to my own rabbi. A kippah and a name are not proof to me in themselves.",
+    "If there is a kippah, a tallit, and Hebrew there, then it is certainly Judaism.",
+    "I will argue with them alone until I figure it out myself.",
+    "I do not need a synagogue; books are enough."
+   ],
+   "answer": 0
+  },
+  {
+   "id": "know-torah-eternal",
+   "topic": "knowledge",
+   "question": "May one say that the Torah has already been replaced by a “new covenant,” and that the mitzvot are no longer needed?",
+   "purpose": "A short check of the ninth principle, and of reading Yirmiyahu 31 in context.",
+   "keyPoints": [
+    "The Torah is eternal: “do not add and do not take away” (Devarim 13:1); no prophet annuls it.",
+    "Yirmiyahu 31 speaks of the same Torah, written upon the heart of Israel, not of an annulment of the mitzvot."
+   ],
+   "mistakes": [
+    "Agreeing that “the spirit matters more than the mitzvot,” and that the mitzvot can be set aside.",
+    "Confusing the prophet’s “new covenant” with an annulment of the Torah."
+   ],
+   "lessons": [
+    "osnovy-2",
+    "osnovy-3",
+    "osnovy-11"
+   ],
+   "options": [
+    "No. The Torah is eternal; the “new covenant” in Yirmiyahu is the same Torah upon the heart of Israel, not an annulment of the mitzvot.",
+    "Yes, the new covenant annuls the old mitzvot.",
+    "The mitzvot are needed only until Mashiach comes, and he has already come.",
+    "It depends on what sign the preacher showed."
+   ],
+   "answer": 0
+  }
+ ]
+}

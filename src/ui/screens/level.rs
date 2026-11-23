@@ -7,6 +7,7 @@ use iced::widget::{button, column, container, row, space, Column, Row};
 use iced::{Alignment, Background, Border, Color, Element, Length};
 
 use crate::content;
+use crate::i18n::tr;
 use crate::storage::Level;
 use crate::ui::app::{Action, Ctx, Route};
 use crate::ui::screens::map::{heading_owned, icons, kicker_owned, txt};
@@ -42,7 +43,11 @@ impl Screen {
         ctx.state.onboarded = true;
         ctx.save();
         let info = content::level_info(level);
-        ctx.toast(&format!("Выбрано: {}", info.title), "", "★");
+        ctx.toast(
+            &crate::trf!("Выбрано: {}", "Selected: {}", tr(info.title)),
+            "",
+            "★",
+        );
         self.confirm = None;
         if first {
             Action::Go(Route::Map)
@@ -99,15 +104,15 @@ impl Screen {
         let first = !ctx.state.onboarded;
 
         let mut page = Column::new().spacing(10).width(Length::Fill);
-        page = page.push(widgets::back_button("Назад", Msg::Back));
+        page = page.push(widgets::back_button(tr("Назад"), Msg::Back));
         page = page.push(widgets::kicker(if first {
-            "Шаг 2 из 2"
+            tr("Шаг 2 из 2")
         } else {
-            "Течение"
+            tr("Течение")
         }));
-        page = page.push(widgets::heading("Выберите течение", 1));
+        page = page.push(widgets::heading(tr("Выберите течение"), 1));
         page = page.push(
-            txt("Уровни вложены друг в друга: консервативный включает всё реформистское, ортодоксальный — всё. У каждого течения своё прохождение: уроки, тесты, «Маалот», карточки, опыт и коллекция. При смене прогресс этого течения сохранится и вернётся, когда вы снова его выберете.")
+            txt(tr("Уровни вложены друг в друга: консервативный включает всё реформистское, ортодоксальный — всё. У каждого течения своё прохождение: уроки, тесты, «Маалот», карточки, опыт и коллекция. При смене прогресс этого течения сохранится и вернётся, когда вы снова его выберете."))
                 .size(theme::text::BODY)
                 .color(p.muted)
                 .width(Length::Fill),
@@ -156,13 +161,13 @@ fn level_card<'a>(
     button(
         column![
             emblem,
-            kicker_owned(format!("Уровень {number}")),
-            txt(info.title)
+            kicker_owned(crate::trf!("Уровень {number}", "Level {number}")),
+            txt(tr(info.title))
                 .size(theme::text::H3)
                 .font(fonts::SANS_BOLD)
                 .align_x(Alignment::Center)
                 .width(Length::Fill),
-            txt(info.text)
+            txt(tr(info.text))
                 .size(theme::text::SMALL)
                 .color(p.muted)
                 .align_x(Alignment::Center)
@@ -203,19 +208,26 @@ fn confirm_dialog<'a>(level: Level, p: theme::Palette) -> Element<'a, Msg> {
     let info = content::level_info(level);
     let dialog = container(
         column![
-            heading_owned(format!("Сменить течение на «{}»?", info.title), 2),
-            txt("Откроется прохождение этого течения: его уроки, результаты и коллекция. Прогресс нынешнего течения сохранится и вернётся, когда вы снова его выберете.")
+            heading_owned(
+                crate::trf!(
+                    "Сменить течение на «{}»?",
+                    "Switch to “{}”?",
+                    tr(info.title)
+                ),
+                2,
+            ),
+            txt(tr("Откроется прохождение этого течения: его уроки, результаты и коллекция. Прогресс нынешнего течения сохранится и вернётся, когда вы снова его выберете."))
                 .size(theme::text::BODY)
                 .color(p.muted)
                 .width(Length::Fill),
             row![
                 space::horizontal(),
-                button(txt("Отмена").size(theme::text::BODY - 1.0))
+                button(txt(tr("Отмена")).size(theme::text::BODY - 1.0))
                     .padding([10.0, 20.0])
                     .style(move |_, status| theme::button_ghost(&theme::current(), status))
                     .on_press(Msg::ConfirmNo),
                 button(
-                    txt("Сменить")
+                    txt(tr("Сменить"))
                         .size(theme::text::BODY - 1.0)
                         .font(fonts::SANS_BOLD)
                 )

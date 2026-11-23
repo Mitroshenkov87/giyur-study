@@ -33,37 +33,45 @@ fn folder(err: &LoadError) -> Option<std::path::PathBuf> {
     None
 }
 
-/// The text of the window (also printed to stderr), in plain Russian.
+/// The text of the window (also printed to stderr).
 pub fn message(err: &LoadError) -> (String, String) {
     let missing_folder = !err.searched.is_empty();
     let title = if missing_folder {
-        "Не найдены материалы курса".to_string()
+        crate::trf!("Не найдены материалы курса", "Course files were not found")
     } else {
-        "Не удалось открыть материалы курса".to_string()
+        crate::trf!(
+            "Не удалось открыть материалы курса",
+            "Could not open the course files"
+        )
     };
     let mut body = String::new();
     if missing_folder {
-        body.push_str(
-            "Уроки, карточки и вопросы лежат в папке content рядом с программой, \
-             но её не удалось найти.\n\n",
-        );
-        for p in &err.searched {
-            body.push_str(&format!("Искали здесь: {}\n", p.display()));
-        }
-        body.push_str(
-            "\nПереустановите программу из Shorashim-Setup.exe — он положит папку на место.",
-        );
-    } else {
-        body.push_str(&format!(
-            "Файл: {}\n\nЧто не так: {}\n\n",
-            err.file.display(),
-            err.reason
+        body.push_str(&crate::trf!(
+            "Уроки, карточки и вопросы лежат в папке content рядом с программой, но её не удалось найти.\n\n",
+            "Lessons, cards and questions live in a content folder next to the app, and it could not be found.\n\n"
         ));
-        body.push_str(
-            "Исправьте этот файл и запустите программу снова, \
-             или переустановите её из Shorashim-Setup.exe. \
-             Ваш прогресс хранится отдельно и не пострадает.",
-        );
+        for p in &err.searched {
+            body.push_str(&crate::trf!(
+                "Искали здесь: {}\n",
+                "Looked here: {}\n",
+                p.display()
+            ));
+        }
+        body.push_str(&crate::trf!(
+            "\nПереустановите программу из Shorashim-Setup.exe — он положит папку на место.",
+            "\nRun Shorashim-Setup.exe again — it will put the folder back."
+        ));
+    } else {
+        let file = err.file.display();
+        let reason = &err.reason;
+        body.push_str(&crate::trf!(
+            "Файл: {file}\n\nЧто не так: {reason}\n\n",
+            "File: {file}\n\nWhat is wrong: {reason}\n\n"
+        ));
+        body.push_str(&crate::trf!(
+            "Исправьте этот файл и запустите программу снова, или переустановите её из Shorashim-Setup.exe. Ваш прогресс хранится отдельно и не пострадает.",
+            "Fix this file and start the app again, or reinstall it from Shorashim-Setup.exe. Your progress is stored separately and will not be lost."
+        ));
     }
     (title, body)
 }
@@ -87,13 +95,13 @@ impl Window {
         let mut buttons = row![].spacing(12);
         if folder(&self.err).is_some() {
             buttons = buttons.push(
-                button(text("Открыть папку").shaping(Shaping::Advanced))
+                button(text(crate::i18n::tr("Открыть папку")).shaping(Shaping::Advanced))
                     .on_press(Msg::OpenFolder)
                     .style(button::secondary),
             );
         }
         buttons = buttons.push(
-            button(text("Закрыть").shaping(Shaping::Advanced))
+            button(text(crate::i18n::tr("Закрыть")).shaping(Shaping::Advanced))
                 .on_press(Msg::Close)
                 .style(button::primary),
         );
@@ -133,7 +141,7 @@ pub fn run(err: LoadError) -> iced::Result {
         Window::update,
         Window::view,
     )
-    .title(|_: &Window| "Шорашим — материалы курса".to_string())
+    .title(|_: &Window| crate::trf!("Шорашим — материалы курса", "Shorashim — course files"))
     .theme(|_: &Window| -> Theme { theme::iced_theme(ThemeKind::Dark) })
     .window(settings)
     .default_font(Font::with_name("Noto Sans"));

@@ -20,12 +20,44 @@ pub mod payload;
 pub const DIR_NAME: &str = "Shorashim";
 /// Installed executable name.
 pub const EXE_NAME: &str = "shorashim.exe";
-/// Shortcut file name (Start menu and desktop).
+/// Shortcut file name (Start menu and desktop) on a Russian system.
 pub const LINK_NAME: &str = "Шорашим.lnk";
+/// English shortcut name, used when the OS interface is not Russian.
+pub const LINK_NAME_EN: &str = "Shorashim.lnk";
 /// Uninstall registry key under `HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall`.
 pub const UNINSTALL_KEY: &str = "Shorashim";
-/// Shown in «Приложения и возможности».
+/// Shown in «Приложения и возможности» on a Russian system.
 pub const DISPLAY_NAME: &str = "Шорашим";
+/// English display name, used when the OS interface is not Russian.
+pub const DISPLAY_NAME_EN: &str = "Shorashim";
+
+/// Both shortcut names, so an update removes the leftover of the other language.
+pub const LINK_NAMES: [&str; 2] = [LINK_NAME, LINK_NAME_EN];
+
+/// Installer / Apps & features name for this OS: English Windows →
+/// «Shorashim», Russian → «Шорашим». Independent of the in-app setting.
+pub fn os_display_name() -> &'static str {
+    match crate::i18n::env_override().unwrap_or_else(crate::i18n::detect_system) {
+        crate::i18n::Lang::En => DISPLAY_NAME_EN,
+        crate::i18n::Lang::Ru => DISPLAY_NAME,
+    }
+}
+
+/// `Шорашим.lnk` or `Shorashim.lnk`, matching [`os_display_name`].
+pub fn os_link_name() -> &'static str {
+    match crate::i18n::env_override().unwrap_or_else(crate::i18n::detect_system) {
+        crate::i18n::Lang::En => LINK_NAME_EN,
+        crate::i18n::Lang::Ru => LINK_NAME,
+    }
+}
+
+/// Shortcut description / registry Comments for this OS.
+pub fn os_tagline() -> &'static str {
+    crate::i18n::with_lang(
+        crate::i18n::env_override().unwrap_or_else(crate::i18n::detect_system),
+        crate::i18n::app_tagline,
+    )
+}
 pub const PUBLISHER: &str = "Aleksandr Mitroshenkov";
 pub const URL: &str = "https://github.com/Mitroshenkov87/shorashim";
 
@@ -158,7 +190,7 @@ pub fn uninstall_values(dir: &Path, version: &str, size_kb: u32) -> Vec<(&'stati
     let exe = dir.join(EXE_NAME);
     let exe_s = exe.display().to_string();
     vec![
-        ("DisplayName", RegValue::Str(DISPLAY_NAME.into())),
+        ("DisplayName", RegValue::Str(os_display_name().into())),
         ("DisplayVersion", RegValue::Str(version.into())),
         ("Publisher", RegValue::Str(PUBLISHER.into())),
         ("DisplayIcon", RegValue::Str(format!("{exe_s},0"))),
@@ -173,10 +205,7 @@ pub fn uninstall_values(dir: &Path, version: &str, size_kb: u32) -> Vec<(&'stati
         ),
         ("URLInfoAbout", RegValue::Str(URL.into())),
         ("HelpLink", RegValue::Str(URL.into())),
-        (
-            "Comments",
-            RegValue::Str("Основы иудаизма и подготовка к гиюру".into()),
-        ),
+        ("Comments", RegValue::Str(os_tagline().into())),
         ("NoModify", RegValue::Dword(1)),
         ("NoRepair", RegValue::Dword(1)),
         ("EstimatedSize", RegValue::Dword(size_kb)),
@@ -219,9 +248,7 @@ pub fn status() -> Status {
     #[cfg(not(windows))]
     {
         Status {
-            support: Support::Unsupported(
-                "Установка в систему пока есть только в Windows. Для Linux позже появится установка ярлыка в меню приложений (.desktop), как у AppImage.",
-            ),
+            support: Support::Unsupported(crate::i18n::tr("Установка в систему пока есть только в Windows. Для Linux позже появится установка ярлыка в меню приложений (.desktop), как у AppImage.")),
             installed: None,
             running_installed: false,
             desktop_link: false,
@@ -261,7 +288,12 @@ pub fn copy_sidecars(from_parent: &Path, to_dir: &Path) -> Result<(), String> {
     let content = from_parent.join(crate::content_store::DIR_NAME);
     if content.is_dir() {
         replace_dir(&content, &to_dir.join(crate::content_store::DIR_NAME))
-            .map_err(|e| format!("Не удалось скопировать материалы курса: {e}"))?;
+            .map_err(|e| {
+                crate::trf!(
+                    "Не удалось скопировать материалы курса: {e}",
+                    "Could not copy the course files: {e}"
+                )
+            })?;
     }
     Ok(())
 }
@@ -301,7 +333,7 @@ pub fn install(opts: Options) -> Result<PathBuf, String> {
     #[cfg(not(windows))]
     {
         let _ = opts;
-        Err("Установка в систему пока доступна только в Windows.".into())
+        Err(crate::i18n::tr("Установка в систему пока доступна только в Windows.").into())
     }
 }
 
@@ -313,7 +345,7 @@ pub fn uninstall() -> Result<Uninstalled, String> {
     }
     #[cfg(not(windows))]
     {
-        Err("Установка в систему пока доступна только в Windows.".into())
+        Err(crate::i18n::tr("Установка в систему пока доступна только в Windows.").into())
     }
 }
 
@@ -331,6 +363,7 @@ pub fn handle_cli(args: &[String]) -> bool {
     let has = |f: &str| args.iter().any(|a| a == f);
     let quiet = has("--quiet");
     if has("--install") {
+        crate::i18n::apply_os_lang();
         let res = install(Options {
             desktop_shortcut: has("--desktop"),
         });
@@ -342,7 +375,15 @@ pub fn handle_cli(args: &[String]) -> bool {
         #[cfg(windows)]
         if !quiet {
             win::report(res.map(|_| {
-                "«Шорашим» установлен: ярлык в меню «Пуск», запись в «Приложениях».".to_string()
+                crate::i18n::with_lang(
+                    crate::i18n::env_override().unwrap_or_else(crate::i18n::detect_system),
+                    || {
+                        crate::trf!(
+                            "«Шорашим» установлен: ярлык в меню «Пуск», запись в «Приложениях».",
+                            "Shorashim is installed: a Start menu shortcut and an Apps & features entry."
+                        )
+                    },
+                )
             }));
         }
         // Shorashim-Setup.exe runs `--install --quiet` and reads the result.
@@ -359,7 +400,11 @@ pub fn handle_cli(args: &[String]) -> bool {
     #[cfg(not(windows))]
     {
         let _ = quiet;
-        eprintln!("--uninstall: установка в систему пока есть только в Windows");
+        crate::i18n::apply_os_lang();
+        eprintln!(
+            "{}",
+            crate::i18n::tr("--uninstall: установка в систему пока есть только в Windows")
+        );
     }
     true
 }
@@ -440,7 +485,10 @@ mod tests {
         let d = Path::new(r"C:\U\AppData\Local\Programs\Shorashim");
         let v = uninstall_values(d, "0.5.0", 30_000);
         let get = |k: &str| v.iter().find(|(n, _)| *n == k).map(|(_, v)| v.clone());
-        assert_eq!(get("DisplayName"), Some(RegValue::Str("Шорашим".into())));
+        assert_eq!(
+            get("DisplayName"),
+            Some(RegValue::Str(os_display_name().into()))
+        );
         assert_eq!(get("DisplayVersion"), Some(RegValue::Str("0.5.0".into())));
         match get("UninstallString") {
             Some(RegValue::Str(s)) => {
@@ -459,6 +507,19 @@ mod tests {
         let d = install_dir_in(Path::new(r"C:\U\AppData\Local"));
         assert!(d.ends_with("Shorashim"));
         assert!(d.to_string_lossy().contains("Programs"));
+    }
+
+    #[test]
+    fn os_names_are_shorashim_or_cyrillic() {
+        assert!(LINK_NAMES.contains(&os_link_name()));
+        let n = os_display_name();
+        assert!(n == DISPLAY_NAME || n == DISPLAY_NAME_EN);
+        crate::i18n::with_lang(crate::i18n::Lang::En, || {
+            assert_eq!(crate::i18n::app_name(), DISPLAY_NAME_EN);
+        });
+        crate::i18n::with_lang(crate::i18n::Lang::Ru, || {
+            assert_eq!(crate::i18n::app_name(), DISPLAY_NAME);
+        });
     }
 
     #[cfg(not(windows))]

@@ -9,6 +9,7 @@ use iced::alignment::Horizontal;
 use iced::widget::{button, column, container, row, Column, Row};
 use iced::{Alignment, Element, Length};
 
+use crate::i18n::tr;
 use crate::prayers::{self, Display, Prayer, Prefs};
 use crate::ui::app::{Action, Ctx, Route};
 use crate::ui::fonts::{HEBREW, SANS, SANS_BOLD};
@@ -119,9 +120,9 @@ impl Screen {
         let p = theme::current();
         let book = prayers::book();
         let mut page = Column::new().spacing(14).width(Length::Fill);
-        page = page.push(widgets::heading("Молитвы на каждый день", 1));
+        page = page.push(widgets::heading(tr("Молитвы на каждый день"), 1));
         page = page.push(
-            txt("Утренние и вечерние молитвы и благословения: иврит с огласовками, чтение русскими буквами и перевод. Если вы пока не читаете на иврите, молитесь по-русски — это разрешено.")
+            txt(tr("Утренние и вечерние молитвы и благословения: иврит с огласовками, чтение русскими буквами и перевод. Если вы пока не читаете на иврите, молитесь по-русски — это разрешено."))
                 .size(theme::text::BODY)
                 .color(p.muted)
                 .width(Length::Fill),
@@ -135,12 +136,12 @@ impl Screen {
         let fav_count = self.prefs.favorites.len();
         let mut chips = Row::new().spacing(6);
         chips = chips.push(filter_chip(
-            "Все",
+            tr("Все"),
             self.filter == Filter::All,
             Msg::Filter(Filter::All),
         ));
         chips = chips.push(filter_chip(
-            format!("★ Избранное ({fav_count})"),
+            crate::trf!("★ Избранное ({fav_count})", "★ Favorites ({fav_count})"),
             self.filter == Filter::Favorites,
             Msg::Filter(Filter::Favorites),
         ));
@@ -157,12 +158,14 @@ impl Screen {
         match &self.filter {
             Filter::Favorites => {
                 let mut list = Column::new().spacing(6).width(Length::Fill);
-                list = list.push(heading_owned("Избранное".into(), 3));
+                list = list.push(heading_owned(tr("Избранное").to_string(), 3));
                 if self.prefs.favorites.is_empty() {
                     list = list.push(
-                        txt("Пока пусто. Нажмите ☆ у молитвы, чтобы она появилась здесь.")
-                            .size(theme::text::SMALL + 1.0)
-                            .color(p.muted),
+                        txt(tr(
+                            "Пока пусто. Нажмите ☆ у молитвы, чтобы она появилась здесь.",
+                        ))
+                        .size(theme::text::SMALL + 1.0)
+                        .color(p.muted),
                     );
                 }
                 for id in &self.prefs.favorites {
@@ -238,8 +241,8 @@ impl Screen {
         let p = theme::current();
         let on = self.prefs.is_favorite(id);
         let label = match (on, long) {
-            (true, true) => "★ В избранном",
-            (false, true) => "☆ В избранное",
+            (true, true) => tr("★ В избранном"),
+            (false, true) => tr("☆ В избранное"),
             (true, false) => "★",
             (false, false) => "☆",
         };
@@ -267,7 +270,9 @@ impl Screen {
         );
         let pct = (self.prefs.scale() * 100.0).round() as i32;
         let size = row![
-            txt("Размер текста").size(theme::text::SMALL).color(p.muted),
+            txt(tr("Размер текста"))
+                .size(theme::text::SMALL)
+                .color(p.muted),
             widgets::btn(
                 "A−",
                 widgets::Btn::Secondary,
@@ -288,7 +293,9 @@ impl Screen {
         .spacing(10)
         .align_y(Alignment::Center);
         column![
-            txt("Показывать").size(theme::text::SMALL).color(p.muted),
+            txt(tr("Показывать"))
+                .size(theme::text::SMALL)
+                .color(p.muted),
             seg,
             size,
         ]
@@ -303,7 +310,7 @@ impl Screen {
         let p = theme::current();
         let book = prayers::book();
         let mut page = Column::new().spacing(14).width(Length::Fill);
-        page = page.push(widgets::back_button("Все молитвы", Msg::Close));
+        page = page.push(widgets::back_button(tr("Все молитвы"), Msg::Close));
 
         let group = pr
             .groups
@@ -337,8 +344,8 @@ impl Screen {
 
         page = page.push(widgets::card(
             column![
-                info("Когда", pr.when.as_str()),
-                info("Как", pr.how.as_str()),
+                info(tr("Когда"), pr.when.as_str()),
+                info(tr("Как"), pr.how.as_str()),
             ]
             .spacing(12),
         ));
@@ -403,18 +410,21 @@ impl Screen {
 
         page = page.push(widgets::card(
             column![
-                info("О молитве", pr.about.as_str()),
+                info(tr("О молитве"), pr.about.as_str()),
                 txt(pr.r#ref.as_str())
                     .size(theme::text::SMALL)
                     .color(p.muted),
             ]
             .spacing(8),
         ));
-        page = page.push(note("До гиюра", pr.candidate.as_str(), true));
+        page = page.push(note(tr("До гиюра"), pr.candidate.as_str(), true));
         page = page.push(
-            txt(format!(
-                "Иврит: {}. Перевод и транслитерация — «Шорашим». Нусах {}.",
-                pr.source, book.nusach
+            txt(crate::trf!(
+                "Иврит: {}. Перевод и транслитерация — «{}». Нусах {}.",
+                "Hebrew: {}. Translation and transliteration by {}. Nusach {}.",
+                pr.source,
+                crate::i18n::app_name(),
+                book.nusach
             ))
             .size(theme::text::SMALL)
             .color(p.muted)
@@ -499,7 +509,7 @@ fn note<'a>(title: &'a str, body: &'a str, rabbi: bool) -> Element<'a, Msg> {
             .color(p.info),
     );
     if rabbi {
-        head = head.push(widgets::chip("Уточните у раввина"));
+        head = head.push(widgets::chip(tr("Уточните у раввина")));
     }
     container(
         column![
@@ -526,15 +536,17 @@ fn sources_line<'a>() -> Element<'a, Msg> {
         .iter()
         .map(|s| format!("{} ({})", s.title, s.license))
         .collect();
-    txt(format!(
-        "Источники: {}. Нусах {}. {}.",
-        list.join("; "),
-        book.nusach,
-        if book.review_status.is_empty() {
-            "Требует проверки раввином"
-        } else {
-            book.review_status.as_str()
-        }
+    let review = if book.review_status.is_empty() {
+        tr("Требует проверки раввином").to_string()
+    } else {
+        book.review_status.clone()
+    };
+    txt(crate::trf!(
+        "Источники: {list}. Нусах {nusach}. {review}.",
+        "Sources: {list}. Nusach {nusach}. {review}.",
+        list = list.join("; "),
+        nusach = book.nusach,
+        review = review
     ))
     .size(theme::text::SMALL)
     .color(p.muted)

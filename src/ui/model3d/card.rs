@@ -7,6 +7,7 @@ use iced::widget::{button, column, container, row, Column};
 use iced::{Alignment, Background, Border, Color, Element, Length};
 
 use super::Model;
+use crate::i18n::tr;
 use crate::ui::app::Ctx;
 use crate::ui::{fonts, theme, widgets};
 
@@ -74,16 +75,16 @@ pub fn card<'a, M: Clone + 'a>(
         super::still(model, size)
     };
     let hint = if live && super::software_forced() {
-        "Щелчок — подпись."
+        tr("Щелчок — подпись.")
     } else if live {
-        "Тяните — повернуть, колесо — приблизить, щелчок — подпись, двойной щелчок — исходный вид."
+        tr("Тяните — повернуть, колесо — приблизить, щелчок — подпись, двойной щелчок — исходный вид.")
     } else {
-        "Объёмные модели выключены в настройках."
+        tr("Объёмные модели выключены в настройках.")
     };
     let mut body: Column<'a, M> = column![
-        widgets::kicker(kicker.unwrap_or(info.kicker)),
-        widgets::heading(info.title, 3),
-        txt(info.lead)
+        widgets::kicker(tr(kicker.unwrap_or(info.kicker))),
+        widgets::heading(tr(info.title), 3),
+        txt(tr(info.lead))
             .size(theme::text::BODY)
             .color(p.text)
             .width(Length::Fill),
@@ -93,7 +94,7 @@ pub fn card<'a, M: Clone + 'a>(
     if caption_open {
         body = body.push(
             container(
-                txt(info.caption)
+                txt(tr(info.caption))
                     .size(theme::text::SMALL)
                     .color(p.text)
                     .width(Length::Fill),
@@ -113,6 +114,7 @@ pub fn card<'a, M: Clone + 'a>(
     }
     body = body.push(txt(hint).size(theme::text::SMALL).color(p.muted));
     if let Some((label, msg)) = msgs.link {
+        let label = tr(&label).to_string();
         body = body.push(
             button(txt(label).size(theme::text::SMALL).font(fonts::SANS_BOLD))
                 .padding([8.0, 16.0])

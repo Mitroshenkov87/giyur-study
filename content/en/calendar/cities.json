@@ -1,0 +1,586 @@
+[
+ {
+  "name_ru": "Jerusalem",
+  "country_ru": "Israel",
+  "lat": 31.78,
+  "lon": 35.23,
+  "tz": "il",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Tel Aviv",
+  "country_ru": "Israel",
+  "lat": 32.09,
+  "lon": 34.78,
+  "tz": "il",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Haifa",
+  "country_ru": "Israel",
+  "lat": 32.8,
+  "lon": 34.99,
+  "tz": "il",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Be'er Sheva",
+  "country_ru": "Israel",
+  "lat": 31.25,
+  "lon": 34.79,
+  "tz": "il",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Ashdod",
+  "country_ru": "Israel",
+  "lat": 31.8,
+  "lon": 34.66,
+  "tz": "il",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Netanya",
+  "country_ru": "Israel",
+  "lat": 32.32,
+  "lon": 34.85,
+  "tz": "il",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Rishon LeZion",
+  "country_ru": "Israel",
+  "lat": 31.97,
+  "lon": 34.79,
+  "tz": "il",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Petah Tikva",
+  "country_ru": "Israel",
+  "lat": 32.08,
+  "lon": 34.89,
+  "tz": "il",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Bnei Brak",
+  "country_ru": "Israel",
+  "lat": 32.08,
+  "lon": 34.83,
+  "tz": "il",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Eilat",
+  "country_ru": "Israel",
+  "lat": 29.56,
+  "lon": 34.95,
+  "tz": "il",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Ashkelon",
+  "country_ru": "Israel",
+  "lat": 31.67,
+  "lon": 34.57,
+  "tz": "il",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Holon",
+  "country_ru": "Israel",
+  "lat": 32.02,
+  "lon": 34.79,
+  "tz": "il",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Ramat Gan",
+  "country_ru": "Israel",
+  "lat": 32.07,
+  "lon": 34.82,
+  "tz": "il",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Rehovot",
+  "country_ru": "Israel",
+  "lat": 31.89,
+  "lon": 34.81,
+  "tz": "il",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Herzliya",
+  "country_ru": "Israel",
+  "lat": 32.16,
+  "lon": 34.84,
+  "tz": "il",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Tzfat (Safed)",
+  "country_ru": "Israel",
+  "lat": 32.96,
+  "lon": 35.5,
+  "tz": "il",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Tiberias",
+  "country_ru": "Israel",
+  "lat": 32.8,
+  "lon": 35.53,
+  "tz": "il",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Ra'anana",
+  "country_ru": "Israel",
+  "lat": 32.18,
+  "lon": 34.87,
+  "tz": "il",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "New York",
+  "country_ru": "USA",
+  "lat": 40.71,
+  "lon": -74.01,
+  "tz": "us",
+  "utc_offset_min": -300
+ },
+ {
+  "name_ru": "Los Angeles",
+  "country_ru": "USA",
+  "lat": 34.05,
+  "lon": -118.24,
+  "tz": "us",
+  "utc_offset_min": -480
+ },
+ {
+  "name_ru": "Chicago",
+  "country_ru": "USA",
+  "lat": 41.88,
+  "lon": -87.63,
+  "tz": "us",
+  "utc_offset_min": -360
+ },
+ {
+  "name_ru": "Miami",
+  "country_ru": "USA",
+  "lat": 25.76,
+  "lon": -80.19,
+  "tz": "us",
+  "utc_offset_min": -300
+ },
+ {
+  "name_ru": "Boston",
+  "country_ru": "USA",
+  "lat": 42.36,
+  "lon": -71.06,
+  "tz": "us",
+  "utc_offset_min": -300
+ },
+ {
+  "name_ru": "Philadelphia",
+  "country_ru": "USA",
+  "lat": 39.95,
+  "lon": -75.17,
+  "tz": "us",
+  "utc_offset_min": -300
+ },
+ {
+  "name_ru": "Toronto",
+  "country_ru": "Canada",
+  "lat": 43.65,
+  "lon": -79.38,
+  "tz": "us",
+  "utc_offset_min": -300
+ },
+ {
+  "name_ru": "Montreal",
+  "country_ru": "Canada",
+  "lat": 45.5,
+  "lon": -73.57,
+  "tz": "us",
+  "utc_offset_min": -300
+ },
+ {
+  "name_ru": "London",
+  "country_ru": "United Kingdom",
+  "lat": 51.51,
+  "lon": -0.13,
+  "tz": "eu",
+  "utc_offset_min": 0
+ },
+ {
+  "name_ru": "Manchester",
+  "country_ru": "United Kingdom",
+  "lat": 53.48,
+  "lon": -2.24,
+  "tz": "eu",
+  "utc_offset_min": 0
+ },
+ {
+  "name_ru": "Paris",
+  "country_ru": "France",
+  "lat": 48.86,
+  "lon": 2.35,
+  "tz": "eu",
+  "utc_offset_min": 60
+ },
+ {
+  "name_ru": "Marseille",
+  "country_ru": "France",
+  "lat": 43.3,
+  "lon": 5.37,
+  "tz": "eu",
+  "utc_offset_min": 60
+ },
+ {
+  "name_ru": "Berlin",
+  "country_ru": "Germany",
+  "lat": 52.52,
+  "lon": 13.41,
+  "tz": "eu",
+  "utc_offset_min": 60
+ },
+ {
+  "name_ru": "Frankfurt am Main",
+  "country_ru": "Germany",
+  "lat": 50.11,
+  "lon": 8.68,
+  "tz": "eu",
+  "utc_offset_min": 60
+ },
+ {
+  "name_ru": "Munich",
+  "country_ru": "Germany",
+  "lat": 48.14,
+  "lon": 11.58,
+  "tz": "eu",
+  "utc_offset_min": 60
+ },
+ {
+  "name_ru": "Antwerp",
+  "country_ru": "Belgium",
+  "lat": 51.22,
+  "lon": 4.4,
+  "tz": "eu",
+  "utc_offset_min": 60
+ },
+ {
+  "name_ru": "Amsterdam",
+  "country_ru": "Netherlands",
+  "lat": 52.37,
+  "lon": 4.9,
+  "tz": "eu",
+  "utc_offset_min": 60
+ },
+ {
+  "name_ru": "Vienna",
+  "country_ru": "Austria",
+  "lat": 48.21,
+  "lon": 16.37,
+  "tz": "eu",
+  "utc_offset_min": 60
+ },
+ {
+  "name_ru": "Budapest",
+  "country_ru": "Hungary",
+  "lat": 47.5,
+  "lon": 19.04,
+  "tz": "eu",
+  "utc_offset_min": 60
+ },
+ {
+  "name_ru": "Prague",
+  "country_ru": "Czech Republic",
+  "lat": 50.08,
+  "lon": 14.44,
+  "tz": "eu",
+  "utc_offset_min": 60
+ },
+ {
+  "name_ru": "Warsaw",
+  "country_ru": "Poland",
+  "lat": 52.23,
+  "lon": 21.01,
+  "tz": "eu",
+  "utc_offset_min": 60
+ },
+ {
+  "name_ru": "Rome",
+  "country_ru": "Italy",
+  "lat": 41.9,
+  "lon": 12.5,
+  "tz": "eu",
+  "utc_offset_min": 60
+ },
+ {
+  "name_ru": "Milan",
+  "country_ru": "Italy",
+  "lat": 45.46,
+  "lon": 9.19,
+  "tz": "eu",
+  "utc_offset_min": 60
+ },
+ {
+  "name_ru": "Madrid",
+  "country_ru": "Spain",
+  "lat": 40.42,
+  "lon": -3.7,
+  "tz": "eu",
+  "utc_offset_min": 60
+ },
+ {
+  "name_ru": "Barcelona",
+  "country_ru": "Spain",
+  "lat": 41.39,
+  "lon": 2.17,
+  "tz": "eu",
+  "utc_offset_min": 60
+ },
+ {
+  "name_ru": "Zurich",
+  "country_ru": "Switzerland",
+  "lat": 47.38,
+  "lon": 8.54,
+  "tz": "eu",
+  "utc_offset_min": 60
+ },
+ {
+  "name_ru": "Moscow",
+  "country_ru": "Russia",
+  "lat": 55.76,
+  "lon": 37.62,
+  "tz": "none",
+  "utc_offset_min": 180
+ },
+ {
+  "name_ru": "Saint Petersburg",
+  "country_ru": "Russia",
+  "lat": 59.93,
+  "lon": 30.34,
+  "tz": "none",
+  "utc_offset_min": 180
+ },
+ {
+  "name_ru": "Kazan",
+  "country_ru": "Russia",
+  "lat": 55.79,
+  "lon": 49.12,
+  "tz": "none",
+  "utc_offset_min": 180
+ },
+ {
+  "name_ru": "Yekaterinburg",
+  "country_ru": "Russia",
+  "lat": 56.84,
+  "lon": 60.61,
+  "tz": "none",
+  "utc_offset_min": 300
+ },
+ {
+  "name_ru": "Novosibirsk",
+  "country_ru": "Russia",
+  "lat": 55.03,
+  "lon": 82.92,
+  "tz": "none",
+  "utc_offset_min": 420
+ },
+ {
+  "name_ru": "Samara",
+  "country_ru": "Russia",
+  "lat": 53.2,
+  "lon": 50.1,
+  "tz": "none",
+  "utc_offset_min": 240
+ },
+ {
+  "name_ru": "Nizhny Novgorod",
+  "country_ru": "Russia",
+  "lat": 56.33,
+  "lon": 44.01,
+  "tz": "none",
+  "utc_offset_min": 180
+ },
+ {
+  "name_ru": "Rostov-on-Don",
+  "country_ru": "Russia",
+  "lat": 47.24,
+  "lon": 39.7,
+  "tz": "none",
+  "utc_offset_min": 180
+ },
+ {
+  "name_ru": "Krasnodar",
+  "country_ru": "Russia",
+  "lat": 45.04,
+  "lon": 38.98,
+  "tz": "none",
+  "utc_offset_min": 180
+ },
+ {
+  "name_ru": "Kyiv",
+  "country_ru": "Ukraine",
+  "lat": 50.45,
+  "lon": 30.52,
+  "tz": "eu",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Odesa",
+  "country_ru": "Ukraine",
+  "lat": 46.48,
+  "lon": 30.72,
+  "tz": "eu",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Dnipro",
+  "country_ru": "Ukraine",
+  "lat": 48.46,
+  "lon": 35.05,
+  "tz": "eu",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Kharkiv",
+  "country_ru": "Ukraine",
+  "lat": 49.99,
+  "lon": 36.23,
+  "tz": "eu",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Minsk",
+  "country_ru": "Belarus",
+  "lat": 53.9,
+  "lon": 27.56,
+  "tz": "none",
+  "utc_offset_min": 180
+ },
+ {
+  "name_ru": "Riga",
+  "country_ru": "Latvia",
+  "lat": 56.95,
+  "lon": 24.11,
+  "tz": "eu",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Vilnius",
+  "country_ru": "Lithuania",
+  "lat": 54.69,
+  "lon": 25.28,
+  "tz": "eu",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Tallinn",
+  "country_ru": "Estonia",
+  "lat": 59.44,
+  "lon": 24.75,
+  "tz": "eu",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Chișinău",
+  "country_ru": "Moldova",
+  "lat": 47.01,
+  "lon": 28.86,
+  "tz": "eu",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Tbilisi",
+  "country_ru": "Georgia",
+  "lat": 41.72,
+  "lon": 44.83,
+  "tz": "none",
+  "utc_offset_min": 240
+ },
+ {
+  "name_ru": "Baku",
+  "country_ru": "Azerbaijan",
+  "lat": 40.41,
+  "lon": 49.87,
+  "tz": "none",
+  "utc_offset_min": 240
+ },
+ {
+  "name_ru": "Yerevan",
+  "country_ru": "Armenia",
+  "lat": 40.18,
+  "lon": 44.5,
+  "tz": "none",
+  "utc_offset_min": 240
+ },
+ {
+  "name_ru": "Almaty",
+  "country_ru": "Kazakhstan",
+  "lat": 43.22,
+  "lon": 76.85,
+  "tz": "none",
+  "utc_offset_min": 300
+ },
+ {
+  "name_ru": "Tashkent",
+  "country_ru": "Uzbekistan",
+  "lat": 41.3,
+  "lon": 69.24,
+  "tz": "none",
+  "utc_offset_min": 300
+ },
+ {
+  "name_ru": "Buenos Aires",
+  "country_ru": "Argentina",
+  "lat": -34.6,
+  "lon": -58.38,
+  "tz": "none",
+  "utc_offset_min": -180
+ },
+ {
+  "name_ru": "São Paulo",
+  "country_ru": "Brazil",
+  "lat": -23.55,
+  "lon": -46.63,
+  "tz": "none",
+  "utc_offset_min": -180
+ },
+ {
+  "name_ru": "Mexico City",
+  "country_ru": "Mexico",
+  "lat": 19.43,
+  "lon": -99.13,
+  "tz": "none",
+  "utc_offset_min": -360
+ },
+ {
+  "name_ru": "Johannesburg",
+  "country_ru": "South Africa",
+  "lat": -26.2,
+  "lon": 28.05,
+  "tz": "none",
+  "utc_offset_min": 120
+ },
+ {
+  "name_ru": "Melbourne",
+  "country_ru": "Australia",
+  "lat": -37.81,
+  "lon": 144.96,
+  "tz": "au",
+  "utc_offset_min": 600
+ },
+ {
+  "name_ru": "Sydney",
+  "country_ru": "Australia",
+  "lat": -33.87,
+  "lon": 151.21,
+  "tz": "au",
+  "utc_offset_min": 600
+ }
+]

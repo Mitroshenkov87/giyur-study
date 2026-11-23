@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
+use crate::i18n::Lang;
 use crate::util;
 
 /// Progress-file format id. Kept from the Giyur Study days on purpose:
@@ -81,10 +82,28 @@ pub struct Settings {
     /// until it is switched off.
     #[serde(default)]
     pub reviewer_mode: bool,
+    /// Interface and course language (`ru` | `en`). `None` until the first
+    /// launch writes the OS default (or the user picks one in «Настройки»).
+    /// Unknown strings fall back to None so an old file still opens.
+    #[serde(
+        default,
+        deserialize_with = "de_lang_opt",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub lang: Option<Lang>,
     /// Unknown keys kept so a PWA file → native → PWA round-trip loses nothing
     /// (js/storage.js fill keeps them).
     #[serde(flatten)]
     pub extra: serde_json::Map<String, serde_json::Value>,
+}
+
+/// Tolerant language parsing: unknown / empty strings → None.
+fn de_lang_opt<'de, D>(deserializer: D) -> Result<Option<Lang>, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    let s = Option::<String>::deserialize(deserializer)?;
+    Ok(s.and_then(|s| Lang::from_code(&s)))
 }
 
 /// Tolerant level parsing: unknown strings → None (orthodox fallback).
@@ -145,6 +164,7 @@ impl Default for Settings {
             music_volume: default_music_volume(),
             music_hint_seen: false,
             reviewer_mode: false,
+            lang: None,
             extra: serde_json::Map::new(),
         }
     }
@@ -384,17 +404,26 @@ const SETTINGS_KINDS: &[(&str, Kind)] = &[
     ("musicVolume", Kind::Int),
     ("musicHintSeen", Kind::Bool),
     ("reviewerMode", Kind::Bool),
+    ("lang", Kind::NullableStr),
 ];
 
 /// Sanitise an imported JSON value like js/storage.js importJSON, then
 /// deserialise with defaults. Returns the Russian error strings of the PWA.
 pub fn import_value(v: &mut serde_json::Value, today: &str) -> Result<(), String> {
     if !looks_valid(v) {
-        return Err("Это не файл прогресса «Шорашим».".to_string());
+        return Err(crate::i18n::tr_or(
+            "Это не файл прогресса «Шорашим».",
+            "This is not a Shorashim progress file.",
+        )
+        .to_string());
     }
     if let Some(schema) = v.get("schema").and_then(|s| s.as_i64()) {
         if schema > SCHEMA {
-            return Err("Файл создан более новой версией приложения.".to_string());
+            return Err(crate::i18n::tr_or(
+                "Файл создан более новой версией приложения.",
+                "This file was made by a newer version of the app.",
+            )
+            .to_string());
         }
     }
     let obj = v.as_object_mut().expect("looks_valid checked object");
@@ -460,11 +489,21 @@ impl State {
         // A UTF-8 BOM (e.g. a file re-saved in Windows Notepad) breaks
         // serde_json but not the PWA's FileReader → JSON.parse path.
         let text = text.strip_prefix('\u{feff}').unwrap_or(text);
-        let mut v: serde_json::Value = serde_json::from_str(text)
-            .map_err(|_| "Файл не является корректным JSON.".to_string())?;
+        let mut v: serde_json::Value = serde_json::from_str(text).map_err(|_| {
+            crate::i18n::tr_or(
+                "Файл не является корректным JSON.",
+                "The file is not valid JSON.",
+            )
+            .to_string()
+        })?;
         import_value(&mut v, today)?;
-        let mut s: State = serde_json::from_value(v)
-            .map_err(|_| "Это не файл прогресса «Шорашим».".to_string())?;
+        let mut s: State = serde_json::from_value(v).map_err(|_| {
+            crate::i18n::tr_or(
+                "Это не файл прогресса «Шорашим».",
+                "This is not a Shorashim progress file.",
+            )
+            .to_string()
+        })?;
         fill(&mut s);
         Ok(s)
     }
@@ -491,19 +530,21 @@ impl State {
         *self.activity.entry(today.to_string()).or_insert(0) += 1;
     }
 
-    /// Reset progress, keeping theme, font size and music preferences.
+    /// Reset progress, keeping theme, font size, language and music preferences.
     pub fn reset(&mut self) {
         let theme = self.settings.theme.clone();
         let font_step = self.settings.font_step;
         let music_enabled = self.settings.music_enabled;
         let music_volume = self.settings.music_volume;
         let music_hint_seen = self.settings.music_hint_seen;
+        let lang = self.settings.lang;
         *self = State::default();
         self.settings.theme = theme;
         self.settings.font_step = font_step;
         self.settings.music_enabled = music_enabled;
         self.settings.music_volume = music_volume.clamp(0, 100);
         self.settings.music_hint_seen = music_hint_seen;
+        self.settings.lang = lang;
     }
 }
 
@@ -644,6 +685,7 @@ mod tests {
         assert_eq!(s.app, "giyur-study");
         assert_eq!(s.schema, 1);
         assert!(!s.onboarded);
+        assert_eq!(s.settings.lang, None);
         assert_eq!(s.settings.theme, "dark");
         assert_eq!(s.settings.font_step, 1);
         assert!(s.settings.translit);
@@ -809,6 +851,7 @@ mod tests {
         s.settings.music_enabled = true;
         s.settings.music_volume = 45;
         s.settings.music_hint_seen = true;
+        s.settings.lang = Some(Lang::En);
         s.xp_total = 500;
         s.reset();
         assert_eq!(s.settings.theme, "leather");
@@ -816,7 +859,29 @@ mod tests {
         assert!(s.settings.music_enabled);
         assert_eq!(s.settings.music_volume, 45);
         assert!(s.settings.music_hint_seen);
+        assert_eq!(s.settings.lang, Some(Lang::En));
         assert_eq!(s.xp_total, 0);
+    }
+
+    #[test]
+    fn lang_roundtrip_and_unknown_is_none() {
+        let mut s = State::default();
+        s.settings.lang = Some(Lang::En);
+        let text = s.export_json();
+        let v: serde_json::Value = serde_json::from_str(&text).unwrap();
+        assert_eq!(v["settings"]["lang"], "en");
+        let back = State::import_json(&text, TODAY).unwrap();
+        assert_eq!(back.settings.lang, Some(Lang::En));
+
+        let ru = r#"{"app":"giyur-study","settings":{"lang":"ru"}}"#;
+        assert_eq!(
+            State::import_json(ru, TODAY).unwrap().settings.lang,
+            Some(Lang::Ru)
+        );
+        let odd = r#"{"app":"giyur-study","settings":{"lang":"fr"}}"#;
+        assert_eq!(State::import_json(odd, TODAY).unwrap().settings.lang, None);
+        let old = r#"{"app":"giyur-study","settings":{"theme":"dark"}}"#;
+        assert_eq!(State::import_json(old, TODAY).unwrap().settings.lang, None);
     }
 
     #[test]

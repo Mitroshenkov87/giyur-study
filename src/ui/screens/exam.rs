@@ -24,6 +24,7 @@ use iced::{
 use crate::content::{Differs, Library, Question, SectionMeta};
 use crate::exam::{self, CheckResult, Mode, Response};
 use crate::game::{self, AwardOutcome};
+use crate::i18n::tr;
 use crate::ui::app::{Action, Ctx, ExamSpec, Route, Toast};
 use crate::ui::fonts::{SANS, SANS_BOLD, SERIF_BOLD};
 use crate::ui::screens::map::icons;
@@ -186,7 +187,7 @@ fn score_ring<'a, Message: 'a>(pct: i64, size: f32) -> Element<'a, Message> {
                 .size(size * 0.19)
                 .font(SERIF_BOLD)
                 .color(p.text),
-            txt("Результат").size(12.0).color(p.muted),
+            txt(tr("Результат")).size(12.0).color(p.muted),
         ]
         .spacing(2)
         .align_x(Alignment::Center),
@@ -204,8 +205,8 @@ fn confirm_dialog<'a>(title: &'a str, body: &'a str) -> Element<'a, Msg> {
     widgets::confirm_modal(
         title,
         body,
-        "Продолжить",
-        "Выйти",
+        tr("Продолжить"),
+        tr("Выйти"),
         Msg::QuitCancel,
         Msg::QuitConfirm,
     )
@@ -257,11 +258,11 @@ fn rich_line<'a, Message: 'a>(
 
 fn format_name(q: &Question) -> &'static str {
     match q {
-        Question::Mc { .. } => "выбор ответа",
-        Question::Tf { .. } => "верно / неверно",
-        Question::Match { .. } => "сопоставление",
-        Question::Typed { .. } => "впишите ответ",
-        Question::Open { .. } => "открытый вопрос",
+        Question::Mc { .. } => tr("выбор ответа"),
+        Question::Tf { .. } => tr("верно / неверно"),
+        Question::Match { .. } => tr("сопоставление"),
+        Question::Typed { .. } => tr("впишите ответ"),
+        Question::Open { .. } => tr("открытый вопрос"),
     }
 }
 
@@ -1001,8 +1002,8 @@ impl Screen {
     pub fn dialog<'a>(&'a self, _ctx: &'a Ctx) -> Option<Element<'a, Msg>> {
         match &self.phase {
             Phase::Run(run) if run.confirm_quit => Some(confirm_dialog(
-                "Прервать тест?",
-                "Результат этой попытки не будет засчитан, а ответы останутся в статистике. Вернуться к тесту можно в любой момент.",
+                tr("Прервать тест?"),
+                tr("Результат этой попытки не будет засчитан, а ответы останутся в статистике. Вернуться к тесту можно в любой момент."),
             )),
             _ => None,
         }
@@ -1026,10 +1027,10 @@ impl Screen {
 fn peek_view<'a>(q: &'a Question) -> Element<'a, Msg> {
     let p = tp();
     let mut col = Column::new().spacing(8).width(Length::Fill);
-    col = col.push(gold_meta("ОТВЕТ · РЕЖИМ РЕЦЕНЗЕНТА"));
+    col = col.push(gold_meta(tr("ОТВЕТ · РЕЖИМ РЕЦЕНЗЕНТА")));
     col = col.push(rich_line(
         vec![
-            ("Правильный ответ: ".to_string(), false),
+            (tr("Правильный ответ: ").to_string(), false),
             (exam::correct_text(q), true),
         ],
         theme::text::BODY,
@@ -1049,7 +1050,7 @@ fn peek_view<'a>(q: &'a Question) -> Element<'a, Msg> {
     }
     if let Some(src) = &q.common().source {
         col = col.push(
-            txt(format!("Источник: {src}"))
+            txt(crate::trf!("Источник: {src}", "Source: {src}"))
                 .size(theme::text::SMALL)
                 .color(p.muted),
         );
@@ -1070,7 +1071,7 @@ fn section_id_for_label(ctx: &Ctx, label: &str) -> Option<String> {
 fn section_label(sec: &SectionMeta, ctx: &Ctx) -> String {
     let base = format!("{}. {}", sec.index + 1, sec.title);
     match Library::best(&ctx.state, &sec.id) {
-        Some(b) => format!("{base} — лучший {}", b.round() as i64) + "%",
+        Some(b) => crate::trf!("{base} — лучший {}", "{base} — best {}", b.round() as i64) + "%",
         None => base,
     }
 }
@@ -1083,11 +1084,13 @@ impl Screen {
     fn view_setup<'a>(&'a self, ctx: &'a Ctx, setup: &'a Setup) -> Element<'a, Msg> {
         let p = tp();
         let mut col = Column::new().spacing(18).width(Length::Fill);
-        col = col.push(widgets::kicker("Проверка знаний"));
-        col = col.push(widgets::heading("Тесты", 1));
+        col = col.push(widgets::kicker(tr("Проверка знаний")));
+        col = col.push(widgets::heading(tr("Тесты"), 1));
         col = col.push(
-            muted("Набор вопросов каждый раз новый; чаще попадаются те, в которых были ошибки.")
-                .size(theme::text::BODY),
+            muted(tr(
+                "Набор вопросов каждый раз новый; чаще попадаются те, в которых были ошибки.",
+            ))
+            .size(theme::text::BODY),
         );
 
         // Mode tiles (radio group): an engraved emblem, title and one line
@@ -1136,11 +1139,11 @@ impl Screen {
             };
             column![
                 row![emblem, space::horizontal(), mark].align_y(Alignment::Start),
-                txt(title)
+                txt(tr(title))
                     .font(SANS_BOLD)
                     .size(theme::text::BODY)
                     .color(if selected { p.gold2 } else { p.text }),
-                txt(desc).size(theme::text::SMALL).color(p.muted),
+                txt(tr(desc)).size(theme::text::SMALL).color(p.muted),
             ]
             .spacing(10)
             .width(Length::Fill)
@@ -1239,14 +1242,16 @@ impl Screen {
                         .map(|i| labels[i].clone())
                 });
                 let control: Element<'a, Msg> = if labels.is_empty() {
-                    muted("Нет открытых разделов")
+                    muted(tr("Нет открытых разделов"))
                         .size(theme::text::SMALL)
                         .into()
                 } else {
-                    let shown = selected.clone().unwrap_or_else(|| "— выберите —".into());
+                    let shown = selected
+                        .clone()
+                        .unwrap_or_else(|| tr("— выберите —").into());
                     crate::automation::reported_choice(
                         pick_list(labels.clone(), selected, Msg::SectionLabel)
-                            .placeholder("— выберите —")
+                            .placeholder(tr("— выберите —"))
                             .text_shaping(Shaping::Advanced)
                             .padding([8, 12])
                             .width(Length::Fill)
@@ -1257,8 +1262,8 @@ impl Screen {
                     )
                 };
                 card_col = card_col.push(form_row(
-                    "Раздел",
-                    Some("Доступны открытые разделы"),
+                    tr("Раздел"),
+                    Some(tr("Доступны открытые разделы")),
                     control,
                 ));
             }
@@ -1266,8 +1271,8 @@ impl Screen {
                 // The whole row toggles, not only the small switch.
                 card_col = card_col.push(
                     button(form_row(
-                        "Только открытые разделы",
-                        Some("Иначе — из всех разделов"),
+                        tr("Только открытые разделы"),
+                        Some(tr("Иначе — из всех разделов")),
                         container(
                             iced::widget::toggler(setup.only_unlocked).on_toggle(Msg::OnlyUnlocked),
                         )
@@ -1286,13 +1291,13 @@ impl Screen {
             SetupMode::Beitdin => {
                 card_col = card_col.push(
                     column![
-                        txt("Как это проходит")
+                        txt(tr("Как это проходит"))
                             .size(theme::text::BODY)
                             .color(p.text),
-                        muted(
+                        muted(tr(
                             "Вопросы задаются по одному, как на настоящем собеседовании. \
                              Подумайте или ответьте вслух, затем сравните с эталоном.",
-                        )
+                        ))
                         .size(theme::text::SMALL),
                     ]
                     .spacing(4)
@@ -1310,26 +1315,30 @@ impl Screen {
                 .collect(),
             counts.iter().position(|&n| n == setup.count),
         );
-        card_col = card_col.push(form_row("Количество вопросов", None, seg));
+        card_col = card_col.push(form_row(tr("Количество вопросов"), None, seg));
         card_col = card_col.push(divider());
 
         let pool = setup.pool(ctx);
         if !pool.is_empty() {
             let counts = crate::study::level_counts(pool.iter().copied(), &ctx.state);
             card_col = card_col.push(form_row(
-                "По уровням",
-                Some("Сколько вопросов и сколько уже освоено"),
+                tr("По уровням"),
+                Some(tr("Сколько вопросов и сколько уже освоено")),
                 crate::ui::screens::section::level_counts_row(&counts, p),
             ));
             card_col = card_col.push(divider());
         }
         let avail = pool.len();
-        let mut avail_line = format!("Доступно вопросов: {avail}");
+        let mut avail_line =
+            crate::trf!("Доступно вопросов: {avail}", "Questions available: {avail}");
         if avail < setup.count && avail > 0 {
-            avail_line.push_str(&format!(" — будет задано {avail}"));
+            avail_line.push_str(&crate::trf!(
+                " — будет задано {avail}",
+                " — {avail} will be asked"
+            ));
         }
         let start = widgets::btn(
-            "Начать",
+            tr("Начать"),
             widgets::Btn::Primary,
             widgets::BtnSize::Lg,
             (avail > 0).then_some(Msg::Start),
@@ -1393,16 +1402,24 @@ impl Screen {
         let mut col = Column::new().spacing(16).width(Length::Fill);
 
         // Top: quit, progress, kicker.
-        let quit = widgets::exit_button("Выйти", Msg::Quit);
+        let quit = widgets::exit_button(tr("Выйти"), Msg::Quit);
         let mut kicker = exam::mode_title(run.mode).to_string();
         if let Some(t) = run.section_title(ctx) {
             kicker.push_str(" · ");
             kicker.push_str(t);
         }
         let progress_label = if interview {
-            format!("Вопрос раввина {} из {total}", run.idx + 1)
+            crate::trf!(
+                "Вопрос раввина {} из {total}",
+                "Rabbi's question {} of {total}",
+                run.idx + 1
+            )
         } else {
-            format!("Вопрос {} из {total}", run.idx + 1)
+            crate::trf!(
+                "Вопрос {} из {total}",
+                "Question {} of {total}",
+                run.idx + 1
+            )
         };
         col = col.push(
             row![
@@ -1418,29 +1435,29 @@ impl Screen {
         col = col.push(widgets::step_bar(run.idx, total));
         if ctx.reviewer() {
             let prev = widgets::btn(
-                "‹ Назад",
+                tr("‹ Назад"),
                 widgets::Btn::Ghost,
                 widgets::BtnSize::Sm,
                 (run.idx > 0).then_some(Msg::Jump(run.idx)),
             );
             let next = widgets::btn(
-                "Вперёд ›",
+                tr("Вперёд ›"),
                 widgets::Btn::Ghost,
                 widgets::BtnSize::Sm,
                 (run.idx + 1 < total).then(|| Msg::Jump(run.idx + 2)),
             );
             let peek = widgets::btn(
                 if run.peek {
-                    "Скрыть ответ"
+                    tr("Скрыть ответ")
                 } else {
-                    "Показать ответ"
+                    tr("Показать ответ")
                 },
                 widgets::Btn::Secondary,
                 widgets::BtnSize::Sm,
                 run.answered.is_none().then_some(Msg::Peek),
             );
             col = col.push(widgets::reviewer_jumps(
-                "Любой вопрос: нажмите номер или «Назад» / «Вперёд». «Показать ответ» открывает правильный ответ без попытки.",
+                tr("Любой вопрос: нажмите номер или «Назад» / «Вперёд». «Показать ответ» открывает правильный ответ без попытки."),
                 total,
                 run.idx + 1,
                 Msg::Jump,
@@ -1466,7 +1483,7 @@ impl Screen {
             card_col = card_col.push(
                 container(
                     column![
-                        gold_meta("РАВВИН"),
+                        gold_meta(tr("РАВВИН")),
                         serif(q.common().prompt.as_str(), theme::text::BODY * 1.22).color(p.text),
                     ]
                     .spacing(6)
@@ -1555,7 +1572,7 @@ impl Screen {
             }
             Question::Tf { answer, .. } => {
                 let mut row = Row::new().spacing(10).width(Length::Fill);
-                for (v, label, key_hint) in [(true, "Верно", "1"), (false, "Неверно", "2")]
+                for (v, label, key_hint) in [(true, tr("Верно"), "1"), (false, tr("Неверно"), "2")]
                 {
                     let is_right = answered.is_some() && v == *answer;
                     let is_chosen_wrong = !is_right
@@ -1592,21 +1609,21 @@ impl Screen {
             Question::Typed { .. } => {
                 if let Some(r) = answered {
                     // Disabled input echo.
-                    column![txt(format!("Ваш ответ: {}", r.user))
+                    column![txt(crate::trf!("Ваш ответ: {}", "Your answer: {}", r.user))
                         .size(theme::text::BODY)
                         .color(p.muted),]
                     .spacing(10)
                     .into()
                 } else {
                     row![
-                        text_input("Ваш ответ", &run.typed)
+                        text_input(tr("Ваш ответ"), &run.typed)
                             .on_input(Msg::Typed)
                             .on_submit(Msg::TypedSubmit)
                             .padding(12.0)
                             .size(theme::text::BODY)
                             .width(Length::Fill),
                         widgets::btn(
-                            "Проверить",
+                            tr("Проверить"),
                             widgets::Btn::Primary,
                             widgets::BtnSize::Md,
                             Some(Msg::TypedSubmit),
@@ -1647,10 +1664,10 @@ impl Screen {
                             );
                         }
                     } else {
-                        let shown = chosen.clone().unwrap_or_else(|| "— выберите —".into());
+                        let shown = chosen.clone().unwrap_or_else(|| tr("— выберите —").into());
                         let pl = crate::automation::reported_choice(
                             pick_list(rights.clone(), chosen, move |v| Msg::MatchPick(i, v))
-                                .placeholder("— выберите —")
+                                .placeholder(tr("— выберите —"))
                                 .text_shaping(Shaping::Advanced)
                                 .width(Length::FillPortion(1))
                                 .style(move |_, st| theme::pick_list(&p, st))
@@ -1667,7 +1684,7 @@ impl Screen {
                         row![
                             space::horizontal(),
                             widgets::btn(
-                                "Проверить",
+                                tr("Проверить"),
                                 widgets::Btn::Primary,
                                 widgets::BtnSize::Md,
                                 Some(Msg::MatchSubmit),
@@ -1689,7 +1706,7 @@ impl Screen {
                     if !written.trim().is_empty() {
                         col = col.push(
                             column![
-                                muted("Ваш ответ").size(theme::text::SMALL),
+                                muted(tr("Ваш ответ")).size(theme::text::SMALL),
                                 txt(written).size(theme::text::BODY).color(p.text),
                             ]
                             .spacing(4),
@@ -1698,7 +1715,7 @@ impl Screen {
                     // Model box (gold-soft).
                     let mut model = Column::new().spacing(10).width(Length::Fill);
                     model = model.push(
-                        txt("Эталонный ответ")
+                        txt(tr("Эталонный ответ"))
                             .font(SERIF_BOLD)
                             .size(theme::text::BODY)
                             .color(p.gold2),
@@ -1710,7 +1727,7 @@ impl Screen {
                     );
                     if !key_points.is_empty() {
                         model = model.push(
-                            txt("Проверьте себя — упомянуты ли ключевые мысли:")
+                            txt(tr("Проверьте себя — упомянуты ли ключевые мысли:"))
                                 .size(theme::text::SMALL)
                                 .color(p.text),
                         );
@@ -1731,19 +1748,19 @@ impl Screen {
                         col = col.push(
                             row![
                                 widgets::btn(
-                                    "Ответил верно",
+                                    tr("Ответил верно"),
                                     widgets::Btn::Primary,
                                     widgets::BtnSize::Md,
                                     Some(Msg::SelfGrade(1.0)),
                                 ),
                                 widgets::btn(
-                                    "Частично",
+                                    tr("Частично"),
                                     widgets::Btn::Secondary,
                                     widgets::BtnSize::Md,
                                     Some(Msg::SelfGrade(0.5)),
                                 ),
                                 widgets::btn(
-                                    "Не ответил",
+                                    tr("Не ответил"),
                                     widgets::Btn::Ghost,
                                     widgets::BtnSize::Md,
                                     Some(Msg::SelfGrade(0.0)),
@@ -1756,7 +1773,7 @@ impl Screen {
                     col = col.push(
                         text_editor(&run.open_text)
                             .placeholder(
-                                "Сформулируйте ответ письменно или вслух (необязательно записывать)",
+                                tr("Сформулируйте ответ письменно или вслух (необязательно записывать)"),
                             )
                             .on_action(Msg::OpenEdit)
                             .height(Length::Fixed(4.0 * 26.0))
@@ -1767,7 +1784,7 @@ impl Screen {
                         row![
                             space::horizontal(),
                             widgets::btn(
-                                "Показать эталонный ответ",
+                                tr("Показать эталонный ответ"),
                                 widgets::Btn::Primary,
                                 widgets::BtnSize::Md,
                                 Some(Msg::OpenReveal),
@@ -1801,11 +1818,11 @@ impl Screen {
             (p.bad_soft, alpha(p.bad, 0.45), p.bad)
         };
         let title = if r.correct {
-            "Верно!"
+            crate::trf!("Верно!", "Correct!")
         } else if r.score > 0.0 {
-            "Частично"
+            crate::trf!("Частично", "Partially")
         } else {
-            "Неверно"
+            crate::trf!("Неверно", "Wrong")
         };
         let mut box_col = Column::new().spacing(8).width(Length::Fill);
         box_col = box_col.push(
@@ -1817,7 +1834,7 @@ impl Screen {
         if !r.correct && !matches!(q, Question::Open { .. } | Question::Match { .. }) {
             box_col = box_col.push(rich_line(
                 vec![
-                    ("Правильный ответ: ".to_string(), false),
+                    (tr("Правильный ответ: ").to_string(), false),
                     (exam::correct_text(q), true),
                 ],
                 theme::text::BODY,
@@ -1829,7 +1846,7 @@ impl Screen {
         }
         if let Some(src) = &q.common().source {
             box_col = box_col.push(
-                txt(format!("Источник: {src}"))
+                txt(crate::trf!("Источник: {src}", "Source: {src}"))
                     .size(theme::text::SMALL)
                     .color(p.muted),
             );
@@ -1848,9 +1865,9 @@ impl Screen {
             }
             if !other.is_empty() {
                 let label = if run.differs_open {
-                    "Как в других течениях ▴"
+                    tr("Как в других течениях ▴")
                 } else {
-                    "Как в других течениях ▾"
+                    tr("Как в других течениях ▾")
                 };
                 box_col = box_col.push(
                     button(txt(label).size(theme::text::SMALL).color(p.muted))
@@ -1871,9 +1888,9 @@ impl Screen {
 
         let last = run.idx + 1 >= run.items.len();
         let next_label = if last {
-            "Результаты"
+            tr("Результаты")
         } else {
-            "Далее"
+            tr("Далее")
         };
         let next = widgets::btn_icon(
             kbd("Enter"),
@@ -1905,7 +1922,7 @@ impl Screen {
         let practice = matches!(res.mode, Mode::SelfCheck | Mode::Rehearsal);
         let (back_label, back_msg) = match (practice, sec) {
             (true, Some(s)) => (s.title.as_str(), Msg::ToSection(s.id.clone())),
-            _ => ("Тесты", Msg::NewExam),
+            _ => (tr("Тесты"), Msg::NewExam),
         };
         let mut col = Column::new().spacing(18).width(Length::Fill);
         col = col.push(widgets::back_button(back_label, back_msg));
@@ -1915,19 +1932,19 @@ impl Screen {
             kicker.push_str(&s.title);
         }
         col = col.push(gold_meta(kicker.to_uppercase()));
-        col = col.push(widgets::heading("Результаты", 1));
+        col = col.push(widgets::heading(tr("Результаты"), 1));
 
         // Result card.
         let headline = if is_section {
             if res.passed {
-                ("Тест сдан!", p.ok)
+                (tr("Тест сдан!"), p.ok)
             } else {
-                ("Пока не сдан", p.bad)
+                (tr("Пока не сдан"), p.bad)
             }
         } else if res.pct >= 80 {
-            ("Отличный результат!", p.ok)
+            (tr("Отличный результат!"), p.ok)
         } else {
-            ("Есть над чем поработать", p.bad)
+            (tr("Есть над чем поработать"), p.bad)
         };
         let mut right_col = Column::new().spacing(8).width(Length::Fill);
         right_col = right_col.push(serif(headline.0, theme::text::H2).color(headline.1));
@@ -1939,13 +1956,13 @@ impl Screen {
             format!("{s}")
         };
         let mut score_parts = vec![
-            ("Набрано ".to_string(), false),
+            (tr("Набрано ").to_string(), false),
             (score_text, true),
-            (" из ".to_string(), false),
+            (tr(" из ").to_string(), false),
             (format!("{}", res.total), true),
         ];
         if is_section {
-            score_parts.push((" · порог 80%".to_string(), false));
+            score_parts.push((tr(" · порог 80%").to_string(), false));
         }
         right_col = right_col.push(rich_line(score_parts, theme::text::BODY, p.text));
         let today_xp = game::today_xp(&ctx.state, ctx.today());
@@ -1953,31 +1970,36 @@ impl Screen {
         let xp_text = if res.xp > 0 {
             format!("+{} XP", res.xp)
         } else if is_section {
-            "Без XP: тест не сдан — попробуйте ещё раз".to_string()
+            tr("Без XP: тест не сдан — попробуйте ещё раз").to_string()
         } else {
-            "Без XP: верных ответов пока нет".to_string()
+            tr("Без XP: верных ответов пока нет").to_string()
         };
         right_col = right_col.push(
-            txt(format!("{xp_text} · сегодня {today_xp} / {goal} XP"))
-                .size(theme::text::BODY)
-                .color(p.gold2),
+            txt(crate::trf!(
+                "{xp_text} · сегодня {today_xp} / {goal} XP",
+                "{xp_text} · today {today_xp} / {goal} XP"
+            ))
+            .size(theme::text::BODY)
+            .color(p.gold2),
         );
         if is_section && res.passed && sec.is_some() {
             right_col = right_col.push(
-                muted("Если все уроки раздела прочитаны, следующий раздел открыт.")
-                    .size(theme::text::BODY),
+                muted(tr(
+                    "Если все уроки раздела прочитаны, следующий раздел открыт.",
+                ))
+                .size(theme::text::BODY),
             );
         }
         if is_section && !res.passed {
             right_col = right_col.push(
-                muted("Повторите уроки и карточки, затем попробуйте снова.")
+                muted(tr("Повторите уроки и карточки, затем попробуйте снова."))
                     .size(theme::text::BODY),
             );
         }
         let mut buttons = Row::new().spacing(10);
         if !r.mistake_ids.is_empty() {
             buttons = buttons.push(widgets::btn(
-                "Повторить ошибки",
+                tr("Повторить ошибки"),
                 widgets::Btn::Primary,
                 widgets::BtnSize::Md,
                 Some(Msg::Retry),
@@ -1985,7 +2007,7 @@ impl Screen {
         }
         if r.again.is_some() {
             buttons = buttons.push(widgets::btn(
-                "Пройти ещё раз",
+                tr("Пройти ещё раз"),
                 if r.mistake_ids.is_empty() {
                     widgets::Btn::Primary
                 } else {
@@ -1997,7 +2019,7 @@ impl Screen {
         }
         if !practice {
             buttons = buttons.push(widgets::btn(
-                "Новый тест",
+                tr("Новый тест"),
                 widgets::Btn::Secondary,
                 widgets::BtnSize::Md,
                 Some(Msg::NewExam),
@@ -2005,13 +2027,13 @@ impl Screen {
         }
         let ghost = match sec {
             Some(s) => widgets::btn(
-                "К разделу",
+                tr("К разделу"),
                 widgets::Btn::Ghost,
                 widgets::BtnSize::Md,
                 Some(Msg::ToSection(s.id.clone())),
             ),
             None => widgets::btn(
-                "К урокам",
+                tr("К урокам"),
                 widgets::Btn::Ghost,
                 widgets::BtnSize::Md,
                 Some(Msg::ToMap),
@@ -2041,7 +2063,7 @@ impl Screen {
         if r.cards.is_empty() {
             col = col.push(
                 container(
-                    muted("Ошибок нет — прекрасно!")
+                    muted(tr("Ошибок нет — прекрасно!"))
                         .size(theme::text::BODY)
                         .align_x(iced::alignment::Horizontal::Center)
                         .width(Length::Fill),
@@ -2049,20 +2071,25 @@ impl Screen {
                 .padding(12),
             );
         } else {
-            col = col
-                .push(serif(format!("Ошибки ({})", r.cards.len()), theme::text::H3).color(p.text));
+            col = col.push(
+                serif(
+                    crate::trf!("Ошибки ({})", "Mistakes ({})", r.cards.len()),
+                    theme::text::H3,
+                )
+                .color(p.text),
+            );
             for card in &r.cards {
                 let mut c = Column::new().spacing(8).width(Length::Fill);
                 c = c.push(serif(card.prompt.as_str(), theme::text::BODY * 1.05).color(p.text));
                 c = c.push(
-                    txt(format!("Ваш ответ: {}", card.user))
+                    txt(crate::trf!("Ваш ответ: {}", "Your answer: {}", card.user))
                         .size(theme::text::BODY)
                         .color(p.bad),
                 );
                 let right_label = if card.open {
-                    "Эталон"
+                    tr("Эталон")
                 } else {
-                    "Правильно"
+                    tr("Правильно")
                 };
                 c = c.push(
                     txt(format!("{right_label}: {}", card.right))
@@ -2074,7 +2101,7 @@ impl Screen {
                 }
                 if let Some(src) = &card.source {
                     c = c.push(
-                        txt(format!("Источник: {src}"))
+                        txt(crate::trf!("Источник: {src}", "Source: {src}"))
                             .size(theme::text::SMALL)
                             .color(p.muted),
                     );

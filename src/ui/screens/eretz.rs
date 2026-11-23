@@ -15,6 +15,7 @@ use crate::eretz::{
     self, Coord, Extent, Place, CANAAN, COVENANT, JORDAN, KINNERET, LAND, PLACES, REGIONS,
     SALT_SEA, TORAH_CAPTION, TORAH_LABELS, TRIBES,
 };
+use crate::i18n::tr;
 use crate::ui::app::{Action, Ctx, Route};
 use crate::ui::fonts::{HEBREW, SANS, SANS_BOLD, SERIF_BOLD};
 use crate::ui::screens::map::txt;
@@ -136,10 +137,10 @@ impl Screen {
     pub fn view<'a>(&'a self, _ctx: &'a Ctx) -> Element<'a, Msg> {
         let p = theme::current();
         let mut page = Column::new().spacing(14).width(Length::Fill);
-        page = page.push(widgets::kicker("ЭРЕЦ-ИСРАЭЛЬ"));
-        page = page.push(widgets::heading("Эрец-Исраэль", 1));
+        page = page.push(widgets::kicker(tr("ЭРЕЦ-ИСРАЭЛЬ")));
+        page = page.push(widgets::heading(tr("Эрец-Исраэль"), 1));
         page = page.push(
-            txt("Вся Земля Израиля — одна еврейская земля: Иудея и Шомрон, Голан, Аза и единый Иерусалим, вечная неделимая столица. Без линий раздела и без вырезанных областей.")
+            txt(tr("Вся Земля Израиля — одна единая и неделимая еврейская земля: Иудея и Шомрон, Голан, Аза и единый Иерусалим, вечная неделимая столица."))
                 .size(theme::text::BODY)
                 .color(p.muted)
                 .width(Length::Fill),
@@ -148,13 +149,21 @@ impl Screen {
         let bar = Row::new()
             .spacing(8)
             .push(layer_btn(
-                "Земля",
+                tr("Земля"),
                 !self.torah && !self.tribes,
                 Msg::ShowLand,
             ))
-            .push(layer_btn("Границы по Торе", self.torah, Msg::ToggleTorah))
-            .push(layer_btn("Наделы колен", self.tribes, Msg::ToggleTribes))
-            .push(layer_btn("Сбросить вид", false, Msg::ResetView));
+            .push(layer_btn(
+                tr("Границы по Торе"),
+                self.torah,
+                Msg::ToggleTorah,
+            ))
+            .push(layer_btn(
+                tr("Наделы колен"),
+                self.tribes,
+                Msg::ToggleTribes,
+            ))
+            .push(layer_btn(tr("Сбросить вид"), false, Msg::ResetView));
         page = page.push(bar);
 
         let map = Canvas::new(MapView {
@@ -185,7 +194,7 @@ impl Screen {
         if self.torah {
             page = page.push(
                 container(
-                    txt(TORAH_CAPTION)
+                    txt(tr(TORAH_CAPTION))
                         .size(theme::text::SMALL)
                         .color(p.muted)
                         .width(Length::Fill),
@@ -204,7 +213,7 @@ impl Screen {
             );
         } else {
             page = page.push(
-                txt("Включите слой «Границы по Торе», чтобы увидеть пределы Земли, обещанной в Торе: от реки Египта до Евфрата (Берешит 15:18; Бемидбар 34; Дварим 11:24).")
+                txt(tr("Включите слой «Границы по Торе», чтобы увидеть пределы Земли, обещанной в Торе: от реки Египта до Евфрата (Берешит 15:18; Бемидбар 34; Дварим 11:24)."))
                     .size(theme::text::SMALL)
                     .color(p.muted)
                     .width(Length::Fill),
@@ -215,7 +224,7 @@ impl Screen {
             page = page.push(place_card(place, p));
         } else {
             page = page.push(
-                txt("Нажмите город, чтобы открыть карточку места.")
+                txt(tr("Нажмите город, чтобы открыть карточку места."))
                     .size(theme::text::SMALL)
                     .color(p.muted),
             );
@@ -233,7 +242,7 @@ fn place_card(place: &'static Place, p: Palette) -> Element<'static, Msg> {
     let mut body = Column::new().spacing(8).width(Length::Fill);
     body = body.push(
         row![
-            txt(place.name)
+            txt(tr(place.name))
                 .size(theme::text::H3)
                 .font(SERIF_BOLD)
                 .color(p.text),
@@ -248,14 +257,14 @@ fn place_card(place: &'static Place, p: Palette) -> Element<'static, Msg> {
     );
     if place.capital {
         body = body.push(
-            txt("Вечная и неделимая столица")
+            txt(tr("Вечная и неделимая столица"))
                 .size(theme::text::SMALL)
                 .font(SANS_BOLD)
                 .color(p.gold2),
         );
     }
     body = body.push(
-        txt(place.text)
+        txt(tr(place.text))
             .size(theme::text::BODY)
             .color(p.text)
             .width(Length::Fill),
@@ -263,14 +272,14 @@ fn place_card(place: &'static Place, p: Palette) -> Element<'static, Msg> {
     let mut actions = Row::new().spacing(10);
     if let Some((id, title)) = place.lesson {
         actions = actions.push(widgets::btn(
-            format!("К уроку: {title}"),
+            crate::trf!("К уроку: {title}", "Lesson: {title}", title = tr(title)),
             widgets::Btn::Primary,
             widgets::BtnSize::Md,
             Some(Msg::GoLesson(id.to_string())),
         ));
     }
     actions = actions.push(widgets::btn(
-        "Закрыть",
+        tr("Закрыть"),
         widgets::Btn::Ghost,
         widgets::BtnSize::Md,
         Some(Msg::CloseCard),
@@ -630,7 +639,7 @@ impl canvas::Program<Msg> for MapView {
                     continue;
                 }
                 frame.fill_text(CText {
-                    content: region.name.to_string(),
+                    content: tr(region.name).to_string(),
                     position: pt,
                     color: label_col,
                     size: if self.torah { 11.0 } else { 13.0 }.into(),
@@ -647,7 +656,7 @@ impl canvas::Program<Msg> for MapView {
                         continue;
                     }
                     frame.fill_text(CText {
-                        content: lab.name.to_string(),
+                        content: tr(lab.name).to_string(),
                         position: pt,
                         color: p.gold2,
                         size: 11.0.into(),
@@ -666,7 +675,7 @@ impl canvas::Program<Msg> for MapView {
                         continue;
                     }
                     frame.fill_text(CText {
-                        content: tribe.name.to_string(),
+                        content: tr(tribe.name).to_string(),
                         position: xy,
                         color: p.gold2,
                         size: 11.5.into(),
@@ -720,7 +729,7 @@ impl canvas::Program<Msg> for MapView {
                         Point::new(lp.x, lp.y - r - 3.0)
                     };
                     frame.fill_text(CText {
-                        content: place.name.to_string(),
+                        content: tr(place.name).to_string(),
                         position: name_pos,
                         color: if on { p.gold2 } else { p.text },
                         size: if place.capital { 12.0 } else { 10.5 }.into(),
