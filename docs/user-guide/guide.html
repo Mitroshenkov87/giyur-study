@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Shorashim User Guide</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<section class="cover">
+  <div class="cover-top">
+    <img class="cover-icon" src="shots/icon.png" alt="">
+    <p class="cover-hebrew" lang="he" dir="rtl">שורשים</p>
+    <h1 class="cover-title">Shorashim</h1>
+    <p class="cover-subtitle">User Guide</p>
+    <hr class="cover-rule">
+    <p class="cover-tagline">Foundations of Judaism, and a calm, step-by-step preparation for giyur and the beit din interview.</p>
+  </div>
+  <div class="cover-bottom">
+    <div class="cover-version">Version 1.0.0</div>
+    An offline Windows app · Course content is checked by a rabbi
+  </div>
+</section>
+
+<section class="frontmatter">
+  <p class="kicker">Shorashim</p>
+  <h1>Contents</h1>
+  <ol class="toc">
+    <li><a href="#about"><span class="num">1</span><span class="t">About the app</span></a></li>
+    <li><a href="#install"><span class="num">2</span><span class="t">Install and first launch</span></a></li>
+    <li><a href="#home"><span class="num">3</span><span class="t">Home and the sidebar</span></a></li>
+    <li><a href="#lessons"><span class="num">4</span><span class="t">Lessons and study levels</span></a></li>
+    <li><a href="#flashcards"><span class="num">5</span><span class="t">Flashcards</span></a></li>
+    <li><a href="#maalot"><span class="num">6</span><span class="t">Quiz and Ma’alot</span></a></li>
+    <li><a href="#tests"><span class="num">7</span><span class="t">Tests</span></a></li>
+    <li><a href="#interview"><span class="num">8</span><span class="t">Beit din interview trainer</span></a></li>
+    <li><a href="#calendar"><span class="num">9</span><span class="t">Jewish calendar</span></a></li>
+    <li><a href="#prayers"><span class="num">10</span><span class="t">Prayers</span></a></li>
+    <li><a href="#progress"><span class="num">11</span><span class="t">Progress</span></a></li>
+    <li><a href="#settings"><span class="num">12</span><span class="t">Settings</span></a></li>
+    <li><a href="#rabbi"><span class="num">13</span><span class="t">Rabbi review</span></a></li>
+  </ol>
+  <p class="preface">This guide describes Shorashim 1.0.0: how to install the app, find your way around, and use each part of the course. The app helps you study; it does not replace a teacher.</p>
+</section>
+
+<section class="section first" id="about">
+  <h2 data-running="About the app"><span class="num">1</span>About the app</h2>
+  <p class="lead">Shorashim (Hebrew for “roots”) is an offline Windows app for studying the foundations of Judaism and for calm, step-by-step preparation for <strong>giyur</strong> and the <strong>beit din</strong> interview.</p>
+  <p>The course is written in the language of Torah and Tanakh — the Written and Oral Torah. It is consistently pro-Israel: Eretz Israel is the heritage the Torah gives the Jewish people, Jerusalem is the eternal undivided capital, and the State of Israel is the Jewish people’s return home.</p>
+  <p>The app is meant to be used every day in short sittings: a lesson of about five to ten minutes, a few flashcards, a step on the Ma’alot ladder, or a handful of interview questions. Nothing here replaces a teacher. The materials need review by a rabbi of your community; the app helps you study.</p>
+  <figure class="shot">
+    <div class="frame"><img src="shots/welcome.jpg" alt="The Shorashim welcome screen"></div>
+    <figcaption>The welcome screen, shown the first time you open the app.</figcaption>
+  </figure>
+</section>
+
+<section class="section" id="install">
+  <h2 data-running="Install and first launch"><span class="num">2</span>Install and first launch</h2>
+  <p>Shorashim runs on Windows&nbsp;10 or Windows&nbsp;11. You do not need administrator rights. The only file you need is the installer, <span class="file">Shorashim-Setup.exe</span>.</p>
+  <ol>
+    <li>Open the latest release: <a href="https://github.com/Mitroshenkov87/shorashim/releases/latest">github.com/Mitroshenkov87/shorashim/releases/latest</a>.</li>
+    <li>Download <span class="file">Shorashim-Setup.exe</span>.</li>
+    <li>Run the installer. It unpacks the program, the <span class="file">content</span> folder (lessons, cards, questions, prayers and the calendar) and the music, creates shortcuts, and starts Shorashim.</li>
+  </ol>
+  <p>Progress is stored separately, in <span class="path">%APPDATA%\Shorashim</span>, and is left as it is if you install the app again. Everything works offline: once the installer has finished, you do not need a network connection to study.</p>
+  <p>The first time the app opens, you will see the welcome screen. Read the short note about rabbi review, then press <span class="ui">Start</span>. You will be asked to choose a movement — Orthodox, Conservative (Masorti), or Reform. Each movement is presented on its own terms, with equal care, and each keeps its own progress. You can change this later in Settings, or with the level switch at the top of the home screen.</p>
+</section>
+
+<section class="section" id="home">
+  <h2 data-running="Home and the sidebar"><span class="num">3</span>Home and the sidebar</h2>
+  <p>After the welcome screen, Shorashim opens on <span class="ui">Lessons</span> — the home view. The left sidebar is the main way around the app. The main pane shows today’s study at a glance.</p>
+  <figure class="shot">
+    <div class="frame"><img src="shots/home.jpg" alt="The Shorashim home screen"></div>
+    <figcaption>Home: the daily goal, Ma’alot, the interview trainer, and the item of the day.</figcaption>
+  </figure>
+  <h3>The daily strip</h3>
+  <p>At the top you will see today’s <span class="ui">XP</span> toward the daily goal (20&nbsp;XP), how many days in a row you have met the goal, and how many flashcards are due today. One lesson marked as read gives 10&nbsp;XP. A hint under the strip tells you how much is still needed for the day.</p>
+  <h3>The sidebar</h3>
+  <ul>
+    <li><span class="ui">Lessons</span> — the eight sections of the course, and this home view.</li>
+    <li><span class="ui">Calendar</span> — the Jewish date, the day’s meaning, the weekly Torah portion, and candle and fast times.</li>
+    <li><span class="ui">The Land</span> — a map of Eretz Israel. The default view, <span class="ui">Israel today</span>, follows official Israeli maps. Separate layers show the bounds of the Land in the Torah and the tribal allotments. This guide does not walk through the map; open it from the sidebar or from the card on the home screen when you want it.</li>
+    <li><span class="ui">Prayers</span> — prayers and blessings for each day, with Hebrew, a translation and a transliteration.</li>
+    <li><span class="ui">Flashcards</span> — spaced repetition of what you have already read.</li>
+    <li><span class="ui">Quiz</span> — Ma’alot, the fifteen-step ladder of knowledge.</li>
+    <li><span class="ui">Tests</span> — a knowledge check for each section, and a general exam.</li>
+    <li><span class="ui">Progress</span> — your level, statistics, and the collection of objects you have unlocked.</li>
+    <li><span class="ui">Settings</span> — movement, theme, font, reviewer mode, and other options.</li>
+    <li><span class="ui">Sources</span> — a reading list for going further.</li>
+  </ul>
+  <p>Below the daily strip, the home screen offers a <span class="ui">Climb</span> button for Ma’alot, a <span class="ui">Prepare</span> button for the beit din interview trainer, and the <span class="ui">Item of the Day</span> — a 3D object, such as a Torah scroll, that you can turn with the mouse.</p>
+</section>
+
+<section class="section" id="lessons">
+  <h2 data-running="Lessons and study levels"><span class="num">4</span>Lessons and study levels</h2>
+  <p>The course has eight sections, from the foundations of faith to the beit din. Lessons are short, about five to ten minutes each:</p>
+  <ol>
+    <li>Foundations</li>
+    <li>Hebrew and Prayer</li>
+    <li>Shabbat</li>
+    <li>Kashrut</li>
+    <li>Festivals</li>
+    <li>The life cycle and the family</li>
+    <li>Ethics</li>
+    <li>Beit din</li>
+  </ol>
+  <p>Open a section, then open a lesson. The text is written at the movement you chose: Orthodox, Conservative (Masorti), or Reform. Where the movements differ, the lesson says so plainly, and each is described on its own terms.</p>
+  <figure class="shot">
+    <div class="frame"><img src="shots/lesson.jpg" alt="A lesson in the Foundations section"></div>
+    <figcaption>A lesson in Foundations. The badge “Awaiting a rabbi’s review” means the wording is still to be checked.</figcaption>
+  </figure>
+  <p>After the lesson text you will usually find:</p>
+  <ul>
+    <li><span class="ui">Main points</span> — a short recap of the lesson, for review.</li>
+    <li><span class="ui">What the beit din asks</span> — typical questions on this topic, with a model answer you can reveal after you have tried in your own words.</li>
+    <li><span class="ui">Mark as read</span> — this counts toward your progress and the daily goal.</li>
+    <li><span class="ui">Self-check</span> — a short set of closed questions on the lesson.</li>
+    <li><span class="ui">To this lesson’s flashcards</span> — jump straight to the cards for this lesson.</li>
+  </ul>
+  <p>A section also has two modes, <span class="ui">Read</span> and <span class="ui">Prepare</span>. <span class="ui">Read</span> is for understanding the material. <span class="ui">Prepare</span> gathers the work that gets you ready for a test: the section’s flashcards, a rehearsal of beit-din questions, and the section test.</p>
+  <p>Sections ordinarily open in order. To unlock the next one, read the lessons and pass the section test (the pass mark is 80%). If you would rather move freely, turn on <span class="ui">Open every section</span> in Settings.</p>
+</section>
+
+<section class="section" id="flashcards">
+  <h2 data-running="Flashcards"><span class="num">5</span>Flashcards</h2>
+  <p>Every lesson already has a deck of cards. You do not create them yourself. Open them from the lesson, from the section, or from <span class="ui">Flashcards</span> in the sidebar.</p>
+  <p>The first time you open a deck, a short “How does it work?” panel explains the method. Then you study as follows:</p>
+  <ol>
+    <li>Read the question, recall the answer in your mind, and click the card to flip it.</li>
+    <li>Grade yourself honestly: <span class="ui">Recalled</span> or <span class="ui">Didn’t recall</span>.</li>
+    <li><span class="ui">Recalled</span> — the card comes back in 1, then 3, 7, 14, and 30 days.</li>
+    <li><span class="ui">Didn’t recall</span> — the card is shown again in this sitting, and the schedule starts over at day&nbsp;1.</li>
+    <li>A card counts as learned when you recall it at the 30-day interval.</li>
+  </ol>
+  <figure class="shot">
+    <div class="frame"><img src="shots/flashcards.jpg" alt="A flashcard in a Foundations lesson"></div>
+    <figcaption>A lesson card. Grade yourself after you have flipped it.</figcaption>
+  </figure>
+  <p>Where it helps, the back of a card also notes how the same point is taught in the other movements. Cards due today are counted on the home screen, so a short daily review is easy to keep up.</p>
+</section>
+
+<section class="section" id="maalot">
+  <h2 data-running="Quiz and Ma’alot"><span class="num">6</span>Quiz and Ma’alot</h2>
+  <p>Ma’alot (Hebrew <span lang="he">מעלות</span>, “steps”) is a fifteen-step ladder of knowledge, from easier questions to harder ones. Open it from <span class="ui">Quiz</span> in the sidebar, or press <span class="ui">Climb</span> on the home screen.</p>
+  <p>The ladder follows the saying in Pirkei Avot 5:21: “At five years — to Mikra, at ten — to Mishnah, at thirteen — to mitzvot, … at fifteen — to Gemara.” Steps 1–5 are easy, 6–10 medium, and 11–15 hard. Questions are taken from the sections you have already opened, at your study level.</p>
+  <p>Steps 5 (“Mikra”) and 10 (“Mishnah”) are <em>safe steps</em>. After a mistake you return to the last safe step you have already passed, marked with a gold edge on the ladder. You may stop at any moment; the steps you have already passed stay with you. Your best climb is kept as a record.</p>
+  <p>You have three hints, each once per climb:</p>
+  <ul>
+    <li><span class="ui">50/50</span> — two wrong answers are removed.</li>
+    <li><span class="ui">Lesson hint</span> — a pointer back to the lesson that teaches this point.</li>
+    <li><span class="ui">Ask the rabbi</span> — a steer toward the source, not the letter of the answer.</li>
+  </ul>
+  <p>A timer is optional: no timer, 30 seconds, or 20 seconds for each question. If the time runs out, the answer is counted as wrong. You can set this on the Ma’alot start screen or in Settings. Answers can also be chosen from the keyboard (A–D or 1–4).</p>
+</section>
+
+<section class="section" id="tests">
+  <h2 data-running="Tests"><span class="num">7</span>Tests</h2>
+  <p>Open <span class="ui">Tests</span> in the sidebar for a knowledge check. There is a test for each section, and a <span class="ui">General exam</span> over the course as a whole. The pass mark is 80%. A passed section test, together with the lessons you have read, is what opens the next section.</p>
+  <figure class="shot">
+    <div class="frame"><img src="shots/exam.jpg" alt="A true-or-false question in a section test"></div>
+    <figcaption>A section test in Foundations. You can leave at any time; an unfinished attempt is not counted.</figcaption>
+  </figure>
+  <p>Questions may be true or false, multiple choice, or another closed form. When you finish, you can <span class="ui">Review your mistakes</span>. If you press <span class="ui">Leave</span> in the middle of a test, the app asks you to confirm. That attempt will not be counted, and you may come back whenever you like.</p>
+</section>
+
+<section class="section" id="interview">
+  <h2 data-running="Beit din interview trainer"><span class="num">8</span>Beit din interview trainer</h2>
+  <p>The beit din does not quiz you from a textbook. The judges want to understand who you are, why you have come, and how you already live. The trainer collects questions rabbis often ask at the interview, with explanations of what lies behind them. These are not ready-made answers to memorize. The judges can spot a memorized text right away; answer in your own words and about your real life. If you do not know something, or do not yet observe something, say so honestly.</p>
+  <p>There are 68 questions, in three modes:</p>
+  <ul>
+    <li><span class="ui">Topics</span> — read the questions and the model answers at your own pace, grouped by theme (motivation, faith and the oneness of G-d, Shabbat, kashrut, festivals, family and community, mitzvot and halacha, prayer and Hebrew, and a knowledge check).</li>
+    <li><span class="ui">Practice</span> — choose the right answer from several options. The result is checked at once and counts toward your review schedule.</li>
+    <li><span class="ui">Rehearsal</span> — a run of ten questions, closer to the interview itself. You may also answer aloud.</li>
+  </ul>
+  <figure class="shot">
+    <div class="frame"><img src="shots/interview.jpg" alt="Multiple-choice practice in the interview trainer"></div>
+    <figcaption>Practice in the interview trainer. The honest option is the one the judges want to hear.</figcaption>
+  </figure>
+  <p>The counters at the top — practiced, ready, and rehearsals — show how far you have come. From the home screen, <span class="ui">Prepare</span> opens this trainer directly.</p>
+</section>
+
+<section class="section" id="calendar">
+  <h2 data-running="Jewish calendar"><span class="num">9</span>Jewish calendar</h2>
+  <p><span class="ui">Calendar</span> in the sidebar opens the Jewish year. The <span class="ui">Today</span> tab is the usual view; <span class="ui">One month</span> shows a month at a time; <span class="ui">Settings</span> is where you set the place used for candle and fast times.</p>
+  <figure class="shot">
+    <div class="frame"><img src="shots/calendar.jpg" alt="The Jewish calendar, Today tab"></div>
+    <figcaption>Today’s date in the civil calendar and in the Jewish calendar, with a short note about the day.</figcaption>
+  </figure>
+  <p>For each day the app shows:</p>
+  <ul>
+    <li>The civil date and the Jewish date, including the Hebrew form of the date.</li>
+    <li><span class="ui">About this day</span> — the meaning of the day, and whether a fast falls on it.</li>
+    <li><span class="ui">Candle and fast times</span> — candle lighting, havdalah, and when fasts begin and end. An approximate place is needed (a city or coordinates). Set it once on the Calendar’s own Settings tab; the times then appear automatically.</li>
+    <li><span class="ui">Weekly portion</span> — the Torah reading for the coming Shabbat.</li>
+  </ul>
+</section>
+
+<section class="section" id="prayers">
+  <h2 data-running="Prayers"><span class="num">10</span>Prayers</h2>
+  <p><span class="ui">Prayers</span> gathers prayers and blessings for each day — for example the Shema Yisrael, the central declaration of faith. Open a prayer from the list. Each one can be shown in three ways, together or one at a time:</p>
+  <ul>
+    <li><span class="ui">Hebrew</span> — the text of the prayer.</li>
+    <li><span class="ui">Translation</span> — so you can follow the meaning.</li>
+    <li><span class="ui">Transliteration</span> — a pronunciation guide under the Hebrew. You can hide or show this in Settings (<span class="ui">Show transliteration</span>).</li>
+  </ul>
+  <p>A short note on the prayer tells you <em>when</em> it is said and <em>how</em>. You can change the text size on the prayer itself (the Hebrew scales too), save a prayer you return to often, and go back to the full list with <span class="ui">All prayers</span>.</p>
+  <p>If you do not yet read Hebrew, pray with the translation and the transliteration beside it, and grow into the Hebrew in your own time. The app is a help for practice; the custom of your community is what you should follow.</p>
+</section>
+
+<section class="section" id="progress">
+  <h2 data-running="Progress"><span class="num">11</span>Progress</h2>
+  <p>Open <span class="ui">Progress</span> in the sidebar for a picture of your study: the daily goal, your streak, total XP, and how ready you are in each part of the course.</p>
+  <p><strong>XP</strong> is given for the work itself: 10 for a lesson marked as read, 1 for each graded flashcard (a “Didn’t recall” still counts, because the work was done), 5 for a finished deck, 20 for a passed section test (plus 10 for a perfect score), 2 for each correct answer on Ma’alot, 15 for a practice beit din, and 1 for each correct answer in a self-check, a rehearsal, or a review of mistakes.</p>
+  <p>The <strong>streak</strong> is how many days in a row you have met the daily goal. If today’s goal is not yet met, the streak is safe until the end of the day. Every seven days of a streak earns a <strong>streak freeze</strong> (you can hold up to two). If you miss a day, a freeze is used automatically and the streak survives.</p>
+  <p>The same screen also shows readiness for the interview trainer, and the <span class="ui">Item collection</span>. Each object is added to the shelf when you read the lesson that mentions it — a Torah scroll, a tallit, Shabbat candles, and others. Open an object to turn it with the mouse and read a short note about it. The <span class="ui">Item of the Day</span> on the home screen is drawn from this collection.</p>
+  <p>Each movement keeps its own progress. If you switch from Orthodox to Reform, or the other way, you will see the path you have already walked in that movement, not a shared score mixed together.</p>
+</section>
+
+<section class="section" id="settings">
+  <h2 data-running="Settings"><span class="num">12</span>Settings</h2>
+  <p><span class="ui">Settings</span> is where you fit the app to how you study. The options below are the ones you will use most.</p>
+  <figure class="shot">
+    <div class="frame"><img src="shots/settings.jpg" alt="The Settings screen"></div>
+    <figcaption>Settings: movement, appearance, reviewer mode, and the Ma’alot timer.</figcaption>
+  </figure>
+  <ul>
+    <li><span class="ui">Movement</span> — Orthodox, Conservative (Masorti), or Reform. Each movement keeps its own progress. Use <span class="ui">Change movement</span> when you want to switch.</li>
+    <li><span class="ui">Theme</span> — Dark (the default) or Leather.</li>
+    <li><span class="ui">Font size</span> — from A− to A++. Hebrew scales too.</li>
+    <li><span class="ui">Open reviewer mode</span> — unrestricted mode for a rabbi or a tester: any section and any part of the app can be opened. Progress is not counted, and your real progress is left unchanged when you turn the mode off.</li>
+    <li><span class="ui">Open every section</span> — study freely, without unlocking sections in order.</li>
+    <li><span class="ui">Show transliteration</span> — a pronunciation guide under the Hebrew in prayers.</li>
+    <li><span class="ui">Quote of the Day</span> — a panel on the right of a wide window: a quote and today’s date.</li>
+    <li><span class="ui">3D models</span> — live objects you can turn with the mouse (a graphics card is required).</li>
+    <li><span class="ui">Ma’alot</span> — a time limit for each question on the ladder: no timer, 30 seconds, or 20 seconds.</li>
+    <li><span class="ui">Music</span> — quiet instrumental melodies, off by default. Turn them on here if you want them.</li>
+  </ul>
+  <p>Settings also lets you reset your progress. That cannot be undone, except by importing a file you saved earlier, so use it only when you mean to start again. Theme, font and music are kept.</p>
+</section>
+
+<section class="section" id="rabbi">
+  <h2 data-running="Rabbi review"><span class="num">13</span>Rabbi review</h2>
+  <p>All course content is checked by a rabbi. A lesson, a card, a question or a prayer may still show the badge <span class="ui">Awaiting a rabbi’s review</span> until that check is complete. The checklists, with a stable id for every item (lessons, cards, questions, interview items, prayers, calendar days and map notes), are in the project documentation:</p>
+  <ul>
+    <li><a href="https://github.com/Mitroshenkov87/shorashim/blob/main/docs/RABBI-REVIEW.md">docs/RABBI-REVIEW.md</a></li>
+    <li><a href="https://github.com/Mitroshenkov87/shorashim/blob/main/docs/RABBI-REVIEW.en.md">docs/RABBI-REVIEW.en.md</a></li>
+  </ul>
+  <p>The two files share the same item ids. If you are a rabbi or a knowledgeable reader and would like to help, please <a href="https://github.com/Mitroshenkov87/shorashim/issues/new">open an issue</a> and cite the item id.</p>
+  <div class="note">
+    <p><strong>A note on the app’s place</strong></p>
+    <p>The app helps you study; it does not replace a teacher. These materials need review by a rabbi of your community. Follow the custom of the beit din that is walking with you.</p>
+  </div>
+  <p class="end">May your study be fruitful, and may it bring you closer to Torah, to the Jewish people, and to Eretz Israel.</p>
+</section>
+
+</body>
+</html>
