@@ -3588,6 +3588,16 @@ Added under the owner's rule of 23 November 2026: the Reform path must be set ou
 
 - [ ] The added links to https://www.ccarnet.org/, https://www.ccarpress.org/, https://www.urj.org/ are the official home pages, without invented responsa numbers. If a rabbi indicates more precise Russian or canonical editions, they should be substituted into `sources`.
 
+### Movement descriptions on the "Choose a movement" screen (new text, needs review)
+
+The old descriptions stacked the levels like a ladder: Reform as "the base shared by every movement", Masorti as "everything in the base level, plus", Orthodox as "the full level". Now each movement is described on its own terms, with equal weight:
+
+- [ ] Reform: "The Torah is a living covenant that each generation studies and keeps with intention: the ethics of the prophets, Shabbat, the holidays, and prayer. Giyur means study with a rabbi, taking on the destiny of the people of Israel, and a beit din of Reform rabbis; mikveh and brit follow the community's rules."
+- [ ] Conservative (Masorti): "Halacha is binding and develops through the rulings of the Masorti movement's rabbis: Shabbat, kashrut, daily prayer. Giyur means study, a beit din of three rabbis, mikveh, and brit milah for men."
+- [ ] Orthodox: "The Torah given at Sinai and halacha according to the Shulchan Aruch in full detail. Giyur means accepting the mitzvot before an Orthodox beit din, brit milah for men, then mikveh."
+- [ ] Intro: "Three movements, three complete paths to giyur, each with its own principles and its own beit din." (instead of "The levels nest…"). The "Level 1/2/3" label above the cards was removed.
+- [ ] Interview question on Reform giyur: "differ from nineteenth-century North American practice" instead of "…minimum".
+
 ## The map of Eretz Israel (the "Land" screen)
 
 A new screen and a sidebar item, "The Land". The map shows all of Eretz Israel as one united and indivisible Jewish land: Judea and Samaria, the Golan, Aza, and united Jerusalem — the eternal undivided capital. The place names are Jewish (Jerusalem, Hevron, Shechem, Beit El, Shilo, Jericho, Judea, Samaria, the Golan, Aza, and others).
