@@ -34,6 +34,8 @@ pub enum Route {
     Map,
     /// «Еврейский календарь» (Сегодня / Месяц / Настройки).
     Calendar,
+    /// «Эрец-Исраэль»: the geographic map of the Land.
+    Eretz,
     Section(String),
     Lesson(String),
     Cards(Deck),

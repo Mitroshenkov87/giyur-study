@@ -760,6 +760,7 @@ impl Screen {
         page = page.push(reminders(ctx, p));
         page = page.push(timed_cta(p));
         page = page.push(interview_cta(ctx));
+        page = page.push(eretz_cta());
         page = page.push(object_of_the_day(ctx, &self.captions, self.day_shift));
 
         if !ctx.lib.sections.iter().any(|s| s.available) {
@@ -1419,6 +1420,57 @@ pub fn day_object(ctx: &Ctx) -> crate::ui::model3d::Model {
     use chrono::Datelike;
     let n = ctx.today().num_days_from_ce().rem_euclid(pool.len() as i32);
     pool[n as usize]
+}
+
+/// «Эрец-Исраэль» card: a small map preview that opens the full land map.
+fn eretz_cta<'a>() -> Element<'a, Msg> {
+    let p = theme::current();
+    button(
+        row![
+            container(crate::ui::screens::eretz::mini_map(148.0).map(|_| Msg::Go(Route::Eretz)))
+                .width(Length::Fixed(168.0))
+                .height(Length::Fixed(148.0))
+                .clip(true),
+            column![
+                txt("Эрец-Исраэль")
+                    .size(theme::text::BODY)
+                    .font(fonts::SANS_BOLD)
+                    .color(p.text),
+                txt("Вся Земля: Иудея и Шомрон, Голан, Аза и единый Иерусалим. Слой границ по Торе.")
+                    .size(theme::text::SMALL)
+                    .color(p.muted),
+                widgets::pill("Открыть карту", widgets::Pill::Cta),
+            ]
+            .spacing(8)
+            .width(Length::Fill),
+        ]
+        .spacing(16)
+        .align_y(Alignment::Center)
+        .width(Length::Fill),
+    )
+    .width(Length::Fill)
+    .padding(14.0)
+    .style(move |_, status| {
+        let p = theme::current();
+        let hovered = matches!(status, button::Status::Hovered | button::Status::Pressed);
+        button::Style {
+            background: Some(Background::Color(if hovered {
+                p.surface2
+            } else {
+                p.surface
+            })),
+            text_color: p.text,
+            border: Border {
+                color: if hovered { p.gold } else { p.line },
+                width: 1.0,
+                radius: theme::radius::CARD.into(),
+            },
+            shadow: iced::Shadow::default(),
+            snap: true,
+        }
+    })
+    .on_press(Msg::Go(Route::Eretz))
+    .into()
 }
 
 fn object_of_the_day<'a>(

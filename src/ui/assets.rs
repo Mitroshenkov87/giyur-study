@@ -336,6 +336,22 @@ const ART: &[(&str, &[u8])] = &[
         include_bytes!("../../assets/img/icons/sources-leather-hover-128.webp"),
     ),
     (
+        "icon-land-wood",
+        include_bytes!("../../assets/img/icons/land-wood-128.webp"),
+    ),
+    (
+        "icon-land-wood-hover",
+        include_bytes!("../../assets/img/icons/land-wood-hover-128.webp"),
+    ),
+    (
+        "icon-land-leather",
+        include_bytes!("../../assets/img/icons/land-leather-128.webp"),
+    ),
+    (
+        "icon-land-leather-hover",
+        include_bytes!("../../assets/img/icons/land-leather-hover-128.webp"),
+    ),
+    (
         "emblem-osnovy-wood",
         include_bytes!("../../assets/img/emblems/osnovy-wood-256.webp"),
     ),

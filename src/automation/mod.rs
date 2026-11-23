@@ -171,6 +171,16 @@ pub fn parse_route(r: &str) -> Option<(Route, Option<screens::calendar::Msg>)> {
             };
             Route::Calendar
         }
+        "eretz" | "land" | "земля" | "эрец-исраэль" => {
+            use crate::ui::screens::eretz::Start;
+            let start = match v.as_str() {
+                "torah" => Start::Torah,
+                "tribes" => Start::Tribes,
+                _ => Start::Land,
+            };
+            crate::ui::screens::eretz::open_with(start);
+            Route::Eretz
+        }
         "section" if !v.is_empty() => Route::Section(v),
         "lesson" if !v.is_empty() => Route::Lesson(v),
         "cards" if v == "review" => Route::Cards(Deck::Review),
@@ -221,6 +231,7 @@ pub fn route_str(r: &Route) -> String {
         Route::Level { .. } => "level".into(),
         Route::Map => "map".into(),
         Route::Calendar => "calendar".into(),
+        Route::Eretz => "eretz".into(),
         Route::Section(id) => format!("section:{id}"),
         Route::Lesson(id) => format!("lesson:{id}"),
         Route::Cards(Deck::Review) => "cards:review".into(),
@@ -254,6 +265,7 @@ pub fn screen_name(s: &Current) -> &'static str {
         Current::Level(_) => "level",
         Current::Map(_) => "map",
         Current::Calendar(_) => "calendar",
+        Current::Eretz(_) => "eretz",
         Current::Section(_) => "section",
         Current::Sources(_) => "sources",
         Current::Lesson(_) => "lesson",
