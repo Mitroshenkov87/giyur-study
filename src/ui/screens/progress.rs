@@ -17,10 +17,12 @@ use iced::{
     Theme,
 };
 
+use crate::collection;
 use crate::content::Library;
 use crate::game;
 use crate::ui::app::{Action, Ctx, Route};
 use crate::ui::fonts::{SANS, SANS_BOLD, SERIF_BOLD};
+use crate::ui::model3d::Model;
 use crate::ui::theme::{self, Palette};
 use crate::ui::{assets, widgets};
 use crate::util;
@@ -397,6 +399,50 @@ struct BadgeItem {
     earned: bool,
 }
 
+/// One object of the «Коллекция предметов» shelf.
+struct CollItem {
+    model: Model,
+    title: &'static str,
+    section: &'static str,
+    unlocked: bool,
+    /// The unlock rule in Russian (shown on a locked tile).
+    condition: String,
+}
+
+/// Tiles per shelf row for a reading column `reading` px wide.
+fn shelf_cols(reading: f32) -> usize {
+    (((reading - 2.0 * theme::spacing::CARD_PAD) / 150.0).floor() as usize).clamp(3, 6)
+}
+
+/// Shelf order: by section (as on «Уроки»), then by the model list.
+fn collection_items(lib: &Library, state: &crate::storage::State) -> Vec<CollItem> {
+    let mut items: Vec<(usize, usize, CollItem)> = Vec::new();
+    for (i, item) in collection::ITEMS.iter().enumerate() {
+        let Some(model) = Model::from_key(item.key) else {
+            continue;
+        };
+        let info = model.info();
+        let sec_pos = lib
+            .sections
+            .iter()
+            .position(|s| s.id == info.section)
+            .unwrap_or(usize::MAX);
+        items.push((
+            sec_pos,
+            i,
+            CollItem {
+                model,
+                title: info.title,
+                section: info.section_title,
+                unlocked: collection::is_unlocked(state, item.key),
+                condition: collection::condition(lib, item.unlock),
+            },
+        ));
+    }
+    items.sort_by_key(|(s, i, _)| (*s, *i));
+    items.into_iter().map(|(_, _, c)| c).collect()
+}
+
 struct HistoryItem {
     date: String,
     mode: String,
@@ -434,12 +480,22 @@ pub struct Screen {
     weak: Vec<WeakItem>,
     explain_open: bool,
     explain_items: Vec<String>,
+    collection: Vec<CollItem>,
+    collection_got: usize,
+    /// The collection object open in the live viewer.
+    open_object: Option<Model>,
+    caption_open: bool,
 }
 
 #[derive(Debug, Clone)]
 pub enum Msg {
     ToggleExplain,
     OpenLesson(String),
+    /// A collection tile: open the object in the live viewer (again: close).
+    OpenObject(Model),
+    CloseObject,
+    ToggleCaption,
+    Model3dReady,
 }
 
 /// js/exam.js E.MODE_TITLES (history entries store the raw mode string).
@@ -474,6 +530,7 @@ fn fmt_ts(ms: i64) -> String {
 
 impl Screen {
     pub fn new(ctx: &mut Ctx, _route: &Route) -> Self {
+        ctx.sync_collection();
         let state = &ctx.state;
         let lib = &ctx.lib;
         let today = ctx.today();
@@ -660,6 +717,13 @@ impl Screen {
             "**Заморозка серии** — за каждые 7 дней серии вы получаете одну (хранится не больше двух). Если вы пропустите день, заморозка спишется автоматически и серия сохранится.".to_string(),
         ];
 
+        let collection = collection_items(lib, state);
+        let collection_got = collection.iter().filter(|c| c.unlocked).count();
+        // Screenshot hook `SHORASHIM_COLLECTION_OPEN=<key>`: open that object.
+        let open_object = util::env_hook("COLLECTION_OPEN")
+            .and_then(|k| Model::from_key(&k))
+            .filter(|m| collection::is_unlocked(state, m.key()));
+
         Screen {
             streak,
             goal,
@@ -681,6 +745,10 @@ impl Screen {
             weak,
             explain_open: false,
             explain_items,
+            collection,
+            collection_got,
+            open_object,
+            caption_open: false,
         }
     }
 
@@ -691,6 +759,25 @@ impl Screen {
                 Action::None
             }
             Msg::OpenLesson(id) => Action::Go(Route::Lesson(id)),
+            Msg::OpenObject(m) => {
+                let unlocked = self.collection.iter().any(|c| c.model == m && c.unlocked);
+                if self.open_object == Some(m) {
+                    self.open_object = None;
+                } else if unlocked {
+                    self.open_object = Some(m);
+                    self.caption_open = false;
+                }
+                Action::None
+            }
+            Msg::CloseObject => {
+                self.open_object = None;
+                Action::None
+            }
+            Msg::ToggleCaption => {
+                self.caption_open = !self.caption_open;
+                Action::None
+            }
+            Msg::Model3dReady => Action::None,
         }
     }
 
@@ -698,12 +785,13 @@ impl Screen {
         iced::Subscription::none()
     }
 
-    pub fn view<'a>(&'a self, _ctx: &'a Ctx) -> Element<'a, Msg> {
+    pub fn view<'a>(&'a self, ctx: &'a Ctx) -> Element<'a, Msg> {
         let p = palette();
         column![
             column![widgets::kicker("Ваш путь"), widgets::heading("Успехи", 1),].spacing(6),
             self.kpis(p),
             self.game_card(p),
+            self.collection_card(ctx, p),
             self.badges_card(p),
             self.activity_card(p),
             self.sections_card(p),
@@ -982,6 +1070,168 @@ impl Screen {
             col = col.push(list);
         }
         col.into()
+    }
+
+    /// «Коллекция предметов»: a shelf of all live 3D objects. Unlocked
+    /// ones show their still and open in the live viewer under their row;
+    /// locked ones are dim silhouettes with the unlock rule.
+    fn collection_card<'a>(&'a self, ctx: &'a Ctx, p: Palette) -> Element<'a, Msg> {
+        let total = self.collection.len();
+        let frac = if total > 0 {
+            self.collection_got as f32 / total as f32
+        } else {
+            0.0
+        };
+        let cols = shelf_cols(crate::ui::layout::reading_width());
+        let mut col = Column::new().spacing(14).width(Length::Fill);
+        col = col.push(
+            row![
+                widgets::heading("Коллекция предметов", 3),
+                space::horizontal(),
+                txt(format!("{} из {}", self.collection_got, total))
+                    .size(theme::text::BODY)
+                    .font(SANS_BOLD)
+                    .color(p.gold2),
+            ]
+            .spacing(8)
+            .align_y(Alignment::Center),
+        );
+        col = col.push(
+            progress_bar(0.0..=1.0, frac)
+                .girth(6)
+                .style(move |_| bar_style(&p, p.gold)),
+        );
+        col = col.push(
+            txt(
+                "Каждый предмет попадает на полку, когда вы прочитаете урок, \
+                 где о нём рассказано. Откройте предмет, чтобы рассмотреть его со всех сторон.",
+            )
+            .size(theme::text::SMALL)
+            .color(p.muted),
+        );
+        for chunk in self.collection.chunks(cols) {
+            let mut r = Row::new().spacing(10).width(Length::Fill);
+            for c in chunk {
+                r = r.push(self.collection_tile(c, p));
+            }
+            for _ in chunk.len()..cols {
+                r = r.push(space::horizontal().width(Length::FillPortion(1)));
+            }
+            col = col.push(r);
+            if let Some(m) = self
+                .open_object
+                .filter(|m| chunk.iter().any(|c| c.model == *m))
+            {
+                col = col.push(crate::ui::model3d::card::card(
+                    ctx,
+                    m,
+                    Some("Из вашей коллекции"),
+                    self.caption_open,
+                    crate::ui::model3d::card::Msgs {
+                        ready: Msg::Model3dReady,
+                        toggle_caption: Msg::ToggleCaption,
+                        link: Some(("Свернуть".to_string(), Msg::CloseObject)),
+                    },
+                ));
+            }
+        }
+        widgets::card(col)
+    }
+
+    fn collection_tile<'a>(&'a self, c: &'a CollItem, p: Palette) -> Element<'a, Msg> {
+        const IMG: f32 = 104.0;
+        const TILE_H: f32 = 224.0;
+        let selected = self.open_object == Some(c.model);
+        let picture: Element<'a, Msg> = if c.unlocked {
+            image(c.model.still_image())
+                .width(Length::Fixed(IMG))
+                .height(Length::Fixed(IMG))
+                .into()
+        } else {
+            let ink = |v: f32| (v.clamp(0.0, 1.0) * 255.0) as u8;
+            let rgb = [ink(p.muted.r), ink(p.muted.g), ink(p.muted.b)];
+            stack![
+                image(c.model.silhouette_image(rgb, 0.32))
+                    .width(Length::Fixed(IMG))
+                    .height(Length::Fixed(IMG)),
+                container(
+                    Canvas::new(LockIcon)
+                        .width(Length::Fixed(18.0))
+                        .height(Length::Fixed(20.0))
+                )
+                .center(Length::Fixed(IMG)),
+            ]
+            .into()
+        };
+        let mut body = Column::new()
+            .spacing(4)
+            .align_x(Horizontal::Center)
+            .width(Length::Fill);
+        body = body.push(container(picture).center_x(Length::Fill));
+        body = body.push(
+            txt(c.title)
+                .size(theme::text::SMALL)
+                .font(SANS_BOLD)
+                .color(if c.unlocked {
+                    p.text
+                } else {
+                    alpha(p.text, 0.6)
+                })
+                .align_x(Horizontal::Center)
+                .width(Length::Fill),
+        );
+        body = body.push(
+            txt(if c.unlocked {
+                c.section.to_string()
+            } else {
+                c.condition.clone()
+            })
+            .size(12.0)
+            .color(p.muted)
+            .align_x(Horizontal::Center)
+            .width(Length::Fill),
+        );
+        if c.unlocked {
+            button(body)
+                .padding([10.0, 8.0])
+                .width(Length::FillPortion(1))
+                .height(Length::Fixed(TILE_H))
+                .on_press(Msg::OpenObject(c.model))
+                .style(move |_, st| {
+                    let hot =
+                        selected || matches!(st, button::Status::Hovered | button::Status::Pressed);
+                    button::Style {
+                        background: Some(Background::Color(if hot {
+                            alpha(p.gold, 0.12)
+                        } else {
+                            alpha(p.surface2, 0.55)
+                        })),
+                        text_color: p.text,
+                        border: Border {
+                            color: if hot { p.gold2 } else { alpha(p.gold, 0.35) },
+                            width: if selected { 1.5 } else { 1.0 },
+                            radius: theme::radius::SMALL.into(),
+                        },
+                        ..button::Style::default()
+                    }
+                })
+                .into()
+        } else {
+            container(body)
+                .padding([10.0, 8.0])
+                .width(Length::FillPortion(1))
+                .height(Length::Fixed(TILE_H))
+                .style(move |_| container::Style {
+                    background: Some(Background::Color(alpha(p.surface3, 0.35))),
+                    border: Border {
+                        color: alpha(p.line, 0.8),
+                        width: 1.0,
+                        radius: theme::radius::SMALL.into(),
+                    },
+                    ..plain_container(None)
+                })
+                .into()
+        }
     }
 
     fn badges_card<'a>(&'a self, p: Palette) -> Element<'a, Msg> {

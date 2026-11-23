@@ -36,6 +36,9 @@ use crate::ui::screens::map::{self, icons};
 use crate::ui::theme::{self, Palette};
 use crate::ui::widgets;
 
+#[path = "timed_stair.rs"]
+mod stair;
+
 /// Content width from which the ladder column stands beside the question.
 const WIDE: f32 = 760.0;
 /// Width of the ladder column on wide windows.
@@ -518,6 +521,30 @@ fn ladder_column<'a>(states: &[RungState]) -> Element<'a, Msg> {
         .into()
 }
 
+/// The 3D stair (wide windows, «Объёмные модели» on): fifteen stone steps
+/// rising away, the lamp on the last climbed step, the step being played lit
+/// in brass. Same column width as the flat ladder.
+fn ladder_stair<'a>(states: Vec<RungState>, pos: f32) -> Element<'a, Msg> {
+    let p = tp();
+    let col = column![
+        container(muted("Пятнадцать ступеней").size(11.5)).center_x(Length::Fill),
+        container(stair::view(states, pos)).center_x(Length::Fill),
+        row![
+            icons::icon(icons::Kind::Shield, 13.0, p.gold),
+            muted("Золотой кант — надёжная ступень").size(12.0),
+        ]
+        .spacing(6)
+        .align_y(Alignment::Center),
+    ]
+    .spacing(6)
+    .width(Length::Fill);
+    container(col)
+        .padding([12.0, 12.0])
+        .width(Length::Fixed(LADDER_W))
+        .style(|_| theme::card(&tp()))
+        .into()
+}
+
 /// The compact ladder (narrow windows, results): 1 on the left to 15 on
 /// the right, in three tier groups, with a legend line under it.
 fn ladder_strip<'a>(states: &[RungState]) -> Element<'a, Msg> {
@@ -595,6 +622,11 @@ struct Run {
     /// Set the moment the run ends (fall, time out, top or walk away):
     /// `ladder::finish` has run, so leaving the screen keeps the result.
     done: Option<Box<Results>>,
+    /// The 3D stair's lamp: animation start position and time.
+    climb_from: f32,
+    climb_at: Option<Instant>,
+    /// Screenshot hook `SHORASHIM_LADDER_CLIMB=<steps>`: a fixed lamp position.
+    climb_fixed: Option<f32>,
 }
 
 impl Run {
@@ -609,6 +641,9 @@ impl Run {
             confirm_at: None,
             frozen: false,
             done: None,
+            climb_from: 0.0,
+            climb_at: None,
+            climb_fixed: None,
         };
         run.start_clock();
         run
@@ -634,10 +669,34 @@ impl Run {
     }
 
     /// Answer the current step (None = time out) and show the reveal.
+    /// Where the lamp of the 3D stair rests: on the last climbed step, or
+    /// on the safe step after a fall.
+    fn climb_target(&self) -> f32 {
+        if self.ladder.outcome == Some(Outcome::Fell) {
+            ladder::safe_below(self.ladder.climbed) as f32
+        } else {
+            self.ladder.climbed as f32
+        }
+    }
+
+    /// The lamp position now (fractional while it climbs).
+    fn climber_pos(&self, now: Instant) -> f32 {
+        self.climb_fixed.unwrap_or_else(|| {
+            stair::position(self.climb_from, self.climb_target(), self.climb_at, now)
+        })
+    }
+
+    fn animating(&self) -> bool {
+        self.climb_at
+            .is_some_and(|at| at.elapsed() < stair::CLIMB + Duration::from_millis(50))
+    }
+
     fn answer(&mut self, ctx: &mut Ctx, k: Option<usize>) {
         if self.reveal.is_some() {
             return;
         }
+        let now = Instant::now();
+        let before = self.climber_pos(now);
         let Some(step) = self.ladder.current().cloned() else {
             return;
         };
@@ -646,6 +705,10 @@ impl Run {
         let today = ctx.today();
         let right = self.ladder.answer(&mut ctx.state, k, today);
         ctx.save();
+        if !self.frozen && (self.climb_target() - before).abs() > f32::EPSILON {
+            self.climb_from = before;
+            self.climb_at = Some(now);
+        }
         if self.ladder.outcome.is_some() {
             // Fall or top: record the result now, not on «Итоги».
             self.finish(ctx);
@@ -721,6 +784,7 @@ fn finish_run(ctx: &mut Ctx, run: &Run) -> Results {
     let r = ladder::finish(&ctx.lib, &run.ladder, &mut ctx.state, today);
     celebrate_award(ctx, &r.award);
     ctx.save();
+    ctx.sync_collection();
     let l = &run.ladder;
     let review = if r.outcome == Outcome::Fell {
         l.steps.get(l.climbed).map(|s| {
@@ -774,6 +838,8 @@ pub enum Msg {
     ToMap,
     // Subscriptions.
     Tick(Instant),
+    /// An animation frame of the 3D stair.
+    Frame(Instant),
     Key(keyboard::Key, key::Physical, keyboard::Modifiers),
 }
 
@@ -833,6 +899,11 @@ fn demo_phase(ctx: &mut Ctx, mode: &str) -> Phase {
                 if let Some(k) = run.ladder.current().map(|s| s.right_index()) {
                     run.answer(ctx, Some(k));
                 }
+            }
+            if let Some(f) =
+                crate::util::env_hook("LADDER_CLIMB").and_then(|v| v.trim().parse::<f32>().ok())
+            {
+                run.climb_fixed = Some(f);
             }
             Phase::Run(Box::new(run))
         }
@@ -987,6 +1058,13 @@ impl Screen {
                     run.tick(ctx, now);
                 }
             }
+            Msg::Frame(_) => {
+                if let Phase::Run(run) = &mut self.phase {
+                    if !run.animating() {
+                        run.climb_at = None;
+                    }
+                }
+            }
             Msg::Key(k, physical, modifiers) => {
                 if modifiers.command() || modifiers.alt() {
                     return Action::None;
@@ -1021,7 +1099,7 @@ impl Screen {
     fn view_at<'a>(&'a self, ctx: &'a Ctx, w: f32) -> Element<'a, Msg> {
         match &self.phase {
             Phase::Setup => view_setup(ctx, w),
-            Phase::Run(run) => view_run(run, w),
+            Phase::Run(run) => view_run(run, w, crate::ui::model3d::enabled(ctx)),
             Phase::Results(r) => view_results(ctx, r, w),
         }
     }
@@ -1062,14 +1140,14 @@ impl Screen {
                     } => Some(Msg::Key(key, physical_key, modifiers)),
                     _ => None,
                 });
+                let mut subs = vec![keys];
                 if run.secs > 0 && !run.frozen && run.reveal.is_none() {
-                    Subscription::batch([
-                        iced::time::every(Duration::from_millis(100)).map(Msg::Tick),
-                        keys,
-                    ])
-                } else {
-                    keys
+                    subs.push(iced::time::every(Duration::from_millis(100)).map(Msg::Tick));
                 }
+                if run.climb_at.is_some() {
+                    subs.push(iced::window::frames().map(Msg::Frame));
+                }
+                Subscription::batch(subs)
             }
             _ => Subscription::none(),
         }
@@ -1576,7 +1654,7 @@ fn reveal_view<'a>(run: &'a Run, rv: &'a Reveal) -> Element<'a, Msg> {
     tinted_box(col, bg, alpha(color, 0.45))
 }
 
-fn view_run<'a>(run: &'a Run, w: f32) -> Element<'a, Msg> {
+fn view_run<'a>(run: &'a Run, w: f32, three_d: bool) -> Element<'a, Msg> {
     let p = tp();
     let l = &run.ladder;
     let wide = w >= WIDE;
@@ -1749,7 +1827,12 @@ fn view_run<'a>(run: &'a Run, w: f32) -> Element<'a, Msg> {
     let card = widgets::card(card);
 
     let body: Element<'a, Msg> = if wide {
-        row![container(card).width(Length::Fill), ladder_column(&states)]
+        let ladder: Element<'a, Msg> = if three_d {
+            ladder_stair(states.clone(), run.climber_pos(Instant::now()))
+        } else {
+            ladder_column(&states)
+        };
+        row![container(card).width(Length::Fill), ladder]
             .spacing(GAP)
             .align_y(Alignment::Start)
             .width(Length::Fill)

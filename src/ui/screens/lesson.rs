@@ -119,6 +119,7 @@ impl Screen {
                 ctx.activity();
                 ctx.toast("Урок отмечен прочитанным", "", "✓");
                 ctx.award(game::XP.lesson);
+                ctx.sync_collection();
                 Action::None
             }
             Msg::ToggleDiffers(id) => {

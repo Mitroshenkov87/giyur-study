@@ -1,5 +1,6 @@
 pub mod automation;
 pub mod calendar;
+pub mod collection;
 pub mod content;
 pub mod exam;
 pub mod game;

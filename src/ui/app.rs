@@ -173,6 +173,8 @@ impl Ctx {
         let today = ctx.today();
         game::apply_freezes(&mut ctx.state, today);
         let _ = game::check_badges(&ctx.lib, &mut ctx.state, today);
+        // Objects earned before the collection existed join it quietly.
+        crate::collection::sync(&mut ctx.state, &crate::util::day_key(today));
         ctx.save();
         ctx
     }
@@ -229,6 +231,29 @@ impl Ctx {
             badge_id: None,
             until: self.next_slot(4200),
         });
+    }
+
+    /// Add the «Успехи» collection objects whose rule is met now (a lesson
+    /// read, a «Маалот» step), announce each one with a toast and save.
+    pub fn sync_collection(&mut self) {
+        let today = self.today_key();
+        let new = crate::collection::sync(&mut self.state, &today);
+        if new.is_empty() {
+            return;
+        }
+        for key in new {
+            if let Some(m) = crate::ui::model3d::Model::from_key(key) {
+                let text = format!("«{}» — откройте его в разделе «Успехи».", m.info().title);
+                self.toasts.push(Toast {
+                    title: "Новый предмет в коллекции".into(),
+                    text,
+                    icon: "✓".into(),
+                    badge_id: None,
+                    until: self.next_slot(4200),
+                });
+            }
+        }
+        self.save();
     }
 
     /// Award XP, then show goal / badge celebrations and save.

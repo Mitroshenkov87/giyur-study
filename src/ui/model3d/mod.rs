@@ -228,6 +228,43 @@ impl Model {
         }
     }
 
+    /// Stable key (the asset name), used by the «Успехи» collection.
+    pub fn key(self) -> &'static str {
+        match self {
+            Model::KiddushCup => "kiddush-cup",
+            Model::ShabbatCandles => "shabbat-candlesticks",
+            Model::Menorah => "menorah",
+            Model::TorahScroll => "torah-scroll",
+            Model::Shofar => "shofar",
+            Model::Temple => "temple-complex",
+            Model::MagenDavid => "magen-david",
+            Model::Hanukkiah => "hanukkiah",
+            Model::SederPlate => "seder-plate",
+            Model::LulavEtrog => "lulav-etrog",
+            Model::MegillatEsther => "megillat-esther",
+            Model::Sukkah => "sukkah",
+            Model::Tallit => "tallit",
+            Model::Mezuzah => "mezuzah",
+            Model::Siddur => "siddur",
+            Model::Tefillin => "tefillin",
+            Model::Kotel => "kotel",
+            Model::Chuppah => "chuppah",
+            Model::Ketubah => "ketubah",
+            Model::KosherDishes => "kosher-dishes",
+            Model::WeddingGlass => "wedding-glass",
+            Model::KosherFish => "kosher-fish",
+        }
+    }
+
+    pub fn from_key(key: &str) -> Option<Model> {
+        ALL.iter().copied().find(|m| m.key() == key)
+    }
+
+    /// All embedded models, in list order.
+    pub fn all() -> &'static [Model] {
+        &ALL
+    }
+
     fn still(self) -> &'static [u8] {
         match self {
             Model::KiddushCup => asset!("kiddush-cup.webp"),
@@ -567,6 +604,30 @@ impl Model {
             .or_insert_with(|| match image::load_from_memory(self.still()) {
                 Ok(i) => {
                     let i = i.to_rgba8();
+                    Handle::from_rgba(i.width(), i.height(), i.into_raw())
+                }
+                Err(_) => Handle::from_rgba(1, 1, vec![0; 4]),
+            })
+            .clone()
+    }
+
+    /// A dim one-colour silhouette of the still (a locked collection
+    /// object): the still's alpha with a flat `rgb` ink at `alpha`.
+    pub fn silhouette_image(self, rgb: [u8; 3], alpha: f32) -> Handle {
+        type Key = (Model, [u8; 3], u8);
+        static CACHE: OnceLock<std::sync::Mutex<HashMap<Key, Handle>>> = OnceLock::new();
+        let a = (alpha.clamp(0.0, 1.0) * 255.0) as u8;
+        let cache = CACHE.get_or_init(Default::default);
+        let mut c = cache.lock().unwrap_or_else(|e| e.into_inner());
+        c.entry((self, rgb, a))
+            .or_insert_with(|| match image::load_from_memory(self.still()) {
+                Ok(i) => {
+                    let mut i = i.to_rgba8();
+                    for px in i.pixels_mut() {
+                        let k = px.0[3] as u32 * a as u32 / 255;
+                        // Premultiplied-free RGBA: flat ink, scaled alpha.
+                        px.0 = [rgb[0], rgb[1], rgb[2], k as u8];
+                    }
                     Handle::from_rgba(i.width(), i.height(), i.into_raw())
                 }
                 Err(_) => Handle::from_rgba(1, 1, vec![0; 4]),
@@ -1555,6 +1616,31 @@ impl shader::Primitive for Primitive {
 #[cfg(test)]
 mod tests {
     use iced::wgpu::naga;
+
+    /// Every model is a collectible of «Успехи» and back.
+    #[test]
+    fn every_model_is_in_the_collection() {
+        assert_eq!(super::ALL.len(), crate::collection::ITEMS.len());
+        for (m, item) in super::ALL.iter().zip(crate::collection::ITEMS.iter()) {
+            assert_eq!(m.key(), item.key);
+            assert_eq!(super::Model::from_key(item.key), Some(*m));
+        }
+    }
+
+    #[test]
+    fn silhouettes_keep_the_shape_only() {
+        let h = super::Model::Shofar.silhouette_image([10, 20, 30], 0.5);
+        let iced::widget::image::Handle::Rgba { pixels, .. } = h else {
+            panic!("rgba handle");
+        };
+        let mut seen = false;
+        for px in pixels.chunks(4) {
+            assert_eq!(&px[..3], &[10, 20, 30]);
+            assert!(px[3] <= 128);
+            seen |= px[3] > 0;
+        }
+        assert!(seen);
+    }
 
     /// Both WGSL halves parse and validate (catches shader errors in CI,
     /// which has no GPU).
