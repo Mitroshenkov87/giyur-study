@@ -12,6 +12,10 @@ The course is written in the language of Torah and Tanakh — the Written and Or
 
 Giyur is a path, not a cram session. Shorashim walks with you: short lessons, honest practice, and the questions a beit din actually asks — so you can answer in your own words, not from a memorized script.
 
+![The Second Temple, a 3D model you can turn](docs/screenshots/temple.webp)
+
+Open a 3D **Second Temple** and turn it with the mouse — look at it from every side. Other objects join your collection as you study.
+
 ## Prepare for the beit din
 
 The judges want to know who you are, why you have come, and how you already live. The **beit din interview trainer** gathers the questions rabbis ask, and explains what lies behind them. These are not ready-made answers to memorize. You can read the topics at your own pace, practice with multiple-choice questions, and rehearse — including out loud.
@@ -38,7 +42,7 @@ The **Jewish calendar** shows the date, the meaning of the day, the weekly Torah
 
 ![Jewish calendar](docs/screenshots/calendar.webp)
 
-You can also turn **3D objects** with the mouse — a Torah scroll, and more — and, if you like, play quiet instrumental music (off by default, in Settings).
+The collection also holds other **3D objects** you can turn — a Torah scroll, a sukkah, and more. If you like, you can play quiet instrumental music (off by default, in Settings).
 
 A **reviewer mode** lets a rabbi or a tester open any part of the app without changing a student’s progress.
 

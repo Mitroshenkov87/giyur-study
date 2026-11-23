@@ -35,6 +35,7 @@ SHOTS = (
     "exam",
     "calendar",
     "settings",
+    "temple",
 )
 
 FONT_CANDIDATES = {
