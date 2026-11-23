@@ -80,6 +80,55 @@ jobs:
           files: |
             dist/Shorashim-Setup.exe
 
+  linux-appimage:
+    # Older glibc than ubuntu-latest, so the AppImage runs on more systems.
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: System libraries
+        run: sudo apt-get update && sudo apt-get install -y libxkbcommon-dev libwayland-dev libx11-dev libxcursor-dev libxrandr-dev libxi-dev libvulkan-dev libasound2-dev pkg-config python3-venv
+      - name: Build release
+        run: cargo build --release --bin shorashim
+      - name: Package Shorashim-x86_64.AppImage
+        run: tools/make_appimage.sh target/release/shorashim dist
+      - name: AppImage smoke (the app finds content/ in usr/share/shorashim)
+        env:
+          APPIMAGE_EXTRACT_AND_RUN: "1"
+        run: |
+          app=$PWD/dist/Shorashim-x86_64.AppImage
+          cd /tmp
+          out=$("$app" validate-content)
+          echo "$out"
+          echo "$out" | grep -q "usr/share/shorashim/content" || { echo "AppImage did not use its own content/"; exit 1; }
+          "$app" --headless --script "$GITHUB_WORKSPACE/tests/scripts/01-navigate.jsonl" --today 2026-11-22 > smoke.jsonl
+          wc -l smoke.jsonl
+          test "$(wc -l < smoke.jsonl)" -ge 10
+          "$app" --headless --script "$GITHUB_WORKSPACE/tests/scripts/02-lesson.jsonl" --today 2026-11-22 > /dev/null
+          mkdir -p "$GITHUB_WORKSPACE/shots"
+          printf '%s\n' \
+            '{"cmd":"press","label":"Начать","expect":{"screen":"level"}}' \
+            '{"cmd":"press","contains":"Ортодоксальный","expect":{"screen":"map"}}' \
+            "{\"cmd\":\"screenshot\",\"path\":\"$GITHUB_WORKSPACE/shots/linux-lessons.webp\"}" > shot.jsonl
+          "$app" --headless --script shot.jsonl --today 2026-11-22
+          ls -l "$GITHUB_WORKSPACE/shots"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Shorashim-Linux
+          path: dist/Shorashim-x86_64.AppImage
+          compression-level: 0
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-screenshot
+          path: shots/
+      - name: Attach to release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/Shorashim-x86_64.AppImage
+
   macos:
     runs-on: macos-latest
     steps:
