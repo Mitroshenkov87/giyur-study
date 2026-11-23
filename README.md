@@ -4,7 +4,7 @@ Shorashim (Hebrew for “roots”) is an offline Windows app for studying the fo
 
 The course is written in the language of Torah and Tanakh — the Written and Oral Torah. It is consistently pro-Israel: Eretz Israel is the heritage the Torah gives the Jewish people, Jerusalem is the eternal undivided capital, and the State of Israel is the Jewish people’s return home.
 
-**[Download Shorashim-Setup.exe](https://github.com/Mitroshenkov87/shorashim/releases/latest)** — Windows 10 or 11, for the current user, no administrator rights needed. Russian is also available; the screenshots below are from the English version.
+**[Download Shorashim-Setup.exe](https://github.com/Mitroshenkov87/shorashim/releases/latest)** — Windows 10 or 11, for the current user, no administrator rights needed.
 
 ![Home](docs/screenshots/home.webp)
 
@@ -21,25 +21,17 @@ The course is written in the language of Torah and Tanakh — the Written and Or
 - **3D objects** you can turn with the mouse (a Torah scroll, and more), and optional quiet instrumental music (off by default, in Settings).
 - **Reviewer mode**, so a rabbi or a tester can open any part of the app without changing a student’s progress.
 
+![Welcome](docs/screenshots/welcome.webp)
+
 ![A lesson](docs/screenshots/lesson.webp)
 
 ![Flashcards](docs/screenshots/flashcards.webp)
 
 ![Beit din interview trainer](docs/screenshots/interview.webp)
 
+![A section test](docs/screenshots/exam.webp)
+
 ![Jewish calendar](docs/screenshots/calendar.webp)
-
-![Eretz Israel — Israel today](docs/screenshots/map-israel-today.webp)
-
-![Eretz Israel — Borders by the Torah](docs/screenshots/map-torah-borders.webp)
-
-![Settings: English and Russian](docs/screenshots/settings.webp)
-
-## English and Russian
-
-The app is in **English** and **Russian**. On first launch it follows the Windows interface language: Russian Windows opens the app in Russian; any other Windows language opens it in English. You can switch later in Settings; your progress is kept.
-
-The English name of the app is Shorashim; the Russian name is Шорашим.
 
 ## Download and install
 
@@ -51,7 +43,7 @@ Progress is stored separately, in `%APPDATA%\Shorashim`, and is left as it is if
 
 ## Course content
 
-Lessons, cards, quiz questions, the interview trainer, prayers and calendar texts are ordinary JSON files in `content/ru/` and `content/en/`, next to the program — nothing of this is built into the `.exe`. A wording fix is an edit to a file and a short repack of the installer; Rust does not need to be compiled again. The two languages keep the same file names and the same ids, so progress carries over when you switch language.
+Lessons, cards, quiz questions, the interview trainer, prayers and calendar texts are ordinary JSON files in a `content` folder next to the program — nothing of this is built into the `.exe`. A wording fix is an edit to a file and a short repack of the installer; Rust does not need to be compiled again.
 
 A short guide to editing and checking the files is in [`docs/CONTENT-UPDATES.md`](docs/CONTENT-UPDATES.md). If a file is missing or invalid, the app shows a calm message with the file, the line and what is wrong; it does not crash.
 
@@ -59,10 +51,10 @@ A short guide to editing and checking the files is in [`docs/CONTENT-UPDATES.md`
 
 All course content is checked by a rabbi. The checklists are:
 
-- [`docs/RABBI-REVIEW.md`](docs/RABBI-REVIEW.md) — Russian
-- [`docs/RABBI-REVIEW.en.md`](docs/RABBI-REVIEW.en.md) — English
+- [`docs/RABBI-REVIEW.md`](docs/RABBI-REVIEW.md)
+- [`docs/RABBI-REVIEW.en.md`](docs/RABBI-REVIEW.en.md)
 
-They share the same item ids (lessons, cards, questions, interview items, prayers, calendar days and map notes). A remark on an item applies to both languages.
+They share the same item ids (lessons, cards, questions, interview items, prayers, calendar days and map notes).
 
 If you are a rabbi or a knowledgeable reader and would like to help, please [open an issue](https://github.com/Mitroshenkov87/shorashim/issues/new) and cite the item id. The app helps you study; it does not replace a teacher.
 
