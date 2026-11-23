@@ -66,6 +66,11 @@ fn exam_setup_mode_tiles() {
 }
 
 #[test]
+fn interview_trainer() {
+    run_script("09-interview.jsonl");
+}
+
+#[test]
 fn errors_are_replies_not_panics() {
     let mut s = session();
     for req in [
@@ -181,7 +186,7 @@ fn mcp_server_lists_and_calls_tools() {
 
 #[test]
 fn prayers() {
-    run_script("09-prayers.jsonl");
+    run_script("10-prayers.jsonl");
 }
 
 /// The «Показывать» toggle really hides the other forms, and the choice is

@@ -5,6 +5,7 @@ pub mod content;
 pub mod exam;
 pub mod game;
 pub mod install;
+pub mod interview;
 pub mod ladder;
 pub mod music;
 pub mod prayers;

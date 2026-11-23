@@ -50,6 +50,8 @@ pub enum Route {
     Progress,
     Settings,
     Sources,
+    /// «Тренажёр собеседования с бейт-дином» (src/ui/screens/interview.rs).
+    Interview(crate::interview::Mode),
     /// «Молитвы»: the list, or one prayer by id (src/prayers.rs).
     Prayers(Option<String>),
 }

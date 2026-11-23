@@ -1,0 +1,31 @@
+# «Тренажёр собеседования с бейт-дином»: map banner, topics with guidance and
+# lesson links, practice with self-rating, a full mock interview and «Успехи».
+{"cmd":"press","label":"Начать"}
+{"cmd":"press","contains":"Ортодоксальный"}
+{"cmd":"navigate","to":"map","expect":{"control":"Тренажёр собеседования"}}
+{"cmd":"press","contains":"Тренажёр собеседования","expect":{"screen":"interview","route":"interview","control":"Interview(Toggle(\"mot-why\"))"}}
+{"cmd":"press","id":"Interview(Toggle(\"mot-why\"))","expect":{"text":"Что хотят услышать раввины","control":"Interview(Lesson(\"beit-din-3\"))"}}
+{"cmd":"press","id":"Interview(Lesson(\"beit-din-3\"))","expect":{"screen":"lesson","route":"lesson:beit-din-3"}}
+{"cmd":"navigate","to":"interview"}
+{"cmd":"press","id":"Interview(Topic(Some(\"kashrut\")))","expect":{"text":"Ваша кухня кошерная?"}}
+{"cmd":"navigate","to":"interview:practice","expect":{"control":"Interview(Reveal)"}}
+{"cmd":"type","text":"Потому что я выбрал этот путь сам","expect":{"ok":true}}
+{"cmd":"press","id":"Interview(Reveal)","expect":{"text":"Частые ошибки","control":"Interview(Rate(Partly))"}}
+{"cmd":"press","id":"Interview(Rate(Partly))","expect":{"text":"Ваша оценка: Частично","control":"Следующий вопрос"}}
+{"cmd":"press","id":"Interview(Next)","expect":{"control":"Interview(Reveal)"}}
+{"cmd":"answer","auto":true,"expect":{"text":"Ваша оценка"}}
+{"cmd":"navigate","to":"interview:rehearsal","expect":{"text":"Вопрос 1 из 10"}}
+{"cmd":"answer","self_grade":1,"next":true}
+{"cmd":"answer","self_grade":1,"next":true}
+{"cmd":"answer","self_grade":1,"next":true}
+{"cmd":"answer","self_grade":1,"next":true}
+{"cmd":"answer","self_grade":1,"next":true}
+{"cmd":"answer","self_grade":1,"next":true}
+{"cmd":"answer","self_grade":1,"next":true}
+{"cmd":"answer","self_grade":1,"next":true}
+{"cmd":"answer","self_grade":1,"next":true}
+{"cmd":"answer","self_grade":0,"next":true,"expect":{"text":"Итоги репетиции","control":"Новая репетиция","min_xp":9}}
+{"cmd":"state","expect":{"reply":{"progress":{"interview_runs":1}}}}
+{"cmd":"press","label":"Новая репетиция","expect":{"text":"Вопрос 1 из 10"}}
+{"cmd":"navigate","to":"progress","expect":{"text":"Тренажёр собеседования","control":"Interview(Practice)"}}
+{"cmd":"press","id":"Progress(OpenInterview(Practice))","expect":{"route":"interview:practice"}}

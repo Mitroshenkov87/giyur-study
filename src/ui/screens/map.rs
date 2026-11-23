@@ -749,6 +749,7 @@ impl Screen {
         page = page.push(header(ctx, p));
         page = page.push(reminders(ctx, p));
         page = page.push(timed_cta(p));
+        page = page.push(interview_cta(ctx));
         page = page.push(object_of_the_day(ctx, &self.captions));
 
         if !ctx.lib.sections.iter().any(|s| s.available) {
@@ -1124,6 +1125,64 @@ fn timed_cta<'a>(_p: theme::Palette) -> Element<'a, Msg> {
         }
     })
     .on_press(Msg::Go(Route::Timed))
+    .into()
+}
+
+/// «Тренажёр собеседования с бейт-дином» banner: a lighter card under the
+/// «Маалот» one, with the trainer's progress.
+fn interview_cta<'a>(ctx: &'a Ctx) -> Element<'a, Msg> {
+    let p = theme::current();
+    let st = crate::interview::stats(&ctx.state, ctx.today());
+    let sub = if st.practiced == 0 {
+        format!(
+            "{} вопросов раввинов: что они проверяют, как ответить честно, репетиция собеседования",
+            st.total
+        )
+    } else {
+        format!(
+            "Отработано {} из {} вопросов · готов {} · репетиций {}",
+            st.practiced, st.total, st.ready, st.runs
+        )
+    };
+    button(
+        row![
+            icons::icon(icons::Kind::Scales, 26.0, p.gold2),
+            column![
+                txt("Тренажёр собеседования с бейт-дином")
+                    .size(theme::text::BODY)
+                    .font(fonts::SANS_BOLD)
+                    .color(p.text),
+                txt(sub).size(theme::text::SMALL).color(p.muted),
+            ]
+            .spacing(2)
+            .width(Length::Fill),
+            widgets::pill("Готовиться", widgets::Pill::Cta),
+        ]
+        .spacing(14)
+        .align_y(Alignment::Center),
+    )
+    .width(Length::Fill)
+    .padding(18.0)
+    .style(move |_, status| {
+        let p = theme::current();
+        let hovered = matches!(status, button::Status::Hovered | button::Status::Pressed);
+        button::Style {
+            background: Some(Background::Color(if hovered {
+                p.surface2
+            } else {
+                p.surface
+            })),
+            text_color: p.text,
+            border: Border {
+                color: alpha(p.gold, 0.45),
+                width: 1.0,
+                radius: 20.0.into(),
+            },
+            shadow: iced::Shadow::default(),
+            snap: true,
+        }
+    })
+    .on_press(Msg::Go(Route::Interview(crate::interview::Mode::Browse)))
     .into()
 }
 

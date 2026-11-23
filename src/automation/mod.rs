@@ -126,7 +126,7 @@ pub const COMMANDS: &[(&str, &str)] = &[
     ("help", "This list."),
     ("screens", "Routes, sidebar items, sections and lessons you can navigate to."),
     ("state", "Current screen: route, visible texts, clickable controls (stable ids), inputs, progress, settings, toasts. Args: texts (bool, default true)."),
-    ("navigate", "Go to a route: to = \"map\" | \"calendar[:today|month|settings|YYYY-MM-DD]\" | \"section:<id>\" | \"lesson:<id>\" | \"cards:<lessonId>\" | \"deck:<sectionId>\" | \"cards:review\" | \"exam[:<sectionId>]\" | \"examrun:section:<id>[:n]\" | \"examrun:general[:n]\" | \"examrun:beitdin[:n]\" | \"timed\" | \"timedrun\" | \"progress\" | \"settings\" | \"sources\" | \"prayers[:<prayerId>]\" | \"level\" | \"welcome\", or a sidebar label, current or old («Уроки» / «Карта», «Карточки» / «Повторение», «Викторина» / «Экзамен», «Успехи» / «Прогресс», «Календарь», «Молитвы», «Тесты», «Настройки», «Источники»)."),
+    ("navigate", "Go to a route: to = \"map\" | \"calendar[:today|month|settings|YYYY-MM-DD]\" | \"section:<id>\" | \"lesson:<id>\" | \"cards:<lessonId>\" | \"deck:<sectionId>\" | \"cards:review\" | \"exam[:<sectionId>]\" | \"examrun:section:<id>[:n]\" | \"examrun:general[:n]\" | \"examrun:beitdin[:n]\" | \"timed\" | \"timedrun\" | \"progress\" | \"settings\" | \"sources\" | \"interview[:practice|rehearsal]\" | \"prayers[:<prayerId>]\" | \"level\" | \"welcome\", or a sidebar label, current or old («Уроки» / «Карта», «Карточки» / «Повторение», «Викторина» / «Экзамен», «Успехи» / «Прогресс», «Календарь», «Молитвы», «Тесты», «Настройки», «Источники»)."),
     ("back", "«Назад»: previous screen."),
     ("press", "Press a control from `state`: id (exact), or label (exact, case-insensitive), or contains (substring); nth picks among several matches (0-based). Links, file dialogs and the installer (OpenUrl, Export, ImportPick, Install, AskUninstall) need allow_external=true and work only in the windowed app."),
     ("answer", "Answer the current question: choice (0-based, in the order shown), tf (true/false), text (typed answer, submitted), knew (flashcard: flips if needed, then grades), self_grade (0..1, open answers), auto=true (any answer, for smoke tests); next=true then presses «Далее»."),
@@ -201,6 +201,7 @@ pub fn parse_route(r: &str) -> Option<(Route, Option<screens::calendar::Msg>)> {
         "progress" => Route::Progress,
         "settings" => Route::Settings,
         "sources" => Route::Sources,
+        "interview" => Route::Interview(crate::interview::Mode::parse(&v)?),
         "prayers" | "prayer" => Route::Prayers(if v.is_empty() {
             None
         } else {
@@ -239,6 +240,8 @@ pub fn route_str(r: &Route) -> String {
         Route::Progress => "progress".into(),
         Route::Settings => "settings".into(),
         Route::Sources => "sources".into(),
+        Route::Interview(m) if m.key().is_empty() => "interview".into(),
+        Route::Interview(m) => format!("interview:{}", m.key()),
         Route::Prayers(None) => "prayers".into(),
         Route::Prayers(Some(id)) => format!("prayers:{id}"),
     }
@@ -258,6 +261,7 @@ pub fn screen_name(s: &Current) -> &'static str {
         Current::Timed(_) => "timed",
         Current::Progress(_) => "progress",
         Current::Settings(_) => "settings",
+        Current::Interview(_) => "interview",
         Current::Prayers(_) => "prayers",
     }
 }
@@ -380,6 +384,8 @@ fn progress_json(ctx: &Ctx) -> Value {
         "exams_taken": s.exams.len(),
         "badges": s.badges.len(),
         "best": s.best,
+        "interview_practiced": crate::interview::stats(s, today).practiced,
+        "interview_runs": crate::interview::stats(s, today).runs,
     })
 }
 
@@ -499,7 +505,7 @@ fn screens_json(ctx: &Ctx) -> Value {
         .collect();
     json!({
         "nav": nav_items(),
-        "routes": ["welcome", "level", "map", "calendar", "calendar:today", "calendar:month", "calendar:settings", "calendar:YYYY-MM-DD", "section:<id>", "lesson:<id>", "cards:<lessonId>", "deck:<sectionId>", "cards:review", "exam", "exam:<sectionId>", "examrun:section:<id>[:n]", "examrun:general[:n]", "examrun:beitdin[:n]", "timed", "timedrun", "progress", "settings", "sources", "prayers", "prayers:<prayerId>"],
+        "routes": ["welcome", "level", "map", "calendar", "calendar:today", "calendar:month", "calendar:settings", "calendar:YYYY-MM-DD", "section:<id>", "lesson:<id>", "cards:<lessonId>", "deck:<sectionId>", "cards:review", "exam", "exam:<sectionId>", "examrun:section:<id>[:n]", "examrun:general[:n]", "examrun:beitdin[:n]", "timed", "timedrun", "progress", "settings", "sources", "interview", "interview:practice", "interview:rehearsal", "prayers", "prayers:<prayerId>"],
         "sections": sections,
         "prayers": crate::prayers::book()
             .prayers
@@ -639,6 +645,8 @@ fn answer(host: &mut dyn Host, a: &Map<String, Value>) -> Result<(), String> {
             msgs.push(S::Cards(screens::cards::Msg::Flip));
         }
         msgs.push(S::Cards(screens::cards::Msg::Grade(knew)));
+    } else if let Some(g) = arg_num(a, "self_grade").filter(|_| screen == "interview") {
+        msgs.extend(interview_grade(g));
     } else if let Some(g) = arg_num(a, "self_grade") {
         if screen != "exam" {
             return Err(format!("self_grade: no open question on screen «{screen}»"));
@@ -654,6 +662,7 @@ fn answer(host: &mut dyn Host, a: &Map<String, Value>) -> Result<(), String> {
         msgs.push(match screen {
             "exam" => S::Exam(screens::exam::Msg::Next),
             "timed" => S::Timed(screens::timed::Msg::Next),
+            "interview" => S::Interview(screens::interview::Msg::Next),
             _ => return Err(format!("next: nothing to advance on «{screen}»")),
         });
     }
@@ -663,11 +672,35 @@ fn answer(host: &mut dyn Host, a: &Map<String, Value>) -> Result<(), String> {
     Ok(())
 }
 
+/// Interview trainer self-rating: reveal the guidance, then rate
+/// (≥ 0.75 «Готов», ≥ 0.25 «Частично», else «Ещё не готов»).
+fn interview_grade(g: f64) -> Vec<screens::Msg> {
+    use crate::interview::Rating;
+    use screens::interview::Msg as I;
+    let r = if g >= 0.75 {
+        Rating::Ready
+    } else if g >= 0.25 {
+        Rating::Partly
+    } else {
+        Rating::NotYet
+    };
+    vec![
+        screens::Msg::Interview(I::Reveal),
+        screens::Msg::Interview(I::Rate(r)),
+    ]
+}
+
 /// Give *some* answer to whatever question is shown (smoke tests): the
 /// first option, a placeholder typed answer, the first option of every
 /// match row, or a middle self-grade for open questions.
 fn auto_answer(host: &mut dyn Host, screen: &str) -> Result<(), String> {
     use screens::Msg as S;
+    if screen == "interview" {
+        for m in interview_grade(0.5) {
+            host.dispatch(m);
+        }
+        return Ok(());
+    }
     if screen == "cards" {
         let mut knew = Map::new();
         knew.insert("knew".into(), Value::Bool(true));
