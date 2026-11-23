@@ -1,11 +1,11 @@
 //! «Еврейский календарь» screen: three tabs — «Сегодня» (a day in detail),
 //! «Месяц» (a Hebrew month grid with a day picker) and «Настройки»
 //! (diaspora/Israel, the location used for candle / havdalah / fast times,
-//! candle and havdalah offsets).
+//! and compact reference rules).
 //!
 //! Texts come from `content/calendar/*.json` ([`texts`]); while those files
 //! are still being written every block degrades gracefully: whatever has no
-//! text is simply omitted. Location is off by default and consent-based
+//! text is simply omitted. Location is off by default and uses the OS permission flow
 //! ([`prefs`]); coordinates are never logged or shown.
 
 use std::sync::{Arc, Mutex, OnceLock};
@@ -13,9 +13,7 @@ use std::sync::{Arc, Mutex, OnceLock};
 use chrono::{Datelike, Duration, NaiveDate, Weekday};
 use iced::alignment::Horizontal;
 use iced::widget::text::IntoFragment;
-use iced::widget::{
-    button, column, container, mouse_area, row, rule, space, stack, text_input, Column, Row,
-};
+use iced::widget::{button, column, container, row, rule, space, text_input, Column, Row};
 use iced::{Alignment, Background, Border, Color, Element, Length, Shadow, Subscription, Theme};
 
 use crate::calendar::{days, geo, hebrew, parasha, prefs, texts, times};
@@ -54,7 +52,7 @@ fn take_open_tab() -> Option<Tab> {
 }
 
 /// Off-thread result of [`geo::request_approximate`]; polled, never printed.
-type GeoResult = Result<(f64, f64), geo::GeoError>;
+type GeoResult = geo::GeoResult;
 
 pub struct Screen {
     tab: Tab,
@@ -64,8 +62,6 @@ pub struct Screen {
     month_year: i32,
     month: u8,
     prefs: prefs::CalendarPrefs,
-    /// The location consent dialog is open.
-    consent: bool,
     city_query: String,
     city_results: Vec<geo::City>,
     lat_input: String,
@@ -88,14 +84,10 @@ pub enum Msg {
     NextMonth,
     Lesson(String),
     SetDiaspora(bool),
-    SetCandles(u32),
-    SetHavdalah(u32),
-    /// «Определить примерно» — open the consent dialog.
+    /// Start the native Windows permission request from the UI thread.
     AskGeo,
-    /// «Разрешить» in the consent dialog.
-    GeoAllow,
-    /// «Не сейчас» in the consent dialog.
-    GeoNotNow,
+    /// Open Windows Settings → Privacy & security → Location.
+    OpenLocationSettings,
     GeoTick,
     CityQuery(String),
     PickCity(usize),
@@ -103,11 +95,6 @@ pub enum Msg {
     LonEdit(String),
     SaveCoords,
     LocationOff,
-    /// First-open card: «Выбрать город».
-    ConsentCity,
-    /// First-open card: «Не нужно».
-    ConsentSkip,
-    Esc,
 }
 
 impl Screen {
@@ -132,7 +119,6 @@ impl Screen {
             month_year: h.year,
             month: h.month,
             prefs,
-            consent: false,
             city_query: String::new(),
             city_results: Vec::new(),
             lat_input: String::new(),
@@ -193,38 +179,22 @@ impl Screen {
                 self.store(ctx);
                 Action::None
             }
-            Msg::SetCandles(v) => {
-                self.prefs.candle_minutes = v;
-                self.store(ctx);
-                Action::None
-            }
-            Msg::SetHavdalah(v) => {
-                self.prefs.havdalah_minutes = v;
-                self.store(ctx);
-                Action::None
-            }
             Msg::AskGeo => {
-                self.consent = true;
-                Action::None
-            }
-            Msg::GeoAllow => {
-                self.consent = false;
+                if self.geo_pending.is_some() {
+                    return Action::None;
+                }
+                self.geo_note = None;
+                self.prefs.consent_asked = true;
+                self.store(ctx);
                 let shared: Arc<Mutex<Option<GeoResult>>> = Arc::new(Mutex::new(None));
                 self.geo_pending = Some(Arc::clone(&shared));
-                // geo::request_approximate is blocking: run off the UI thread
-                // and poll the slot with a subscription (no Action::Task).
-                std::thread::spawn(move || {
-                    let res = geo::request_approximate();
+                // Initiate RequestAccessAsync here, on the foreground UI thread.
+                // Only waiting for access and acquiring a fix happen on a worker.
+                geo::request_approximate(move |res| {
                     if let Ok(mut slot) = shared.lock() {
                         *slot = Some(res);
                     }
                 });
-                Action::None
-            }
-            Msg::GeoNotNow => {
-                self.consent = false;
-                self.prefs.consent_asked = true;
-                self.store(ctx);
                 Action::None
             }
             Msg::GeoTick => {
@@ -238,6 +208,9 @@ impl Screen {
                 };
                 self.geo_pending = None;
                 self.prefs.consent_asked = true;
+                if res.is_err() {
+                    self.tab = Tab::Settings;
+                }
                 match res {
                     Ok((lat, lon)) => {
                         self.prefs.location_mode = prefs::LocationMode::System;
@@ -248,6 +221,7 @@ impl Screen {
                             tz: "local".into(),
                             utc_offset_min: 0,
                         });
+                        self.prefs.apply_place_customs();
                         self.geo_note = None;
                         self.store(ctx);
                         ctx.toast(
@@ -258,7 +232,7 @@ impl Screen {
                     }
                     Err(geo::GeoError::Denied) => {
                         self.geo_note = Some(
-                            "Доступ к местоположению запрещён в Windows (Параметры → Конфиденциальность → Расположение). Выберите город вручную."
+                            "Windows не разрешила доступ. Его можно изменить в Параметры → Конфиденциальность и безопасность → Расположение, затем запросить снова. Или выберите город ниже. Сохранённое место не меняется."
                                 .into(),
                         );
                         self.store(ctx);
@@ -272,9 +246,18 @@ impl Screen {
                     }
                     Err(geo::GeoError::Unavailable(why)) => {
                         self.geo_note =
-                            Some(format!("Не удалось определить местоположение: {why}"));
+                            Some(format!("Не удалось определить местоположение: {why}. Выберите город ниже. Сохранённое место не меняется."));
                         self.store(ctx);
                     }
+                }
+                Action::None
+            }
+            Msg::OpenLocationSettings => {
+                #[cfg(windows)]
+                {
+                    let _spawned = std::process::Command::new("explorer.exe")
+                        .arg("ms-settings:privacy-location")
+                        .spawn();
                 }
                 Action::None
             }
@@ -287,6 +270,7 @@ impl Screen {
                 let Some(c) = self.city_results.get(i).cloned() else {
                     return Action::None;
                 };
+                self.geo_pending = None;
                 self.prefs.location_mode = prefs::LocationMode::Manual;
                 self.prefs.place = Some(prefs::Place {
                     name: format!("{}, {}", c.name_ru, c.country_ru),
@@ -296,6 +280,7 @@ impl Screen {
                     utc_offset_min: c.utc_offset_min,
                 });
                 self.prefs.consent_asked = true;
+                self.prefs.apply_place_customs();
                 self.geo_note = None;
                 self.city_results.clear();
                 self.city_query.clear();
@@ -328,6 +313,7 @@ impl Screen {
                     self.coord_error = Some("Долгота должна быть от −180 до 180.".into());
                     return Action::None;
                 }
+                self.geo_pending = None;
                 self.prefs.location_mode = prefs::LocationMode::Manual;
                 self.prefs.place = Some(prefs::Place {
                     name: "Координаты вручную".into(),
@@ -337,31 +323,18 @@ impl Screen {
                     utc_offset_min: 0,
                 });
                 self.prefs.consent_asked = true;
+                self.prefs.apply_place_customs();
                 self.coord_error = None;
                 self.geo_note = None;
                 self.store(ctx);
                 Action::None
             }
             Msg::LocationOff => {
+                self.geo_pending = None;
                 self.prefs.location_mode = prefs::LocationMode::Off;
                 self.prefs.place = None;
                 self.geo_note = None;
                 self.store(ctx);
-                Action::None
-            }
-            Msg::ConsentCity => {
-                self.prefs.consent_asked = true;
-                self.store(ctx);
-                self.tab = Tab::Settings;
-                Action::None
-            }
-            Msg::ConsentSkip => {
-                self.prefs.consent_asked = true;
-                self.store(ctx);
-                Action::None
-            }
-            Msg::Esc => {
-                self.consent = false;
                 Action::None
             }
         }
@@ -369,15 +342,6 @@ impl Screen {
 
     pub fn subscription(&self) -> Subscription<Msg> {
         let mut subs: Vec<Subscription<Msg>> = Vec::new();
-        if self.consent {
-            subs.push(iced::keyboard::listen().filter_map(|event| match event {
-                iced::keyboard::Event::KeyPressed {
-                    key: iced::keyboard::Key::Named(iced::keyboard::key::Named::Escape),
-                    ..
-                } => Some(Msg::Esc),
-                _ => None,
-            }));
-        }
         if self.geo_pending.is_some() {
             subs.push(
                 iced::time::every(std::time::Duration::from_millis(300)).map(|_| Msg::GeoTick),
@@ -404,77 +368,9 @@ impl Screen {
         base
     }
 
-    /// The location consent dialog, rendered as a shell layer above the
-    /// whole window (like the other confirm dialogs), so it is centred on the
-    /// window and not on the long calendar page.
+    // Kept for the common screen interface: Windows owns the permission UI.
     pub fn dialog<'a>(&'a self, _ctx: &'a Ctx) -> Option<Element<'a, Msg>> {
-        self.consent.then(|| self.consent_dialog())
-    }
-
-    // ---- Consent dialog -----------------------------------------------------
-
-    /// The location consent modal (§0.3 style, like settings.rs).
-    fn consent_dialog<'a>(&'a self) -> Element<'a, Msg> {
-        let p = palette();
-        let backdrop = mouse_area(
-            container(space::horizontal())
-                .width(Length::Fill)
-                .height(Length::Fill)
-                .style(move |_| plain_container(Some(Color { a: 0.66, ..p.bg0 }))),
-        )
-        .on_press(Msg::GeoNotNow);
-
-        let allow = widgets::btn(
-            "Разрешить",
-            widgets::Btn::Primary,
-            widgets::BtnSize::Md,
-            Some(Msg::GeoAllow),
-        );
-        let not_now = widgets::btn(
-            "Не сейчас",
-            widgets::Btn::Ghost,
-            widgets::BtnSize::Md,
-            Some(Msg::GeoNotNow),
-        );
-
-        let modal = container(
-            column![
-                widgets::heading("Примерное местоположение", 3),
-                txt("Шорашим может определить ваше примерное местоположение (с точностью до города), чтобы считать время зажигания свечей, авдалы и постов. Координаты округляются примерно до 10 км, хранятся только на этом компьютере и никуда не отправляются. Windows может спросить разрешение на доступ к местоположению.")
-                    .size(theme::text::SMALL + 1.0)
-                    .color(p.muted)
-                    .width(Length::Fill),
-                row![space::horizontal().width(Length::Fill), not_now, allow]
-                    .spacing(10)
-                    .align_y(Alignment::Center),
-            ]
-            .spacing(14),
-        )
-        .padding(24.0)
-        .max_width(460.0)
-        .style(move |_| container::Style {
-            background: Some(Background::Color(p.surface)),
-            border: Border {
-                color: p.line2,
-                width: 1.0,
-                radius: theme::radius::MODAL.into(),
-            },
-            shadow: Shadow {
-                color: alpha(Color::BLACK, 0.4),
-                offset: iced::Vector::new(0.0, 10.0),
-                blur_radius: 30.0,
-            },
-            text_color: None,
-            snap: true,
-        });
-
-        stack![
-            backdrop,
-            container(widgets::modal_fit(modal))
-                .center(Length::Fill)
-                .padding(20.0),
-        ]
-        .into()
+        None
     }
 
     fn tabs_bar<'a>(&self) -> Element<'a, Msg> {
@@ -497,42 +393,18 @@ impl Screen {
         let t = texts::Texts::get();
 
         let mut col = Column::new().spacing(16).width(Length::Fill);
-        if !self.prefs.consent_asked {
-            col = col.push(self.consent_prompt(p));
-        }
         col = col.push(self.day_nav(date, ctx.today(), p));
         col = col.push(self.hero(&info, p));
         col = col.push(self.what_day(&info, t, p));
+        col = col.push(self.times_card(date, p));
         for el in self.day_text_blocks(ctx, &info, t, p) {
             col = col.push(el);
         }
         col = col.push(self.parasha_card(date, ctx, t, p));
-        col = col.push(self.times_card(date, p));
         if let Some(card) = self.nearest_card(date, p) {
             col = col.push(card);
         }
         col.into()
-    }
-
-    /// Gentle first-open prompt about location-based times (not a modal).
-    fn consent_prompt<'a>(&'a self, p: Palette) -> Element<'a, Msg> {
-        widgets::card(
-            column![
-                widgets::heading("Показывать время свечей и постов?", 3),
-                txt("Для расчёта времени нужно примерное местоположение. Оно хранится только на этом компьютере.")
-                    .size(theme::text::SMALL + 0.5)
-                    .color(p.muted)
-                    .width(Length::Fill),
-                row![
-                    btn_primary("Определить примерно", Msg::AskGeo),
-                    btn_secondary("Выбрать город", Msg::ConsentCity),
-                    btn_ghost("Не нужно", Msg::ConsentSkip),
-                ]
-                .spacing(10)
-                .wrap(),
-            ]
-            .spacing(12),
-        )
     }
 
     fn day_nav<'a>(&'a self, date: NaiveDate, today: NaiveDate, p: Palette) -> Element<'a, Msg> {
@@ -607,12 +479,16 @@ impl Screen {
         let mut col = Column::new().spacing(12).width(Length::Fill);
         col = col.push(widgets::heading("Что за день", 3));
 
-        let mut chips = Row::new().spacing(8);
         for ev in &info.events {
             let (accent, _) = kind_tint(&p, ev.kind);
-            chips = chips.push(event_chip(ev.title.clone(), accent));
+            col = col.push(
+                txt(ev.title.clone())
+                    .size(theme::text::BODY)
+                    .font(SANS_BOLD)
+                    .color(accent)
+                    .width(Length::Fill),
+            );
         }
-        col = col.push(chips.wrap());
 
         if !info.events.iter().any(|e| e.is_notable()) {
             col = col.push(
@@ -911,7 +787,12 @@ impl Screen {
                         .color(p.muted)
                         .width(Length::Fill),
                 );
-                col = col.push(btn_secondary("Включить", Msg::AskGeo));
+                col = col.push(
+                    txt("Укажите место один раз на вкладке «Настройки» — время будет показано автоматически.")
+                        .size(theme::text::SMALL)
+                        .color(p.gold2)
+                        .width(Length::Fill),
+                );
             }
             Some(place) => {
                 col = col.push(
@@ -929,9 +810,13 @@ impl Screen {
                                 .color(color)
                                 .width(Length::Fill),
                             txt(it.time.format("%H:%M").to_string())
-                                .size(theme::text::SMALL + 0.5)
+                                .size(if it.minor {
+                                    theme::text::SMALL + 0.5
+                                } else {
+                                    theme::text::H3
+                                })
                                 .font(SANS_BOLD)
-                                .color(color),
+                                .color(if it.minor { p.muted } else { p.gold2 }),
                         ]
                         .spacing(10),
                     );
@@ -1105,7 +990,20 @@ impl Screen {
         let is_today = date == today;
         let is_selected = date == self.date;
 
-        let num_color = if is_today { p.gold2 } else { p.text };
+        let tint = info
+            .events
+            .iter()
+            .find(|ev| ev.is_notable())
+            .map(|ev| alpha(kind_tint(&p, ev.kind).0, 0.16));
+        let num_color = if is_today {
+            p.gold2
+        } else if let Some(ev) = info.events.iter().find(|ev| ev.is_notable()) {
+            kind_tint(&p, ev.kind).0
+        } else if shabbat_col {
+            p.gold2
+        } else {
+            p.text
+        };
         let greg_month = GREG_MONTHS_ABBR[date.month0() as usize];
 
         let mut dots = Row::new().spacing(3).height(Length::Fixed(6.0));
@@ -1135,7 +1033,7 @@ impl Screen {
                 ]
                 .align_y(Alignment::Center),
                 row![
-                    txt(info.hebrew.day.to_string()).size(11.0).color(p.muted),
+                    txt(info.hebrew.day.to_string()).size(11.0).color(num_color),
                     space::horizontal().width(Length::Fill),
                     txt(greg_month).size(11.0).color(p.muted),
                 ],
@@ -1149,7 +1047,7 @@ impl Screen {
         .padding(6.0)
         .width(Length::Fill)
         .height(Length::Fixed(64.0))
-        .style(move |_, status| cell_style(&p, is_today, is_selected, shabbat_col, status))
+        .style(move |_, status| cell_style(&p, is_today, is_selected, shabbat_col, tint, status))
         .on_press(Msg::PickDate(date))
         .into()
     }
@@ -1214,7 +1112,7 @@ impl Screen {
                         txt(it.time.format("%H:%M").to_string())
                             .size(theme::text::SMALL)
                             .font(SANS_BOLD)
-                            .color(color),
+                            .color(if it.minor { p.muted } else { p.gold2 }),
                     ]
                     .spacing(10),
                 );
@@ -1282,9 +1180,9 @@ impl Screen {
 
     fn settings_tab<'a>(&'a self, p: Palette) -> Element<'a, Msg> {
         let mut col = Column::new().spacing(16).width(Length::Fill);
-        col = col.push(self.where_card(p));
         col = col.push(self.location_card(p));
-        col = col.push(self.candles_card(p));
+        col = col.push(self.where_card(p));
+
         col = col.push(
             txt("Всё хранится только на этом компьютере.")
                 .size(theme::text::SMALL)
@@ -1296,8 +1194,8 @@ impl Screen {
     fn where_card<'a>(&'a self, p: Palette) -> Element<'a, Msg> {
         widgets::card(
             column![
-                widgets::heading("Где вы соблюдаете праздники", 3),
-                txt("В диаспоре многие праздники длятся два дня, а порядок недельных глав иной, чем в Израиле.")
+                widgets::heading("Порядок праздников", 3),
+                txt("Выбирается по месту автоматически. В диаспоре многие праздники длятся два дня, и порядок недельных глав иногда иной.")
                     .size(theme::text::SMALL)
                     .color(p.muted)
                     .width(Length::Fill),
@@ -1311,35 +1209,65 @@ impl Screen {
     }
 
     fn location_card<'a>(&'a self, p: Palette) -> Element<'a, Msg> {
-        let mode_label = mode_title(self.prefs.location_mode);
-        let status = match &self.prefs.place {
-            Some(pl) => format!("{mode_label}: {}", pl.name),
-            None => mode_label.to_string(),
+        let status = match self.prefs.active_place() {
+            Some(pl) => format!("{}: {}", mode_title(self.prefs.location_mode), pl.name),
+            None => "Место не выбрано — время свечей и постов не показывается".to_string(),
         };
-        let mut col = Column::new().spacing(12).width(Length::Fill);
+        let mut col = Column::new().spacing(8).width(Length::Fill);
         col = col.push(widgets::heading("Местоположение для времени", 3));
         col = col.push(
             txt(status)
-                .size(theme::text::SMALL + 0.5)
-                .color(p.text)
+                .size(theme::text::BODY)
+                .font(SANS_BOLD)
+                .color(p.gold2)
                 .width(Length::Fill),
         );
         col = col.push(
-            txt("Нужно, чтобы считать время зажигания свечей, авдалы и постов.")
+            txt("Хранится только на этом компьютере, с точностью до города. Разрешение на доступ спрашивает сама Windows.")
                 .size(theme::text::SMALL)
                 .color(p.muted)
                 .width(Length::Fill),
         );
-        col = col.push(
-            row![
-                btn_secondary("Определить примерно", Msg::AskGeo),
-                btn_danger("Выключить местоположение", Msg::LocationOff),
-            ]
-            .spacing(10)
-            .wrap(),
-        );
+        if cfg!(windows) {
+            let label = if self.geo_pending.is_some() {
+                "Ожидаем ответ Windows…"
+            } else if self.prefs.consent_asked {
+                "Запросить у Windows снова"
+            } else {
+                "Определить через Windows"
+            };
+            col = col.push(widgets::btn(
+                label,
+                widgets::Btn::Secondary,
+                widgets::BtnSize::Sm,
+                self.geo_pending.is_none().then_some(Msg::AskGeo),
+            ));
+        } else {
+            col = col.push(
+                txt("На этой системе выберите город или введите координаты ниже.")
+                    .size(theme::text::SMALL)
+                    .color(p.muted)
+                    .width(Length::Fill),
+            );
+        }
+        if self.prefs.active_place().is_some() {
+            col = col.push(widgets::btn(
+                "Удалить сохранённое место",
+                widgets::Btn::Ghost,
+                widgets::BtnSize::Sm,
+                Some(Msg::LocationOff),
+            ));
+        }
         if let Some(note) = &self.geo_note {
             col = col.push(widgets::note_block("Местоположение", note));
+            if cfg!(windows) {
+                col = col.push(widgets::btn(
+                    "Открыть параметры расположения Windows",
+                    widgets::Btn::Ghost,
+                    widgets::BtnSize::Sm,
+                    Some(Msg::OpenLocationSettings),
+                ));
+            }
         }
 
         col = col.push(divider(p));
@@ -1395,51 +1323,25 @@ impl Screen {
                     .width(Length::Fill),
             );
         }
-        col = col.push(btn_secondary("Сохранить", Msg::SaveCoords));
+        col = col.push(btn_secondary("Сохранить координаты", Msg::SaveCoords));
+        col = col.push(divider(p));
+        col = col.push(self.calculation_rules(p));
         widgets::card(col)
     }
 
-    fn candles_card<'a>(&'a self, p: Palette) -> Element<'a, Msg> {
-        let mut candles = Row::new().spacing(6);
-        for v in [18, 20, 22, 30, 40] {
-            candles = candles.push(seg_button(
-                format!("{v}"),
-                self.prefs.candle_minutes == v,
-                Msg::SetCandles(v),
-            ));
-        }
-        let mut havdalah = Row::new().spacing(6);
-        for (label, v) in [
-            ("по выходу звёзд", 0),
-            ("42 минуты", 42),
-            ("50 минут", 50),
-            ("72 минуты", 72),
-        ] {
-            havdalah = havdalah.push(seg_button(
-                label,
-                self.prefs.havdalah_minutes == v,
-                Msg::SetHavdalah(v),
-            ));
-        }
-        widgets::card(
-            column![
-                widgets::heading("Свечи", 3),
-                txt("Зажигание свечей — за сколько минут до заката")
-                    .size(theme::text::BODY)
-                    .font(SANS_BOLD),
-                candles,
-                txt("В Иерусалиме принято зажигать свечи за 40 минут до заката.")
-                    .size(theme::text::SMALL)
-                    .color(p.muted)
-                    .width(Length::Fill),
-                divider(p),
-                txt("Авдала — выход Шаббата и праздников")
-                    .size(theme::text::BODY)
-                    .font(SANS_BOLD),
-                havdalah,
-            ]
-            .spacing(12),
-        )
+    /// Reference, not a quiz: display the actual saved calculation rules.
+    fn calculation_rules<'a>(&'a self, p: Palette) -> Element<'a, Msg> {
+        let havdalah = match self.prefs.havdalah_minutes {
+            0 => "по выходу звёзд (Солнце на 8,5° ниже горизонта)".to_string(),
+            n => format!("через {n} мин после заката"),
+        };
+        column![
+            txt("Расчёт времени").size(theme::text::BODY).font(SANS_BOLD),
+            txt(format!("Свечи — за {} мин до заката. Авдала — {havdalah}.", self.prefs.candle_minutes))
+                .size(theme::text::SMALL).color(p.gold2).width(Length::Fill),
+            txt("Обычай выбирается по месту: в Иерусалиме за 40 мин, в остальных местах за 18 мин. Начало малого поста — рассвет, большого — закат накануне; конец — выход звёзд. Местный обычай уточните у раввина.")
+                .size(theme::text::SMALL).color(p.muted).width(Length::Fill),
+        ].spacing(6).into()
     }
 
     fn store(&self, ctx: &mut Ctx) {
@@ -1522,11 +1424,6 @@ fn dot<'a>(color: Color, size: f32) -> Element<'a, Msg> {
         .into()
 }
 
-/// Event chip: the shared tinted pill in the kind's accent colour.
-fn event_chip<'a>(title: impl IntoFragment<'a>, accent: Color) -> Element<'a, Msg> {
-    widgets::pill(title, widgets::Pill::Tint(accent))
-}
-
 /// Soft banner (fast warning, note).
 fn banner<'a>(
     title: String,
@@ -1589,16 +1486,6 @@ fn nav_arrow<'a>(label: &'static str, msg: Msg) -> Element<'a, Msg> {
     .into()
 }
 
-fn btn_primary<'a>(label: &'static str, msg: Msg) -> Element<'a, Msg> {
-    widgets::btn(
-        label,
-        widgets::Btn::Primary,
-        widgets::BtnSize::Md,
-        Some(msg),
-    )
-    .into()
-}
-
 fn btn_secondary<'a>(label: &'static str, msg: Msg) -> Element<'a, Msg> {
     widgets::btn(
         label,
@@ -1613,11 +1500,6 @@ fn btn_ghost<'a>(label: &'static str, msg: Msg) -> Element<'a, Msg> {
     widgets::btn(label, widgets::Btn::Ghost, widgets::BtnSize::Md, Some(msg)).into()
 }
 
-fn btn_danger<'a>(label: &'static str, msg: Msg) -> Element<'a, Msg> {
-    widgets::btn(label, widgets::Btn::Danger, widgets::BtnSize::Md, Some(msg)).into()
-}
-
-/// A row of segmented buttons (selected = gold-soft, gold2 text, gold border).
 fn seg_row<'a>(items: &[(&'static str, bool, Msg)]) -> Element<'a, Msg> {
     let mut r = Row::new().spacing(4);
     for (label, selected, msg) in items {
@@ -1637,12 +1519,15 @@ fn cell_style(
     today: bool,
     selected: bool,
     shabbat_col: bool,
+    tint: Option<Color>,
     status: button::Status,
 ) -> button::Style {
     let background = if selected {
         p.gold_soft
     } else if today {
         p.surface3
+    } else if let Some(tint) = tint {
+        tint
     } else if shabbat_col {
         alpha(p.gold, 0.05)
     } else {
@@ -1652,7 +1537,13 @@ fn cell_style(
         background: Some(Background::Color(background)),
         text_color: p.text,
         border: Border {
-            color: if today || selected { p.gold } else { p.line },
+            color: if today || selected {
+                p.gold
+            } else if let Some(tint) = tint {
+                Color { a: 0.55, ..tint }
+            } else {
+                p.line
+            },
             width: 1.0,
             radius: theme::radius::SMALL.into(),
         },
@@ -1670,9 +1561,9 @@ fn cell_style(
 
 fn mode_title(mode: prefs::LocationMode) -> &'static str {
     match mode {
-        prefs::LocationMode::Off => "Выключено",
-        prefs::LocationMode::System => "Примерное местоположение системы",
-        prefs::LocationMode::Manual => "Город или координаты",
+        prefs::LocationMode::Off => "Не выбрано",
+        prefs::LocationMode::System => "Определено Windows",
+        prefs::LocationMode::Manual => "Выбрано вручную",
     }
 }
 
