@@ -112,11 +112,13 @@ pub fn install(opts: Options) -> Result<PathBuf, String> {
             "Could not find the program file: {e}"
         )
     })?;
-    let dir = install_dir().ok_or_else(|| {
-        crate::i18n::tr("Не найдена папка %LOCALAPPDATA%").to_string()
-    })?;
+    let dir = install_dir()
+        .ok_or_else(|| crate::i18n::tr("Не найдена папка %LOCALAPPDATA%").to_string())?;
     std::fs::create_dir_all(&dir).map_err(|e| {
-        crate::trf!("Не удалось создать папку: {e}", "Could not create the folder: {e}")
+        crate::trf!(
+            "Не удалось создать папку: {e}",
+            "Could not create the folder: {e}"
+        )
     })?;
     let target = dir.join(EXE_NAME);
     if !is_inside(&me, &dir) {
@@ -125,13 +127,12 @@ pub fn install(opts: Options) -> Result<PathBuf, String> {
         let old = dir.join(format!("{EXE_NAME}.old"));
         let _ = std::fs::remove_file(&old);
         if target.exists() {
-            std::fs::rename(&target, &old)
-                .map_err(|e| {
-                    crate::trf!(
-                        "Не удалось заменить установленную копию: {e}",
-                        "Could not replace the installed copy: {e}"
-                    )
-                })?;
+            std::fs::rename(&target, &old).map_err(|e| {
+                crate::trf!(
+                    "Не удалось заменить установленную копию: {e}",
+                    "Could not replace the installed copy: {e}"
+                )
+            })?;
         }
         if let Err(e) = std::fs::copy(&me, &target) {
             let _ = std::fs::rename(&old, &target);
@@ -292,13 +293,12 @@ pub fn uninstall() -> Result<Uninstalled, String> {
         Ok(Uninstalled::QuitToFinish)
     } else {
         if dir.exists() {
-            std::fs::remove_dir_all(&dir)
-                .map_err(|e| {
-                    crate::trf!(
-                        "Не удалось удалить папку программы: {e}",
-                        "Could not delete the program folder: {e}"
-                    )
-                })?;
+            std::fs::remove_dir_all(&dir).map_err(|e| {
+                crate::trf!(
+                    "Не удалось удалить папку программы: {e}",
+                    "Could not delete the program folder: {e}"
+                )
+            })?;
         }
         Ok(Uninstalled::Done)
     }

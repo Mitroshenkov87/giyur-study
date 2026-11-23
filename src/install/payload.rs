@@ -102,9 +102,8 @@ pub fn unpack(setup: &Path, dir: &Path) -> Result<Unpacked, String> {
         }
         let out = dir.join(&path);
         if let Some(p) = out.parent() {
-            std::fs::create_dir_all(p).map_err(|e| {
-                crate::trf!("Не удалось распаковать: {e}", "Could not unpack: {e}")
-            })?;
+            std::fs::create_dir_all(p)
+                .map_err(|e| crate::trf!("Не удалось распаковать: {e}", "Could not unpack: {e}"))?;
         }
         File::create(&out)
             .and_then(|mut o| o.write_all(&data))

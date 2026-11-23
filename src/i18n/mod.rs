@@ -94,8 +94,16 @@ pub fn is_en() -> bool {
     lang() == Lang::En
 }
 
-/// Switch the interface language for the whole process.
+/// Switch the interface language for the whole process. In the crate's own
+/// unit tests it only switches the calling thread, so parallel tests never
+/// see each other's language.
 pub fn set_lang(l: Lang) {
+    #[cfg(test)]
+    {
+        OVERRIDE.with(|o| o.set(Some(l)));
+        return;
+    }
+    #[allow(unreachable_code)]
     LANG.store(
         match l {
             Lang::Ru => 0,
@@ -302,10 +310,8 @@ mod tests {
     fn tr_falls_back_to_russian_and_follows_the_thread_language() {
         with_lang(Lang::Ru, || assert_eq!(tr("Настройки"), "Настройки"));
         with_lang(Lang::En, || {
-            assert_eq!(
-                tr("нет такой строки в каталоге"),
-                "нет такой строки в каталоге"
-            );
+            let unknown = "нет такой строки в каталоге";
+            assert_eq!(tr(unknown), unknown);
             assert_eq!(
                 tr_or("нет такой строки в каталоге", "no such string"),
                 "no such string"
@@ -445,13 +451,26 @@ mod tests {
         let mut out = Vec::new();
         let mut rest = src;
         while let Some(at) = rest.find("tr(\"") {
+            // `tr(` itself, not `str(` / `from_str(`.
+            let word = rest[..at]
+                .chars()
+                .next_back()
+                .is_some_and(|c| c.is_alphanumeric() || c == '_');
             rest = &rest[at + 4..];
             let mut s = String::new();
             let mut chars = rest.chars();
             while let Some(c) = chars.next() {
                 if c == '\\' {
-                    if let Some(n) = chars.next() {
-                        s.push(n);
+                    match chars.next() {
+                        Some('n') => s.push('\n'),
+                        Some('t') => s.push('\t'),
+                        Some('\n') => {
+                            // Line continuation: skip the next line's indent.
+                            let t = chars.as_str().trim_start();
+                            chars = t.chars();
+                        }
+                        Some(n) => s.push(n),
+                        None => {}
                     }
                     continue;
                 }
@@ -460,7 +479,13 @@ mod tests {
                 }
                 s.push(c);
             }
-            if !s.is_empty() {
+            if !word
+                && s.chars().any(|c| {
+                    ('а'..='я').contains(&c.to_lowercase().next().unwrap_or(c))
+                        || c == 'ё'
+                        || c == 'Ё'
+                })
+            {
                 out.push(s);
             }
             rest = chars.as_str();

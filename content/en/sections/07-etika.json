@@ -887,51 +887,51 @@
     },
     {
      "id": "etika-3-n2",
-     "front": "Что такое пеа, шихеха и лекет?",
-     "back": "Углы поля, случайно оставленные снопы и колоски, принадлежащие бедным, вдовам и сиротам (Ваикра 19:9–10; Дварим 24:19–21)",
+     "front": "What are pe'ah, shikhechah, and leket?",
+     "back": "The corners of the field, sheaves left behind by accident, and dropped ears of grain, which belong to the poor, to widows, and to orphans (Vayikra 19:9–10; Devarim 24:19–21)",
      "minLevel": "reform"
     },
     {
      "id": "etika-3-n3",
-     "front": "Третья ступень цдаки (Рамбам)",
-     "back": "Дающий знает, кому даёт, а берущий не знает: мудрецы тайно клали монеты в двери бедняков (10:9)",
+     "front": "The third level of tzedakah (Rambam)",
+     "back": "The giver knows to whom he gives, but the recipient does not know: the sages would secretly place coins in the doorways of the poor (10:9)",
      "minLevel": "reform"
     },
     {
      "id": "etika-3-n4",
-     "front": "Четвёртая ступень цдаки (Рамбам)",
-     "back": "Берущий знает, от кого берёт, а дающий не знает: монеты клали в платок на плече (10:10)",
+     "front": "The fourth level of tzedakah (Rambam)",
+     "back": "The recipient knows from whom he receives, but the giver does not know: coins were placed in a cloth on the shoulder (10:10)",
      "minLevel": "reform"
     },
     {
      "id": "etika-3-n5",
-     "front": "Привычка великих мудрецов (Матнот Аниим 10:15)",
-     "back": "Давали монету бедному перед каждой молитвой",
+     "front": "A custom of the great sages (Matnot Aniyim 10:15)",
+     "back": "They would give a coin to a poor person before every prayer",
      "minLevel": "reform"
     },
     {
      "id": "etika-3-n6",
-     "front": "Совет КСА 34:13 о тайном даянии",
-     "back": "Давайте тайно, насколько возможно, — и не гордитесь размером дара",
+     "front": "The advice of KSA 34:13 on giving in secret",
+     "back": "Give in secret, as far as possible — and do not take pride in the size of the gift",
      "minLevel": "reform"
     },
     {
      "id": "etika-3-n7",
-     "front": "Стих, с которого урок выводит заповедь цдаки",
-     "back": "«Не ожесточай сердца своего и не сжимай руки твоей перед нищим братом твоим… руку твою открой ему» (Дварим 15:7–8)",
+     "front": "The verse from which the lesson derives the mitzvah of tzedakah",
+     "back": "“Do not harden your heart and do not close your hand before your poor brother… open your hand to him” (Devarim 15:7–8)",
      "minLevel": "reform"
     },
     {
      "id": "etika-3-n8",
-     "front": "Что такое хахнасат орхим?",
-     "back": "Гостеприимство — черта Авраама: он стоял у входа в шатёр в жару дня, ожидая путников",
+     "front": "What is hachnasat orchim?",
+     "back": "Hospitality — a trait of Avraham: he would stand at the entrance of the tent in the heat of the day, waiting for travelers",
      "minLevel": "reform"
     }
    ]
   },
   {
    "id": "etika-4",
-   "title": "Этика речи",
+   "title": "The ethics of speech",
    "minLevel": "reform",
    "minutes": 8,
    "sourceRefs": [
@@ -940,237 +940,237 @@
     "eee"
    ],
    "citations": [
-    "Мишлей 18:21",
-    "Тегилим 34:13–14",
-    "Шмот 23:1; 23:7",
-    "Ваикра 19:11",
-    "Ваикра 25:17",
-    "Талмуд, Арахин 15б",
+    "Mishlei 18:21",
+    "Tehillim 34:13–14",
+    "Shemot 23:1; 23:7",
+    "Vayikra 19:11",
+    "Vayikra 25:17",
+    "Talmud, Arakhin 15b",
     "Talmud, Bava Metzia 58b",
-    "Кицур Шульхан Арух 30; 63:1",
-    "Хафец Хаим, «Шмират а-Лашон»"
+    "Kitzur Shulchan Aruch 30; 63:1",
+    "Chafetz Chaim, “Shmirat ha-Lashon”"
    ],
    "keyIdeas": [
-    "«Смерть и жизнь — во власти языка»: традиция различает лашон а-ра, рехилут и моци шем ра.",
-    "Лашон а-ра — правдивая, но вредная речь; Талмуд приравнивает злословие к трём тяжелейшим грехам, а слушание — к соучастию.",
-    "Говорить о человеке допустимо только ради предотвращения реального вреда: факты проверены, иного пути нет, цель — защита, сказано приватно.",
-    "Хафец Хаим систематизировал законы речи; сегодня они относятся и к пересылке сообщений в мессенджерах и соцсетях.",
-    "Онаат дварим — обида словами — тяжелее обмана в цене: деньги можно вернуть, слова нельзя; сорвавшись, нужно извиниться."
+    "“Death and life are in the power of the tongue”: the tradition distinguishes lashon hara, rechilut, and motzi shem ra.",
+    "Lashon hara is speech that is true but harmful; the Talmud equates evil speech with the three gravest sins, and listening to it with taking part in the sin.",
+    "One may speak about a person only in order to prevent real harm: the facts have been checked, there is no other way, the aim is protection, and it is said in private.",
+    "The Chafetz Chaim systematized the laws of speech; today they apply also to forwarding messages in messaging apps and on social networks.",
+    "Ona'at devarim — hurt caused by words — is more serious than cheating on a price: money can be returned, words cannot; if you have lashed out, you need to apologize."
    ],
    "blocks": [
     {
      "type": "h",
-     "text": "Три вида запретной речи"
+     "text": "Three kinds of forbidden speech"
     },
     {
      "type": "p",
-     "text": "Еврейская этика придаёт слову исключительный вес: «Смерть и жизнь — во власти языка» (Мишлей 18:21). Традиция различает три главных вида запретной речи о человеке: правдивая, но вредная речь (лашон а-ра), перенос слов с целью раздора (рехилут) и порочащая ложь (моци шем ра). Псалмист формулирует идеал положительно — и именно его слова станут именем великого кодекса речи:"
+     "text": "Jewish ethics gives the word exceptional weight: “Death and life are in the power of the tongue” (Mishlei 18:21). The tradition distinguishes three main kinds of forbidden speech about a person: speech that is true but harmful (lashon hara), carrying words in order to stir up strife (rechilut), and a defaming lie (motzi shem ra). The psalmist states the ideal in positive form — and it is precisely his words that become the name of the great code of speech:"
     },
     {
      "type": "hebrew",
      "he": "מִי הָאִישׁ הֶחָפֵץ חַיִּים, אֹהֵב יָמִים לִרְאוֹת טוֹב; נְצֹר לְשׁוֹנְךָ מֵרָע, וּשְׂפָתֶיךָ מִדַּבֵּר מִרְמָה",
-     "translit": "Ми а-иш ха-хафэц хаим, охэв ямим лирот тов; нэцор лшонха мэра, усфатэха мидáбер мирма",
-     "ru": "Кто человек, желающий жизни, любящий дни видеть добро? Храни язык свой от зла и уста свои от лукавых слов",
-     "ref": "Тегилим 34:13–14"
+     "translit": "Mi ha-ish he-chafetz chayim, ohev yamim lir'ot tov; netzor leshoncha me-ra, u-sfatecha midaber mirmah",
+     "ru": "Who is the person who desires life, who loves days in which to see good? Guard your tongue from evil and your lips from deceitful words",
+     "ref": "Tehillim 34:13–14"
     },
     {
      "type": "term",
-     "term": "Лашон а-ра",
+     "term": "Lashon hara",
      "he": "לָשׁוֹן הָרָע",
-     "text": "«дурной язык»: правдивая речь о человеке, которая ему вредит или за которой стоит злой умысел."
+     "text": "“an evil tongue”: true speech about a person that harms him, or behind which there is malicious intent."
     },
     {
      "type": "term",
-     "term": "Рехилут",
+     "term": "Rechilut",
      "he": "רְכִילוּת",
-     "text": "наушничество, сплетня: перенос слов от человека к человеку с целью посеять раздор или обиду."
+     "text": "talebearing, gossip: carrying words from one person to another in order to sow strife or hurt."
     },
     {
      "type": "term",
-     "term": "Моци шем ра",
+     "term": "Motzi shem ra",
      "he": "מוֹצִיא שֵׁם רָע",
-     "text": "«вынос дурного имени»: клевета — ложь, порочащая другого."
+     "text": "“bringing out an evil name”: slander — a lie that defames another person."
     },
     {
      "type": "h",
-     "text": "Мера греха (Арахин 15б)"
+     "text": "The measure of the sin (Arakhin 15b)"
     },
     {
      "type": "p",
-     "text": "Талмуд не преуменьшает трудности заповеди: злословие приравнивается к трём тяжелейшим грехам — идолопоклонству, запретным связям и убийству (Арахин 15б; для этого используется приём толкования «гэзера шава» по слову «великий»). «Говорящий лашон а-ра — словно отвергает веру» (там же). Талмуд учит и о слушателе: принимать злословие — соучастие в грехе, поэтому запрет касается не только языка, но и уха."
+     "text": "The Talmud does not play down the difficulty of the commandment: evil speech is equated with the three gravest sins — idolatry, forbidden relations, and murder (Arakhin 15b; for this the method of interpretation called “gezerah shavah” is used, by way of the word “great”). “One who speaks lashon hara is as if he rejects the faith” (there). The Talmud also teaches about the listener: to accept evil speech is to take part in the sin, and so the prohibition concerns not only the tongue but also the ear."
     },
     {
      "type": "p",
-     "text": "Запрет лжи шире запрета злословия: «От лжи удали́сь» (Шмот 23:7); «Не лгите друг другу» (Ваикра 19:11). И даже готовность слушать сплетню нарушает заповедь: «Не принимай слуха лживого» (Шмот 23:1) — то есть ухо, настроенное на злословие, уже греховно. Кицур Шульчан Арух (гл. 30) объединяет запреты сплетен, злоязычия, мести и затаённой злобы: гнёт, который мы прячем в сердце, по тяжести сравнивается с самой местью."
+     "text": "The prohibition of lying is broader than the prohibition of evil speech: “Keep far from falsehood” (Shemot 23:7); “Do not lie to one another” (Vayikra 19:11). Even a readiness to listen to gossip violates a commandment: “Do not accept a false report” (Shemot 23:1) — that is, an ear tuned to evil speech is already in the wrong. The Kitzur Shulchan Aruch (ch. 30) joins together the prohibitions of gossip, an evil tongue, revenge, and a grudge kept hidden: the weight we conceal in the heart is compared, in its gravity, to revenge itself."
     },
     {
      "type": "h",
-     "text": "Когда слова всё же допустимы"
+     "text": "When words are nevertheless permitted"
     },
     {
      "type": "p",
-     "text": "Запрет не означает, что о проблемах нельзя говорить вообще. Классика (Хафец Хаим) разрешает речь о человеке, когда от неё зависит предотвращение реального вреда — например, предупредить жертву обманщика или сообщить о ненадёжном партнёре. Но строгие условия: факты проверены лично, а не «мне сказали»; нет иного способа предотвратить вред; намерение — защита, а не осуждение; слова сказаны приватно тому, кто может действовать. Если хоть одно условие не выполнено — молчание заповедно, а речь становится лашон а-ра даже при правдивых фактах."
+     "text": "The prohibition does not mean that one may not speak about problems at all. The classic source (the Chafetz Chaim) permits speech about a person when the prevention of real harm depends on it — for example, to warn a swindler’s victim, or to report an unreliable partner. But the conditions are strict: the facts have been checked in person, and not by “I was told”; there is no other way to prevent the harm; the intention is protection, not condemnation; the words are said privately to someone who is able to act. If even one condition is not met, silence is the mitzvah, and the speech becomes lashon hara even when the facts are true."
     },
     {
      "type": "h",
-     "text": "Хафец Хаим"
+     "text": "The Chafetz Chaim"
     },
     {
      "type": "p",
-     "text": "Самым влиятельным кодексом этики речи стал труд раби Исраэля Меира а-Коэна (1838–1933) из Радина, известного как «Хафец Хаим» — «желающий жизни», по первым словам псалма 34, который мы только что процитировали. Книги «Хафец Хаим» (1873) и «Шмират а-Лашон» («Хранение языка», 1876) систематизируют десятки ситуаций: когда говорить нельзя ни при каких условиях, когда слова допустимы ради предотвращения вреда (но и тогда с жёсткими ограничениями), как оправдать отсутствующего, о чём молчать. Хафец Хаим делает практическим идеал, который звучит в молитве: язык — инструмент жизни, а не оружия. Писал он также книгу «Ахават Хесед» — о любви к добру и беспроцентных займах: этика слова и этика денег у него — одно целое."
+     "text": "The most influential code of the ethics of speech was the work of Rabbi Yisrael Meir ha-Kohen (1838–1933) of Radin, known as the “Chafetz Chaim” — “one who desires life,” from the opening words of Tehillim 34, which we have just quoted. The books “Chafetz Chaim” (1873) and “Shmirat ha-Lashon” (“Guarding the Tongue,” 1876) set out dozens of situations in order: when one may not speak under any circumstances, when words are permitted in order to prevent harm (but even then with strict limits), how to find a defense for someone who is absent, and what one must keep silent about. The Chafetz Chaim makes practical the ideal that is heard in prayer: the tongue is an instrument of life, not a weapon. He also wrote the book “Ahavat Chesed” — on the love of kindness and on interest-free loans: for him, the ethics of speech and the ethics of money are one whole."
     },
     {
      "type": "p",
-     "text": "Сегодня заповедь приобрела новое измерение: лашон а-ра в мессенджерах и соцсетях распространяется мгновенно и остаётся навсегда. Современные учителя переносят правила Хафец Хаима на цифровую речь: не пересылать порочащие материалы, не подписываться на злословие, удалять сплетни из общих чатов — нажатие «поделиться» есть тот же пересказ, и ответственность за него такая же, как за собственные слова."
+     "text": "Today the commandment has gained a new dimension: lashon hara in messaging apps and on social networks spreads in an instant and remains forever. Contemporary teachers carry the rules of the Chafetz Chaim over to digital speech: do not forward defamatory material, do not subscribe to evil speech, delete gossip from group chats — pressing “share” is the same as retelling, and the responsibility for it is the same as for one’s own words."
     },
     {
      "type": "note",
-     "text": "Практика: перед тем как пересказать что-либо о человеке, спросите себя: правда ли это? нужно ли это? мягко ли сказано? что изменится, если я промолчу?"
+     "text": "A practice: before you retell anything about a person, ask yourself: is it true? is it necessary? is it said gently? what will change if I stay silent?"
     },
     {
      "type": "h",
-     "text": "Онаат дварим — обида словами"
+     "text": "Ona'at devarim — hurt by words"
     },
     {
      "type": "p",
-     "text": "Словесная этика не сводится к речи «о третьих». «Не обижай друг друга» (Ваикра 25:17) получает в Талмуде толкование: как есть обман в купле-продаже, так есть обида в словах (Бава Меция 58б). Примеры мудрецов: не спрашивать цену у продавца, не собираясь покупать; не говорить кающемуся «вспомни прежние дела»; не задавать человеку вопрос, требующий знаний, которых у него нет. Кицур Шульчан Арух (63:3) добавляет: если у человека есть позорная кличка — даже если он к ней привык, называть им его, чтобы унизить, запрещено. А в 63:1 подчёркивается: обидеть словами тяжелее, чем обмануть в цене, — деньги можно вернуть, слова нельзя."
+     "text": "The ethics of speech is not limited to talk “about third parties.” “Do not hurt one another” (Vayikra 25:17) is explained in the Talmud this way: just as there is fraud in buying and selling, so there is hurt in words (Bava Metzia 58b). Examples from the sages: do not ask a seller the price if you do not intend to buy; do not say to someone who has repented, “remember your former deeds”; do not put to a person a question that requires knowledge he does not have. The Kitzur Shulchan Aruch (63:3) adds: if a person has a shameful nickname — even if he has grown used to it — it is forbidden to call him by it in order to humiliate him. And 63:1 stresses: to hurt someone with words is more serious than to cheat him on the price — money can be returned, words cannot."
     },
     {
      "type": "p",
-     "text": "Если речь всё же сорвалась — извинитесь и исправьте вред, насколько возможно: скажите тому, кому перенесли слова, что они не были точными, попросите прощения у обиженного. Еврейская традиция не требует недостижимого совершенства языка; она требует честной работы над ним день за днём. Именно здесь, в мелочах ежедневной речи, начинается подлинная духовная работа."
+     "text": "If your speech has nevertheless broken loose — apologize and repair the harm as far as you can: tell the person to whom you carried the words that they were not accurate, and ask forgiveness of the one who was hurt. Jewish tradition does not demand an unattainable perfection of speech; it demands honest work on it, day after day. It is here, in the small things of daily speech, that genuine spiritual work begins."
     },
     {
      "type": "p",
-     "text": "Профилактика обид начинается с цены, которую мы привыкаем приписывать чужому достоинству: Раби Элиэзер советует (Пиркей Авот 2:10): «Пусть честь твоего друга будет дорога тебе, как твоя собственная».",
+     "text": "Guarding against hurt begins with the worth we grow used to assigning to another person’s dignity. Rabbi Eliezer advises (Pirkei Avot 2:10): “Let your friend’s honor be as dear to you as your own.”",
      "minLevel": "reform"
     }
    ],
    "cards": [
     {
      "id": "etika-4-c1",
-     "front": "Что такое лашон а-ра?",
-     "back": "Правдивая, но вредоносная речь о человеке — запрещена, даже если факты верны",
+     "front": "What is lashon hara?",
+     "back": "Speech about a person that is true but harmful — it is forbidden, even if the facts are correct",
      "minLevel": "reform"
     },
     {
      "id": "etika-4-c2",
-     "front": "Что такое рехилут?",
-     "back": "Наушничество: перенос слов с целью раздора или обиды",
+     "front": "What is rechilut?",
+     "back": "Talebearing: carrying words in order to cause strife or hurt",
      "minLevel": "reform"
     },
     {
      "id": "etika-4-c3",
-     "front": "Что такое моци шем ра?",
-     "back": "Клевета — порочащая ложь о человеке",
+     "front": "What is motzi shem ra?",
+     "back": "Slander — a defaming lie about a person",
      "minLevel": "reform"
     },
     {
      "id": "etika-4-c4",
-     "front": "Стих «От лжи удали́сь»",
-     "back": "Шмот 23:7 — запрет лжи; «не лгите друг другу» — Ваикра 19:11",
+     "front": "The verse “Keep far from falsehood”",
+     "back": "Shemot 23:7 — the prohibition of lying; “do not lie to one another” — Vayikra 19:11",
      "minLevel": "reform"
     },
     {
      "id": "etika-4-c5",
-     "front": "Что запрещает Шмот 23:1?",
-     "back": "«Не принимай слуха лживого» — слушание сплетни уже нарушение",
+     "front": "What does Shemot 23:1 forbid?",
+     "back": "“Do not accept a false report” — listening to gossip is already a violation",
      "minLevel": "reform"
     },
     {
      "id": "etika-4-c6",
-     "front": "Чему равняет Талмуд лашон а-ра (Арахин 15б)?",
-     "back": "Трём тяжелейшим грехам: идолопоклонству, запретным связям, убийству; говорящий — «словно отвергает веру»",
+     "front": "To what does the Talmud equate lashon hara (Arakhin 15b)?",
+     "back": "To the three gravest sins: idolatry, forbidden relations, and murder; one who speaks it is “as if he rejects the faith”",
      "minLevel": "reform"
     },
     {
      "id": "etika-4-c7",
-     "front": "Кто такой Хафец Хаим?",
-     "back": "Раби Исраэль Меир а-Коэн из Радина (1838–1933), автор кодекса законов речи",
+     "front": "Who is the Chafetz Chaim?",
+     "back": "Rabbi Yisrael Meir ha-Kohen of Radin (1838–1933), author of the code of the laws of speech",
      "minLevel": "reform"
     },
     {
      "id": "etika-4-c8",
-     "front": "Откуда имя «Хафец Хаим»?",
-     "back": "От Тегилим 34:13 — «кто человек, желающий (хафец) жизни (хаяйм)?»",
+     "front": "Where does the name “Chafetz Chaim” come from?",
+     "back": "From Tehillim 34:13 — “who is the person who desires (chafetz) life (chayim)?”",
      "minLevel": "reform"
     },
     {
      "id": "etika-4-c9",
-     "front": "Главные книги Хафец Хаима о речи",
-     "back": "«Хафец Хаим» (1873) и «Шмират а-Лашон» («Хранение языка», 1876)",
+     "front": "The Chafetz Chaim’s principal books on speech",
+     "back": "“Chafetz Chaim” (1873) and “Shmirat ha-Lashon” (“Guarding the Tongue,” 1876)",
      "minLevel": "reform"
     },
     {
      "id": "etika-4-c10",
-     "front": "Что такое онаат дварим?",
-     "back": "Словесная обида (Ваикра 25:17; Бава Меция 58б): наводящие вопросы о цене, прозвища, «вспомни прошлое»",
+     "front": "What is ona'at devarim?",
+     "back": "Hurt by words (Vayikra 25:17; Bava Metzia 58b): leading questions about a price, nicknames, “remember the past”",
      "minLevel": "reform"
     },
     {
      "id": "etika-4-c11",
-     "front": "Почему обида словами тяжелее денежной?",
-     "back": "Деньги можно вернуть, а слова — нет; вред причиняется самому человеку (КСА 63:1)",
+     "front": "Why is hurt by words more serious than a monetary one?",
+     "back": "Money can be returned, but words cannot; the harm is done to the person himself (KSA 63:1)",
      "minLevel": "orthodox"
     },
     {
      "id": "etika-4-c12",
-     "front": "Что объединяет КСА, глава 30?",
-     "back": "Запрет сплетен, злоязычия, мести и затаённой злобы",
+     "front": "What does KSA, chapter 30, bring together?",
+     "back": "The prohibition of gossip, an evil tongue, revenge, and a grudge kept hidden",
      "minLevel": "orthodox"
     },
     {
      "id": "etika-4-n1",
-     "front": "Главный стих этики речи по уроку",
-     "back": "«Смерть и жизнь — во власти языка» (Мишлей 18:21)",
+     "front": "The principal verse of the ethics of speech in this lesson",
+     "back": "“Death and life are in the power of the tongue” (Mishlei 18:21)",
      "minLevel": "reform"
     },
     {
      "id": "etika-4-n2",
-     "front": "Какой вопрос нельзя задавать незнающему?",
-     "back": "Вопрос, требующий знаний, которых у него нет: это онаат дварим (Бава Меция 58б)",
+     "front": "What question may one not ask a person who does not know?",
+     "back": "A question that requires knowledge he does not have: this is ona'at devarim (Bava Metzia 58b)",
      "minLevel": "reform"
     },
     {
      "id": "etika-4-n3",
-     "front": "Четыре условия речи ради предотвращения вреда",
-     "back": "Факты проверены лично; иного способа нет; намерение — защита; сказано приватно тому, кто может действовать",
+     "front": "The four conditions for speech aimed at preventing harm",
+     "back": "The facts have been checked in person; there is no other way; the intention is protection; it is said privately to someone who is able to act",
      "minLevel": "reform"
     },
     {
      "id": "etika-4-n4",
-     "front": "Лашон а-ра в мессенджерах и соцсетях",
-     "back": "Не пересылать порочащие материалы и не подписываться на злословие; нажатие «поделиться» — тот же пересказ",
+     "front": "Lashon hara in messaging apps and on social networks",
+     "back": "Do not forward defamatory material and do not subscribe to evil speech; pressing “share” is the same as retelling",
      "minLevel": "reform"
     },
     {
      "id": "etika-4-n5",
-     "front": "Четыре вопроса перед пересказом о человеке",
-     "back": "Правда ли это? Нужно ли это? Мягко ли сказано? Что изменится, если я промолчу?",
+     "front": "Four questions before retelling something about a person",
+     "back": "Is it true? Is it necessary? Is it said gently? What will change if I stay silent?",
      "minLevel": "reform"
     },
     {
      "id": "etika-4-n6",
-     "front": "Правило позорных кличек (КСА 63:3)",
-     "back": "Даже если человек привык к кличке, называть им его, чтобы унизить, запрещено",
+     "front": "The rule of shameful nicknames (KSA 63:3)",
+     "back": "Even if a person has grown used to a nickname, it is forbidden to call him by it in order to humiliate him",
      "minLevel": "reform"
     },
     {
      "id": "etika-4-n7",
-     "front": "Совет Раби Элиэзера (Авот 2:10)",
-     "back": "«Пусть честь твоего друга будет дорога тебе, как твоя собственная» — профилактика обид",
+     "front": "The advice of Rabbi Eliezer (Avot 2:10)",
+     "back": "“Let your friend’s honor be as dear to you as your own” — a safeguard against hurt",
      "minLevel": "reform"
     },
     {
      "id": "etika-4-n8",
-     "front": "Какую книгу о хеседе написал Хафец Хаим?",
-     "back": "«Ахават Хесед» — о любви к добру и о беспроцентных займах",
+     "front": "Which book about chesed did the Chafetz Chaim write?",
+     "back": "“Ahavat Chesed” — on the love of kindness and on interest-free loans",
      "minLevel": "reform"
     }
    ]
   },
   {
    "id": "etika-5",
-   "title": "Честность в делах",
+   "title": "Honesty in one’s dealings",
    "minLevel": "reform",
    "minutes": 8,
    "sourceRefs": [
@@ -1178,110 +1178,110 @@
     "ksa"
    ],
    "citations": [
-    "Ваикра 19:35–36",
-    "Дварим 25:13–15",
-    "Ваикра 19:13",
-    "Дварим 24:14–15",
-    "Ваикра 25:14; 25:36–37",
-    "Дварим 23:20–21",
-    "Талмуд, Бава Меция 50б–51а",
-    "Ваикра 22:32",
-    "Пиркей Авот 2:12",
-    "Кицур Шульхан Арух 62; 63; 65"
+    "Vayikra 19:35–36",
+    "Devarim 25:13–15",
+    "Vayikra 19:13",
+    "Devarim 24:14–15",
+    "Vayikra 25:14; 25:36–37",
+    "Devarim 23:20–21",
+    "Talmud, Bava Metzia 50b–51a",
+    "Vayikra 22:32",
+    "Pirkei Avot 2:12",
+    "Kitzur Shulchan Aruch 62; 63; 65"
    ],
    "keyIdeas": [
-    "Тора требует точных мер и весов и запрещает держать две гири — для покупки и для продажи.",
-    "Плату дневному работнику нужно отдать в тот же день: для него это вопрос выживания.",
-    "Брать проценты с единоверца запрещено: ссуда должна спасать от нужды; отсюда вырос гемах — фонд беспроцентных займов.",
-    "Онаа — обман в цене — запрещена; держать слово тоже часть честности: пусть твоё «да» будет «да», а «нет» — «нет».",
-    "Честные поступки освящают Имя Б-га (кидуш а-Шем), а нечестность — оскверняет его (хилуль а-Шем)."
+    "The Torah requires accurate measures and weights and forbids keeping two weights — one for buying and one for selling.",
+    "A day laborer’s wage must be paid on the same day: for him it is a matter of survival.",
+    "Taking interest from a fellow Jew is forbidden: a loan should rescue a person from need; out of this grew the gemach — a fund for interest-free loans.",
+    "Ona'ah — fraud in the price — is forbidden; keeping one’s word is also part of honesty: let your “yes” be “yes,” and your “no” be “no.”",
+    "Honest deeds sanctify the Name of G-d (kiddush Hashem), and dishonesty desecrates it (chillul Hashem)."
    ],
    "blocks": [
     {
      "type": "h",
-     "text": "Точные меры"
+     "text": "Accurate measures"
     },
     {
      "type": "p",
-     "text": "Тора предъявляет к торговле требования, опередившие эпоху: «Меры праведные, гири праведные, эфá праведная и хин праведный да будут у вас» (Ваикра 19:35–36); «Не будет у тебя в кошеле двух гирь — большой и малой… камень полновесный и истинный пусть будет у тебя» (Дварим 25:13–15). Двойные весы — символ мошенничества: одна гирь для покупки, другая для продажи. Мудрецы добавляют и обратное: отмеряй «с горкой», отделяя немного от своего — так толкуется слово «истинный» в заповеди о мерах (КСА 62:9)."
+     "text": "The Torah makes demands of trade that were ahead of their time: “Just measures, just weights, a just ephah, and a just hin shall you have” (Vayikra 19:35–36); “You shall not have in your bag two weights — a large one and a small one… a full and true weight shall you have” (Devarim 25:13–15). Double scales are a symbol of fraud: one weight for buying, another for selling. The sages add the other side as well: measure “heaped up,” setting aside a little of your own — that is how the word “true” in the commandment about measures is explained (KSA 62:9)."
     },
     {
      "type": "hebrew",
      "he": "מֹאזְנֵי צֶדֶק אַבְנֵי־צֶדֶק אֵיפַת־צֶדֶק וְהִין־צֶדֶק יִהְיֶה לָכֶם",
-     "translit": "Мозней цэдэк, авнэй-цэдэк, эйфат-цэдэк ве-хин-цэдэк иие лахем",
-     "ru": "Весы праведные, гири праведные, эфа праведная и хин праведный да будут у вас",
-     "ref": "Ваикра 19:35–36"
+     "translit": "Moznei tzedek, avnei-tzedek, eifat-tzedek ve-hin-tzedek yihyeh lachem",
+     "ru": "Just scales, just weights, a just ephah, and a just hin shall you have",
+     "ref": "Vayikra 19:35–36"
     },
     {
      "type": "p",
-     "text": "Держать дома даже неиспользуемую уменьшенную меру запрещено — вдруг кто-то воспользуется ею, не зная (КСА 62:12). Недовес и недолив запрещены и при торговле с неевреем (КСА 62:7), а покаяние обмера особенно тяжело: обманщик не знает, у кого и сколько именно он украл.",
+     "text": "It is forbidden to keep in the house even an unused short measure — someone might use it without knowing (KSA 62:12). Short weight and short measure are forbidden even in trade with a non-Jew (KSA 62:7), and repentance for cheating in measure is especially hard: the cheater does not know from whom, and exactly how much, he stole.",
      "minLevel": "orthodox"
     },
     {
      "type": "h",
-     "text": "Плата работнику — в тот же день"
+     "text": "A worker’s pay — on the same day"
     },
     {
      "type": "p",
-     "text": "Тора защищает наёмного работника, для которого день оплаты — вопрос выживания:"
+     "text": "The Torah protects the hired worker, for whom the day of payment is a matter of survival:"
     },
     {
      "type": "hebrew",
      "he": "לֹא תָלִין פְּעֻלַּת שָׂכִיר אִתְּךָ עַד־בֹּקֶר",
-     "translit": "Ло талин пэулат сахир итха ад бокер",
-     "ru": "Не оставляй у себя до утра платы наёмного работника",
-     "ref": "Ваикра 19:13"
+     "translit": "Lo talin pe'ulat sachir itcha ad boker",
+     "ru": "Do not keep a hired worker’s wage with you until morning",
+     "ref": "Vayikra 19:13"
     },
     {
      "type": "hebrew",
      "he": "בְּיוֹמוֹ תִתֵּן שְׂכָרוֹ, וְלֹא־תָבוֹא עָלָיו הַשֶּׁמֶשׁ",
-     "translit": "Бе-йомо титэн скаро, ве-ло таво аляв а-шемеш",
-     "ru": "В день его отдай ему плату его, и не зайдёт из-за неё солнце",
-     "ref": "Дварим 24:15"
+     "translit": "Be-yomo titen secharo, ve-lo tavo alav ha-shemesh",
+     "ru": "On his day give him his wage, and let the sun not set because of it",
+     "ref": "Devarim 24:15"
     },
     {
      "type": "p",
-     "text": "Обязанность относится прежде всего к дневному работнику, живущему сегодняшним заработком: он ждёт эти деньги, чтобы прожить, и задержка платы сравнивается в традиции с лишением жизни. В более широком смысле заповедь учит: не делай ближнего заложником своей финансовой «гигиены»."
+     "text": "The obligation applies first of all to a day laborer who lives on that day’s earnings: he is waiting for this money in order to live, and in the tradition a delay in pay is compared to taking a life. In a broader sense the commandment teaches: do not make your neighbor a hostage to your financial “hygiene.”"
     },
     {
      "type": "h",
-     "text": "Без процентов"
+     "text": "Without interest"
     },
     {
      "type": "p",
-     "text": "Заём под процент единоверцу запрещён Торой: «Не давай в рост брату твоему…» (Дварим 23:20–21); «Не бери у него роста и прибыли, и бойся Б-га твоего» (Ваикра 25:36–37). Логика заповеди: ссуда должна спасать от нужды, а не обогащаться на чужой беде. По букве Торы процент разрешался с неевреем (Дварим 23:21), чтобы не нести убыток в конкурентной среде; позже галаха и это ограничила. Из заповеди выросла красивая общинная институция — гемах (общественный фонд беспроцентных займов), действующая до сих пор."
+     "text": "A loan at interest to a fellow Jew is forbidden by the Torah: “Do not lend at interest to your brother…” (Devarim 23:20–21); “Do not take from him interest or increase, and fear your G-d” (Vayikra 25:36–37). The logic of the commandment is this: a loan should rescue a person from need, and not be a way to grow rich on someone else’s trouble. By the letter of the Torah, interest was permitted from a non-Jew (Devarim 23:21), so as not to suffer a loss in a competitive setting; later, halacha limited this as well. From the commandment grew a beautiful communal institution — the gemach (a communal fund for interest-free loans), which is still at work today."
     },
     {
      "type": "p",
-     "text": "Кицур Шульхан Арух (гл. 65) детализирует запрет: нарушают его не только заимодавец и заёмщик, но и писарь, свидетели и поручитель расписки под проценты; «предшествующие» и «последующие» проценты — тоже проценты: нельзя ни завысить долг до выдачи, ни «подарить» заимодавцу после возврата в благодарность за пользование деньгами.",
+     "text": "The Kitzur Shulchan Aruch (ch. 65) sets out the prohibition in detail: it is violated not only by the lender and the borrower, but also by the scribe, the witnesses, and the guarantor of a note at interest; “prior” and “subsequent” interest is interest as well: one may neither inflate the debt before the money is given, nor “make a gift” to the lender after repayment, in gratitude for the use of the money.",
      "minLevel": "orthodox"
     },
     {
      "type": "h",
-     "text": "Гнева́ (онаа) и обман"
+     "text": "Geneivah (ona'ah) and deception"
     },
     {
      "type": "term",
-     "term": "Онаа (гнева́)",
+     "term": "Ona'ah (geneivah)",
      "he": "אוֹנָאָה",
-     "text": "обман в цене при купле-продаже; буквально «притеснение». Отдельно — онаат дварим, обида словами."
+     "text": "fraud in the price in buying and selling; literally, “oppression.” Separately there is ona'at devarim, hurt by words."
     },
     {
      "type": "p",
-     "text": "«Когда будете продавать ближнему вашему или покупать у руки ближнего вашего — не обманывайте друг друга» (Ваикра 25:14). Галаха устанавливает меру обмана: если цена завышена или занижена на шестую часть и более, сделка может быть расторгнута, а разница возвращается (Бава Меция 50б–51а; Шульхан Арух, Хошен Мишпат 227). Кицур Шульчан Арух (62:1) замечает мудро: первый вопрос, который зададут человеку на Страшном Суде, — «честно ли ты торговал?»"
+     "text": "“When you sell to your neighbor, or buy from the hand of your neighbor, do not cheat one another” (Vayikra 25:14). Halacha sets a measure for the fraud: if the price is raised or lowered by a sixth or more, the transaction may be annulled and the difference returned (Bava Metzia 50b–51a; Shulchan Aruch, Choshen Mishpat 227). The Kitzur Shulchan Aruch (62:1) remarks wisely: the first question that will be asked of a person in the Heavenly Court is, “Did you trade honestly?”"
     },
     {
      "type": "p",
-     "text": "Запрет касается и сдачи внаём, подряда, обмена; вводить человека в заблуждение — даже нееврея, даже без денежного ущерба — запрещено (КСА 63:4): нельзя продать некошерное мясо, выдав его за кошерное. И словесная онаа (гл. 63) тяжелее денежной: деньги можно вернуть, слова нельзя.",
+     "text": "The prohibition also covers leasing, contract work, and exchange; misleading a person — even a non-Jew, even without a monetary loss — is forbidden (KSA 63:4): one may not sell non-kosher meat while passing it off as kosher. And verbal ona'ah (ch. 63) is more serious than monetary ona'ah: money can be returned, words cannot.",
      "minLevel": "orthodox"
     },
     {
      "type": "h",
-     "text": "Слово и «да»"
+     "text": "One’s word, and “yes”"
     },
     {
      "type": "p",
-     "text": "Честность в иудаизме шире точности весов: важно держать само слово. «Пусть будет гин истинный» (Ваикра 19:36) мудрецы толкуют двояко: пусть твоя мера будет истинной — и пусть твоё «да» (по-арамейски «гэн») будет истинным «да», а «нет» — истинным «нет» (КСА 62:16). Договорившиеся о цене не должны отказываться от сделки; а раввинский суд вынесет проклятие нарушителю слова формулой: «Тот, Кто взыскал с поколения потопа, с поколения Вавилонской башни, с Содома и с египтян, взыщет с того, кто не держит слова» (КСА 62:15). Бгобоязненный человек старается выполнять и то, о чём лишь помыслил согласиться. КСА (62:17) добавляет: обещание подарка бедному становится обетом — передумать уже нельзя."
+     "text": "Honesty in Judaism is broader than the accuracy of the scales: what matters is keeping one’s very word. “Let the hin be true” (Vayikra 19:36) the sages explain in two ways: let your measure be true — and let your “yes” (in Aramaic, “hen”) be a true “yes,” and your “no” a true “no” (KSA 62:16). Those who have agreed on a price must not back out of the deal; and a beit din will pronounce a curse on one who breaks his word, in this formula: “He Who exacted retribution from the generation of the Flood, from the generation of the Tower of Babel, from Sodom, and from the Egyptians will exact it from the one who does not keep his word” (KSA 62:15). A G-d-fearing person tries to carry out even what he has only thought of agreeing to. The KSA (62:17) adds: a promise of a gift to a poor person becomes a vow — one may no longer change one’s mind."
     },
     {
      "type": "h",
@@ -1291,149 +1291,149 @@
      "type": "term",
      "term": "Kiddush HaShem",
      "he": "קִדּוּשׁ הַשֵּׁם",
-     "text": "«освящение Имени»: поступки, которыми еврей прославляет имя Б-га в глазах людей."
+     "text": "“sanctification of the Name”: deeds by which a Jew brings glory to the Name of G-d in the eyes of people."
     },
     {
      "type": "term",
      "term": "Chillul HaShem",
      "he": "חִלּוּל הַשֵּׁם",
-     "text": "«осквернение Имени»: поступки, из-за которых благочестие Б-га ставится под сомнение."
+     "text": "“desecration of the Name”: deeds because of which piety toward G-d is called into question."
     },
     {
      "type": "p",
-     "text": "«Не оскверняйте имя Моё святое — и буду освящён среди сынов Израиля» (Ваикра 22:32). Имя Б-га «освящается» через людей: язычники, говорят комментаторы, должны сказать о евреях: «блажен народ, у которого такой Б-г». Отсюда этическое следствие: кидуш а-Шем — это не только мученичество за веру, но повседневная честность, порядочность, вежливость, доброе слово. Раби Йосе формулирует (Пиркей Авот 2:12): «Пусть все дела твои будут во имя Небес»."
+     "text": "“Do not profane My holy Name — and I will be sanctified among the children of Israel” (Vayikra 22:32). The Name of G-d is “sanctified” through people: idolaters, the commentators say, ought to say of the Jews, “blessed is the people that has such a G-d.” From this follows an ethical consequence: kiddush Hashem is not only martyrdom for the faith, but everyday honesty, decency, courtesy, and a kind word. Rabbi Yose formulates it (Pirkei Avot 2:12): “Let all your deeds be for the sake of Heaven.”"
     },
     {
      "type": "note",
-     "text": "Практический совет: в бизнесе, в споре и в интернете спрашивайте себя: усилит мой поступок доброе мнение о еврействе и о Б-ге — или испортит его?"
+     "text": "A practical word of advice: in business, in an argument, and on the internet, ask yourself: will my action strengthen a good opinion of the Jewish people and of G-d — or will it spoil it?"
     }
    ],
    "cards": [
     {
      "id": "etika-5-c1",
-     "front": "Заповедь о точных мерах",
-     "back": "Ваикра 19:35–36 — «меры, гири, эфа и хин праведные»; Ваикра 19:36 завершает: «ибо Я Всевышний, Б-г ваш»",
+     "front": "The commandment of accurate measures",
+     "back": "Vayikra 19:35–36 — “just measures, weights, an ephah, and a hin”; Vayikra 19:36 concludes: “for I am the Almighty, your G-d”",
      "minLevel": "reform"
     },
     {
      "id": "etika-5-c2",
-     "front": "Запрет двойных гирь",
-     "back": "Дварим 25:13–15 — не иметь большой и малой гири; держать уменьшенную меру даже без пользования запрещено (КСА 62:12)",
+     "front": "The prohibition of double weights",
+     "back": "Devarim 25:13–15 — not to have a large weight and a small one; keeping a short measure even without using it is forbidden (KSA 62:12)",
      "minLevel": "reform"
     },
     {
      "id": "etika-5-c3",
-     "front": "Правило «отмеряй щедро»",
-     "back": "КСА 62:9 — клади «с горкой»; слово «истинный» толкуется: «отдели немного от своего и дай ему»",
+     "front": "The rule “measure generously”",
+     "back": "KSA 62:9 — give it “heaped up”; the word “true” is explained: “set aside a little of your own and give it to him”",
      "minLevel": "orthodox"
     },
     {
      "id": "etika-5-c4",
-     "front": "Оплата наёмного работника (Ваикра 19:13)",
-     "back": "«Не оставляй у себя до утра плату наёмного работника»",
+     "front": "Paying a hired worker (Vayikra 19:13)",
+     "back": "“Do not keep a hired worker’s wage with you until morning”",
      "minLevel": "reform"
     },
     {
      "id": "etika-5-c5",
-     "front": "Срок оплаты дневному работнику (Дварим 24:15)",
-     "back": "В тот же день, «прежде чем зайдёт солнце»",
+     "front": "The time for paying a day laborer (Devarim 24:15)",
+     "back": "On the same day, “before the sun sets”",
      "minLevel": "reform"
     },
     {
      "id": "etika-5-c6",
-     "front": "Заповедь о процентах",
-     "back": "«Не давай в рост брату твоему» (Дварим 23:20–21); «не бери роста и прибыли» (Ваикра 25:36–37)",
+     "front": "The commandment concerning interest",
+     "back": "“Do not lend at interest to your brother” (Devarim 23:20–21); “do not take interest or increase” (Vayikra 25:36–37)",
      "minLevel": "reform"
     },
     {
      "id": "etika-5-c7",
-     "front": "Что такое гемах?",
-     "back": "Общественный фонд беспроцентных займов (от «гмилут хасадим»)",
+     "front": "What is a gemach?",
+     "back": "A communal fund for interest-free loans (from “gemilut chasadim”)",
      "minLevel": "reform"
     },
     {
      "id": "etika-5-c8",
-     "front": "Что такое онаа (гнева)?",
-     "back": "Обман в цене при купле-продаже (Ваикра 25:14); мера обмана — шестая часть (Бава Меция 50б–51а)",
+     "front": "What is ona'ah (geneivah)?",
+     "back": "Fraud in the price in buying and selling (Vayikra 25:14); the measure of the fraud is one sixth (Bava Metzia 50b–51a)",
      "minLevel": "reform"
     },
     {
      "id": "etika-5-c9",
-     "front": "Мера обмана в цене",
-     "back": "Завышение/занижение на 1/6 и более — сделка расторгается, разница возвращается (Шульхан Арух, ХМ 227)",
+     "front": "The measure of fraud in the price",
+     "back": "Overcharging or undercharging by 1/6 or more — the deal is annulled and the difference is returned (Shulchan Aruch, Choshen Mishpat 227)",
      "minLevel": "orthodox"
     },
     {
      "id": "etika-5-c10",
-     "front": "«Первый вопрос на Страшном Суде»",
-     "back": "«Честно ли ты торговал?» (КСА 62:1)",
+     "front": "“The first question in the Heavenly Court”",
+     "back": "“Did you trade honestly?” (KSA 62:1)",
      "minLevel": "orthodox"
     },
     {
      "id": "etika-5-c11",
-     "front": "Кидуш а-Шем — определение",
-     "back": "Освящение Имени Б-га поступками; источник — Ваикра 22:32 («и буду освящён среди сынов Израиля»)",
+     "front": "Kiddush Hashem — a definition",
+     "back": "Sanctification of the Name of G-d through one’s deeds; the source is Vayikra 22:32 (“and I will be sanctified among the children of Israel”)",
      "minLevel": "reform"
     },
     {
      "id": "etika-5-c12",
-     "front": "Формула кидуш а-Шем в быту",
-     "back": "«Пусть все дела твои будут во имя Небес» (Пиркей Авот 2:12)",
+     "front": "The formula of kiddush Hashem in everyday life",
+     "back": "“Let all your deeds be for the sake of Heaven” (Pirkei Avot 2:12)",
      "minLevel": "reform"
     },
     {
      "id": "etika-5-n1",
-     "front": "Недовес и недолив при торговле с неевреем",
-     "back": "Запрещены и при торговле с неевреем (КСА 62:7)",
+     "front": "Short weight and short measure in trade with a non-Jew",
+     "back": "They are forbidden in trade with a non-Jew as well (KSA 62:7)",
      "minLevel": "orthodox"
     },
     {
      "id": "etika-5-n2",
-     "front": "Почему покаяние обмера особенно тяжело?",
-     "back": "Обманщик не знает, у кого и сколько именно он украл",
+     "front": "Why is repentance for cheating in measure especially hard?",
+     "back": "The cheater does not know from whom, and exactly how much, he stole",
      "minLevel": "orthodox"
     },
     {
      "id": "etika-5-n3",
-     "front": "Формула проклятия нарушителю слова (КСА 62:15)",
-     "back": "«Тот, Кто взыскал с поколения потопа, Вавилонской башни, Содома и египтян, взыщет с того, кто не держит слова»",
+     "front": "The formula of the curse on one who breaks his word (KSA 62:15)",
+     "back": "“He Who exacted retribution from the generation of the Flood, from the Tower of Babel, from Sodom, and from the Egyptians will exact it from the one who does not keep his word”",
      "minLevel": "reform"
     },
     {
      "id": "etika-5-n4",
-     "front": "Обещание подарка бедному (КСА 62:17)",
-     "back": "Становится обетом — передумать уже нельзя",
+     "front": "A promise of a gift to a poor person (KSA 62:17)",
+     "back": "It becomes a vow — one may no longer change one’s mind",
      "minLevel": "reform"
     },
     {
      "id": "etika-5-n5",
-     "front": "Чем задержка платы дневному работнику сравнивается в традиции?",
-     "back": "С лишением жизни: он ждёт эти деньги, чтобы прожить",
+     "front": "To what is a delay in a day laborer’s pay compared in the tradition?",
+     "back": "To taking a life: he is waiting for this money in order to live",
      "minLevel": "reform"
     },
     {
      "id": "etika-5-n6",
-     "front": "Логика запрета процента",
-     "back": "Ссуда должна спасать от нужды, а не обогащаться на чужой беде",
+     "front": "The logic of the prohibition of interest",
+     "back": "A loan should rescue a person from need, and not be a way to grow rich on someone else’s trouble",
      "minLevel": "reform"
     },
     {
      "id": "etika-5-n7",
-     "front": "«Предшествующие» и «последующие» проценты (КСА 65)",
-     "back": "Тоже проценты: нельзя ни завысить долг до выдачи, ни «одарить» заимодавца после возврата",
+     "front": "“Prior” and “subsequent” interest (KSA 65)",
+     "back": "This too is interest: one may neither inflate the debt before it is given, nor “bestow a gift” on the lender after repayment",
      "minLevel": "orthodox"
     },
     {
      "id": "etika-5-n8",
-     "front": "Куда ещё, кроме купли-продажи, входит запрет обмана?",
-     "back": "На сдачу внаём, подряд и обмен денег (КСА 62:2)",
+     "front": "Besides buying and selling, where else does the prohibition of fraud apply?",
+     "back": "To leasing, to contract work, and to the exchange of money (KSA 62:2)",
      "minLevel": "orthodox"
     }
    ]
   },
   {
    "id": "etika-6",
-   "title": "Тиккун олам: исправлять мир",
+   "title": "Tikkun olam: repairing the world",
    "minLevel": "reform",
    "minutes": 8,
    "sourceRefs": [
@@ -1444,49 +1444,49 @@
     "reform-spb"
    ],
    "citations": [
-    "Мишна, Гиттин 4:2–3",
-    "Сидур, молитва «Алейну»",
-    "Дварим 20:19",
-    "Дварим 25:4",
-    "Шмот 23:5",
-    "Дварим 22:10",
-    "Шмот 20:12; Дварим 5:16",
-    "Талмуд, Кидушин 31а–б",
+    "Mishnah, Gittin 4:2–3",
+    "Siddur, the “Aleinu” prayer",
+    "Devarim 20:19",
+    "Devarim 25:4",
+    "Shemot 23:5",
+    "Devarim 22:10",
+    "Shemot 20:12; Devarim 5:16",
+    "Talmud, Kiddushin 31a–b",
     "Vayikra 19:3",
-    "Кицур Шульхан Арух 190; 191; 193"
+    "Kitzur Shulchan Aruch 190; 191; 193"
    ],
    "keyIdeas": [
-    "Тиккун олам — «исправление мира»: постановления мудрецов «ради исправления мира» (Гиттин 4:2–3) и молитва «Алейну».",
-    "Прозбул Гиллеля сохраняет долг через седьмой год, чтобы бедным не перестали давать взаймы, — ради блага мира.",
-    "Все течения ценят тиккун олам; акценты разные: реформисты — в центре наряду с Торой и молитвой, Масорти — внутри галахи, ортодоксы — через заповеди и святость.",
-    "Тора запрещает мучить животных (цаар баалей хаим) и бессмысленно уничтожать деревья, еду и вещи (бал ташхит).",
-    "Почитание родителей — пятая заповедь: Талмуд различает «страх» и «почитание»; пример — нееврей Дама бен Нетина."
+    "Tikkun olam — “repair of the world”: enactments of the sages “for the sake of the repair of the world” (Gittin 4:2–3), and the “Aleinu” prayer.",
+    "Hillel’s prosbul preserves a debt through the seventh year, so that people will not stop lending to the poor — for the good of the world.",
+    "All the movements value tikkun olam; the emphases differ: Reform places it at the center alongside Torah and prayer, Masorti places it within halacha, and Orthodoxy places it in the mitzvot and in holiness.",
+    "The Torah forbids causing animals to suffer (tza'ar ba'alei chayim) and destroying trees, food, and things for no purpose (bal tashchit).",
+    "Honoring parents is the fifth commandment: the Talmud distinguishes “fear” and “honor”; the example is the non-Jew Dama ben Netina."
    ],
    "blocks": [
     {
      "type": "h",
-     "text": "Что такое тиккун олам"
+     "text": "What tikkun olam is"
     },
     {
      "type": "term",
-     "term": "Тиккун олам",
+     "term": "Tikkun olam",
      "he": "תִּקּוּן עוֹלָם",
-     "text": "«исправление мира»: постановления ради общественного блага и, в более позднем понимании, социальная ответственность еврея."
+     "text": "“repair of the world”: enactments for the public good and, in a later understanding, the social responsibility of a Jew."
     },
     {
      "type": "p",
-     "text": "Понятие имеет два источника. Первый — мишна (Гиттин 4:2–3): ряд постановлений мудрецов сопровождается формулой «ради исправления мира» (мипней тиккун а-олам); там же — прозбул Гиллеля, договор, сохраняющий долг через седьмой год отмены долгов, чтобы люди не боялись давать взаймы. Так галаха сама учит: право может и должно исправляться ради блага мира. Второй источник — молитва «Алейну», закрывающая каждую службу:"
+     "text": "The concept has two sources. The first is the Mishnah (Gittin 4:2–3): a series of enactments of the sages is accompanied by the formula “for the sake of the repair of the world” (mipnei tikkun ha-olam); there, too, is Hillel’s prosbul, an agreement that preserves a debt through the seventh year, when debts are cancelled, so that people will not be afraid to lend. In this way halacha itself teaches: the law can and should be set right for the good of the world. The second source is the “Aleinu” prayer, which closes every service:"
     },
     {
      "type": "hebrew",
      "he": "לְתַקֵּן עוֹלָם בְּמַלְכוּת שַׁדַּי",
-     "translit": "Лэтакэн олам бэ-малхут шадай",
-     "ru": "Исправить мир в царстве Вседержителя",
-     "ref": "Сидур, молитва «Алейну»"
+     "translit": "Letaken olam be-malchut Shaddai",
+     "ru": "To repair the world in the kingdom of the Almighty",
+     "ref": "Siddur, the “Aleinu” prayer"
     },
     {
      "type": "p",
-     "text": "К XVI веку каббала (учение Аризаля) наполняет понятие новым смыслом: через заповеди и добрые дела человек «исправляет» мир, возвращая ему изначальную гармонию. В новое время «тиккун олам» стало общим названием социальной ответственности еврея. Сегодня все течения употребляют понятие; споры идут о том, что считать «исправлением». Прозбул — характерный пример: седьмой год отменяет долги, но Гиллель увидел, что добрый закон привёл к ужесточению сердец — бедным перестали давать взаймы, — и устроил документ, сохраняющий долг, чтобы вернуть людям возможность помогать. Исправление мира начинается с ближнего, общины и собственных поступков. Когда речь заходит о социальной справедливости или об экологии, тиккун олам напоминает, что у иудаизма давно есть собственный язык для этих обязанностей — и они вырастают из заповедей, а не из моды."
+     "text": "By the sixteenth century, Kabbalah (the teaching of the Arizal) fills the concept with a new meaning: through the mitzvot and good deeds a person “repairs” the world, restoring to it its original harmony. In modern times “tikkun olam” became the common name for a Jew’s social responsibility. Today all the movements use the concept; the debate is over what counts as “repair.” The prosbul is a telling example: the seventh year cancels debts, but Hillel saw that a good law had led to a hardening of hearts — people stopped lending to the poor — and he arranged a document that preserves the debt, so as to give people back the possibility of helping. Repairing the world begins with one’s neighbor, with the community, and with one’s own deeds. When the talk turns to social justice or to ecology, tikkun olam is a reminder that Judaism has long had its own language for these obligations — and that they grow out of the mitzvot, not out of fashion."
     },
     {
      "type": "p",
@@ -2136,7 +2136,7 @@
    "lessonId": "etika-4",
    "format": "mc",
    "minLevel": "reform",
-   "prompt": "Что такое лашон а-ра?",
+   "prompt": "What is lashon hara?",
    "options": [
     "Truthful speech about a person that harms him",
     "A lie told to save someone",
@@ -2155,7 +2155,7 @@
    "minLevel": "reform",
    "prompt": "Who was the “Chafetz Chaim”?",
    "options": [
-    "Раби Исраэль Меир а-Коэн из Радина (1838–1933), автор кодекса законов речи",
+    "Rabbi Yisrael Meir ha-Kohen of Radin (1838–1933), author of the code of the laws of speech",
     "The High Priest of the Second Temple",
     "The commentator Rashi",
     "The founder of the Hasidic movement"
@@ -2179,7 +2179,7 @@
    ],
    "answer": 0,
    "explanation": "“One who speaks lashon hara multiplies sins corresponding to the three transgressions: idolatry, adultery, and murder” (Arachin 15b).",
-   "source": "Талмуд, Арахин 15б",
+   "source": "Talmud, Arakhin 15b",
    "difficulty": "hard"
   },
   {
@@ -2212,15 +2212,15 @@
    "prompt": "Match the types of forbidden speech with their definitions.",
    "pairs": [
     [
-     "Лашон а-ра",
+     "Lashon hara",
      "true but harmful speech"
     ],
     [
-     "Рехилут",
+     "Rechilut",
      "carrying words to stir up strife"
     ],
     [
-     "Моци шем ра",
+     "Motzi shem ra",
      "slander — a defaming lie"
     ],
     [
@@ -2238,7 +2238,7 @@
    "format": "typed",
    "minLevel": "reform",
    "prompt": "What was the name (after the title of his book) of the rabbi from Radin, the author of the classic codex on the prohibition of gossip?",
-   "answer": "Хафец Хаим",
+   "answer": "The Chafetz Chaim",
    "accept": [
     "chafetz chaim"
    ],
@@ -2277,7 +2277,7 @@
    ],
    "answer": 0,
    "explanation": "“You shall not have in your pouch two weights — a large one and a small one…” — the prohibition of double measures and scales.",
-   "source": "Дварим 25:13–15",
+   "source": "Devarim 25:13–15",
    "difficulty": "medium"
   },
   {
@@ -2294,7 +2294,7 @@
    ],
    "answer": 0,
    "explanation": "“On his day you shall give him his wages… lest he cry out against you to the Almighty, and there be sin upon you.”",
-   "source": "Дварим 24:14–15",
+   "source": "Devarim 24:14–15",
    "difficulty": "medium"
   },
   {
@@ -2302,7 +2302,7 @@
    "lessonId": "etika-5",
    "format": "mc",
    "minLevel": "reform",
-   "prompt": "Что такое онаа (гнева)?",
+   "prompt": "What is ona'ah (geneivah)?",
    "options": [
     "Deception in price in buying and selling",
     "Interest on a loan",
@@ -2322,7 +2322,7 @@
    "prompt": "The Torah permits lending money at interest to a fellow Jew, if the interest is small.",
    "answer": false,
    "explanation": "“You shall not lend your brother on interest” (Devarim 23:20–21); “you shall not take from him interest or increase” (Vayikra 25:36–37).",
-   "source": "Дварим 23:20–21",
+   "source": "Devarim 23:20–21",
    "difficulty": "easy"
   },
   {
@@ -2345,15 +2345,15 @@
    "pairs": [
     [
      "Accurate measures and weights",
-     "Ваикра 19:35–36"
+     "Vayikra 19:35–36"
     ],
     [
      "Paying a worker the same day",
-     "Дварим 24:15"
+     "Devarim 24:15"
     ],
     [
-     "Запрет двойных гирь",
-     "Дварим 25:13–15"
+     "The prohibition of double weights",
+     "Devarim 25:13–15"
     ],
     [
      "The prohibition of interest",
@@ -2361,7 +2361,7 @@
     ],
     [
      "Not withholding wages until morning",
-     "Ваикра 19:13"
+     "Vayikra 19:13"
     ]
    ],
    "explanation": "Five explicit commandments of the Torah regulate honesty in trade and employment.",
@@ -2405,14 +2405,14 @@
    "minLevel": "reform",
    "prompt": "What is the concept of “repairing the world,” of which the Mishnah (Gittin 4) says: “for the sake of repairing the world”?",
    "options": [
-    "Тиккун олам",
+    "Tikkun olam",
     "Pikuach nefesh",
     "Teshuvah",
     "Giyur"
    ],
    "answer": 0,
    "explanation": "“Mipnei tikkun ha-olam” — the formula for the sages’ enactments made for the public good (Gittin 4:2–3).",
-   "source": "Мишна, Гиттин 4:2–3",
+   "source": "Mishnah, Gittin 4:2–3",
    "difficulty": "easy"
   },
   {
@@ -2474,7 +2474,7 @@
    "prompt": "The commandment “honor your father and your mother” is the only one of the Ten Commandments to which a promise of reward is attached (“that your days may be prolonged”).",
    "answer": true,
    "explanation": "“Kabbed et avicha… lemaan ya’arichun yamecha” (Shemot 20:12; cf. Devarim 5:16).",
-   "source": "Шмот 20:12; Дварим 5:16",
+   "source": "Shemot 20:12; Devarim 5:16",
    "difficulty": "medium"
   },
   {
@@ -2936,12 +2936,12 @@
    "prompt": "Vayikra 19:18 forbids taking revenge and bearing a grudge. Tell about a situation in which it was hard for you to let go of a score against a person, and how you understand the commandment to “break the chain of offenses.”",
    "modelAnswer": "There was a person in my life who once refused to help me, and I remembered it for a long time, waiting for a chance to “repay” him in kind. The commandment “do not take revenge and do not bear a grudge” describes my state exactly: grudge-bearing is a loan with the reproach “I am not like you,” and revenge is refusing the axe to the one who did not give you the sickle yesterday. My understanding is this: the past must not govern today’s attitude toward a person; if a neighbor asks for help now, I answer today’s need, not yesterday’s offense. This does not mean being naive — it means not letting someone else’s wrong define my character. After giyur, I want offenses to end with me, not to pass through me any further.",
    "keyPoints": [
-    "Упомянуты запреты мести и злопамятности (Ваикра 19:18)",
-    "Личный пример конкретный и честный",
-    "Смысл: прошлое не управляет сегодняшним отношением",
-    "Понимание, что заповедь касается характера, а не только поступков"
+    "The prohibitions of revenge and bearing grudges are mentioned (Vayikra 19:18)",
+    "The personal example is specific and honest",
+    "Meaning: the past does not control today's attitude",
+    "Understanding that the mitzvah concerns character, and not only actions"
    ],
-   "explanation": "Раввины проверяют, способен ли кандидат применить заповедь к реальной обиде, а не только пересказать её.",
+   "explanation": "The rabbis check whether the candidate can apply the mitzvah to a real offense, and not merely retell it.",
    "source": "Vayikra 19:18",
    "difficulty": "medium"
   },
@@ -2950,15 +2950,15 @@
    "lessonId": "etika-2",
    "minLevel": "reform",
    "format": "open",
-   "prompt": "Истории Шаббат 31а учат, что «первое впечатление о еврействе человек получает от евреев». Как вы, став евреем, будете встречать в общине новичков и герей?",
-   "modelAnswer": "Я хочу быть для новичка таким, каким был Гиллель, а не Шамаи: встречать вопросы — даже наивные или дерзкие — спокойствием и уважением. Если кто-то спросит меня о гиюре, я постараюсь не отпугнуть его сухостью, а ответить и предложить учиться вместе. Я помню, как важно было мне самому получить тёплый ответ, когда я впервые пришёл в общину, и хочу отдавать это дальше. Место, где меня приняли без упрёков о прошлом, стало для меня домом — и я хочу, чтобы другие узнали этот дом через меня.",
+   "prompt": "The stories of Shabbat 31a teach that “a person's first impression of Judaism comes from Jews.” How will you, having become a Jew, welcome newcomers and gerim in the community?",
+   "modelAnswer": "I want to be for a newcomer what Hillel was, and not Shammai: to meet questions — even naive or insolent ones — with calm and respect. If someone asks me about giyur, I will try not to drive him away with dryness, but to answer and offer to study together. I remember how important it was for me to receive a warm answer when I first came to the community, and I want to pass it on. The place where I was accepted without reproaches about the past became my home — and I want others to know this home through me.",
    "keyPoints": [
-    "Упомянут контраст Гиллель/Шамаи из Шаббат 31а",
-    "Конкретное поведение: терпение к наивным вопросам, приглашение учиться",
-    "Личный опыт принятия в общине",
-    "Связь с запретом напоминать герю прошлое"
+    "The Hillel/Shammai contrast from Shabbat 31a is mentioned",
+    "Concrete behavior: patience with naive questions, an invitation to study",
+    "Personal experience of being accepted into the community",
+    "Connection with the prohibition of reminding a ger of the past"
    ],
-   "explanation": "Умение встречать вступающих — практическое следствие урока Шаббат 31а; бейт-дин ждёт личной готовности, а не пересказа.",
+   "explanation": "The ability to welcome those who are entering is a practical consequence of the lesson of Shabbat 31a; the beit din expects personal readiness, not a retelling.",
    "source": "Talmud, Shabbat 31a",
    "difficulty": "medium"
   },
@@ -2967,15 +2967,15 @@
    "lessonId": "etika-3",
    "minLevel": "reform",
    "format": "mc",
-   "prompt": "Какую меру цдаки приводит Талмуд (Бава Батра 9а)?",
+   "prompt": "What measure of tzedakah does the Talmud cite (Bava Batra 9a)?",
    "options": [
-    "«Цдака равна только заповедям между человеком и Б-гом»",
-    "«Цдака — треть всех заповедей»",
-    "«Цдака равна всем заповедям вместе взятым»",
-    "«Цдака удваивает награду за молитву»"
+    "“Tzedakah equals only the mitzvot between a person and G-d”",
+    "“Tzedakah is a third of all the mitzvot”",
+    "“Tzedakah equals all the mitzvot taken together”",
+    "“Tzedakah doubles the reward for prayer”"
    ],
    "answer": 2,
-   "explanation": "Талмуд выражает масштаб так: «Цдака равна всем заповедям вместе взятым» (Бава Батра 9а).",
+   "explanation": "The Talmud expresses the scale in this way: “Tzedakah equals all the mitzvot taken together” (Bava Batra 9a).",
    "source": "Bava Batra 9a",
    "difficulty": "easy"
   },
@@ -2984,15 +2984,15 @@
    "lessonId": "etika-3",
    "minLevel": "reform",
    "format": "mc",
-   "prompt": "Что, по Мишлей 21:3, угоднее Всевышнему, чем жертва?",
+   "prompt": "According to Mishlei 21:3, what is more pleasing to the Almighty than a sacrifice?",
    "options": [
-    "Приносить жертвы в точно назначенное время",
-    "Молиться три раза в день",
-    "Поститься в дни общей скорби",
-    "Делать правду (цдаку) и правосудие"
+    "Bringing sacrifices at the precisely appointed time",
+    "Praying three times a day",
+    "Fasting on days of communal mourning",
+    "Doing righteousness (tzedakah) and justice"
    ],
    "answer": 3,
-   "explanation": "«Делать правду (цдака) и правосудие угоднее Всевышнему, чем жертва» (Мишлей 21:3).",
+   "explanation": "“Doing righteousness (tzedakah) and justice is more pleasing to the Almighty than a sacrifice” (Mishlei 21:3).",
    "source": "Mishlei 21:3",
    "difficulty": "easy"
   },
@@ -3001,16 +3001,16 @@
    "lessonId": "etika-3",
    "minLevel": "reform",
    "format": "mc",
-   "prompt": "Чем устройство пеа, шихеха и лекета сохраняет достоинство бедного?",
+   "prompt": "How does the arrangement of peah, shikhechah and leket preserve the dignity of the poor?",
    "options": [
-    "Бедный сам собирает положенное ему — он работает, а не ждёт подаяния",
-    "Ему передают деньги анонимно через посредника",
-    "Помощь распределяет только раввин",
-    "Ему разрешается вообще не работать"
+    "The poor person gathers what is due to him himself — he works, rather than waiting for handouts",
+    "Money is passed to him anonymously through an intermediary",
+    "Only the rabbi distributes the aid",
+    "He is allowed not to work at all"
    ],
    "answer": 0,
-   "explanation": "Углы поля, оставленные снопы и колоски принадлежат бедным: нуждающийся сам собирает дар — он работает, а не ждёт подаяния.",
-   "source": "Ваикра 19:9–10; Дварим 24:19–21",
+   "explanation": "The corners of the field, the forgotten sheaves and the gleanings belong to the poor: the needy person gathers the gift himself — he works, rather than waiting for handouts.",
+   "source": "Vayikra 19:9–10; Devarim 24:19–21",
    "difficulty": "medium"
   },
   {
@@ -3018,16 +3018,16 @@
    "lessonId": "etika-3",
    "minLevel": "orthodox",
    "format": "mc",
-   "prompt": "Какой порядок очерёдности в цдаке устанавливает Кицур Шульхан Арух (34:6)?",
+   "prompt": "What order of priority in tzedakah does the Kitzur Shulchan Aruch establish (34:6)?",
    "options": [
-    "Сначала незнакомцы, чтобы расширить заслугу",
-    "Родственники и домашние — прежде бедных своего города, а те — прежде бедных других городов",
-    "Бедные других городов — прежде всех",
-    "Очерёдности нет: дают тому, кто просит первым"
+    "Strangers first, in order to broaden the merit",
+    "Relatives and household members come before the poor of your own city, and those come before the poor of other cities",
+    "The poor of other cities come before everyone",
+    "There is no order: one gives to whoever asks first"
    ],
    "answer": 1,
-   "explanation": "Галаха выстраивает очерёдность: родственники и домашние — прежде бедных города, бедные твоего города — прежде бедных других городов; распределители фонда не должны покровительствовать родне (КСА 34:6).",
-   "source": "Кицур Шульхан Арух 34:6",
+   "explanation": "Halacha establishes an order: relatives and household members come before the poor of the city, the poor of your city come before the poor of other cities; the administrators of a fund must not show favoritism to relatives (KSA 34:6).",
+   "source": "Kitzur Shulchan Aruch 34:6",
    "difficulty": "hard"
   },
   {
@@ -3035,15 +3035,15 @@
    "lessonId": "etika-3",
    "minLevel": "reform",
    "format": "tf",
-   "prompt": "По Кицур Шульхан Арух 34:4, отдавать в цдаку следует не более пятой части имущества, чтобы самому не оказаться в нужде.",
+   "prompt": "According to Kitzur Shulchan Aruch 34:4, one should give no more than a fifth of one's property to tzedakah, so as not to end up in need oneself.",
    "answer": true,
-   "explanation": "КСА 34:4 предостерегает: «Не отдавайте больше пятой части имущества, чтобы самому не оказаться в нужде» — цдака строится на разуме, а не на импульсе.",
-   "source": "Кицур Шульхан Арух 34:4",
+   "explanation": "KSA 34:4 warns: “Do not give away more than a fifth of your property, lest you yourself end up in need” — tzedakah is built on reason, not on impulse.",
+   "source": "Kitzur Shulchan Aruch 34:4",
    "difficulty": "hard",
    "differs": [
     {
      "level": "reform",
-     "text": "В реформистском иудаизме маасер не сохраняется как обязательная галахическая десятина, и предел «не больше пятой части» не действует как галаха. Общины рекомендуют регулярные пожертвования по возможностям."
+     "text": "In Reform Judaism, maaser is not preserved as an obligatory halachic tithe, and the limit of “no more than a fifth” does not operate as halacha. Communities recommend regular donations according to one's means."
     }
    ]
   },
@@ -3052,9 +3052,9 @@
    "lessonId": "etika-3",
    "minLevel": "reform",
    "format": "tf",
-   "prompt": "Согласно Талмуду (Сота 14а), милосердие воспитывается подражанием Б-гу: как Он посещает больных и утешает скорбящих, так и человек.",
+   "prompt": "According to the Talmud (Sotah 14a), compassion is cultivated through imitation of G-d: as He visits the sick and comforts the mourners, so should a person.",
    "answer": true,
-   "explanation": "«Следуй за Б-гом — как Он посещает больных, утешает скорбящих, хоронит умерших, так и ты» (Сота 14а): модель заботы — сам Творец.",
+   "explanation": "“Walk after G-d — as He visits the sick, comforts the mourners, buries the dead, so shall you” (Sotah 14a): the model of care is the Creator Himself.",
    "source": "Sotah 14a",
    "difficulty": "easy"
   },
@@ -3063,22 +3063,22 @@
    "lessonId": "etika-3",
    "minLevel": "reform",
    "format": "match",
-   "prompt": "Соотнесите описания со ступенями цдаки Рамбама (Матнот Аниим, гл. 10).",
+   "prompt": "Match the descriptions with the levels of tzedakah of the Rambam (Matnot Aniim, ch. 10).",
    "pairs": [
     [
-     "Мудрецы тайно клали монеты в двери бедняков",
-     "дающий знает, кому даёт, а берущий не знает"
+     "The sages secretly placed coins at the doors of the poor",
+     "the giver knows to whom he gives, but the receiver does not know"
     ],
     [
-     "Монеты клали в платок на плече",
-     "берущий знает, от кого берёт, а дающий не знает"
+     "Coins were placed in a cloth on the shoulder",
+     "the receiver knows from whom he takes, but the giver does not know"
     ],
     [
-     "Дать в руку нуждающемуся после просьбы",
-     "шестая ступень (ниже «до просьбы»)"
+     "Giving into the hand of the needy person after he asks",
+     "the sixth level (below “before he asks”)"
     ]
    ],
-   "explanation": "Рамбам описывает эти примеры в Матнот Аниим 10:9–12: чем полнее анонимность и чем раньше даяние, тем выше ступень.",
+   "explanation": "The Rambam describes these examples in Matnot Aniim 10:9–12: the more complete the anonymity and the earlier the giving, the higher the level.",
    "source": "Mishneh Torah, Matanot Ani'im 10:7–14",
    "difficulty": "hard"
   },
@@ -3087,14 +3087,14 @@
    "lessonId": "etika-3",
    "minLevel": "reform",
    "format": "typed",
-   "prompt": "Как называется десятина бедных третьего года семилетки (Дварим 26:12)?",
-   "answer": "Маасер аний",
+   "prompt": "What is the tithe for the poor of the third year of the seven-year cycle called (Devarim 26:12)?",
+   "answer": "Maaser ani",
    "accept": [
-    "маасер аний",
-    "маасер ании"
+    "maaser ani",
+    "maaser aniy"
    ],
-   "explanation": "Десятина урожая и доходов на святые и общественные нужды включала помощь бедным; десятина для бедных в третий год семилетки называется «маасер аний» (Дварим 26:12).",
-   "source": "Дварим 26:12",
+   "explanation": "The tithe of the harvest and of income for holy and communal needs included aid to the poor; the tithe for the poor in the third year of the seven-year cycle is called “maaser ani” (Devarim 26:12).",
+   "source": "Devarim 26:12",
    "difficulty": "hard"
   },
   {
@@ -3102,14 +3102,14 @@
    "lessonId": "etika-3",
    "minLevel": "reform",
    "format": "typed",
-   "prompt": "Как называется мицва посещения больных?",
-   "answer": "бикур холим",
+   "prompt": "What is the mitzvah of visiting the sick called?",
+   "answer": "bikur cholim",
    "accept": [
-    "бикур холим",
-    "бикур-холим",
-    "биккур холим"
+    "bikur cholim",
+    "bikur-cholim",
+    "bikkur cholim"
    ],
-   "explanation": "Бикур холим — посещение больных. Талмуд учит ей через подражание Б-гу, посетившему Авраама (Сота 14а; Берешит 18:1).",
+   "explanation": "Bikur cholim is the visiting of the sick. The Talmud teaches it through imitation of G-d, who visited Avraham (Sotah 14a; Bereshit 18:1).",
    "source": "Sotah 14a",
    "difficulty": "easy"
   },
@@ -3118,16 +3118,16 @@
    "lessonId": "etika-3",
    "minLevel": "reform",
    "format": "open",
-   "prompt": "Что такое гмилут хасадим и чем он отличается от цдаки? Какие виды хеседа вы готовы делать в своей общине?",
-   "modelAnswer": "Цдака — прежде всего деньги нуждающемуся, а гмилут хасадим — добрые дела, которые не сводятся к деньгам: навестить больного, утешить скорбящего, встретить гостя, сопроводить умершего. Талмуд учит, что модель заботы — сам Творец: как Он посещает больных и утешает скорбящих, так и я должен поступать с людьми (Сота 14а). В моей общине я хочу регулярно навещать больных — приходить просто посидеть рядом, помочь с едой и делами. Гостеприимство для меня — приглашать на шаббатний стол людей, которые оказались в городе без семьи. Деньги останутся частью моей цдаки, а хесед добавит то, чего деньги не заменяют: присутствие и время.",
+   "prompt": "What is gemilut chasadim, and how does it differ from tzedakah? What kinds of chesed are you ready to do in your community?",
+   "modelAnswer": "Tzedakah is above all money for the needy, while gemilut chasadim is good deeds that cannot be reduced to money: visiting the sick, comforting mourners, welcoming guests, accompanying the dead. The Talmud teaches that the model of care is the Creator Himself: as He visits the sick and comforts the mourners, so must I act toward people (Sotah 14a). In my community I want to visit the sick regularly — to come simply to sit beside them, to help with food and errands. Hospitality for me means inviting to the Shabbat table people who find themselves in the city without family. Money will remain part of my tzedakah, and chesed will add what money cannot replace: presence and time.",
    "keyPoints": [
-    "Различие: цдака — деньги, хесед — дела и время (Сота 14а)",
-    "Примеры хеседа из урока: бикур холим, утешение скорбящих, гостеприимство",
-    "Подражание Б-гу как основание мицвы",
-    "Конкретный личный план: кого и как навещать, кого приглашать"
+    "The difference: tzedakah is money, chesed is deeds and time (Sotah 14a)",
+    "Examples of chesed from the lesson: bikur cholim, comforting mourners, hospitality",
+    "Imitation of G-d as the basis of the mitzvah",
+    "A concrete personal plan: whom and how to visit, whom to invite"
    ],
-   "explanation": "Бейт-дин проверяет, понимает ли кандидат, что иудаизм требует заботы временем и присутствием, а не только деньгами.",
-   "source": "Сота 14а; Пиркей Авот 1:2; 1:5",
+   "explanation": "The beit din checks whether the candidate understands that Judaism requires care with time and presence, and not only with money.",
+   "source": "Sotah 14a; Pirkei Avot 1:2; 1:5",
    "difficulty": "medium"
   },
   {
@@ -3135,16 +3135,16 @@
    "lessonId": "etika-3",
    "minLevel": "reform",
    "format": "open",
-   "prompt": "Почему даяние в иудаизме называется не милостыней, а цдакой — «праведностью»? Как это меняет отношение дающего?",
-   "modelAnswer": "Слово «цдака» происходит от корня «цедек» — справедливость: то, что я даю, — не щедрость по настроению, а долг. Имущество дано мне во владение с обязательством делиться, поэтому нуждающийся получает не милость, а то, что ему следует. Это меняет отношение: я не властелин, а распорядитель, и отказ давать — несправедливость. Когда я отделяю долю дохода регулярно, а не по порыву, даяние перестаёт зависеть от настроения. Мишлей 21:3 ставит правду и правосудие выше жертвы: цдака — постоянный долг справедливости.",
+   "prompt": "Why is giving in Judaism called not charity but tzedakah — “righteousness”? How does this change the giver's attitude?",
+   "modelAnswer": "The word “tzedakah” comes from the root “tzedek” — justice: what I give is not generosity according to mood, but a duty. Property is given into my possession on the condition that I share it, so the needy person receives not mercy, but what is due to him. This changes the attitude: I am not the owner, but a trustee, and refusing to give is injustice. When I set aside a share of my income regularly, and not on impulse, giving ceases to depend on mood. Mishlei 21:3 places righteousness and justice above sacrifice: tzedakah is a constant duty of justice.",
    "keyPoints": [
-    "Корень «цедек» — справедливость",
-    "Даяние как долг, а не щедрость по настроению",
-    "Нуждающийся — не объект милости, а человек с правами",
-    "Связь с регулярностью даяния (маасер)"
+    "The root “tzedek” — justice",
+    "Giving as a duty, and not generosity according to mood",
+    "The needy person is not an object of mercy, but a person with rights",
+    "Connection with the regularity of giving (maaser)"
    ],
-   "explanation": "Понимание сути слова «цдака» — базовый вопрос о мотивации даяния.",
-   "source": "Дварим 15:7–8; Мишлей 21:3",
+   "explanation": "Understanding the essence of the word “tzedakah” is a basic question about the motivation for giving.",
+   "source": "Devarim 15:7–8; Mishlei 21:3",
    "difficulty": "medium"
   },
   {
@@ -3152,16 +3152,16 @@
    "lessonId": "etika-4",
    "minLevel": "reform",
    "format": "mc",
-   "prompt": "Какой стих книги Мишлей придаёт человеческому слову исключительный вес?",
+   "prompt": "Which verse of the book of Mishlei gives exceptional weight to the human word?",
    "options": [
-    "«Начало мудрости — страх Всевышнего» (Мишлей 9:10)",
-    "«Лучше кусок сухого хлеба, и при том в мире» (Мишлей 17:1)",
-    "«Смерть и жизнь — во власти языка» (Мишлей 18:21)",
-    "«Надейся на Всевышнего всем сердцем» (Мишлей 3:5)"
+    "“The beginning of wisdom is the fear of the Almighty” (Mishlei 9:10)",
+    "“Better a dry piece of bread, and with it peace” (Mishlei 17:1)",
+    "“Death and life are in the power of the tongue” (Mishlei 18:21)",
+    "“Trust in the Almighty with all your heart” (Mishlei 3:5)"
    ],
    "answer": 2,
-   "explanation": "Еврейская этика придаёт слову исключительный вес: «Смерть и жизнь — во власти языка» (Мишлей 18:21).",
-   "source": "Мишлей 18:21",
+   "explanation": "Jewish ethics gives the word exceptional weight: “Death and life are in the power of the tongue” (Mishlei 18:21).",
+   "source": "Mishlei 18:21",
    "difficulty": "easy"
   },
   {
@@ -3169,16 +3169,16 @@
    "lessonId": "etika-4",
    "minLevel": "reform",
    "format": "mc",
-   "prompt": "Каким приёмом толкования пользуется Талмуд в Арахин 15б, приравнивая лашон а-ра к идолопоклонству, запретным связям и убийству?",
+   "prompt": "What interpretive device does the Talmud use in Arachin 15b, equating lashon hara with idolatry, forbidden relations and murder?",
    "options": [
-    "Приём «каль вахомер» — вывод большего из меньшего",
-    "Сопоставление размеров награды и наказания",
-    "Отсылка к устной традиции пророков",
-    "Приём «гэзера шава» — толкование по общему слову «великий»"
+    "The device of “kal vachomer” — deriving the greater from the lesser",
+    "Comparing the magnitude of reward and punishment",
+    "A reference to the oral tradition of the prophets",
+    "The device of “gezeirah shavah” — interpretation by the common word “great”"
    ],
    "answer": 3,
-   "explanation": "Для этого используется приём «гэзера шава» по слову «великий» (Арахин 15б).",
-   "source": "Талмуд, Арахин 15б",
+   "explanation": "For this, the device of “gezeirah shavah” is used, based on the word “great” (Arachin 15b).",
+   "source": "Talmud, Arakhin 15b",
    "difficulty": "hard"
   },
   {
@@ -3186,16 +3186,16 @@
    "lessonId": "etika-4",
    "minLevel": "reform",
    "format": "mc",
-   "prompt": "Что НЕ входит в строгие условия, при которых, по классике, допустима речь о человеке ради предотвращения вреда?",
+   "prompt": "What is NOT among the strict conditions under which, according to the classical sources, it is permitted to speak about a person in order to prevent harm?",
    "options": [
-    "Согласие большинства общины на такой разговор",
-    "Факты проверены лично, а не по слухам",
-    "Нет иного способа предотвратить вред",
-    "Слова сказаны приватно тому, кто может действовать; намерение — защита, а не осуждение"
+    "The consent of the majority of the community to such a conversation",
+    "The facts have been verified personally, and not by hearsay",
+    "There is no other way to prevent the harm",
+    "The words are said privately to someone who can act; the intention is protection, and not condemnation"
    ],
    "answer": 0,
-   "explanation": "Классика (Хафец Хаим) требует: факты проверены лично, иного способа нет, намерение — защита, слова сказаны приватно тому, кто может действовать; если хоть одно условие не выполнено — молчание заповедно.",
-   "source": "Хафец Хаим, «Шмират а-Лашон»",
+   "explanation": "The classical source (Chafetz Chaim) requires: the facts have been verified personally, there is no other way, the intention is protection, the words are said privately to someone who can act; if even one condition is not met — silence is commanded.",
+   "source": "Chafetz Chaim, “Shmirat ha-Lashon”",
    "difficulty": "hard"
   },
   {
@@ -3203,10 +3203,10 @@
    "lessonId": "etika-4",
    "minLevel": "reform",
    "format": "tf",
-   "prompt": "Запрет лжи в Торе уже, чем запрет злословия.",
+   "prompt": "The Torah's prohibition of lying is narrower than the prohibition of lashon hara.",
    "answer": false,
-   "explanation": "Урок подчёркивает: запрет лжи шире запрета злословия — «От лжи удали́сь» (Шмот 23:7), «не лгите друг другу» (Ваикра 19:11).",
-   "source": "Шмот 23:7",
+   "explanation": "The lesson emphasizes: the prohibition of lying is broader than the prohibition of lashon hara — “Keep far from falsehood” (Shemot 23:7), “you shall not lie to one another” (Vayikra 19:11).",
+   "source": "Shemot 23:7",
    "difficulty": "easy"
   },
   {
@@ -3214,10 +3214,10 @@
    "lessonId": "etika-4",
    "minLevel": "reform",
    "format": "tf",
-   "prompt": "По Кицур Шульчан Арух 63:1, обман в цене тяжелее словесной обиды, потому что при нём теряются деньги.",
+   "prompt": "According to Kitzur Shulchan Aruch 63:1, deception in price is graver than a verbal offense, because money is lost in it.",
    "answer": false,
-   "explanation": "КСА 63:1 подчёркивает обратное: обидеть словами тяжелее, чем обмануть в цене, — деньги можно вернуть, а слова нельзя.",
-   "source": "Кицур Шульчан Арух 63:1",
+   "explanation": "KSA 63:1 emphasizes the opposite: to offend with words is graver than to deceive in price — money can be returned, but words cannot.",
+   "source": "Kitzur Shulchan Aruch 63:1",
    "difficulty": "easy"
   },
   {
@@ -3225,10 +3225,10 @@
    "lessonId": "etika-4",
    "minLevel": "reform",
    "format": "tf",
-   "prompt": "Хафец Хаим написал также книгу «Ахават Хесед» — о любви к добру и беспроцентных займах.",
+   "prompt": "The Chafetz Chaim also wrote the book “Ahavat Chesed” — about love of goodness and interest-free loans.",
    "answer": true,
-   "explanation": "Писал он также книгу «Ахават Хесед» — о любви к добру и беспроцентных займах: этика слова и этика денег у него — одно целое.",
-   "source": "Урок: Этика речи",
+   "explanation": "He also wrote the book “Ahavat Chesed” — about love of goodness and interest-free loans: for him, the ethics of speech and the ethics of money are one whole.",
+   "source": "Lesson: The Ethics of Speech",
    "difficulty": "hard"
   },
   {
@@ -3236,27 +3236,27 @@
    "lessonId": "etika-4",
    "minLevel": "reform",
    "format": "match",
-   "prompt": "Соотнесите формулировки со стихами, откуда они взяты.",
+   "prompt": "Match the formulations with the verses they are taken from.",
    "pairs": [
     [
-     "«Смерть и жизнь — во власти языка»",
-     "Мишлей 18:21"
+     "“Death and life are in the power of the tongue”",
+     "Mishlei 18:21"
     ],
     [
-     "«От лжи удали́сь»",
-     "Шмот 23:7"
+     "“Keep far from falsehood”",
+     "Shemot 23:7"
     ],
     [
-     "«Не лгите друг другу»",
-     "Ваикра 19:11"
+     "“You shall not lie to one another”",
+     "Vayikra 19:11"
     ],
     [
-     "«Кто человек, желающий жизни?»",
-     "Тегилим 34:13"
+     "“Who is the man who desires life?”",
+     "Tehillim 34:13"
     ]
    ],
-   "explanation": "Все четыре формулировки приведены в уроке; от псалма 34 («кто человек, желающий жизни») взял имя и Хафец Хаим.",
-   "source": "Мишлей 18:21; Шмот 23:7; Ваикра 19:11; Тегилим 34:13–14",
+   "explanation": "All four formulations are cited in the lesson; the Chafetz Chaim also took his name from Psalm 34 (“who is the man who desires life”).",
+   "source": "Mishlei 18:21; Shemot 23:7; Vayikra 19:11; Tehillim 34:13–14",
    "difficulty": "hard"
   },
   {
@@ -3264,15 +3264,15 @@
    "lessonId": "etika-4",
    "minLevel": "reform",
    "format": "typed",
-   "prompt": "Как называется книга Хафец Хаима 1876 года «Хранение языка»?",
-   "answer": "Шмират а-Лашон",
+   "prompt": "What is the name of the Chafetz Chaim's 1876 book “Guarding the Tongue”?",
+   "answer": "Shmirat HaLashon",
    "accept": [
-    "шмират а-лашон",
-    "шмират алашон",
-    "шмират а лашон"
+    "shmirat ha-lashon",
+    "shmirat halashon",
+    "shmirat a lashon"
    ],
-   "explanation": "Книги «Хафец Хаим» (1873) и «Шмират а-Лашон» («Хранение языка», 1876) систематизируют законы речи.",
-   "source": "Хафец Хаим, «Шмират а-Лашон»",
+   "explanation": "The books “Chafetz Chaim” (1873) and “Shmirat HaLashon” (“Guarding the Tongue”, 1876) systematize the laws of speech.",
+   "source": "Chafetz Chaim, “Shmirat ha-Lashon”",
    "difficulty": "hard"
   },
   {
@@ -3280,16 +3280,16 @@
    "lessonId": "etika-4",
    "minLevel": "reform",
    "format": "open",
-   "prompt": "Речь о человеке всё же сорвалась. Что, по уроку, нужно сделать дальше?",
-   "modelAnswer": "Я понимаю, что традиция не требует недостижимого совершенства языка: она требует честной работы день за днём. Если слова уже сказаны, я извиняюсь и исправляю вред, насколько это возможно. Если я пересказал неточные слова, я говорю тем, кто их услышал, что они не были точными, и прошу прощения у обиженного. Я не оправдываюсь и не продолжаю тему. Такая ежедневная работа над речью и есть, по уроку, начало духовной работы.",
+   "prompt": "Speech about a person slipped out anyway. What, according to the lesson, should one do next?",
+   "modelAnswer": "I understand that tradition does not demand an unattainable perfection of speech: it demands honest work day after day. If the words have already been said, I apologize and repair the harm, as far as it is possible. If I repeated inaccurate words, I tell those who heard them that they were not accurate, and I ask forgiveness of the offended person. I do not justify myself and do not continue the topic. Such daily work on speech is, according to the lesson, the beginning of spiritual work.",
    "keyPoints": [
-    "Извиниться и исправить вред, насколько возможно",
-    "Если слова были неточны — сказать это слышавшим и попросить прощения у обиженного",
-    "Не оправдываться и не продолжать пересказ",
-    "Работа над речью ежедневная, а не требование совершенства"
+    "Apologize and repair the harm, as far as possible",
+    "If the words were inaccurate — tell this to those who heard and ask forgiveness of the offended person",
+    "Do not justify oneself and do not continue the retelling",
+    "Work on speech is daily work, and not a demand for perfection"
    ],
-   "explanation": "Урок говорит прямо: если речь сорвалась, извинитесь и исправьте вред; тому, кому перенесли неточные слова, скажите, что они не были точными, и попросите прощения у обиженного.",
-   "source": "Урок: Этика речи",
+   "explanation": "The lesson says it directly: if speech slipped out, apologize and repair the harm; tell the person to whom you carried the inaccurate words that they were not accurate, and ask forgiveness of the offended person.",
+   "source": "Lesson: The Ethics of Speech",
    "difficulty": "medium"
   },
   {
@@ -3297,16 +3297,16 @@
    "lessonId": "etika-4",
    "minLevel": "reform",
    "format": "open",
-   "prompt": "Перед тем как пересказать что-либо о человеке, урок советует задать себе четыре вопроса. Назовите их и объясните, почему они охватывают и цифровую переписку.",
-   "modelAnswer": "Четыре вопроса: правда ли это? нужно ли это? мягко ли это сказано? что изменится, если я промолчу? Первый вопрос отсекает ложь, второй — болтовню, которая ничего не даёт, третий — жестокость формы, а четвёртый учит видеть цену молчания: часто молчание не умаляет истину, но бережёт человека. Эти вопросы работают и в мессенджерах: нажатие «поделиться» — тот же пересказ своими словами, и ответственность за него такая же, как за сказанное. Слова в сети распространяются мгновенно и остаются навсегда, поэтому цифровая речь требует ещё большей строгости. Я хочу сделать эти четыре вопроса привычкой — и в разговоре, и перед отправкой сообщения.",
+   "prompt": "Before repeating anything about a person, the lesson advises asking yourself four questions. Name them and explain why they also cover digital correspondence.",
+   "modelAnswer": "Four questions: is it true? is it necessary? is it said gently? what will change if I keep silent? The first question cuts off falsehood, the second — chatter that accomplishes nothing, the third — cruelty of form, and the fourth teaches one to see the value of silence: often silence does not diminish the truth, but preserves the person. These questions work in messengers too: pressing “share” is the same as retelling in one's own words, and the responsibility for it is the same as for what is spoken. Words on the internet spread instantly and remain forever, so digital speech requires even greater strictness. I want to make these four questions a habit — both in conversation and before sending a message.",
    "keyPoints": [
-    "Названы все четыре вопроса (правда, нужность, мягкость, цена молчания)",
-    "Понимание смысла каждого вопроса",
-    "Пересылка равнозначна пересказу; ответственность одинаковая",
-    "Применение как привычка в цифровой речи"
+    "All four questions are named (truth, necessity, gentleness, the value of silence)",
+    "Understanding the meaning of each question",
+    "Forwarding is equivalent to retelling; the responsibility is the same",
+    "Application as a habit in digital speech"
    ],
-   "explanation": "Современные учителя переносят правила Хафец Хаима на цифровую речь; бейт-дин может спросить о применении законов в сети.",
-   "source": "Урок: Этика речи",
+   "explanation": "Contemporary teachers extend the rules of the Chafetz Chaim to digital speech; the beit din may ask about the application of the laws online.",
+   "source": "Lesson: The Ethics of Speech",
    "difficulty": "hard"
   },
   {
@@ -3314,16 +3314,16 @@
    "lessonId": "etika-5",
    "minLevel": "reform",
    "format": "mc",
-   "prompt": "Как толкует слово «истинный» в заповеди о мерах Кицур Шульхан Арух (62:9)?",
+   "prompt": "How does the Kitzur Shulchan Aruch interpret the word “true” in the mitzvah about measures (62:9)?",
    "options": [
-    "«Истинный» значит откалиброванный по храмовому эталону",
-    "«Отдели немного от своего и дай ему» — отмеряй щедро, чуть больше меры",
-    "«Истинный» относится только к мерам драгоценных металлов",
-    "«Истинный» — синоним слова «дорогой»"
+    "“True” means calibrated against the Temple standard",
+    "“Take a little of your own and give him” — measure generously, a little beyond the measure",
+    "“True” refers only to the measures of precious metals",
+    "“True” is a synonym of the word “expensive”"
    ],
    "answer": 1,
-   "explanation": "Мудрецы толкуют слово «истинный»: «отдели немного от своего и дай ему» — отмеряй щедро, чуть больше меры (КСА 62:9).",
-   "source": "Кицур Шульхан Арух 62:9",
+   "explanation": "The sages interpret the word “true”: “take a little of your own and give him” — measure generously, a little beyond the measure (KSA 62:9).",
+   "source": "Kitzur Shulchan Aruch 62:9",
    "difficulty": "hard"
   },
   {
@@ -3331,16 +3331,16 @@
    "lessonId": "etika-5",
    "minLevel": "orthodox",
    "format": "mc",
-   "prompt": "Разрешены ли недовес и недолив при торговле с неевреем?",
+   "prompt": "Are short weight and short measure permitted in trade with a non-Jew?",
    "options": [
-    "Да, если сумма небольшая",
-    "Да, неевреи не под защитой этой заповеди",
-    "Нет, они запрещены и при торговле с неевреем",
-    "Да, но только в виде недолива"
+    "Yes, if the amount is small",
+    "Yes, non-Jews are not protected by this mitzvah",
+    "No, they are forbidden even in trade with a non-Jew",
+    "Yes, but only in the form of short measure"
    ],
    "answer": 2,
-   "explanation": "Недовес и недолив запрещены и при торговле с неевреем (КСА 62:7).",
-   "source": "Кицур Шульчан Арух 62:7",
+   "explanation": "Short weight and short measure are forbidden even in trade with a non-Jew (KSA 62:7).",
+   "source": "Kitzur Shulchan Aruch 62:7",
    "difficulty": "easy"
   },
   {
@@ -3348,16 +3348,16 @@
    "lessonId": "etika-5",
    "minLevel": "reform",
    "format": "mc",
-   "prompt": "Какую формулу произносит раввинский суд над тем, кто не держит своего слова (КСА 62:15)?",
+   "prompt": "What formula does the rabbinic court pronounce over one who does not keep his word (KSA 62:15)?",
    "options": [
-    "«Да будет он предан анафеме до третьего колена»",
-    "«Пусть заплатит двойную цену за нарушенный договор»",
-    "«Да отлучат его от общины на тридцать дней»",
-    "«Тот, Кто взыскал с поколения потопа, с поколения Вавилонской башни, с Содома и с египтян, взыщет с того, кто не держит слова»"
+    "“May he be placed under the ban until the third generation”",
+    "“Let him pay double the price for the broken agreement”",
+    "“May he be expelled from the community for thirty days”",
+    "“He Who exacted punishment from the generation of the flood, from the generation of the Tower of Bavel, from Sedom and from the Egyptians, will exact punishment from one who does not keep his word”"
    ],
    "answer": 3,
-   "explanation": "Раввинский суд вынесет проклятие нарушителю слова именно этой формулой — от потопа до египтян (КСА 62:15).",
-   "source": "Кицур Шульчан Арух 62:15",
+   "explanation": "The rabbinic court will pronounce the curse on the violator of his word in precisely this formula — from the flood to the Egyptians (KSA 62:15).",
+   "source": "Kitzur Shulchan Aruch 62:15",
    "difficulty": "hard"
   },
   {
@@ -3365,16 +3365,16 @@
    "lessonId": "etika-5",
    "minLevel": "reform",
    "format": "mc",
-   "prompt": "Что происходит с обещанием подарка, данным бедному, по КСА 62:17?",
+   "prompt": "What happens to a promise of a gift given to a poor person, according to KSA 62:17?",
    "options": [
-    "Оно становится обетом — передумать уже нельзя",
-    "Оно считается выполненным уже произнесённым словом",
-    "Его можно отменить в течение суток",
-    "Оно требует подписи двух свидетелей"
+    "It becomes a vow — one can no longer change one's mind",
+    "It is considered fulfilled by the spoken word alone",
+    "It can be canceled within twenty-four hours",
+    "It requires the signature of two witnesses"
    ],
    "answer": 0,
-   "explanation": "КСА (62:17) добавляет: обещание подарка бедному становится обетом — передумать уже нельзя.",
-   "source": "Кицур Шульчан Арух 62:17",
+   "explanation": "KSA (62:17) adds: a promise of a gift to a poor person becomes a vow — one can no longer change one's mind.",
+   "source": "Kitzur Shulchan Aruch 62:17",
    "difficulty": "medium"
   },
   {
@@ -3382,16 +3382,16 @@
    "lessonId": "etika-5",
    "minLevel": "reform",
    "format": "mc",
-   "prompt": "Что, по комментаторам, должны сказать язычники, видя честную жизнь евреев?",
+   "prompt": "What, according to the commentators, should the nations say on seeing the honest life of Jews?",
    "options": [
-    "«Видно, что они умнее всех на рынке»",
-    "«Блажен народ, у которого такой Б-г»",
-    "«У них самые точные весы в городе»",
-    "«Пусть их Б-г благословит и наши города»"
+    "“Clearly they are the smartest of everyone in the market”",
+    "“Fortunate is the people whose G-d is such”",
+    "“They have the most accurate scales in the city”",
+    "“May their G-d bless our cities as well”"
    ],
    "answer": 1,
-   "explanation": "Имя Б-га «освящается» через людей: язычники, говорят комментаторы, должны сказать о евреях: «блажен народ, у которого такой Б-г» (Ваикра 22:32).",
-   "source": "Ваикра 22:32",
+   "explanation": "The name of G-d is “sanctified” through people: the nations, say the commentators, should say of the Jews: “fortunate is the people whose G-d is such” (Vayikra 22:32).",
+   "source": "Vayikra 22:32",
    "difficulty": "medium"
   },
   {
@@ -3399,16 +3399,16 @@
    "lessonId": "etika-5",
    "minLevel": "orthodox",
    "format": "mc",
-   "prompt": "Разрешается ли вводить человека в заблуждение без денежного ущерба — например, продать некошерное мясо как кошерное?",
+   "prompt": "Is it permitted to mislead a person without monetary loss — for example, to sell non-kosher meat as kosher?",
    "options": [
-    "Да, если покупатель сам не разбирается в кашруте",
-    "Да, главное — честно назвать цену",
-    "Нет, это запрещено даже без денежного ущерба",
-    "Да, если мясо выглядит свежим"
+    "Yes, if the buyer himself does not understand kashrut",
+    "Yes, the main thing is to state the price honestly",
+    "No, this is forbidden even without monetary loss",
+    "Yes, if the meat looks fresh"
    ],
    "answer": 2,
-   "explanation": "Вводить человека в заблуждение — даже нееврея, даже без денежного ущерба — запрещено: нельзя продать некошерное мясо, выдав его за кошерное (КСА 63:4).",
-   "source": "Кицур Шульчан Арух 63:4",
+   "explanation": "To mislead a person — even a non-Jew, even without monetary loss — is forbidden: one may not sell non-kosher meat, passing it off as kosher (KSA 63:4).",
+   "source": "Kitzur Shulchan Aruch 63:4",
    "difficulty": "easy"
   },
   {
@@ -3416,10 +3416,10 @@
    "lessonId": "etika-5",
    "minLevel": "reform",
    "format": "tf",
-   "prompt": "Задержка платы дневному работнику, который живёт сегодняшним заработком, сравнивается в традиции с лишением жизни.",
+   "prompt": "Delaying the wages of a day laborer, who lives on today's earnings, is compared in the tradition to the taking of a life.",
    "answer": true,
-   "explanation": "Для дневного работника день оплаты — вопрос выживания: он ждёт эти деньги, чтобы прожить, и задержка платы сравнивается в традиции с лишением жизни.",
-   "source": "Дварим 24:14–15",
+   "explanation": "For the day laborer, payday is a matter of survival: he waits for this money to live on, and delaying the wage is compared in the tradition to the taking of a life.",
+   "source": "Devarim 24:14–15",
    "difficulty": "medium"
   },
   {
@@ -3427,10 +3427,10 @@
    "lessonId": "etika-5",
    "minLevel": "orthodox",
    "format": "tf",
-   "prompt": "По Кицур Шульхан Арух (гл. 65), запрет процента нарушают только заимодавец и заёмщик.",
+   "prompt": "According to the Kitzur Shulchan Aruch (ch. 65), only the lender and the borrower violate the prohibition of interest.",
    "answer": false,
-   "explanation": "Нарушают его не только заимодавец и заёмщик, но и писарь, свидетели и поручитель расписки под проценты (КСА, гл. 65).",
-   "source": "Кицур Шульчан Арух 65",
+   "explanation": "It is violated not only by the lender and the borrower, but also by the scribe, the witnesses, and the guarantor of an interest-bearing note (KSA, ch. 65).",
+   "source": "Kitzur Shulchan Aruch 65",
    "difficulty": "hard"
   },
   {
@@ -3438,31 +3438,31 @@
    "lessonId": "etika-5",
    "minLevel": "reform",
    "format": "match",
-   "prompt": "Соотнесите понятия деловой честности с их источниками.",
+   "prompt": "Match the concepts of business honesty with their sources.",
    "pairs": [
     [
-     "Обман в цене (онаа)",
+     "Deception in price (onaah)",
      "Vayikra 25:14"
     ],
     [
-     "Запрет процента единоверцу",
-     "Дварим 23:20–21"
+     "The prohibition of interest toward a fellow Jew",
+     "Devarim 23:20–21"
     ],
     [
-     "«Да» будет «да»: толкование «гин истинный»",
-     "Ваикра 19:36"
+     "“Yes” shall be “yes”: the interpretation of “a true hin”",
+     "Vayikra 19:36"
     ],
     [
-     "«Пусть все дела твои будут во имя Небес»",
-     "Пиркей Авот 2:12"
+     "“Let all your deeds be for the sake of Heaven”",
+     "Pirkei Avot 2:12"
     ],
     [
-     "«Не оскверняйте имя Моё святое»",
-     "Ваикра 22:32"
+     "“You shall not profane My holy Name”",
+     "Vayikra 22:32"
     ]
    ],
-   "explanation": "Галаха деловой честности опирается на прямые стихи Торы и изречение Раби Йосе.",
-   "source": "Ваикра 25:14; Дварим 23:20–21; Ваикра 19:36; Пиркей Авот 2:12; Ваикра 22:32",
+   "explanation": "The halacha of business honesty rests on direct verses of the Torah and the saying of Rabbi Yose.",
+   "source": "Vayikra 25:14; Devarim 23:20–21; Vayikra 19:36; Pirkei Avot 2:12; Vayikra 22:32",
    "difficulty": "hard"
   },
   {
@@ -3470,16 +3470,16 @@
    "lessonId": "etika-5",
    "minLevel": "reform",
    "format": "typed",
-   "prompt": "Как называется «осквернение Имени» — поступки, из-за которых благочестие Б-га ставится под сомнение?",
+   "prompt": "What is “profanation of the Name” — deeds that call devotion to G-d into question — called?",
    "answer": "Chillul HaShem",
    "accept": [
-    "хилуль а-шем",
-    "хилул а-шем",
-    "хилуль ха-шем",
-    "хилуль ашем"
+    "chilul ha-shem",
+    "chilul hashem",
+    "chilul ha'shem",
+    "chilul ashem"
    ],
-   "explanation": "Хилуль а-Шем — «осквернение Имени»; противоположность кидуш а-Шем, освящению Имени честными поступками.",
-   "source": "Ваикра 22:32",
+   "explanation": "Chilul Hashem — “profanation of the Name”; the opposite of kiddush Hashem, the sanctification of the Name through honest deeds.",
+   "source": "Vayikra 22:32",
    "difficulty": "easy"
   },
   {
@@ -3487,16 +3487,16 @@
    "lessonId": "etika-5",
    "minLevel": "reform",
    "format": "open",
-   "prompt": "«Пусть будет гин истинный» (Ваикра 19:36) мудрецы толкуют и так: пусть твоё «да» будет «да», а «нет» — «нет». Как заповедь держать слово будет выглядеть в вашей работе и дома?",
-   "modelAnswer": "Для меня эта заповедь начинается с малого: если я сказал «да», я стараюсь выполнить, даже когда передумал, а если сказал «нет» — не менять решение под давлением. Богобоязненный человек, говорит урок, старается выполнить даже то, на что лишь мысленно согласился, — и я хочу учиться этой внутренней честности. На работе это значит не обещать сроки, в которые я не верю, и не отступать от согласованной цены, если нашёлся покупатель подороже. Дома — быть последовательным для близких: моё слово должно быть таким же точным, как мера. Слово, которое не держат, оскверняет Имя Б-га в глазах людей, а слово, которое держат, освящает его.",
+   "prompt": "“A true hin” (Vayikra 19:36) the sages also interpret in this way: let your “yes” be “yes”, and your “no” be “no”. How will the mitzvah of keeping one's word look in your work and at home?",
+   "modelAnswer": "For me, this mitzvah begins with small things: if I said “yes”, I strive to follow through, even when I have changed my mind, and if I said “no” — I do not change my decision under pressure. A G-d-fearing person, says the lesson, strives to fulfill even what he has agreed to only in thought — and I want to learn this inner honesty. At work this means not promising deadlines I do not believe in, and not going back on an agreed price if a buyer offering more has appeared. At home it means being consistent for those close to me: my word should be as exact as a measure. A word that is not kept profanes the Name of G-d in the eyes of people, and a word that is kept sanctifies it.",
    "keyPoints": [
-    "«Да» — «да», «нет» — «нет» как толкование «гин истинный» (Ваикра 19:36)",
-    "Стараться выполнять даже помысленное согласие (КСА 62:16)",
-    "Конкретика: сроки, цены, последовательность дома",
-    "Связь с кидуш а-Шем и хилуль а-Шем"
+    "“Yes” — “yes”, “no” — “no” as the interpretation of “a true hin” (Vayikra 19:36)",
+    "Striving to fulfill even consent given in thought (KSA 62:16)",
+    "Specifics: deadlines, prices, consistency at home",
+    "Connection with kiddush Hashem and chilul Hashem"
    ],
-   "explanation": "Заповедь держать слово — одна из самых практичных тем бейт-динового разговора о работе и доме.",
-   "source": "Ваикра 19:36; Кицур Шульхан Арух 62:16–17",
+   "explanation": "The mitzvah of keeping one's word is one of the most practical topics of the beit din conversation about work and home.",
+   "source": "Vayikra 19:36; Kitzur Shulchan Aruch 62:16–17",
    "difficulty": "medium"
   },
   {
@@ -3504,16 +3504,16 @@
    "lessonId": "etika-6",
    "minLevel": "reform",
    "format": "mc",
-   "prompt": "Зачем Гиллель установил прозбул (Гиттин 4:3)?",
+   "prompt": "Why did Hillel institute the pruzbul (Gittin 4:3)?",
    "options": [
-    "Чтобы отменить седьмой год",
-    "Чтобы разрешить брать проценты с бедных",
-    "Чтобы обложить долги дополнительной десятиной",
-    "Чтобы долг сохранялся через седьмой год и бедным не перестали давать взаймы"
+    "In order to cancel the seventh year",
+    "In order to permit taking interest from the poor",
+    "In order to impose an additional tithe on debts",
+    "So that a debt would survive the seventh year and the poor would not stop receiving loans"
    ],
    "answer": 3,
-   "explanation": "Седьмой год отменял долги, и бедным перестали давать взаймы; прозбул — договор, сохраняющий долг через седьмой год (Гиттин 4:3).",
-   "source": "Мишна, Гиттин 4:2–3",
+   "explanation": "The seventh year canceled debts, and the poor stopped being given loans; the pruzbul is an agreement that preserves a debt through the seventh year (Gittin 4:3).",
+   "source": "Mishnah, Gittin 4:2–3",
    "difficulty": "easy"
   },
   {
@@ -3521,16 +3521,16 @@
    "lessonId": "etika-6",
    "minLevel": "reform",
    "format": "mc",
-   "prompt": "Какое новое понимание тиккун олам внесла каббала учения Аризаля (XVI век)?",
+   "prompt": "What new understanding of tikkun olam did the Kabbalah of the Arizal's teaching bring (16th century)?",
    "options": [
-    "Через заповеди и добрые дела человек возвращает миру изначальную гармонию",
-    "Мир исправится только после прихода Машиаха",
-    "Исправление мира — задача исключительно пророков",
-    "Тиккун олам касается только дней между Песахом и Шавуотом"
+    "Through mitzvot and good deeds, a person restores the world's original harmony",
+    "The world will be repaired only after the coming of Mashiach",
+    "Repairing the world is the task of the prophets alone",
+    "Tikkun olam concerns only the days between Pesach and Shavuot"
    ],
    "answer": 0,
-   "explanation": "К XVI веку каббала (учение Аризаля) наполняет понятие новым смыслом: через заповеди и добрые дела человек «исправляет» мир, возвращая ему изначальную гармонию.",
-   "source": "Урок: Тиккун олам: исправлять мир",
+   "explanation": "By the 16th century, the Kabbalah (the teaching of the Arizal) filled the concept with a new meaning: through mitzvot and good deeds, a person “repairs” the world, restoring its original harmony to it.",
+   "source": "Lesson: Tikkun Olam: Repairing the World",
    "difficulty": "hard"
   },
   {
@@ -3538,25 +3538,25 @@
    "lessonId": "etika-6",
    "minLevel": "reform",
    "format": "mc",
-   "prompt": "Какую позицию занимает ортодоксальная традиция относительно тиккун олам?",
+   "prompt": "What position does the Orthodox tradition take on tikkun olam?",
    "options": [
-    "Исправление мира возможно только вне галахи",
-    "Главное исправление достигается заповедями и личной святостью, из которых вырастают добрые дела",
-    "Тиккун олам — исключительно благотворительные проекты общины",
-    "Социальная справедливость важнее соблюдения шаббата"
+    "Repairing the world is possible only outside halacha",
+    "The main repair is achieved through mitzvot and personal holiness, from which good deeds grow",
+    "Tikkun olam is exclusively the charitable projects of the community",
+    "Social justice is more important than observing Shabbat"
    ],
    "answer": 1,
-   "explanation": "Ортодоксальная традиция подчёркивает, что главное исправление мира достигается заповедями и личной святостью, из которых вырастают добрые дела.",
-   "source": "Урок: Тиккун олам: исправлять мир",
+   "explanation": "The Orthodox tradition emphasizes that the main repair of the world is achieved through mitzvot and personal holiness, from which good deeds grow.",
+   "source": "Lesson: Tikkun Olam: Repairing the World",
    "difficulty": "hard",
    "differs": [
     {
      "level": "reform",
-     "text": "В реформистском иудаизме тиккун олам — один из центральных лозунгов идентичности: исправление мира ставится в центр еврейской жизни наряду с Торой и молитвой."
+     "text": "In Reform Judaism, tikkun olam is one of the central slogans of identity: repairing the world is placed at the center of Jewish life, alongside Torah and prayer."
     },
     {
      "level": "conservative",
-     "text": "В консервативном (Масорти) иудаизме тиккун олам — общинная обязанность внутри галахи: социальная справедливость вместе с шаббатом, кашрутом и семейной чистотой."
+     "text": "In Conservative (Masorti) Judaism, tikkun olam is a communal obligation within halacha: social justice together with Shabbat, kashrut, and family purity."
     }
    ]
   },
@@ -3565,10 +3565,10 @@
    "lessonId": "etika-6",
    "minLevel": "reform",
    "format": "tf",
-   "prompt": "Тора запрещает пахать волом и ослом вместе, учитывая разную природу животных (Дварим 22:10).",
+   "prompt": "The Torah forbids plowing with an ox and a donkey together, taking into account the different nature of the animals (Devarim 22:10).",
    "answer": true,
-   "explanation": "«Не пахай волом и ослом вместе» (Дварим 22:10) — одна из заповедей, учитывающих разную природу животных; это часть запрета цаар баалей хаим.",
-   "source": "Дварим 22:10",
+   "explanation": "“Do not plow with an ox and a donkey together” (Devarim 22:10) is one of the mitzvot that take into account the different nature of animals; it is part of the prohibition of tzaar baalei chayim.",
+   "source": "Devarim 22:10",
    "difficulty": "easy"
   },
   {
@@ -3576,10 +3576,10 @@
    "lessonId": "etika-6",
    "minLevel": "reform",
    "format": "tf",
-   "prompt": "Кицур Шульхан Арух (гл. 190) разрешает уничтожать без нужды еду и вещи, если это не вредит здоровью.",
+   "prompt": "The Kitzur Shulchan Aruch (ch. 190) permits destroying food and things without need, if this does not harm one's health.",
    "answer": false,
-   "explanation": "КСА (гл. 190) соединяет запрет бал ташхит с заботой о собственном теле: беречь здоровье и беречь мир — две стороны одной ответственности; уничтожение без нужды запрещено само по себе.",
-   "source": "Кицур Шульхан Арух 190",
+   "explanation": "KSA (ch. 190) connects the prohibition of bal tashchit with care for one's own body: guarding health and guarding the world are two sides of one responsibility; needless destruction is forbidden in itself.",
+   "source": "Kitzur Shulchan Aruch 190",
    "difficulty": "medium"
   },
   {
@@ -3587,10 +3587,10 @@
    "lessonId": "etika-6",
    "minLevel": "reform",
    "format": "tf",
-   "prompt": "По Талмуду, почитание родителей заканчивается вместе с их жизнью.",
+   "prompt": "According to the Talmud, honoring parents ends together with their life.",
    "answer": false,
-   "explanation": "Заповедь адресована взрослому человеку и продолжается даже после смерти родителей: о них говорят с почтением и исполняют их волю (Кидушин 31б).",
-   "source": "Талмуд, Кидушин 31а–б",
+   "explanation": "The mitzvah is addressed to an adult and continues even after the death of the parents: they are spoken of with respect and their will is carried out (Kiddushin 31b).",
+   "source": "Talmud, Kiddushin 31a–b",
    "difficulty": "medium"
   },
   {
@@ -3598,27 +3598,27 @@
    "lessonId": "etika-6",
    "minLevel": "reform",
    "format": "match",
-   "prompt": "Соотнесите заповеди о животных с их стихами.",
+   "prompt": "Match the mitzvot about animals with their verses.",
    "pairs": [
     [
-     "Не завязывай рот жующему волу",
-     "Дварим 25:4"
+     "Do not muzzle the ox while it chews",
+     "Devarim 25:4"
     ],
     [
-     "Помоги подняться ослу даже врага",
-     "Шмот 23:5"
+     "Help even the donkey of an enemy to rise",
+     "Shemot 23:5"
     ],
     [
-     "Не паши волом и ослом вместе",
-     "Дварим 22:10"
+     "Do not plow with an ox and a donkey together",
+     "Devarim 22:10"
     ],
     [
-     "Чтобы отдохнул бык твой и осёл твой",
-     "Шмот 23:12"
+     "So that your ox and your donkey may rest",
+     "Shemot 23:12"
     ]
    ],
-   "explanation": "Из этих стихов урок выводит заботу о животных: не завязывать рот волу, помочь чужому ослу, не впрягать вместе разных животных и дать им отдых в шаббат.",
-   "source": "Дварим 25:4; Шмот 23:5; Дварим 22:10; Шмот 23:12",
+   "explanation": "From these verses the lesson derives care for animals: do not muzzle the ox, help a stranger's donkey, do not harness different animals together, and give them rest on Shabbat.",
+   "source": "Devarim 25:4; Shemot 23:5; Devarim 22:10; Shemot 23:12",
    "difficulty": "hard"
   },
   {
@@ -3626,14 +3626,14 @@
    "lessonId": "etika-6",
    "minLevel": "reform",
    "format": "typed",
-   "prompt": "Какая по счёту из Десяти заповедей — почитание отца и матери?",
-   "answer": "пятая",
+   "prompt": "Which of the Ten Commandments is honoring father and mother?",
+   "answer": "the fifth",
    "accept": [
-    "пятая",
+    "the fifth",
     "5",
-    "пятая заповедь"
+    "the fifth commandment"
    ],
-   "explanation": "Пятая из Десяти заповедей — первая об отношениях между людьми и первая с обещанной наградой: «чтобы продлились дни твои» (Шмот 20:12).",
+   "explanation": "The fifth of the Ten Commandments — the first concerning relations between people and the first with a promised reward: “so that your days may be long” (Shemot 20:12).",
    "source": "Shemot 20:12",
    "difficulty": "easy"
   },
@@ -3642,16 +3642,16 @@
    "lessonId": "etika-6",
    "minLevel": "reform",
    "format": "open",
-   "prompt": "Как вы понимаете запрет цаар баалей хаим и что готовы соблюдать в быту?",
-   "modelAnswer": "Я понимаю цаар баалей хаим как запрет мучить животных и обязанность заботиться о них. Тора не позволяет завязывать рот жующему волу (Дварим 25:4), велит помочь подняться ослу даже врага (Шмот 23:5) и запрещает пахать волом и ослом вместе: у них разная природа (Дварим 22:10). Шаббат распространяет отдых и на них: «чтобы отдохнул бык твой и осёл твой» (Шмот 23:12). Притча об ослице Билема напоминает, что жестокость затмевает человеку глаза. В быту я хочу кормить животных вовремя, не оставлять их под непосильной ношей и не считать их труд своей собственностью.",
+   "prompt": "How do you understand the prohibition of tzaar baalei chayim, and what are you ready to observe in daily life?",
+   "modelAnswer": "I understand tzaar baalei chayim as the prohibition of tormenting animals and the obligation to care for them. The Torah does not allow muzzling the ox while it chews (Devarim 25:4), commands helping even the enemy's donkey to its feet (Shemot 23:5), and forbids plowing with an ox and a donkey together: they have different natures (Devarim 22:10). Shabbat extends rest to them as well: “so that your ox and your donkey may rest” (Shemot 23:12). The parable of Bilaam's she-donkey reminds us that cruelty blinds a person's eyes. In daily life I want to feed animals on time, not leave them under an unbearable load, and not treat their labor as my property.",
    "keyPoints": [
-    "Определение: запрет причинять страдания животным",
-    "Хотя бы две заповеди урока: вол, осёл врага, вол с ослом",
-    "Отдых животных в шаббат (Шмот 23:12) или притча о Билеме",
-    "Конкретное бытовое применение"
+    "Definition: the prohibition of causing animals to suffer",
+    "At least two commandments from the lesson: the ox, the enemy's donkey, the ox with the donkey",
+    "Animals' rest on Shabbat (Shemot 23:12) or the parable of Bilaam",
+    "A concrete everyday application"
    ],
-   "explanation": "Запрет цаар баалей хаим урок выводит из нескольких стихов Торы и распространяет на кормление, нагрузку и шаббат.",
-   "source": "Дварим 25:4; Шмот 23:5; Дварим 22:10",
+   "explanation": "The lesson derives the prohibition of tzaar baalei chayim from several verses of the Torah and extends it to feeding, load, and Shabbat.",
+   "source": "Devarim 25:4; Shemot 23:5; Devarim 22:10",
    "difficulty": "medium"
   },
   {
@@ -3659,16 +3659,16 @@
    "lessonId": "etika-6",
    "minLevel": "reform",
    "format": "open",
-   "prompt": "Талмуд различает «страх» (мора) и «почитание» (кавод) родителей. Объясните разницу и приведите примеры того, как вы будете проявлять и то и другое.",
-   "modelAnswer": "«Страх» (мора) — границы: не стоять на месте родителя, не садиться на его место, не противоречить им голосом. «Почитание» (кавод) — забота: кормить, поить, одевать родителей, выводить и вводить их с почестями. Для меня мора выглядит так: не встану на место родителя, не сяду на его место и не стану перечить им голосом. Кавод — практический: регулярно звонить, навещать, помогать с врачами и делами, позаботиться об их комфорте в старости. Урок добавляет тонкость: сын боится отца более, чем матери, поэтому в стихе «каждый человек должен бояться своей матери и своего отца» (Ваикра 19:3) мать названа первой — чтобы подчеркнуть и её честь. Я понимаю эту заповедь как мост между этикой и заповедью: уважение к тем, кто дал мне жизнь, — начало всей моей этики.",
+   "prompt": "The Talmud distinguishes between “fear” (mora) and “honor” (kavod) of parents. Explain the difference and give examples of how you will show both.",
+   "modelAnswer": "“Fear” (mora) — boundaries: not standing in the parent's place, not sitting in his seat, not contradicting them by tone of voice. “Honor” (kavod) — care: feeding, giving drink, clothing the parents, escorting them in and out with deference. For me mora looks like this: I will not stand in the parent's place, will not sit in his seat, and will not contradict them by tone of voice. Kavod is practical: calling regularly, visiting, helping with doctors and affairs, seeing to their comfort in old age. The lesson adds a subtlety: a son fears his father more than his mother, so in the verse “every person shall fear his mother and his father” (Vayikra 19:3) the mother is named first — to emphasize her honor as well. I understand this commandment as a bridge between ethics and commandment: respect for those who gave me life is the beginning of my entire ethics.",
    "keyPoints": [
-    "Различие мора и кавод с примерами из Кидушин 31б–32а",
-    "Личные конкретные примеры и того и другого",
-    "Упомянута тонкость о матери, названной первой (Кидушин 31а; Ваикра 19:3)",
-    "Понимание заповеди как моста между этикой и заповедью"
+    "The distinction between mora and kavod with examples from Kiddushin 31b–32a",
+    "Personal concrete examples of both",
+    "Mentions the subtlety about the mother being named first (Kiddushin 31a; Vayikra 19:3)",
+    "Understanding the commandment as a bridge between ethics and divine command"
    ],
-   "explanation": "Различие мора и кавод — точный галахический материал из Кидушин 31б–32а, который часто проверяют на бейт-дине.",
-   "source": "Талмуд, Кидушин 31а–б; Ваикра 19:3",
+   "explanation": "The distinction between mora and kavod is precise halachic material from Kiddushin 31b–32a that is often checked at the beit din.",
+   "source": "Talmud, Kiddushin 31a–b; Vayikra 19:3",
    "difficulty": "hard"
   },
   {
@@ -3676,16 +3676,16 @@
    "lessonId": "etika-6",
    "minLevel": "reform",
    "format": "mc",
-   "prompt": "Как реформистский иудаизм понимает тиккун олам?",
+   "prompt": "How does Reform Judaism understand tikkun olam?",
    "options": [
-    "Как религиозную обязанность исправлять мир: справедливость, достоинство человека, мир и заботу о творении",
-    "Как чисто политический лозунг, не связанный с Торой и молитвой",
-    "Как разрешение не соблюдать никакие заповеди, если человек «делает добро»",
-    "Как обязанность только для раввинов, но не для рядового члена общины"
+    "As a religious duty to repair the world: justice, human dignity, peace, and care for creation",
+    "As a purely political slogan unconnected to Torah and prayer",
+    "As permission to observe no mitzvot at all as long as a person “does good”",
+    "As a duty only for rabbis, not for an ordinary member of the congregation"
    ],
    "answer": 0,
-   "explanation": "В прогрессивном движении тиккун олам — часть религиозной жизни, а не замена учёбы и обрядов.",
-   "source": "Урок «Тиккун олам»; материалы CCAR",
+   "explanation": "In the progressive movement, tikkun olam is part of religious life, not a replacement for study and observances.",
+   "source": "Lesson “Tikkun Olam”; CCAR materials",
    "difficulty": "medium"
   },
   {
@@ -3693,10 +3693,10 @@
    "lessonId": "etika-6",
    "minLevel": "reform",
    "format": "tf",
-   "prompt": "Для реформистского кандидата дела справедливости и хеседа заменяют молитву, Шаббат и изучение Торы.",
+   "prompt": "For a Reform candidate, deeds of justice and chesed replace prayer, Shabbat, and Torah study.",
    "answer": false,
-   "explanation": "Тиккун олам стоит рядом с молитвой и учёбой, а не вместо них. Бейт-дин ждёт и служения миру, и еврейского ритма жизни.",
-   "source": "Урок о тиккун олам; урок о реформистском гиюре",
+   "explanation": "Tikkun olam stands alongside prayer and study, not instead of them. The beit din expects both service to the world and a Jewish rhythm of life.",
+   "source": "Lesson on tikkun olam; lesson on Reform giyur",
    "difficulty": "easy"
   },
   {
@@ -3704,16 +3704,16 @@
    "lessonId": "etika-1",
    "minLevel": "reform",
    "format": "mc",
-   "prompt": "Как иудаизм описывает природу человека, говоря о йецере?",
+   "prompt": "How does Judaism describe human nature when it speaks of the yetzer?",
    "options": [
-    "Все рождаются уже виновными так, что сами вернуться не могут",
-    "У человека есть склонности к добру и к дурному, и он способен возвращаться",
-    "Дурное в человеке неустранимо без посредника",
-    "Йецер есть только у неевреев"
+    "Everyone is born already guilty, so that they cannot return by themselves",
+    "A person has inclinations to good and to evil, and is able to return",
+    "The evil in a person cannot be removed without an intermediary",
+    "The yetzer exists only in non-Jews"
    ],
    "answer": 1,
-   "explanation": "Йецер а-тов и йецер а-ра — часть человеческой свободы. Йехезкель 18: каждый отвечает за себя.",
-   "source": "Пиркей Авот; Йехезкель 18:20",
+   "explanation": "The yetzer hatov and the yetzer hara are part of human freedom. Yechezkel 18: each person is responsible for himself.",
+   "source": "Pirkei Avot; Yechezkel 18:20",
    "difficulty": "medium"
   },
   {
@@ -3721,10 +3721,10 @@
    "lessonId": "etika-3",
    "minLevel": "reform",
    "format": "tf",
-   "prompt": "Цдака, тшува и тфила — пути возвращения к Всевышнему, без посредника.",
+   "prompt": "Tzedakah, teshuvah, and tefillah are paths of return to the Almighty, without an intermediary.",
    "answer": true,
-   "explanation": "Так устроена этика Дней трепета и повседневная мицва цдаки: человек стоит перед Богом сам.",
-   "source": "Уроки об этике и о Днях трепета; Ошеа 14:3",
+   "explanation": "Such is the ethics of the Days of Awe and the everyday mitzvah of tzedakah: a person stands before G-d alone.",
+   "source": "Lessons on ethics and on the Days of Awe; Hoshea 14:3",
    "difficulty": "easy"
   },
   {
@@ -3732,16 +3732,16 @@
    "lessonId": "etika-2",
    "minLevel": "reform",
    "format": "mc",
-   "prompt": "Как Тора велит относиться к геру?",
+   "prompt": "How does the Torah command us to treat the ger?",
    "options": [
-    "Напоминать ему прежнюю жизнь при каждом споре",
-    "Любить его, потому что сами были герами в Египте, и не притеснять",
-    "Считать его евреем второго сорта до третьего поколения",
-    "Требовать, чтобы он забыл Землю Израиля"
+    "To remind him of his former life in every disagreement",
+    "To love him, because we ourselves were gerim in Egypt, and not to wrong him",
+    "To consider him a second-class Jew until the third generation",
+    "To demand that he forget Eretz Israel"
    ],
    "answer": 1,
-   "explanation": "Ваикра 19:33–34 и Дварим 10:19: люби гера, не обижай. Это связано и с лояльностью гера к народу и к Земле.",
-   "source": "Ваикра 19:33–34; Дварим 10:19",
+   "explanation": "Vayikra 19:33–34 and Devarim 10:19: love the ger, do not wrong him. This is also connected with the ger's loyalty to the people and to the Land.",
+   "source": "Vayikra 19:33–34; Devarim 10:19",
    "difficulty": "easy"
   },
   {
@@ -3749,10 +3749,10 @@
    "lessonId": "etika-1",
    "minLevel": "reform",
    "format": "tf",
-   "prompt": "Иудаизм учит, что человек может исправить свои поступки сам, возвращаясь к Всевышнему.",
+   "prompt": "Judaism teaches that a person can mend his own deeds, returning to the Almighty.",
    "answer": true,
-   "explanation": "Тшува предполагает свободу и ответственность, а не прирождённую вину, которую снимает только другой.",
-   "source": "Йехезкель 18; Пиркей Авот",
+   "explanation": "Teshuvah presupposes freedom and responsibility, not an innate guilt that only another can remove.",
+   "source": "Yechezkel 18; Pirkei Avot",
    "difficulty": "easy"
   }
  ]

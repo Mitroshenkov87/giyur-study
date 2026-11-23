@@ -179,7 +179,11 @@ impl Screen {
                 ctx.state.settings.daily_goal = xp;
                 // The new goal may already be reached today (js/ui/settings.js).
                 ctx.award(0);
-                ctx.toast(&crate::trf!("Цель дня: {xp} XP", "Daily goal: {xp} XP"), "", "");
+                ctx.toast(
+                    &crate::trf!("Цель дня: {xp} XP", "Daily goal: {xp} XP"),
+                    "",
+                    "",
+                );
                 Action::None
             }
             Msg::Export => {
@@ -572,7 +576,12 @@ impl Screen {
                     let cur = crate::ladder::timer_seconds(&ctx.state);
                     let mut r = iced::widget::Row::new().spacing(4);
                     for (v, label) in crate::ladder::TIMER_CHOICES {
-                        r = r.push(widgets::choice(tr(label), cur == v, false, Msg::SetSeconds(v)));
+                        r = r.push(widgets::choice(
+                            tr(label),
+                            cur == v,
+                            false,
+                            Msg::SetSeconds(v),
+                        ));
                     }
                     r.into()
                 },
@@ -624,9 +633,11 @@ impl Screen {
                 widgets::heading(tr("Цель и серия"), 3),
                 column![
                     txt(tr("Цель дня")).size(theme::text::BODY).font(SANS_BOLD),
-                    txt(tr("Сколько XP набирать в день. Серия растёт, когда цель выполнена."))
-                        .size(theme::text::SMALL)
-                        .color(p.muted),
+                    txt(tr(
+                        "Сколько XP набирать в день. Серия растёт, когда цель выполнена."
+                    ))
+                    .size(theme::text::SMALL)
+                    .color(p.muted),
                 ]
                 .spacing(2),
                 segs,
@@ -696,10 +707,12 @@ impl Screen {
         widgets::card(
             column![
                 widgets::heading(tr("Музыка"), 3),
-                txt(tr("Тихие инструментальные мелодии на фоне занятий. По умолчанию выключена."))
-                    .size(theme::text::SMALL)
-                    .color(p.muted)
-                    .width(Length::Fill),
+                txt(tr(
+                    "Тихие инструментальные мелодии на фоне занятий. По умолчанию выключена."
+                ))
+                .size(theme::text::SMALL)
+                .color(p.muted)
+                .width(Length::Fill),
                 set_row(
                     tr("Включить музыку"),
                     if ctx.music_track_count > 1 {
@@ -826,9 +839,11 @@ impl Screen {
         widgets::card(
             column![
                 widgets::heading(tr("Еврейский календарь"), 3),
-                txt(tr("Израиль или диаспора, местоположение для времени свечей и постов"))
-                    .size(theme::text::SMALL)
-                    .color(p.muted),
+                txt(tr(
+                    "Израиль или диаспора, местоположение для времени свечей и постов"
+                ))
+                .size(theme::text::SMALL)
+                .color(p.muted),
                 widgets::btn(
                     tr("Настройки календаря"),
                     widgets::Btn::Secondary,
@@ -968,7 +983,10 @@ impl Screen {
 
         let modal = container(
             column![
-                txt(title).size(theme::text::H3).font(SERIF_BOLD).color(p.text),
+                txt(title)
+                    .size(theme::text::H3)
+                    .font(SERIF_BOLD)
+                    .color(p.text),
                 txt(body)
                     .size(theme::text::SMALL + 1.0)
                     .color(p.muted)

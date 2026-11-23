@@ -1192,17 +1192,17 @@ fn view_setup<'a>(ctx: &'a Ctx, w: f32) -> Element<'a, Msg> {
     );
     col = col.push(
         column![
-            muted(
-                tr("Пятнадцать ступеней — от лёгких вопросов к трудным. Ступени 5 «Микра» \
+            muted(tr(
+                "Пятнадцать ступеней — от лёгких вопросов к трудным. Ступени 5 «Микра» \
                     и 10 «Мишна» надёжные: после ошибки вы спускаетесь к последней \
-                    надёжной ступени, которую прошли."),
-            )
+                    надёжной ступени, которую прошли."
+            ),)
             .size(theme::text::BODY),
-            muted(
-                tr("Три подсказки — «50 на 50», «Подсказка из урока» и «Спросить раввина» — \
+            muted(tr(
+                "Три подсказки — «50 на 50», «Подсказка из урока» и «Спросить раввина» — \
                     по одному разу за игру. Остановиться можно в любой момент: пройденные \
-                    ступени останутся за вами."),
-            )
+                    ступени останутся за вами."
+            ),)
             .size(theme::text::BODY),
         ]
         .spacing(10)
@@ -1944,7 +1944,8 @@ fn view_results<'a>(ctx: &'a Ctx, res: &'a Results, w: f32) -> Element<'a, Msg> 
                 .size(44.0)
                 .font(SERIF_BOLD)
                 .color(p.gold2),
-            muted(crate::trf!("из {total}", "of {total}", total = r.total)).size(theme::text::SMALL),
+            muted(crate::trf!("из {total}", "of {total}", total = r.total))
+                .size(theme::text::SMALL),
         ]
         .spacing(0)
         .align_x(Alignment::Center)

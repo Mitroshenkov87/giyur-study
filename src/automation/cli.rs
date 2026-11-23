@@ -164,28 +164,70 @@ fn headless(args: &[String]) -> i32 {
     i32::from(failed > 0)
 }
 
-/// `validate-content [DIR] [--lang ru]`: check one language folder (or
-/// `content/` with language folders inside, or the copy the app would use)
-/// and print what is in it. Exit 0 = good, 1 = a broken file (named).
+/// `validate-content [DIR] [--lang ru]`: check the course files the way the
+/// app reads them and print what is in each language. Without `--lang` every
+/// language is checked (Russian and English must both be there) and
+/// `content/en` must match `content/ru`: the same files, ids and fields.
+/// Exit 0 = good, 1 = a broken or missing file (named).
 fn validate_content(args: &[String]) -> i32 {
     use crate::content_store as cs;
     let mut args = args.to_vec();
-    let lang = take_opt(&mut args, "--lang").unwrap_or_else(|| cs::DEFAULT_LANG.to_string());
+    let only = take_opt(&mut args, "--lang");
     let roots = match args.first() {
         Some(d) => vec![PathBuf::from(d)],
         None => cs::candidate_roots(),
     };
-    let result = cs::locate_in(&roots, &lang).and_then(|dir| cs::load_dir(&dir, &lang));
-    match result {
-        Ok(c) => {
-            println!("OK {}: {}", c.dir.display(), cs::summary(&c));
-            0
-        }
-        Err(e) => {
-            eprintln!("{}", crate::trf!("ОШИБКА {e}", "ERROR {e}"));
-            1
+    let langs: Vec<String> = match &only {
+        Some(l) => vec![l.clone()],
+        None => crate::i18n::Lang::ALL
+            .iter()
+            .map(|l| l.code().to_string())
+            .collect(),
+    };
+    let mut failed = false;
+    let mut root_used = None;
+    for lang in &langs {
+        match cs::locate_in(&roots, lang).and_then(|dir| cs::load_dir(&dir, lang)) {
+            Ok(c) => {
+                println!("OK {}: {}", c.dir.display(), cs::summary(&c));
+                if root_used.is_none() {
+                    root_used = c.dir.parent().map(PathBuf::from);
+                }
+            }
+            Err(e) => {
+                eprintln!("{}", crate::trf!("ОШИБКА {e}", "ERROR {e}"));
+                failed = true;
+            }
         }
     }
+    if only.is_none() && !failed {
+        if let Some(root) = root_used {
+            match cs::check_parity(&root) {
+                cs::ParityResult::Ok => println!("OK parity {} ru ↔ en", root.display()),
+                cs::ParityResult::Skipped { missing } => {
+                    eprintln!(
+                        "{}",
+                        crate::trf!(
+                            "ОШИБКА нет {}",
+                            "ERROR missing {}",
+                            missing.display()
+                        )
+                    );
+                    failed = true;
+                }
+                cs::ParityResult::Failed(issues) => {
+                    for i in &issues {
+                        eprintln!(
+                            "{}",
+                            crate::trf!("ОШИБКА {}: {}", "ERROR {}: {}", i.file, i.reason)
+                        );
+                    }
+                    failed = true;
+                }
+            }
+        }
+    }
+    i32::from(failed)
 }
 
 /// `validate-parity [DIR]`: `content/en` must have the same JSON files, ids

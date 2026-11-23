@@ -926,7 +926,7 @@ impl Screen {
             .enumerate()
         {
             head = head.push(
-                txt(tr(*w))
+                txt(tr(w))
                     .size(theme::text::SMALL)
                     .font(if i == 6 { SANS_BOLD } else { SANS })
                     .color(if i == 6 { p.gold2 } else { p.muted })

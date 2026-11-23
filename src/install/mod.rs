@@ -287,13 +287,12 @@ pub fn copy_sidecars(from_parent: &Path, to_dir: &Path) -> Result<(), String> {
     }
     let content = from_parent.join(crate::content_store::DIR_NAME);
     if content.is_dir() {
-        replace_dir(&content, &to_dir.join(crate::content_store::DIR_NAME))
-            .map_err(|e| {
-                crate::trf!(
-                    "Не удалось скопировать материалы курса: {e}",
-                    "Could not copy the course files: {e}"
-                )
-            })?;
+        replace_dir(&content, &to_dir.join(crate::content_store::DIR_NAME)).map_err(|e| {
+            crate::trf!(
+                "Не удалось скопировать материалы курса: {e}",
+                "Could not copy the course files: {e}"
+            )
+        })?;
     }
     Ok(())
 }

@@ -1182,4 +1182,52 @@ mod tests {
         assert!(!ru.library.sections.is_empty());
         let _ = std::fs::remove_dir_all(root);
     }
+
+    /// English course files: present, loadable, the same ids as Russian,
+    /// and Jewish framing only (Torah / Tanakh, never the other names).
+    #[test]
+    fn repo_en_loads_matches_ru_and_keeps_jewish_framing() {
+        let root = Path::new(env!("CARGO_MANIFEST_DIR")).join(DIR_NAME);
+        let en = load_dir(&root.join("en"), "en").expect("content/en must load");
+        assert!(matches!(check_parity(&root), ParityResult::Ok));
+        assert_eq!(en.lang, "en");
+        let mut files = Vec::new();
+        fn walk(d: &Path, out: &mut Vec<PathBuf>) {
+            for e in std::fs::read_dir(d).unwrap().flatten() {
+                let p = e.path();
+                if p.is_dir() {
+                    walk(&p, out);
+                } else if p.extension().is_some_and(|x| x == "json") {
+                    out.push(p);
+                }
+            }
+        }
+        walk(&root.join("en"), &mut files);
+        let banned = [
+            "bible",
+            "biblical",
+            "old testament",
+            "new testament",
+            "christian",
+            "christianity",
+            "church",
+            "jesus",
+            "heresy",
+            "heretic",
+            "heretical",
+            "west bank",
+        ];
+        for f in files {
+            let low = std::fs::read_to_string(&f).unwrap().to_lowercase();
+            let words: Vec<&str> = low
+                .split(|c: char| !(c.is_alphanumeric() || c == '\''))
+                .filter(|w| !w.is_empty())
+                .collect();
+            for b in banned {
+                let parts: Vec<&str> = b.split(' ').collect();
+                let hit = words.windows(parts.len()).any(|w| w == parts.as_slice());
+                assert!(!hit, "{}: «{b}»", f.display());
+            }
+        }
+    }
 }
