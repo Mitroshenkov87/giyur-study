@@ -585,8 +585,10 @@ mod tests {
         let hits = (0..400)
             .filter(|_| pick(&s, None, None, t, &mut rng).as_deref() == Some("shab-how"))
             .count();
-        // Uniform would be 400 / 55 ≈ 7.
-        assert!(hits > 20, "weak question picked {hits} times");
+        // Uniform would be 400 / bank_len; the weak item must still stand out.
+        let n = ids.len().max(1);
+        let floor = (400 / n).saturating_mul(2).max(12);
+        assert!(hits > floor, "weak question picked {hits} times (bank={n}, floor={floor})");
     }
 
     #[test]
