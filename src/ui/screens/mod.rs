@@ -27,7 +27,8 @@ pub struct LeaveGuard {
 
 /// Title and text of the leave dialog for an exam or a test.
 pub const LEAVE_EXAM_TITLE: &str = "Прервать экзамен?";
-pub const LEAVE_EXAM_BODY: &str = "Прогресс этой попытки не сохранится.";
+pub const LEAVE_EXAM_BODY: &str =
+    "Прогресс этой попытки не засчитается — вернуться можно в любой момент.";
 
 /// The live screen for the current route.
 pub enum Current {

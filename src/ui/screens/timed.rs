@@ -19,7 +19,7 @@ use iced::keyboard::{self, key};
 use iced::widget::canvas::{self, Canvas, Frame, Path, Stroke};
 use iced::widget::text::Shaping;
 use iced::widget::{
-    button, center, column, container, responsive, row, space, stack, text, Column, Row, Text,
+    button, column, container, responsive, row, space, stack, text, Column, Row, Text,
 };
 use iced::{
     Alignment, Background, Border, Color, Element, Gradient, Length, Point, Radians, Rectangle,
@@ -273,66 +273,34 @@ fn celebrate_award(ctx: &mut Ctx, award: &AwardOutcome) {
     }
 }
 
-/// Confirm dialog: dimmed backdrop (click = cancel) + modal card. Rendered
-/// as a shell layer above the whole window (see `screens::mod.rs`).
-fn confirm_dialog<'a>(title: String, body: String, yes: String) -> Element<'a, Msg> {
-    let p = tp();
-    let dialog = container(
-        column![
-            txt(title)
-                .font(SERIF_BOLD)
-                .size(theme::text::H2)
-                .color(p.text),
-            txt(body).size(theme::text::BODY).color(p.text),
-            row![
-                space::horizontal(),
-                widgets::btn(
-                    "Продолжить",
-                    widgets::Btn::Ghost,
-                    widgets::BtnSize::Md,
-                    Some(Msg::ConfirmNo),
-                ),
-                widgets::btn(
-                    yes,
-                    widgets::Btn::Primary,
-                    widgets::BtnSize::Md,
-                    Some(Msg::ConfirmYes),
-                ),
-            ]
-            .spacing(10)
-            .width(Length::Fill),
-        ]
-        .spacing(14)
-        .width(Length::Fill),
+/// «Прервать восхождение?» (t164u): the shared calm dialog, «Продолжить»
+/// first. Rendered as a shell layer above the whole window.
+fn confirm_dialog<'a>(body: String) -> Element<'a, Msg> {
+    widgets::confirm_modal(
+        LEAVE_TITLE,
+        body,
+        "Продолжить",
+        "Выйти",
+        Msg::ConfirmNo,
+        Msg::ConfirmYes,
     )
-    .padding(24)
-    .max_width(460)
-    .style(move |_| container::Style {
-        background: Some(Background::Color(p.surface)),
-        border: Border {
-            color: p.line2,
-            width: 1.0,
-            radius: theme::radius::MODAL.into(),
-        },
-        shadow: Shadow {
-            color: Color::from_rgba8(0, 0, 0, 0.5),
-            offset: iced::Vector::new(0.0, 12.0),
-            blur_radius: 34.0,
-        },
-        ..plain()
-    });
-    let back = Color::from_rgba8(3, 5, 12, 0.66);
-    let backdrop = button(container(space()).style(move |_| container::Style {
-        background: Some(Background::Color(back)),
-        ..plain()
-    }))
-    .width(Length::Fill)
-    .height(Length::Fill)
-    .on_press(Msg::ConfirmNo);
-    stack![backdrop, center(widgets::modal_fit(dialog)).padding(16)]
-        .width(Length::Fill)
-        .height(Length::Fill)
-        .into()
+}
+
+/// The title of the leave dialogs.
+const LEAVE_TITLE: &str = "Прервать восхождение?";
+
+/// What leaving now means, said gently and truthfully: no answers yet —
+/// the run does not count; steps climbed — they stay (as «Забрать»).
+fn leave_note(climbed: usize) -> String {
+    if climbed == 0 {
+        "Эта попытка не будет засчитана — ничего страшного, подняться можно в любой момент."
+            .to_string()
+    } else {
+        format!(
+            "Восхождение на этом закончится, а {climbed} {} останутся за вами. Продолжить можно и позже — новой попыткой.",
+            ladder::steps_word(climbed)
+        )
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -1159,12 +1127,8 @@ impl Screen {
             Phase::Run(run) if run.ladder.outcome.is_none() && !run.frozen => {
                 let n = run.ladder.climbed;
                 Some(super::LeaveGuard {
-                    title: "Прервать «Маалот»?".to_string(),
-                    body: if n == 0 {
-                        "Ответов пока нет, игра не будет засчитана.".to_string()
-                    } else {
-                        format!("Игра на этом закончится, а пройденные ступени ({n}) останутся за вами.")
-                    },
+                    title: LEAVE_TITLE.to_string(),
+                    body: leave_note(n),
                 })
             }
             _ => None,
@@ -1174,23 +1138,7 @@ impl Screen {
     /// The walk-away / leave dialog, rendered as a shell layer above the window.
     pub fn dialog<'a>(&'a self, _ctx: &'a Ctx) -> Option<Element<'a, Msg>> {
         match &self.phase {
-            Phase::Run(run) if run.confirm => {
-                let n = run.ladder.climbed;
-                Some(if n == 0 {
-                    confirm_dialog(
-                        "Выйти из игры?".to_string(),
-                        "Ответов пока нет, игра не будет засчитана.".to_string(),
-                        "Выйти".to_string(),
-                    )
-                } else {
-                    confirm_dialog(
-                        format!("Забрать {n} {}?", ladder::steps_word(n)),
-                        "Игра на этом закончится, а пройденные ступени останутся за вами."
-                            .to_string(),
-                        "Забрать".to_string(),
-                    )
-                })
-            }
+            Phase::Run(run) if run.confirm => Some(confirm_dialog(leave_note(run.ladder.climbed))),
             _ => None,
         }
     }

@@ -712,8 +712,8 @@ impl App {
                 layers = layers.push(iced::widget::opaque(widgets::confirm_modal(
                     g.title,
                     g.body,
-                    "Остаться",
-                    "Прервать",
+                    "Продолжить",
+                    "Выйти",
                     Message::LeaveAnswer(false),
                     Message::LeaveAnswer(true),
                 )));

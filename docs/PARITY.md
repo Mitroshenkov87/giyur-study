@@ -86,6 +86,8 @@ image `assets/img/level-{reform|conservative|orthodox}.webp` in 104 px circle (f
 | orthodox | «Ортодоксальный» | «Ортодоксия» | «Полный уровень: включает всё предыдущее и подробную галахическую практику.» |
 
 **Interactions:** pick → if onboarded and a different level is already set: confirm title «Сменить течение на «{title}»?», text «Прогресс сохранится; уроки и вопросы другого уровня появятся или скроются.», OK «Сменить». On apply: `settings.level = id`, `onboarded = true`, save, toast «Выбрано: {title}», go `#/map` (first run) or back target. Same level / first run: apply without a dialog. Progress is never reset.
+
+> **Native change (GS-29, v0.5.6):** the PWA shared one progress across movements by design (levels were only content filters). The native app now keeps a separate progress track per movement (`src/tracks.rs`, stored under `tracks` in the progress file): lessons, cards (SRS), questions, exam history and best results, «Маалот» records, XP, streak data, badges, the collection and the interview trainer. The progress that existed before the change belongs to the movement chosen at that time. Switching shows the chosen movement's own progress; a new track starts with the Torah scroll. The texts above changed accordingly (« У каждого течения своё прохождение… »).
 **Edge:** level null → content treated as orthodox (level 3) everywhere.
 
 ## 3. Map / home (`#/map`)
@@ -290,7 +292,7 @@ Header kicker «Ваш путь», h1 «Прогресс».
 ## 12. Settings (`#/settings`)
 h1 «Настройки». Rows: bold label + small muted sub, control right (wrap).
 **Card 1:**
-- «Течение» / «{level title} · прогресс сохранится при смене» + secondary «Сменить течение» → `levelReturn='#/settings'`, `#/level`.
+- «Течение» / «{level title} · прогресс сохранится при смене» (native: «{level title} · у каждого течения своё прохождение»; «Сбросить прохождение» asks «Только «{течение}»» / «Все течения», see GS-29) + secondary «Сменить течение» → `levelReturn='#/settings'`, `#/level`.
 - «Тема» / «Тёмная — основная»: segmented «Тёмная» | «Кожа» (PWA: «Пергамент») → apply immediately.
 - «Размер шрифта» / «Иврит масштабируется тоже»: «A−» | «A» | «A+» | «A++» (root 15 / 17 / 19 / 21.5 px; default step 1).
 - Switch «Открыть все разделы» / «Свободное изучение без последовательной разблокировки» (`unlockAll`, default off).

@@ -323,7 +323,7 @@ impl Screen {
         );
         let test_sub = match rd.best {
             None => "Ещё не сдавали · порог 80%".to_string(),
-            Some(best) => format!("Лучший: {} · порог 80%", fmt_pct(best)),
+            Some(best) => format!("Лучший: {} · пройти ещё раз", fmt_pct(best)),
         };
         let test_action = action_card(
             icons::Kind::Exam,
@@ -707,9 +707,9 @@ fn next_step<'a>(
             Some(Msg::Go(Route::Exam(Some(sec.id.clone())))),
         ),
         NextStep::Done => (
-            "Раздел пройден. Повторяйте карточки по расписанию.".to_string(),
-            "",
-            None,
+            "Раздел пройден. Повторяйте карточки по расписанию или пройдите тест ещё раз — лучший результат сохранится.".to_string(),
+            "Пройти ещё раз",
+            Some(Msg::Go(Route::Exam(Some(sec.id.clone())))),
         ),
     }
 }
@@ -751,7 +751,11 @@ fn prep_row<'a>(
     .spacing(4)
     .width(Length::Fill);
     let read_btn = widgets::btn(
-        "Читать",
+        if lp.read {
+            "Повторить"
+        } else {
+            "Читать"
+        },
         widgets::Btn::Ghost,
         widgets::BtnSize::Sm,
         Some(Msg::Go(Route::Lesson(lesson.id.clone()))),

@@ -79,6 +79,9 @@ impl Session {
         };
         game::apply_freezes(&mut ctx.state, today);
         let _ = game::check_badges(&ctx.lib, &mut ctx.state, today);
+        // As `Ctx::load`: earned objects (and the Torah scroll, open from the
+        // start) join the collection quietly.
+        crate::collection::sync(&mut ctx.state, &crate::util::day_key(today));
         ctx.save();
         if opts.reviewer {
             ctx.set_reviewer(true, false);

@@ -270,3 +270,18 @@ or use `shorashim-ctl.exe`.
   windowed `App` in `src/main.rs`, or the headless `Session`).
 - `server.rs` (control channel as an iced subscription), `client.rs`,
   `cli.rs`, `mcp.rs`, `session.rs`.
+
+## Movement tracks, reset and replay (v0.5.6)
+
+- Each movement has its own progress (`src/tracks.rs`). `navigate level`,
+  `press contains=Реформистский`, `press id='Level(ConfirmYes)'` switches and
+  brings that movement's progress; the old one is kept under `tracks`.
+- A fresh profile or track starts with the Torah scroll in the collection;
+  it is also the first «Предмет дня».
+- «Сбросить прохождение»: `press id='Settings(AskReset)'`, then
+  `Settings(ResetCurrent)` (only the movement in use) or `Settings(ConfirmOk)`
+  (all movements). Theme, font, music and the movement choice stay.
+- «Пройти ещё раз» on test results: `press id='Exam(Again)'` (the same test;
+  the best result is kept). Read lessons show «Повторить» in the section list;
+  «Маалот» has «Ещё раз».
+

@@ -1066,9 +1066,11 @@ impl<Message> Widget<Message, Theme, Renderer> for MinHeight<'_, Message> {
     }
 }
 
-/// A confirm dialog for a shell layer above the whole window: dimmed
-/// backdrop (a click on it = `on_stay`), a modal card with a serif title,
-/// body text and two buttons, «stay» (ghost) and «go» (primary).
+/// A calm confirm dialog for a shell layer above the whole window (t164u):
+/// a light dim over the page (a click on it = `on_stay`) and a small card
+/// in the app's own palette with a serif title, a gentle note and two
+/// buttons: «stay» (primary, the suggested choice) and «go» (quiet). No
+/// warning colours: leaving is allowed, nothing is wrong with it.
 pub fn confirm_modal<'a, M: Clone + 'a>(
     title: impl IntoFragment<'a>,
     body: impl IntoFragment<'a>,
@@ -1082,45 +1084,52 @@ pub fn confirm_modal<'a, M: Clone + 'a>(
         column![
             txt(title)
                 .font(SERIF_BOLD)
-                .size(theme::text::H2)
+                .size(theme::text::H3)
                 .color(p.text),
-            txt(body).size(theme::text::BODY).color(p.text),
+            txt(body)
+                .size(theme::text::BODY)
+                .color(p.muted)
+                .width(Length::Fill),
             row![
                 iced::widget::space::horizontal(),
-                btn(stay_label, Btn::Ghost, BtnSize::Md, Some(on_stay.clone())),
-                btn(go_label, Btn::Primary, BtnSize::Md, Some(on_go)),
+                btn(go_label, Btn::Ghost, BtnSize::Md, Some(on_go)),
+                btn(stay_label, Btn::Primary, BtnSize::Md, Some(on_stay.clone())),
             ]
             .spacing(10)
+            .align_y(iced::Alignment::Center)
             .width(Length::Fill),
         ]
-        .spacing(14)
+        .spacing(12)
         .width(Length::Fill),
     )
-    .padding(24)
-    .max_width(460)
+    .padding(22)
+    .max_width(400)
     .style(move |_| container::Style {
         background: Some(Background::Color(p.surface)),
         border: Border {
-            color: p.line2,
+            color: p.line,
             width: 1.0,
             radius: theme::radius::MODAL.into(),
         },
         shadow: Shadow {
-            color: Color::from_rgba8(0, 0, 0, 0.5),
-            offset: iced::Vector::new(0.0, 12.0),
-            blur_radius: 34.0,
+            color: Color::from_rgba8(0, 0, 0, 0.28),
+            offset: iced::Vector::new(0.0, 8.0),
+            blur_radius: 24.0,
         },
         ..container::Style::default()
     });
-    let back = Color::from_rgba8(3, 5, 12, 0.66);
-    let backdrop = button(
-        container(iced::widget::space()).style(move |_| container::Style {
-            background: Some(Background::Color(back)),
-            ..container::Style::default()
-        }),
+    // A plain mouse area, not a button: a button paints its own (gold)
+    // background under the dim, which made the whole window yellow.
+    let dim = Color::from_rgba8(3, 5, 12, 0.38);
+    let backdrop = iced::widget::mouse_area(
+        container(iced::widget::space())
+            .width(Length::Fill)
+            .height(Length::Fill)
+            .style(move |_| container::Style {
+                background: Some(Background::Color(dim)),
+                ..container::Style::default()
+            }),
     )
-    .width(Length::Fill)
-    .height(Length::Fill)
     .on_press(on_stay);
     iced::widget::stack![
         backdrop,

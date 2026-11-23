@@ -1386,16 +1386,57 @@ pub(crate) fn toggle(open: &mut Vec<crate::ui::model3d::Model>, m: crate::ui::mo
 
 /// «Предмет дня»: one live 3D ritual object, a different one each day,
 /// linking to its section.
+/// «Предмет дня» for the learner (t162u): the Torah scroll at the very
+/// start (nothing read yet; it is also the first object of the collection),
+/// then one a day from the objects already in the collection and those of
+/// the section being studied now.
+pub fn day_object(ctx: &Ctx) -> crate::ui::model3d::Model {
+    use crate::collection;
+    use crate::ui::model3d::Model;
+    let state = &ctx.state;
+    // The real records, not the reviewer mode's «everything is open».
+    let mut pool: Vec<Model> = collection::ITEMS
+        .iter()
+        .filter(|i| collection::unlocked_on(state, i.key).is_some())
+        .filter_map(|i| Model::from_key(i.key))
+        .collect();
+    let user = Library::user_level(state);
+    let current = ctx.lib.sections.iter().find(|s| {
+        s.available
+            && ctx.lib.is_unlocked(s, state)
+            && !ctx.lib.section_stats(s, user, state).complete
+    });
+    if let Some(sec) = current {
+        for m in Model::for_section(&sec.id) {
+            if !pool.contains(m) {
+                pool.push(*m);
+            }
+        }
+    }
+    if state.lessons_read.is_empty() || pool.len() <= 1 {
+        return Model::TorahScroll;
+    }
+    use chrono::Datelike;
+    let n = ctx.today().num_days_from_ce().rem_euclid(pool.len() as i32);
+    pool[n as usize]
+}
+
 fn object_of_the_day<'a>(
     ctx: &'a Ctx,
     captions: &[crate::ui::model3d::Model],
     shift: i64,
 ) -> Element<'a, Msg> {
     use crate::ui::model3d::{card, Model};
-    // Outside the «Открытый режим рецензента» it is always today's object.
-    let shift = if ctx.reviewer() { shift } else { 0 };
-    let day = ctx.today() + chrono::Duration::days(shift);
-    let model = Model::of_the_day(day);
+    // Today's object for this learner; in the «Открытый режим рецензента»
+    // ‹ › walk through all of them from there.
+    let base = day_object(ctx);
+    let model = if ctx.reviewer() && shift != 0 {
+        let all = &Model::OF_THE_DAY;
+        let at = all.iter().position(|m| *m == base).unwrap_or(0) as i64;
+        all[(at + shift).rem_euclid(all.len() as i64) as usize]
+    } else {
+        base
+    };
     let info = model.info();
     let card = card::card(
         ctx,

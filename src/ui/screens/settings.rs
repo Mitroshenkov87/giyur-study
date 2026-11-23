@@ -73,6 +73,8 @@ pub enum Msg {
     Export,
     ImportPick,
     AskReset,
+    /// «Сбросить прохождение» → «Только …» (the movement in use).
+    ResetCurrent,
     ConfirmOk,
     ConfirmCancel,
     GoProgress,
@@ -182,7 +184,7 @@ impl Screen {
             Msg::AskReset if ctx.reviewer() => {
                 ctx.toast(
                     "Недоступно в открытом режиме рецензента",
-                    "Выключите режим, чтобы сбросить прогресс.",
+                    "Выключите режим, чтобы сбросить прохождение.",
                     "",
                 );
                 Action::None
@@ -224,12 +226,7 @@ impl Screen {
                         Action::None
                     }
                 },
-                Some(Confirm::Reset) => {
-                    ctx.state.reset();
-                    ctx.save();
-                    ctx.toast("Прогресс сброшен", "", "");
-                    Action::Go(Route::Welcome)
-                }
+                Some(Confirm::Reset) => self.reset(ctx, crate::tracks::Reset::All),
                 Some(Confirm::Uninstall) => {
                     let res = install::uninstall();
                     self.install = install::status();
@@ -251,6 +248,10 @@ impl Screen {
                 }
                 None => Action::None,
             },
+            Msg::ResetCurrent => {
+                self.confirm = None;
+                self.reset(ctx, crate::tracks::Reset::Current)
+            }
             Msg::ConfirmCancel | Msg::Esc => {
                 self.confirm = None;
                 Action::None
@@ -358,8 +359,31 @@ impl Screen {
         .into()
     }
 
+    /// «Сбросить прохождение» (GS-29): the progress of the movement in use
+    /// or of every movement; settings (theme, font, music, the movement
+    /// itself) stay. The cleared track starts again with the Torah scroll.
+    fn reset(&mut self, ctx: &mut Ctx, what: crate::tracks::Reset) -> Action {
+        let today = ctx.today_key();
+        crate::tracks::reset(&mut ctx.state, what, &today);
+        ctx.save();
+        match what {
+            crate::tracks::Reset::Current => {
+                let title = content::level_info(crate::tracks::current(&ctx.state)).title;
+                ctx.toast(
+                    "Прохождение сброшено",
+                    &format!("Течение «{title}» начинается заново. Другие течения не тронуты."),
+                    "",
+                )
+            }
+            crate::tracks::Reset::All => {
+                ctx.toast("Прохождение сброшено", "Все течения начинаются заново.", "")
+            }
+        }
+        Action::Go(Route::Map)
+    }
+
     /// The import / reset confirm dialog, rendered as a shell layer (§0.3).
-    pub fn dialog<'a>(&'a self, _ctx: &'a Ctx) -> Option<Element<'a, Msg>> {
+    pub fn dialog<'a>(&'a self, ctx: &'a Ctx) -> Option<Element<'a, Msg>> {
         match &self.confirm {
             None => None,
             Some(Confirm::Import(_)) => Some(self.dialog_view(
@@ -367,6 +391,7 @@ impl Screen {
                 "Текущий прогресс на этом устройстве будет заменён данными из файла.",
                 "Импортировать",
                 false,
+                None,
             )),
             Some(Confirm::Uninstall) => Some(self.dialog_view(
                 "Удалить «Шорашим» из системы?",
@@ -377,13 +402,18 @@ impl Screen {
                 },
                 "Удалить",
                 true,
+                None,
             )),
-            Some(Confirm::Reset) => Some(self.dialog_view(
-                "Сбросить весь прогресс?",
-                "Будут удалены прочитанные уроки, карточки, результаты экзаменов и серия дней. Это действие нельзя отменить (кроме импорта ранее сохранённого файла).",
-                "Сбросить",
-                true,
-            )),
+            Some(Confirm::Reset) => {
+                let title = content::level_info(crate::tracks::current(&ctx.state)).title;
+                Some(self.dialog_view(
+                    "Сбросить прохождение?",
+                    "Будут удалены прочитанные уроки, результаты тестов и экзаменов, «Маалот», карточки, опыт, значки и коллекция. Тема, шрифт и музыка останутся. Это нельзя отменить (кроме импорта ранее сохранённого файла).",
+                    "Все течения",
+                    true,
+                    Some((format!("Только «{title}»"), Msg::ResetCurrent)),
+                ))
+            }
         }
     }
 
@@ -397,7 +427,7 @@ impl Screen {
         let rows = column![
             set_row(
                 "Течение",
-                format!("{level_title} · прогресс сохранится при смене"),
+                format!("{level_title} · у каждого течения своё прохождение"),
                 widgets::btn(
                     "Сменить течение",
                     widgets::Btn::Secondary,
@@ -557,7 +587,7 @@ impl Screen {
             Some(Msg::ImportPick),
         );
         let reset = widgets::btn(
-            "Сбросить прогресс",
+            "Сбросить прохождение",
             widgets::Btn::Danger,
             widgets::BtnSize::Sm,
             Some(Msg::AskReset),
@@ -834,13 +864,14 @@ impl Screen {
         body: &'a str,
         ok_label: &'a str,
         danger: bool,
+        middle: Option<(String, Msg)>,
     ) -> Element<'a, Msg> {
         let p = palette();
         let backdrop = mouse_area(
             container(space::horizontal())
                 .width(Length::Fill)
                 .height(Length::Fill)
-                .style(move |_| plain_container(Some(Color::from_rgba8(3, 5, 12, 0.66)))),
+                .style(move |_| plain_container(Some(Color::from_rgba8(3, 5, 12, 0.38)))),
         )
         .on_press(Msg::ConfirmCancel);
 
@@ -869,9 +900,20 @@ impl Screen {
                     .size(theme::text::SMALL + 1.0)
                     .color(p.muted)
                     .width(Length::Fill),
-                row![space::horizontal().width(Length::Fill), cancel, ok]
-                    .spacing(10)
-                    .align_y(Alignment::Center),
+                {
+                    let mut r = row![space::horizontal().width(Length::Fill), cancel]
+                        .spacing(10)
+                        .align_y(Alignment::Center);
+                    if let Some((label, msg)) = middle {
+                        r = r.push(widgets::btn(
+                            label,
+                            widgets::Btn::Secondary,
+                            widgets::BtnSize::Md,
+                            Some(msg),
+                        ));
+                    }
+                    r.push(ok).wrap()
+                },
             ]
             .spacing(14),
         )

@@ -14,5 +14,6 @@ pub mod reviewer;
 pub mod srs;
 pub mod storage;
 pub mod study;
+pub mod tracks;
 pub mod ui;
 pub mod util;

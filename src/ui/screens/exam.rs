@@ -13,7 +13,7 @@ use iced::keyboard::{self, key};
 use iced::widget::canvas::{self, Canvas, Frame, Path, Stroke};
 use iced::widget::text::Shaping;
 use iced::widget::{
-    button, center, checkbox, column, container, pick_list, row, space, stack, text, text_editor,
+    button, checkbox, column, container, pick_list, row, space, stack, text, text_editor,
     text_input, Column, Row, Text,
 };
 use iced::{
@@ -198,63 +198,17 @@ fn score_ring<'a, Message: 'a>(pct: i64, size: f32) -> Element<'a, Message> {
     stack![canvas, label].width(Length::Shrink).into()
 }
 
-/// Quit-confirm dialog (§0.3): dimmed backdrop (click = cancel) + modal card.
-/// Rendered as a shell layer above the whole window (see `screens::mod.rs`).
+/// Quit-confirm dialog (§0.3), the shared calm style (t164u). Rendered as a
+/// shell layer above the whole window (see `screens::mod.rs`).
 fn confirm_dialog<'a>(title: &'a str, body: &'a str) -> Element<'a, Msg> {
-    let p = tp();
-    let dialog = container(
-        column![
-            serif(title, theme::text::H2).color(p.text),
-            txt(body).size(theme::text::BODY).color(p.text),
-            row![
-                space::horizontal(),
-                widgets::btn(
-                    "Отмена",
-                    widgets::Btn::Ghost,
-                    widgets::BtnSize::Md,
-                    Some(Msg::QuitCancel),
-                ),
-                widgets::btn(
-                    "Выйти",
-                    widgets::Btn::Primary,
-                    widgets::BtnSize::Md,
-                    Some(Msg::QuitConfirm),
-                ),
-            ]
-            .spacing(10)
-            .width(Length::Fill),
-        ]
-        .spacing(14)
-        .width(Length::Fill),
+    widgets::confirm_modal(
+        title,
+        body,
+        "Продолжить",
+        "Выйти",
+        Msg::QuitCancel,
+        Msg::QuitConfirm,
     )
-    .padding(24)
-    .max_width(460)
-    .style(move |_| container::Style {
-        background: Some(Background::Color(p.surface)),
-        border: Border {
-            color: p.line2,
-            width: 1.0,
-            radius: theme::radius::MODAL.into(),
-        },
-        shadow: Shadow {
-            color: Color::from_rgba8(0, 0, 0, 0.5),
-            offset: iced::Vector::new(0.0, 12.0),
-            blur_radius: 34.0,
-        },
-        ..plain()
-    });
-    let back = Color::from_rgba8(3, 5, 12, 0.66);
-    let backdrop = button(container(space()).style(move |_| container::Style {
-        background: Some(Background::Color(back)),
-        ..plain()
-    }))
-    .width(Length::Fill)
-    .height(Length::Fill)
-    .on_press(Msg::QuitCancel);
-    stack![backdrop, center(widgets::modal_fit(dialog)).padding(16)]
-        .width(Length::Fill)
-        .height(Length::Fill)
-        .into()
 }
 
 /// Badge / goal toasts after a finished run (mirrors `Ctx::award` effects;
@@ -426,6 +380,8 @@ struct Run {
     /// «Открытый режим рецензента»: the answer of the current question is
     /// shown without an attempt («Показать ответ»).
     peek: bool,
+    /// What started this run, for «Пройти ещё раз» on the results.
+    spec: Option<ExamSpec>,
 }
 
 impl Run {
@@ -446,6 +402,7 @@ impl Run {
             differs_open: false,
             confirm_quit: false,
             peek: false,
+            spec: None,
         };
         run.reset_question();
         run
@@ -568,6 +525,7 @@ impl Run {
             res,
             cards,
             mistake_ids,
+            again: self.spec.clone(),
         }
     }
 }
@@ -589,6 +547,9 @@ struct Results {
     res: exam::ExamResult,
     cards: Vec<MistakeCard>,
     mistake_ids: Vec<String>,
+    /// The same test once more (GS-29 «Пройти ещё раз»); the best result
+    /// is kept (exam::finish only raises it).
+    again: Option<ExamSpec>,
 }
 
 // ---------------------------------------------------------------------------
@@ -635,6 +596,8 @@ pub enum Msg {
     // Results.
     Retry,
     NewExam,
+    /// «Пройти ещё раз»: the same test again.
+    Again,
     ToSection(String),
     ToMap,
     // Keyboard subscription.
@@ -728,7 +691,9 @@ fn build_run(ctx: &Ctx, spec: &ExamSpec) -> Option<Run> {
             rights: it.rights.clone(),
         })
         .collect();
-    Some(Run::new(s.mode, s.section_id, items, s.started_at))
+    let mut run = Run::new(s.mode, s.section_id, items, s.started_at);
+    run.spec = Some(spec.clone());
+    Some(run)
 }
 
 impl Screen {
@@ -954,6 +919,13 @@ impl Screen {
                 Action::None
             }
             Msg::NewExam => Action::Go(Route::Exam(None)),
+            Msg::Again => match &self.phase {
+                Phase::Results(r) => match r.again.clone() {
+                    Some(spec) => Action::Go(Route::ExamRun(spec)),
+                    None => Action::None,
+                },
+                _ => Action::None,
+            },
             Msg::ToSection(id) => Action::Go(Route::Section(id)),
             Msg::ToMap => Action::Go(Route::Map),
             // ---- Keyboard ----
@@ -1030,7 +1002,7 @@ impl Screen {
         match &self.phase {
             Phase::Run(run) if run.confirm_quit => Some(confirm_dialog(
                 "Прервать тест?",
-                "Ответы на текущие вопросы сохранятся в статистике, но результат не будет засчитан.",
+                "Результат этой попытки не будет засчитан, а ответы останутся в статистике. Вернуться к тесту можно в любой момент.",
             )),
             _ => None,
         }
@@ -2009,6 +1981,18 @@ impl Screen {
                 widgets::Btn::Primary,
                 widgets::BtnSize::Md,
                 Some(Msg::Retry),
+            ));
+        }
+        if r.again.is_some() {
+            buttons = buttons.push(widgets::btn(
+                "Пройти ещё раз",
+                if r.mistake_ids.is_empty() {
+                    widgets::Btn::Primary
+                } else {
+                    widgets::Btn::Secondary
+                },
+                widgets::BtnSize::Md,
+                Some(Msg::Again),
             ));
         }
         if !practice {

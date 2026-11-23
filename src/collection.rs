@@ -1,7 +1,8 @@
 //! «Коллекция предметов» on «Успехи»: every live 3D ritual object is a
 //! collectible that opens through real study, not by itself.
 //!
-//! Most objects open when the lesson that talks about them is marked read;
+//! The Torah scroll is open from the very start (the first object of every
+//! progress track). Most objects open when the lesson that talks about them is marked read;
 //! the Second Temple opens on the 10th step («Мишна») of «Маалот», whose
 //! fifteen steps recall the fifteen steps of the Temple court. Unlocks are
 //! recorded once in `State::extra["collection"]` (object key → day), so an
@@ -21,6 +22,9 @@ pub enum Unlock {
     Lesson(&'static str),
     /// The best «Маалот» result reaches this many steps.
     Ladder(usize),
+    /// Open from the very start: the Torah scroll, the first object of
+    /// every progress track (t162u).
+    Start,
 }
 
 /// One collectible: the object key (the 3D asset name, see
@@ -43,7 +47,10 @@ pub const ITEMS: [Item; 22] = [
     lesson("kiddush-cup", "shabbat-3"),
     lesson("shabbat-candlesticks", "shabbat-2"),
     lesson("menorah", "osnovy-5"),
-    lesson("torah-scroll", "osnovy-2"),
+    Item {
+        key: "torah-scroll",
+        unlock: Unlock::Start,
+    },
     lesson("shofar", "prazdniki-2"),
     Item {
         key: "temple-complex",
@@ -76,6 +83,7 @@ pub fn met(state: &State, unlock: Unlock) -> bool {
     match unlock {
         Unlock::Lesson(id) => Library::is_read(state, id),
         Unlock::Ladder(n) => crate::ladder::best(state) >= n,
+        Unlock::Start => true,
     }
 }
 
@@ -90,6 +98,7 @@ pub fn condition(lib: &Library, unlock: Unlock) -> String {
             ),
             None => "Прочитайте урок, где рассказано об этом предмете".to_string(),
         },
+        Unlock::Start => "Открыт с самого начала".to_string(),
         Unlock::Ladder(n) => {
             let r = crate::ladder::rung(n);
             if r.name.is_empty() {
@@ -175,6 +184,7 @@ mod tests {
                     assert!(c.starts_with("Прочитайте урок «"), "{c}");
                 }
                 Unlock::Ladder(n) => assert!((1..=crate::ladder::STEPS).contains(&n)),
+                Unlock::Start => assert_eq!(i.key, "torah-scroll"),
             }
         }
     }
@@ -182,14 +192,14 @@ mod tests {
     #[test]
     fn reading_a_lesson_unlocks_its_objects_once() {
         let mut s = State::default();
-        assert!(sync(&mut s, "2026-11-23").is_empty());
-        assert_eq!(count(&s), 0);
+        assert_eq!(sync(&mut s, "2026-11-23"), vec!["torah-scroll"]);
+        assert_eq!(count(&s), 1);
         s.lessons_read.insert("semya-3".into(), "2026-11-23".into());
         assert_eq!(
             sync(&mut s, "2026-11-23"),
             vec!["chuppah", "ketubah", "wedding-glass"]
         );
-        assert_eq!(count(&s), 3);
+        assert_eq!(count(&s), 4);
         assert_eq!(unlocked_on(&s, "ketubah"), Some("2026-11-23"));
         // Nothing new the next time; the first day is kept.
         assert!(sync(&mut s, "2026-11-24").is_empty());
@@ -202,7 +212,7 @@ mod tests {
         let lib = Library::embedded();
         let mut s = State::default();
         s.counters.insert(crate::ladder::BEST_KEY.into(), 9);
-        assert!(sync(&mut s, "2026-11-23").is_empty());
+        assert_eq!(sync(&mut s, "2026-11-23"), vec!["torah-scroll"]);
         s.counters.insert(crate::ladder::BEST_KEY.into(), 10);
         assert_eq!(sync(&mut s, "2026-11-23"), vec!["temple-complex"]);
         let c = condition(&lib, item("temple-complex").unwrap().unlock);
@@ -226,7 +236,7 @@ mod tests {
         back.lessons_read.clear();
         back.settings.level = Some(Level::Reform);
         assert!(sync(&mut back, "2026-11-24").is_empty());
-        assert_eq!(count(&back), 1);
+        assert_eq!(count(&back), 2, "the cup and the Torah scroll");
         // Export / import keeps it too.
         let again = State::import_json(&back.export_json(), "2026-11-24").unwrap();
         assert!(is_unlocked(&again, "kiddush-cup"));
@@ -243,7 +253,24 @@ mod tests {
         assert_eq!(count(&s), 0);
         s.lessons_read
             .insert("kashrut-2".into(), "2026-11-23".into());
-        assert_eq!(sync(&mut s, "2026-11-23"), vec!["kosher-fish"]);
+        assert_eq!(
+            sync(&mut s, "2026-11-23"),
+            vec!["torah-scroll", "kosher-fish"]
+        );
+        assert_eq!(count(&s), 2);
+    }
+}
+
+#[cfg(test)]
+mod start_tests {
+    use super::*;
+
+    #[test]
+    fn a_fresh_profile_starts_with_the_torah_scroll() {
+        let mut s = State::default();
+        assert_eq!(sync(&mut s, "2026-11-23"), vec!["torah-scroll"]);
+        assert!(is_unlocked(&s, "torah-scroll"));
         assert_eq!(count(&s), 1);
+        assert!(sync(&mut s, "2026-11-23").is_empty(), "once");
     }
 }

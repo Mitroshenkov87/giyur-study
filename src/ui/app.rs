@@ -236,7 +236,11 @@ impl Ctx {
             (false, true) => {
                 let sb = self.sandbox.take().expect("checked");
                 let mut real = sb.real;
+                // The movement belongs to the progress tracks (src/tracks.rs):
+                // a change made inside the mode is not kept.
+                let level = real.settings.level;
                 real.settings = self.state.settings.clone();
+                real.settings.level = level;
                 real.settings.reviewer_mode = false;
                 self.state = real;
                 self.save();
@@ -266,7 +270,9 @@ impl Ctx {
         }
         let res = match &mut self.sandbox {
             Some(sb) => {
+                let level = sb.real.settings.level;
                 sb.real.settings = self.state.settings.clone();
+                sb.real.settings.level = level;
                 sb.real.settings.reviewer_mode = sb.persist;
                 storage::save(&self.path, &sb.real)
             }
