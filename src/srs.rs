@@ -16,23 +16,29 @@ pub const MAX: i64 = 5;
 pub fn grade(state: &mut State, id: &str, knew: bool, today: NaiveDate) -> CardState {
     let today_key = util::day_key(today);
     let mut c = state.cards.get(id).cloned().unwrap_or_default();
+    step(&mut c, knew, &today_key);
+    state.cards.insert(id.to_string(), c.clone());
+    state.touch(&today_key);
+    c
+}
+
+/// One review of a card state (the scheduling part of [`grade`]), for other
+/// decks that keep their own card states (the interview trainer).
+pub fn step(c: &mut CardState, knew: bool, today_key: &str) {
     c.n += 1;
     if knew {
         if c.l >= MAX {
             c.m = true; // recalled at the 30-day interval → выучена
         }
         c.l = (c.l + 1).min(MAX);
-        c.due = util::add_days(&today_key, INTERVALS[(c.l - 1) as usize]);
+        c.due = util::add_days(today_key, INTERVALS[(c.l - 1) as usize]);
     } else {
         c.l = 0;
         c.m = false;
         c.miss += 1;
-        c.due = util::add_days(&today_key, 1);
+        c.due = util::add_days(today_key, 1);
     }
-    c.last = today_key.clone();
-    state.cards.insert(id.to_string(), c.clone());
-    state.touch(&today_key);
-    c
+    c.last = today_key.to_string();
 }
 
 pub fn is_due(state: &State, id: &str, today: NaiveDate) -> bool {

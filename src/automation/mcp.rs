@@ -56,7 +56,7 @@ fn tools(attach: bool) -> Vec<Value> {
         ("state", "Read the current screen: route, visible texts, clickable controls with stable ids, input fields, progress, settings and toasts.",
             obj(json!({"texts": {"type": "boolean", "description": "Include all visible texts (default true)."}}), &[])),
         ("screens", "List navigation targets: sidebar items, route syntax, sections and lessons with ids.", obj(json!({}), &[])),
-        ("navigate", "Go to a screen. Routes: map, calendar[:today|month|settings|YYYY-MM-DD], section:<id>, lesson:<id>, cards:<lessonId>, deck:<sectionId>, cards:review, exam[:<sectionId>], examrun:section:<id>[:n], examrun:general[:n], examrun:beitdin[:n], timed, timedrun, progress, settings, sources, level, welcome; or a sidebar label like «Уроки» or «Календарь» (old labels such as «Карта» also work).",
+        ("navigate", "Go to a screen. Routes: map, calendar[:today|month|settings|YYYY-MM-DD], section:<id>, lesson:<id>, cards:<lessonId>, deck:<sectionId>, cards:review, exam[:<sectionId>], examrun:section:<id>[:n], examrun:general[:n], examrun:beitdin[:n], timed, timedrun, progress, settings, sources, interview[:practice|rehearsal], level, welcome; or a sidebar label like «Уроки» or «Календарь» (old labels such as «Карта» also work).",
             obj(json!({"to": {"type": "string"}, "state": state_flag}), &["to"])),
         ("back", "Go back to the previous screen («Назад»).", obj(json!({"state": state_flag}), &[])),
         ("press", "Press a control listed by `state`: by id (exact), label (exact visible text, case-insensitive) or contains (substring). nth picks among several matches.",

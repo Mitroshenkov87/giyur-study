@@ -680,6 +680,7 @@ fn parse_route(r: &str) -> Option<Route> {
         "progress" => Route::Progress,
         "settings" => Route::Settings,
         "sources" => Route::Sources,
+        "interview" => Route::Interview(shorashim::interview::Mode::parse(&v)?),
         // A sidebar label, current or pre-v0.5 («Уроки», «Карта», …).
         _ => return nav::find(r).map(nav::route),
     })
