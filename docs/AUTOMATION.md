@@ -145,6 +145,13 @@ shorashim --headless < commands.jsonl          # stdin, keeps going on errors
   (`route` is a prefix, `text` / `control` are case-insensitive substrings, `reply` objects match as subsets).
 - Headless screenshots render the page column (no sidebar) with the
   software renderer.
+- Screenshot hooks for the 3D parts (environment variables, read on
+  start): `SHORASHIM_COLLECTION_OPEN=<key>` opens that unlocked object of
+  the «Коллекция предметов» on «Успехи» in the live viewer (keys are the
+  asset names, e.g. `kiddush-cup`); `SHORASHIM_LADDER_DEMO=mid` with
+  `SHORASHIM_LADDER_CLIMB=<steps>` (e.g. `6.5`) freezes the lamp of the 3D
+  «Маалот» stair mid-climb. Live 3D needs the wgpu renderer (a real window);
+  the software renderer shows the stills.
 
 CI runs `tests/automation.rs`, which plays `tests/scripts/*.jsonl` (first
 run and navigation, a lesson, flashcards, a section test, the timed quiz («Викторина») and
