@@ -87,22 +87,17 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy
-          targets: aarch64-apple-darwin, x86_64-apple-darwin
+          targets: aarch64-apple-darwin
       - uses: Swatinem/rust-cache@v2
       - name: Clippy
         run: cargo clippy --all-targets -- -D warnings
       - name: Test
         run: cargo test --all-targets
-      - name: Build release (Apple Silicon and Intel)
+      - name: Build release (Apple Silicon only)
         run: |
           cargo build --release --bin shorashim --target aarch64-apple-darwin
-          cargo build --release --bin shorashim --target x86_64-apple-darwin
-      - name: Universal binary (lipo)
-        run: |
           mkdir -p dist
-          lipo -create -output dist/shorashim \
-            target/aarch64-apple-darwin/release/shorashim \
-            target/x86_64-apple-darwin/release/shorashim
+          cp target/aarch64-apple-darwin/release/shorashim dist/shorashim
           lipo -info dist/shorashim
       - name: Package Shorashim.app and Shorashim-macOS.dmg
         run: tools/make_macos_app.sh dist/shorashim dist
