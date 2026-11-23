@@ -52,11 +52,16 @@ was a flatter book with geometric marks on the pages; attempt B had a cover
 standing like a wall, a ragged flap and a floating ribbon. Letters on the
 pages are decorative; zoom is capped at 1.15× like the scrolls.
 
-`tefillin` is v3 `d23da79a` (a single-image shel-rosh bayit). The base slab
-was about a third of the cube height and was scaled in Z to a thin titura;
-the short thick rear ring was removed (a tiny nub remains on the back-right),
-and a shallow handle-like recess on one side of the titura was left. The
-letter shin and the straps are not on the model. v1 and v2 were not placed.
+`tefillin` was rebuilt in Blender from the cleaned v3 bayit/titura as a
+proportion reference. It is now a modelled shel-rosh: a square bayit on a
+wider titura, a maabarta slot at the back, a raised three-headed shin
+(Frank Ruhl Libre) on the wearer's right and a four-headed shin on the
+left (a fourth prong added to the same letter), and glossy black leather
+straps looping out of the maabarta with hanging tails. The knot is
+stylized, not a precise dalet-kesher. Single leather material, roughness
+about 0.25, 2K WebP maps, well under 199,999 triangles. The still uses
+pitch 0.32 so the titura and strap loop are visible (the app start view
+matches). v1–v3 of the scanned placeholder were replaced.
 
 `kotel` and `chuppah` were added the same way (`199999 2048 2048`). The Kotel
 is a short fragment of ashlar with plants in the joints and a paved stand;
