@@ -1,12 +1,16 @@
-//! Eretz Israel map data: the land as one Jewish country, Torah-border
-//! overlays, tribal allotments and place cards.
+//! Eretz Israel map data: «Израиль сегодня», Torah-border overlays, tribal
+//! allotments and place cards.
 //!
-//! The base outline is the whole of the Land now under Jewish sovereignty
-//! and historic settlement west of the Jordan — Judea, Samaria, the Golan,
-//! Aza and a united Jerusalem — drawn as one united, indivisible land. The «Границы по Торе» layer adds the promised
-//! extent (Bereshit 15:18, Devarim 11:24) and the Canaan bounds of
-//! Bamidbar 34. Tribal allotments follow Yehoshua 13–19 as a schematic
-//! teaching overlay, not a surveyed cadastre.
+//! The base view follows official Israeli maps (Survey of Israel, the MFA):
+//! united Jerusalem and the Golan inside Israel; Judea and Samaria labelled
+//! «Иудея и Шомрон» with the 1949 armistice line as a thin dashed line, the
+//! way Israeli historical and MFA maps mark it; Aza outside Israel's borders
+//! since the 2005 disengagement. Neighbouring land is drawn in a neutral
+//! colour so the coast and the Gulf read like a real map. The «Границы по
+//! Торе» layer adds the promised extent (Bereshit 15:18, Devarim 11:24) and the
+//! Canaan bounds of Bamidbar 34. Tribal allotments follow Yehoshua 13–19 as a
+//! schematic teaching overlay, not a surveyed cadastre. Sources:
+//! docs/RABBI-REVIEW.md, «Карта: Израиль сегодня».
 
 /// A geographic point, `lon` degrees east, `lat` degrees north.
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -77,19 +81,20 @@ impl Extent {
     }
 }
 
-/// The land of Israel as one polygon, clockwise from the south-west (Rafah).
-/// Judea, Samaria, the Golan and Aza are part of the same ring; Jerusalem
-/// sits in the middle, not on a dividing line.
+/// Israel today as one polygon, clockwise from Kerem Shalom. Judea and
+/// Samaria, the Golan and a united Jerusalem are inside the ring; Aza is not
+/// (see [`AZA`]).
 pub const LAND: &[Coord] = &[
-    // Mediterranean coast, Rafah → Rosh HaNikra
-    Coord::new(34.219, 31.217),
-    Coord::new(34.230, 31.250),
-    Coord::new(34.248, 31.296),
-    Coord::new(34.270, 31.330),
-    Coord::new(34.305, 31.380),
-    Coord::new(34.380, 31.470),
-    Coord::new(34.430, 31.520),
-    Coord::new(34.490, 31.580),
+    // Along Aza, Kerem Shalom → Zikim
+    Coord::new(34.267, 31.220),
+    Coord::new(34.300, 31.260),
+    Coord::new(34.380, 31.310),
+    Coord::new(34.450, 31.370),
+    Coord::new(34.495, 31.420),
+    Coord::new(34.540, 31.490),
+    Coord::new(34.567, 31.540),
+    Coord::new(34.525, 31.595),
+    // Mediterranean coast, Zikim → Rosh HaNikra
     Coord::new(34.545, 31.660),
     Coord::new(34.570, 31.700),
     Coord::new(34.620, 31.800),
@@ -182,6 +187,165 @@ pub const LAND: &[Coord] = &[
     Coord::new(34.380, 30.850),
     Coord::new(34.330, 31.000),
     Coord::new(34.270, 31.120),
+];
+
+/// Aza, outside Israel's borders since 2005: Rafah → Zikim along the coast,
+/// back along the border to Kerem Shalom.
+pub const AZA: &[Coord] = &[
+    Coord::new(34.219, 31.217),
+    Coord::new(34.230, 31.250),
+    Coord::new(34.248, 31.296),
+    Coord::new(34.270, 31.330),
+    Coord::new(34.305, 31.380),
+    Coord::new(34.380, 31.470),
+    Coord::new(34.430, 31.520),
+    Coord::new(34.490, 31.580),
+    Coord::new(34.525, 31.595),
+    Coord::new(34.567, 31.540),
+    Coord::new(34.540, 31.490),
+    Coord::new(34.495, 31.420),
+    Coord::new(34.450, 31.370),
+    Coord::new(34.380, 31.310),
+    Coord::new(34.300, 31.260),
+    Coord::new(34.267, 31.220),
+];
+
+/// The 1949 armistice line around Judea and Samaria, north part (Jordan →
+/// the Latrun area → the edge of Jerusalem). Drawn thin and dashed; it stops
+/// at Jerusalem's municipal edge, because the city is one.
+pub const ARMISTICE_1949_NORTH: &[Coord] = &[
+    Coord::new(35.555, 32.400),
+    Coord::new(35.480, 32.410),
+    Coord::new(35.400, 32.500),
+    Coord::new(35.300, 32.530),
+    Coord::new(35.210, 32.550),
+    Coord::new(35.100, 32.500),
+    Coord::new(35.070, 32.430),
+    Coord::new(35.020, 32.360),
+    Coord::new(35.030, 32.280),
+    Coord::new(35.000, 32.220),
+    Coord::new(34.960, 32.170),
+    Coord::new(34.990, 32.100),
+    Coord::new(35.000, 32.000),
+    Coord::new(34.980, 31.930),
+    Coord::new(34.970, 31.860),
+    Coord::new(35.020, 31.830),
+    Coord::new(35.080, 31.850),
+    Coord::new(35.130, 31.840),
+    Coord::new(35.165, 31.815),
+];
+
+/// South part: from the edge of Jerusalem around the Hebron hills to the
+/// Salt Sea.
+pub const ARMISTICE_1949_SOUTH: &[Coord] = &[
+    Coord::new(35.150, 31.740),
+    Coord::new(35.100, 31.720),
+    Coord::new(35.030, 31.690),
+    Coord::new(34.970, 31.620),
+    Coord::new(34.920, 31.530),
+    Coord::new(34.880, 31.420),
+    Coord::new(34.920, 31.360),
+    Coord::new(35.020, 31.350),
+    Coord::new(35.150, 31.350),
+    Coord::new(35.280, 31.360),
+    Coord::new(35.400, 31.400),
+    Coord::new(35.450, 31.490),
+];
+
+/// Neighbouring land, drawn in a neutral colour under Israel. Its western
+/// edge is the real coast north of Rosh HaNikra and west of Rafah; along
+/// Israel it runs inland, where Israel's own fill covers it.
+pub const NEIGHBOURS: &[Coord] = &[
+    Coord::new(34.219, 31.217),
+    Coord::new(34.400, 31.300),
+    Coord::new(34.800, 31.400),
+    Coord::new(35.000, 32.000),
+    Coord::new(35.100, 32.700),
+    Coord::new(35.150, 33.000),
+    Coord::new(35.104, 33.086),
+    // Lebanon and Syria coast
+    Coord::new(35.200, 33.270),
+    Coord::new(35.370, 33.560),
+    Coord::new(35.480, 33.900),
+    Coord::new(35.650, 34.250),
+    Coord::new(35.850, 34.450),
+    Coord::new(35.980, 34.800),
+    Coord::new(35.880, 35.200),
+    Coord::new(35.780, 35.550),
+    Coord::new(35.950, 35.900),
+    Coord::new(35.850, 36.300),
+    Coord::new(36.150, 36.600),
+    // Anatolian coast, westward
+    Coord::new(35.800, 36.800),
+    Coord::new(35.300, 36.600),
+    Coord::new(34.600, 36.800),
+    Coord::new(33.900, 36.250),
+    Coord::new(33.200, 36.150),
+    Coord::new(32.000, 36.100),
+    Coord::new(31.000, 36.600),
+    Coord::new(30.600, 36.850),
+    Coord::new(30.000, 36.300),
+    Coord::new(29.000, 36.600),
+    Coord::new(28.000, 36.800),
+    Coord::new(27.300, 37.200),
+    // Far frame, then Africa and Sinai coast back to Rafah
+    Coord::new(27.300, 45.000),
+    Coord::new(70.000, 45.000),
+    Coord::new(70.000, 5.000),
+    Coord::new(10.000, 5.000),
+    Coord::new(10.000, 33.000),
+    Coord::new(20.000, 31.400),
+    Coord::new(30.000, 31.400),
+    Coord::new(31.900, 31.500),
+    Coord::new(32.300, 31.250),
+    Coord::new(32.600, 31.070),
+    Coord::new(33.100, 31.080),
+    Coord::new(33.500, 31.120),
+    Coord::new(33.800, 31.140),
+    Coord::new(34.000, 31.170),
+];
+
+/// Cyprus, a rough outline for the wide Torah view.
+pub const CYPRUS: &[Coord] = &[
+    Coord::new(32.300, 35.050),
+    Coord::new(32.600, 35.200),
+    Coord::new(33.000, 35.350),
+    Coord::new(33.600, 35.350),
+    Coord::new(34.100, 35.500),
+    Coord::new(34.600, 35.700),
+    Coord::new(34.000, 35.300),
+    Coord::new(33.900, 35.000),
+    Coord::new(33.600, 34.950),
+    Coord::new(33.000, 34.650),
+    Coord::new(32.400, 34.750),
+];
+
+/// The Gulf of Eilat (Aqaba), from Eilat south to the Straits of Tiran.
+pub const GULF_EILAT: &[Coord] = &[
+    Coord::new(34.880, 29.500),
+    Coord::new(34.951, 29.550),
+    Coord::new(35.010, 29.520),
+    Coord::new(34.920, 29.100),
+    Coord::new(34.830, 28.700),
+    Coord::new(34.680, 28.200),
+    Coord::new(34.450, 27.900),
+    Coord::new(34.300, 27.950),
+    Coord::new(34.450, 28.400),
+    Coord::new(34.620, 28.900),
+    Coord::new(34.750, 29.300),
+];
+
+/// The Gulf of Suez, at the western edge of the Torah view.
+pub const GULF_SUEZ: &[Coord] = &[
+    Coord::new(32.550, 29.970),
+    Coord::new(32.750, 29.650),
+    Coord::new(33.200, 28.900),
+    Coord::new(33.600, 28.200),
+    Coord::new(33.900, 27.900),
+    Coord::new(33.550, 27.800),
+    Coord::new(32.900, 28.800),
+    Coord::new(32.400, 29.600),
+    Coord::new(32.400, 29.970),
 ];
 
 /// Yam Kinneret (the Sea of Galilee), clockwise.
@@ -513,14 +677,8 @@ pub struct Region {
 
 pub const REGIONS: &[Region] = &[
     Region {
-        name: "Иудея",
-        at: Coord::new(35.05, 31.38),
-        dx: 0.0,
-        dy: 0.0,
-    },
-    Region {
-        name: "Шомрон",
-        at: Coord::new(35.18, 32.12),
+        name: "Иудея и Шомрон",
+        at: Coord::new(35.28, 32.47),
         dx: 0.0,
         dy: 0.0,
     },
@@ -532,7 +690,7 @@ pub const REGIONS: &[Region] = &[
     },
     Region {
         name: "Галилея",
-        at: Coord::new(35.22, 32.88),
+        at: Coord::new(35.25, 32.76),
         dx: 0.0,
         dy: 0.0,
     },
@@ -622,7 +780,7 @@ pub const PLACES: &[Place] = &[
         capital: true,
         dx: 0.0,
         dy: 0.03,
-        text: "Вечная и неделимая столица еврейского народа. Здесь стояли Первый и Второй Храм, здесь Западная стена — Котель, остаток ограды Храмовой горы. Это единый Иерусалим, Йерушалаим.",
+        text: "Столица Государства Израиль и вечная столица еврейского народа. По Основному закону 1980 года «Иерусалим, единый и целостный, — столица Израиля». Здесь стояли Первый и Второй Храм, здесь Западная стена — Котель, остаток ограды Храмовой горы.",
         lesson: Some(("prazdniki-6", "Посты и памятные дни")),
     },
     Place {
@@ -776,7 +934,7 @@ pub const PLACES: &[Place] = &[
         capital: false,
         dx: -0.12,
         dy: 0.02,
-        text: "Аза — южное приморье единой Эрец-Исраэль: в наделе Йеhуды названы «Аза, её города и селения, до ручья Египта» (Йеhошуа 15:47).",
+        text: "Древний город южного приморья. В Торе и у пророков Аза — в пределах Земли: в наделе Йеhуды названы «Аза, её города и селения, до ручья Египта» (Йеhошуа 15:47). С 2005 года, после ухода Израиля, Аза находится за пределами его границ.",
         lesson: Some(("osnovy-5", "Краткая история еврейского народа")),
     },
     Place {
@@ -787,7 +945,7 @@ pub const PLACES: &[Place] = &[
         capital: false,
         dx: 0.12,
         dy: 0.03,
-        text: "Город на Голане — плато, которое с древности связано с Башаном и наделом восточного Менаше. Голан — неотъемлемая часть севера Земли.",
+        text: "Город на Голане — плато, которое с древности связано с Башаном и наделом восточного Менаше. С 1981 года на Голане действует израильский закон, и на израильских картах Голан — часть страны.",
         lesson: None,
     },
     Place {
@@ -837,8 +995,9 @@ pub fn all_visible_texts() -> impl Iterator<Item = &'static str> {
         .chain(PLACES.iter().flat_map(|p| [p.name, p.text]))
         .chain(TRIBES.iter().map(|t| t.name))
         .chain(std::iter::once(TORAH_CAPTION))
-        .chain(std::iter::once("Иерусалим — вечная и неделимая столица"))
+        .chain(std::iter::once("Столица Израиля, вечная столица народа"))
         .chain(std::iter::once("Эрец-Исраэль"))
+        .chain(std::iter::once("Израиль сегодня"))
         .chain(std::iter::once("Границы по Торе"))
         .chain(std::iter::once("Наделы колен"))
 }
@@ -863,8 +1022,9 @@ pub const FORBIDDEN: &[&str] = &[
     "восточный иерусалим",
     "восточного иерусалим",
     "east jerusalem",
-    "линия перемирия",
     "autonomy",
+    "неделим",
+    "вырезан",
     "автономия палест",
 ];
 
@@ -911,7 +1071,6 @@ mod tests {
             ("beit-el", c(35.227, 31.940)),
             ("shiloh", c(35.290, 32.056)),
             ("jericho", c(35.456, 31.857)),
-            ("aza", c(34.466, 31.506)),
             ("katzrin-golan", c(35.689, 32.992)),
             ("eilat", c(34.951, 29.557)),
             ("tzfat", c(35.494, 32.965)),
@@ -936,6 +1095,34 @@ mod tests {
             !inside(c(33.80, 31.13), LAND),
             "El-Arish is outside the base land"
         );
+        assert!(
+            !inside(c(34.466, 31.506), LAND),
+            "Aza is outside Israel's borders since 2005"
+        );
+        assert!(inside(c(34.466, 31.506), AZA));
+        assert!(inside(c(34.60, 31.52), LAND), "Sderot is in Israel");
+        assert!(!inside(c(34.60, 31.52), AZA));
+    }
+
+    #[test]
+    fn neighbours_cover_sinai_and_jordan_but_not_the_sea() {
+        assert!(inside(c(33.80, 30.50), NEIGHBOURS), "Sinai");
+        assert!(inside(c(35.93, 31.95), NEIGHBOURS), "Amman");
+        assert!(inside(c(36.30, 33.51), NEIGHBOURS), "Damascus");
+        assert!(
+            !inside(c(34.30, 32.50), NEIGHBOURS),
+            "off the coast of Israel"
+        );
+        assert!(!inside(c(34.00, 34.00), NEIGHBOURS), "the open sea");
+    }
+
+    #[test]
+    fn armistice_line_stays_out_of_jerusalem() {
+        let jlm = c(35.217, 31.778);
+        for p in ARMISTICE_1949_NORTH.iter().chain(ARMISTICE_1949_SOUTH) {
+            let d = ((p.lon - jlm.lon).powi(2) + (p.lat - jlm.lat).powi(2)).sqrt();
+            assert!(d > 0.05, "the line must not cross the city: {p:?}");
+        }
     }
 
     #[test]
@@ -985,7 +1172,7 @@ mod tests {
             assert!(names.contains(&need), "missing place {need}");
         }
         let regions: Vec<&str> = REGIONS.iter().map(|r| r.name).collect();
-        for need in ["Иудея", "Шомрон", "Голан"] {
+        for need in ["Иудея и Шомрон", "Голан"] {
             assert!(regions.contains(&need), "missing region {need}");
         }
         // «Аза» is a city card (and would double the region label).

@@ -1480,7 +1480,7 @@ fn eretz_cta<'a>() -> Element<'a, Msg> {
                     .size(theme::text::BODY)
                     .font(fonts::SANS_BOLD)
                     .color(p.text),
-                txt(tr("Вся Земля: Иудея и Шомрон, Голан, Аза и единый Иерусалим. Слой границ по Торе."))
+                txt(tr("Израиль сегодня — по официальным израильским картам. Слои границ по Торе и наделов колен."))
                     .size(theme::text::SMALL)
                     .color(p.muted),
                 widgets::pill(tr("Открыть карту"), widgets::Pill::Cta),

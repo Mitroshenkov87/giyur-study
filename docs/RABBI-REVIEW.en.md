@@ -3600,9 +3600,24 @@ The old descriptions stacked the levels like a ladder: Reform as "the base share
 
 ## The map of Eretz Israel (the "Land" screen)
 
-A new screen and a sidebar item, "The Land". The map shows all of Eretz Israel as one united and indivisible Jewish land: Judea and Samaria, the Golan, Aza, and united Jerusalem — the eternal undivided capital. The place names are Jewish (Jerusalem, Hevron, Shechem, Beit El, Shilo, Jericho, Judea, Samaria, the Golan, Aza, and others).
+The screen and sidebar item "The Land". In version 0.6.0 the map was redone to be calmer and closer to reality (at the author's request: "more realistic… perhaps we went a little too far"). It now has two main views and an extra layer:
 
-A toggleable layer, "Torah Borders", and an additional layer, "Tribal Allotments". The texts of the place cards and the layer caption are given below. The geography of the layer is an educational diagram, not a cadastral plan: the lines of the northern and eastern limits are drawn according to widespread identifications of the places in Bamidbar 34 and according to the usual reading of the covenant with Avraham.
+- **"Israel today"** (the default view) shows the country the way official Israeli maps draw it. United Jerusalem and the Golan are within Israel. Judea and Samaria are labelled by their name, "Judea and Samaria". The 1949 armistice line is a thin dashed line, the way Israel's Foreign Ministry maps mark it. The dashed line is not drawn inside Jerusalem's municipal boundary, because the city is one. Since Israel's withdrawal in 2005, Aza has been outside Israel's borders; on this view it is shaded in a neutral colour, like the neighbouring countries. The neighbouring countries are neutral grey land without labels, so the coastline and the gulfs read as on a real map.
+- **"Torah Borders"** is unchanged: the bounds of the Land in the Torah. On this layer Aza is shaded together with the Land (Yehoshua 15:47), and the 1949 dashed line is not shown.
+- **"Tribal Allotments"** is unchanged.
+
+The place names are Jewish (Jerusalem, Hevron, Shechem, Beit El, Shilo, Jericho, the Golan, Aza, and others). Political labels that Israeli maps do not use never appear on the map; the test `no_forbidden_political_language` checks this. The geography is an educational diagram, not a cadastral plan.
+
+### The "Israel today" map: sources
+
+- Survey of Israel (the national mapping agency), its Judea and Samaria unit: https://www.gov.il/en/departments/units/kadaster-deprtment. Official maps name the area "Judea and Samaria" (יהודה ושומרון).
+- The government map portal GovMap: https://www.govmap.gov.il.
+- Israel's Foreign Ministry booklet "Quest for Peace" (the "Facts about Israel" series, 2018): https://www.gov.il/BlobFolder/generalpage/facts-about-israel-2018/en/English_ABOUT_ISRAEL_PDF_Quest-for-Peace.pdf. Its maps mark the line as "Armistice Line, 1949–1967".
+- December 2006 reports on school maps (Chicago Tribune, Washington Post, Arutz Sheva). After 1967 the armistice line is usually left off official Israeli maps. The director of the Survey of Israel explained that it appears only on maps designated as historical. The Prime Minister's Office said showing the 1949 line is acceptable, while the government's position rejects a return to the 1967 lines.
+- Jerusalem: Basic Law: Jerusalem, Capital of Israel (1980): "Jerusalem, complete and united, is the capital of Israel." The Golan: the Golan Heights Law (1981). Aza: the disengagement plan, carried out in August–September 2005.
+- [ ] Please confirm that a thin 1949 dashed line with a gap inside Jerusalem is a fitting way to show it. The other option is to drop the dashed line altogether, as most current Survey of Israel maps do.
+
+### Torah Borders — sources and identifications
 
 ### Torah Borders — sources and identifications
 
@@ -3614,18 +3629,20 @@ A toggleable layer, "Torah Borders", and an additional layer, "Tribal Allotments
 
 ### Place cards
 
-- [ ] Jerusalem: "the eternal and undivided capital", the Kotel as what remains of the Temple Mount enclosure, united Jerusalem. Linked to the lesson `prazdniki-6`.
+- [ ] Jerusalem (new text): "The capital of the State of Israel and the eternal capital of the Jewish people. Under the Basic Law of 1980, 'Jerusalem, complete and united, is the capital of Israel.' The First and Second Temples stood here, and here is the Western Wall, the Kotel, a remnant of the Temple Mount enclosure." The line above the card: "The capital of Israel, the eternal capital of the people". Linked to the lesson `prazdniki-6`.
 - [ ] Hevron: the Cave of Machpelah, the patriarchs and the matriarchs, David's reign of seven years. Lesson `osnovy-5`.
 - [ ] Shechem (not "Nablus"): Avraham's altar, Yosef's bones, Gerizim and Eival. Lesson `osnovy-5`.
 - [ ] Beit El: Yaakov's dream. Shilo: the site of the Mishkan before the Temple. Jericho: the first city on entering the Land under Yehoshua. Beit Lechem: Rachel's Tomb, the line of David. The lessons, where indicated, are `osnovy-5`.
-- [ ] Aza: "the southern coast of the one Eretz Israel", the quotation from Yehoshua 15:47 ("Aza, its towns and villages, as far as the Brook of Egypt"). Is there excessive generalization here about conquest and possession?
-- [ ] Katzrin and the Golan: the connection with Bashan and the allotment of eastern Menashe; the Golan is part of the north of the Land.
+- [ ] Aza (new text): "An ancient city of the southern coast. In the Torah and the Prophets, Aza lies within the Land: the allotment of Yehudah names 'Aza, its towns and villages, as far as the Brook of Egypt' (Yehoshua 15:47). Since Israel's withdrawal in 2005, Aza has been outside Israel's borders."
+- [ ] Katzrin and the Golan (new text): the connection with Bashan and the allotment of eastern Menashe; "Israeli law has applied on the Golan since 1981, and Israeli maps show the Golan as part of the country."
 - [ ] Tzfat (Lecha Dodi, the Arizal, lesson `shabbat-2`), Tveria (the Sanhedrin, the Jerusalem Gemara, the tomb of the Rambam, lesson `osnovy-2`), Yafo, Akko (the Rambam's remark about the border of the Land for certain mitzvot — please confirm the wording), Haifa and Carmel (Eliyahu), Be'er Sheva (the Well of the Oath), Eilat / Etzion-Gever, Hermon.
-- [ ] Region labels on the map itself: Judea, Samaria, the Golan, Galilee, the Negev; Aza is labeled as a city of the southern coast. On the Torah layer: the Euphrates, Nachal Mitzrayim, Lebanon, Damascus, Gilad, Bashan, Moav, Yam ha-Gadol. Jewish names, without political labels.
+- [ ] Region labels on the map itself: "Judea and Samaria" (as on official maps), the Golan, Galilee, the Negev; Aza is labeled as a city of the southern coast. On the Torah layer: the Euphrates, Nachal Mitzrayim, Lebanon, Damascus, Gilad, Bashan, Moav, Yam ha-Gadol. Jewish names, without political labels.
 
 ### Introduction to the screen
 
-- [ ] The introductory paragraph: "The whole Land of Israel is one united and indivisible Jewish land: Judea and Samaria, the Golan, Aza, and united Jerusalem, the eternal undivided capital." Are the tone and the formulations acceptable for an educational app?
+- [ ] The introductory paragraph (new text): "Eretz Israel is the Land the Torah calls the heritage of the Jewish people. The Israel Today view shows the country as official Israeli maps draw it; the Torah Borders layer shows the bounds of the Land in the Torah; the Tribal Allotments layer shows how the Land was divided under Yehoshua."
+- [ ] The caption under "Israel today": "Israel today, as on official Israeli maps: united Jerusalem and the Golan within Israel; Judea and Samaria labelled by their name, with the 1949 armistice line as a thin dashed line, the way Israel's Foreign Ministry maps mark it; Aza outside Israel's borders since 2005. The Torah Borders layer shows the bounds of the Land in the Torah: from the river of Egypt to the Euphrates (Bereshit 15:18; Bamidbar 34; Devarim 11:24)."
+- [ ] The home card: "Israel today, as official Israeli maps show it, with Torah Borders and Tribal Allotments layers." The sidebar tooltip: "A map of Eretz Israel: Israel today as official Israeli maps show it, with the Torah Borders and Tribal Allotments layers".
 
 ## Zionism and immunity to false teachings (November 2026)
 

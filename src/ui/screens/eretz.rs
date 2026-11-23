@@ -1,6 +1,6 @@
-//! «Эрец-Исраэль» screen: a geographic map of the Land as one Jewish
-//! country, with a toggleable Torah-borders layer and schematic tribal
-//! allotments. Click a city for a short card and, where there is one, a
+//! «Эрец-Исраэль» screen: «Израиль сегодня» drawn the way official
+//! Israeli maps draw it, with a toggleable Torah-borders layer and schematic
+//! tribal allotments. Click a city for a short card and, where there is one, a
 //! link to the related lesson.
 
 use std::sync::{Mutex, OnceLock};
@@ -12,8 +12,9 @@ use iced::widget::{container, row, space, Column, Row};
 use iced::{Background, Border, Color, Element, Length, Point, Rectangle, Renderer, Theme};
 
 use crate::eretz::{
-    self, Coord, Extent, Place, CANAAN, COVENANT, JORDAN, KINNERET, LAND, PLACES, REGIONS,
-    SALT_SEA, TORAH_CAPTION, TORAH_LABELS, TRIBES,
+    self, Coord, Extent, Place, ARMISTICE_1949_NORTH, ARMISTICE_1949_SOUTH, AZA, CANAAN, COVENANT,
+    CYPRUS, GULF_EILAT, GULF_SUEZ, JORDAN, KINNERET, LAND, NEIGHBOURS, PLACES, REGIONS, SALT_SEA,
+    TORAH_CAPTION, TORAH_LABELS, TRIBES,
 };
 use crate::i18n::tr;
 use crate::ui::app::{Action, Ctx, Route};
@@ -140,7 +141,7 @@ impl Screen {
         page = page.push(widgets::kicker(tr("ЭРЕЦ-ИСРАЭЛЬ")));
         page = page.push(widgets::heading(tr("Эрец-Исраэль"), 1));
         page = page.push(
-            txt(tr("Вся Земля Израиля — одна единая и неделимая еврейская земля: Иудея и Шомрон, Голан, Аза и единый Иерусалим, вечная неделимая столица."))
+            txt(tr("Эрец-Исраэль — Земля, которую Тора называет наследием еврейского народа. Вид «Израиль сегодня» показывает страну так, как её рисуют официальные израильские карты; слой «Границы по Торе» — пределы Земли по Торе; слой «Наделы колен» — раздел Земли при Йеhошуа."))
                 .size(theme::text::BODY)
                 .color(p.muted)
                 .width(Length::Fill),
@@ -149,7 +150,7 @@ impl Screen {
         let bar = Row::new()
             .spacing(8)
             .push(layer_btn(
-                tr("Земля"),
+                tr("Израиль сегодня"),
                 !self.torah && !self.tribes,
                 Msg::ShowLand,
             ))
@@ -213,7 +214,7 @@ impl Screen {
             );
         } else {
             page = page.push(
-                txt(tr("Включите слой «Границы по Торе», чтобы увидеть пределы Земли, обещанной в Торе: от реки Египта до Евфрата (Берешит 15:18; Бемидбар 34; Дварим 11:24)."))
+                txt(tr("Израиль сегодня — как на официальных израильских картах: единый Иерусалим и Голан в составе Израиля; Иудея и Шомрон подписаны своим именем, тонкий пунктир — линия перемирия 1949 года, как её отмечают карты МИД Израиля; Аза с 2005 года за пределами границ Израиля. Слой «Границы по Торе» показывает пределы Земли по Торе: от реки Египта до Евфрата (Берешит 15:18; Бемидбар 34; Дварим 11:24)."))
                     .size(theme::text::SMALL)
                     .color(p.muted)
                     .width(Length::Fill),
@@ -257,7 +258,7 @@ fn place_card(place: &'static Place, p: Palette) -> Element<'static, Msg> {
     );
     if place.capital {
         body = body.push(
-            txt(tr("Вечная и неделимая столица"))
+            txt(tr("Столица Израиля, вечная столица народа"))
                 .size(theme::text::SMALL)
                 .font(SANS_BOLD)
                 .color(p.gold2),
@@ -315,6 +316,32 @@ fn land_fill(_p: Palette) -> Color {
         Color::from_rgb(0.42, 0.34, 0.22)
     } else {
         Color::from_rgb(0.86, 0.78, 0.58)
+    }
+}
+
+/// Neighbouring countries and Aza: a quiet neutral, like the grey around the
+/// country on Israeli maps.
+fn neutral_fill() -> Color {
+    if is_dark() {
+        Color::from_rgb(0.24, 0.24, 0.23)
+    } else {
+        Color::from_rgb(0.89, 0.88, 0.85)
+    }
+}
+
+fn neutral_stroke() -> Color {
+    if is_dark() {
+        Color::from_rgb(0.42, 0.42, 0.40)
+    } else {
+        Color::from_rgb(0.66, 0.65, 0.62)
+    }
+}
+
+fn armistice_color() -> Color {
+    if is_dark() {
+        Color::from_rgba(0.85, 0.82, 0.75, 0.75)
+    } else {
+        Color::from_rgba(0.30, 0.27, 0.22, 0.70)
     }
 }
 
@@ -540,6 +567,18 @@ impl canvas::Program<Msg> for MapView {
 
         const DASH: [f32; 2] = [8.0, 5.0];
         const DOT: [f32; 2] = [3.0, 5.0];
+        const THIN_DASH: [f32; 2] = [4.0, 3.0];
+
+        // Neighbouring land and the seas around it, so the coast reads true.
+        let water = if is_dark() {
+            Color::from_rgb(0.18, 0.32, 0.42)
+        } else {
+            Color::from_rgb(0.55, 0.70, 0.78)
+        };
+        frame.fill(&ring_path(&proj, NEIGHBOURS), Fill::from(neutral_fill()));
+        frame.fill(&ring_path(&proj, CYPRUS), Fill::from(neutral_fill()));
+        frame.fill(&ring_path(&proj, GULF_EILAT), Fill::from(sea_color(p)));
+        frame.fill(&ring_path(&proj, GULF_SUEZ), Fill::from(sea_color(p)));
 
         if self.torah {
             let cov = ring_path(&proj, COVENANT);
@@ -600,6 +639,21 @@ impl canvas::Program<Msg> for MapView {
             lf.a = 0.28;
         }
         frame.fill(&land, Fill::from(lf));
+        // Aza: outside Israel's borders since 2005 on «Израиль сегодня»; on the
+        // Torah layers it is part of the Land (Yehoshua 15:47).
+        let aza = ring_path(&proj, AZA);
+        frame.fill(
+            &aza,
+            Fill::from(if self.torah { lf } else { neutral_fill() }),
+        );
+        frame.stroke(
+            &aza,
+            Stroke {
+                style: canvas::Style::Solid(neutral_stroke()),
+                width: 1.0,
+                ..Stroke::default()
+            },
+        );
         frame.stroke(
             &land,
             Stroke {
@@ -609,11 +663,23 @@ impl canvas::Program<Msg> for MapView {
             },
         );
 
-        let water = if is_dark() {
-            Color::from_rgb(0.18, 0.32, 0.42)
-        } else {
-            Color::from_rgb(0.55, 0.70, 0.78)
-        };
+        if !self.torah {
+            for line in [ARMISTICE_1949_NORTH, ARMISTICE_1949_SOUTH] {
+                frame.stroke(
+                    &line_path(&proj, line),
+                    Stroke {
+                        style: canvas::Style::Solid(armistice_color()),
+                        width: if self.mini { 0.7 } else { 1.1 },
+                        line_dash: LineDash {
+                            segments: &THIN_DASH,
+                            offset: 0,
+                        },
+                        ..Stroke::default()
+                    },
+                );
+            }
+        }
+
         frame.fill(&ring_path(&proj, KINNERET), Fill::from(water));
         frame.fill(&ring_path(&proj, SALT_SEA), Fill::from(water));
         frame.stroke(
