@@ -1,13 +1,11 @@
 //! «Молитвы»: daily prayers and blessings for someone who does not (yet)
-//! read Hebrew, embedded from `content/prayers.json`. Every text has pointed
+//! read Hebrew, embedded from `content/ru/prayers.json`. Every text has pointed
 //! Hebrew, a Russian transliteration and a Russian translation, plus when /
 //! how / why notes and a «До гиюра» note for candidates (marked «уточните у
 //! раввина»). The whole file is listed in docs/RABBI-REVIEW.md.
 //!
 //! The reader's choices (what to show, text size, favourites) live in
 //! `State::extra["prayers"]`, so the progress file schema does not change.
-
-use std::sync::OnceLock;
 
 use serde::{Deserialize, Serialize};
 
@@ -118,10 +116,7 @@ impl Book {
 
 /// The embedded prayer book.
 pub fn book() -> &'static Book {
-    static BOOK: OnceLock<Book> = OnceLock::new();
-    BOOK.get_or_init(|| {
-        serde_json::from_str::<Book>(include_str!("../content/prayers.json")).unwrap_or_default()
-    })
+    &crate::content_store::get().prayers
 }
 
 // ------------------------------------------------------------------ prefs
@@ -414,7 +409,7 @@ mod tests {
             "христиан",
             "церк",
         ];
-        let raw = include_str!("../content/prayers.json").to_lowercase();
+        let raw = include_str!("../content/ru/prayers.json").to_lowercase();
         for w in BANNED {
             assert!(!raw.contains(w), "banned word «{w}»");
         }

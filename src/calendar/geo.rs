@@ -7,9 +7,7 @@
 //! Windows uses the WinRT geolocator. Other platforms return
 //! [`GeoError::Unsupported`]; the user picks a city or types coordinates.
 
-use std::sync::OnceLock;
-
-/// One bundled city (content/calendar/cities.json).
+/// One bundled city (content/ru/calendar/cities.json).
 #[derive(Debug, Clone, PartialEq, serde::Deserialize)]
 pub struct City {
     pub name_ru: String,
@@ -137,13 +135,7 @@ fn windows_approximate(
 
 /// All bundled cities.
 pub fn cities() -> &'static [City] {
-    static CITIES: OnceLock<Vec<City>> = OnceLock::new();
-    CITIES.get_or_init(load_cities).as_slice()
-}
-
-fn load_cities() -> Vec<City> {
-    serde_json::from_str(include_str!("../../content/calendar/cities.json"))
-        .expect("content/calendar/cities.json")
+    &crate::content_store::get().cities
 }
 
 /// Case-insensitive substring search over Russian names and countries.

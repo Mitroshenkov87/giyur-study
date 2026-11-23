@@ -23,12 +23,20 @@ path = "src/main.rs"
 name = "shorashim-ctl"
 path = "src/bin/shorashim-ctl.rs"
 
+# Shorashim-Setup.exe stub: the app, its course files (content/) and music
+# are appended to it by tools/make_setup.py. See docs/CONTENT-UPDATES.md.
+[[bin]]
+name = "shorashim-setup"
+path = "src/bin/shorashim-setup.rs"
+
 [dependencies]
 iced = { version = "0.14", features = ["image", "tiny-skia", "wgpu", "tokio", "canvas", "advanced"] }
 # Headless widget tree for the automation probe (same version as iced).
 iced_runtime = "0.14"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+# Unpacks the payload of Shorashim-Setup.exe (src/bin/shorashim-setup.rs).
+flate2 = "1"
 bytemuck = { version = "1", features = ["derive"] }
 image = { version = "0.25", default-features = false, features = ["webp"] }
 rand = "0.8"

@@ -1,8 +1,6 @@
 //! «Цитата дня»: short sayings from Jewish sources (Pirkei Avot, Tanakh,
-//! Talmud, sages), embedded from `content/quotes.json`, one per calendar day.
+//! Talmud, sages), read from `content/<lang>/quotes.json`, one per calendar day.
 //! Every quote is listed in docs/RABBI-REVIEW.md for review.
-
-use std::sync::OnceLock;
 
 use chrono::NaiveDate;
 use serde::Deserialize;
@@ -26,12 +24,12 @@ struct File {
 
 /// All quotes, in file order.
 pub fn all() -> &'static [Quote] {
-    static ALL: OnceLock<Vec<Quote>> = OnceLock::new();
-    ALL.get_or_init(|| {
-        serde_json::from_str::<File>(include_str!("../content/quotes.json"))
-            .map(|f| f.quotes)
-            .unwrap_or_default()
-    })
+    &crate::content_store::get().quotes
+}
+
+/// Parse `quotes.json`.
+pub fn parse(raw: &str) -> Result<Vec<Quote>, serde_json::Error> {
+    serde_json::from_str::<File>(raw).map(|f| f.quotes)
 }
 
 /// The quote for a date: rotates by day, so each day shows the next quote

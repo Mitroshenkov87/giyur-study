@@ -496,7 +496,7 @@ mod tests {
     }
 
     fn lib() -> Library {
-        Library::embedded()
+        Library::current()
     }
 
     fn goal_day(state: &mut State, d: NaiveDate) {

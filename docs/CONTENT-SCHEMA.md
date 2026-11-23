@@ -1,6 +1,8 @@
 # Content schema (Шорашим)
 
-All content lives in `content/` as JSON (UTF-8, no comments). The app loads `content/manifest.json`, then each section file. Code never hardcodes lesson text.
+All content lives in `content/<lang>/` as JSON (UTF-8, no comments); Russian is `content/ru/`, a later English version adds `content/en/` with the same file names. Nothing is built into the program: the app reads `content/<lang>/manifest.json` and every file it lists at start-up, from the `content\` folder beside `shorashim.exe` (src/content_store.rs). Code never hardcodes lesson text. Editing and shipping content without rebuilding: docs/CONTENT-UPDATES.md.
+
+`manifest.json` also carries `contentVersion` (bump it with every content change, e.g. `2026-11-24` or `2026-11-24.2`), `minAppVersion` (the oldest program that can read these files; raise it when content needs a new app feature) and `contentFormat` (1). Lesson, card and question ids are what progress is stored under: never reuse or renumber them; a removed id is simply ignored by old progress.
 
 ## Levels (movements) — nested strictness
 `"reform"` (1) ⊂ `"conservative"` (2) ⊂ `"orthodox"` (3).
@@ -12,7 +14,7 @@ Where Reform (or Conservative) differs IN KIND (not just "less"), add `"differs"
 
 Equal depth (owner's rule, 2026-11-23): Reform Judaism must be written as fully and respectfully as Orthodox. Do not treat `minLevel: reform` as a residual “common core” and leave Reform practice to short footnotes. Where Reform has its own process, theology or custom (гиюр, бейт-дин, Shabbat, kashrut, prayer, siddurim such as Mishkan T'filah, interview questions), give it its own substantial blocks, lessons, sources and questions. Neutral shared text stays neutral; Orthodox-only detail stays behind `minLevel: orthodox`. Never describe Reform as “softer Orthodox” or “optional leftovers”.
 
-## Section file `content/sections/NN-id.json`
+## Section file `content/ru/sections/NN-id.json`
 ```json
 {
   "id": "shabbat",

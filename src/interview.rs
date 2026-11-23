@@ -1,5 +1,5 @@
 //! «Тренажёр собеседования с бейт-дином»: the question bank
-//! (content/interview.json, built by tools/interview/build_content.py) and
+//! (content/ru/interview.json, built by tools/interview/build_content.py) and
 //! the practice rules. The screen is `ui::screens::interview`.
 //!
 //! «Практика» and «Репетиция» are multiple-choice (3–4 options, one of
@@ -15,7 +15,6 @@
 //! the last mock interviews («Репетиция»).
 
 use std::collections::HashMap;
-use std::sync::OnceLock;
 
 use chrono::NaiveDate;
 use rand::Rng;
@@ -156,12 +155,9 @@ pub fn neighbor_topic(id: Option<&str>, dir: i32) -> Option<&'static str> {
     }
 }
 
-pub const RAW: &str = include_str!("../content/interview.json");
-
-/// The embedded question bank.
+/// The question bank (`content/<lang>/interview.json`, read at start-up).
 pub fn bank() -> &'static Bank {
-    static BANK: OnceLock<Bank> = OnceLock::new();
-    BANK.get_or_init(|| serde_json::from_str(RAW).expect("content/interview.json"))
+    &crate::content_store::get().interview
 }
 
 /// Which part of the trainer a route opens.
@@ -472,7 +468,7 @@ mod tests {
             b.questions.len()
         );
         assert_eq!(b.topics.len(), 9);
-        let lib = crate::content::Library::embedded();
+        let lib = crate::content::Library::current();
         let mut ids = std::collections::HashSet::new();
         for q in &b.questions {
             assert!(ids.insert(q.id.as_str()), "duplicate {}", q.id);
@@ -526,7 +522,7 @@ mod tests {
 
     #[test]
     fn no_christian_framing() {
-        let low = RAW.to_lowercase();
+        let low = include_str!("../content/ru/interview.json").to_lowercase();
         for banned in [
             "библи",
             "ветхий завет",

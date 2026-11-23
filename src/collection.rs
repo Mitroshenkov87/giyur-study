@@ -168,7 +168,7 @@ mod tests {
 
     #[test]
     fn every_rule_points_at_a_lesson_everyone_sees() {
-        let lib = Library::embedded();
+        let lib = Library::current();
         let mut keys = std::collections::HashSet::new();
         for i in ITEMS {
             assert!(keys.insert(i.key), "duplicate {}", i.key);
@@ -209,7 +209,7 @@ mod tests {
 
     #[test]
     fn the_temple_opens_on_the_mishna_step() {
-        let lib = Library::embedded();
+        let lib = Library::current();
         let mut s = State::default();
         s.counters.insert(crate::ladder::BEST_KEY.into(), 9);
         assert_eq!(sync(&mut s, "2026-11-23"), vec!["torah-scroll"]);

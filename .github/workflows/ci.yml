@@ -39,40 +39,43 @@ jobs:
         run: |
           target/release/shorashim-ctl.exe --headless --script tests/scripts/02-lesson.jsonl --today 2026-11-22
           if ($LASTEXITCODE -ne 0) { exit 1 }
-      - name: Package
+      - name: Course content is valid (content/<lang>/, read at run time)
+        run: target/release/shorashim-ctl.exe validate-content content
+      - name: Package Shorashim-Setup.exe (stub + app + content/ + music)
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force dist | Out-Null
-          # PR refs look like "1/merge"; keep the file name path-safe.
-          $ref = "${{ github.ref_name }}" -replace '[\\/]', '-'
-          Copy-Item target/release/shorashim.exe "dist/Shorashim-$ref-windows-x64.exe"
-          # Console companion for command control (docs/AUTOMATION.md); keeps
-          # its plain name, which `shorashim-ctl launch` relies on.
-          Copy-Item target/release/shorashim-ctl.exe dist/
-          Copy-Item LICENSE, NOTICE dist/
-          # Portable zip: exe + music playlist + licenses (the lone exe has no music).
-          $portable = "dist/Shorashim-$ref-windows-x64"
-          New-Item -ItemType Directory -Force $portable | Out-Null
-          Copy-Item target/release/shorashim.exe "$portable/Shorashim.exe"
-          Copy-Item LICENSE, NOTICE $portable/
-          if (Test-Path assets/music) {
-            Copy-Item assets/music $portable/music -Recurse
-          }
-          Compress-Archive -Path "$portable/*" -DestinationPath "$portable.zip" -Force
+          python tools/make_setup.py --stub target/release/shorashim-setup.exe `
+            --exe target/release/shorashim.exe --ctl target/release/shorashim-ctl.exe `
+            --content content --music assets/music --extra LICENSE NOTICE `
+            --out dist/Shorashim-Setup.exe
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          python tools/make_setup.py --list dist/Shorashim-Setup.exe
+      - name: Setup smoke (install, then run the installed copy with its content/)
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath dist/Shorashim-Setup.exe -ArgumentList '--quiet','--no-launch' -Wait -PassThru
+          if ($p.ExitCode -ne 0) { Write-Error "setup failed ($($p.ExitCode))"; exit 1 }
+          $dir = Join-Path $env:LOCALAPPDATA 'Programs\Shorashim'
+          Get-ChildItem $dir | Format-Table Name, Length
+          if (-not (Test-Path (Join-Path $dir 'content\ru\manifest.json'))) { Write-Error "no content in $dir"; exit 1 }
+          # With no folder given the installed copy must pick content\ beside itself.
+          $out = & (Join-Path $dir 'shorashim-ctl.exe') validate-content
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          $out
+          if (-not ($out -like "*$dir*")) { Write-Error "installed copy did not use $dir\content"; exit 1 }
+          & (Join-Path $dir 'shorashim-ctl.exe') --headless --script tests/scripts/02-lesson.jsonl --today 2026-11-22
+          if ($LASTEXITCODE -ne 0) { exit 1 }
       - uses: actions/upload-artifact@v4
         with:
-          name: Shorashim-windows-x64
-          path: dist/
+          name: Shorashim-Setup
+          path: dist/Shorashim-Setup.exe
       - name: Attach to release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist/Shorashim-${{ github.ref_name }}-windows-x64.exe
-            dist/shorashim-ctl.exe
-            dist/Shorashim-${{ github.ref_name }}-windows-x64.zip
-            dist/LICENSE
-            dist/NOTICE
+            dist/Shorashim-Setup.exe
 
   linux:
     runs-on: ubuntu-latest
@@ -86,5 +89,7 @@ jobs:
         run: cargo test --all-targets
       - name: Build
         run: cargo build --release
+      - name: Course content is valid (content/<lang>/, read at run time)
+        run: target/release/shorashim-ctl validate-content content
       - name: Automation smoke (release binary, headless script)
         run: target/release/shorashim --headless --script tests/scripts/01-navigate.jsonl --today 2026-11-22

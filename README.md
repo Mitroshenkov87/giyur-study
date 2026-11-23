@@ -12,7 +12,7 @@ Foundations of Judaism and preparation for giyur. A Russian-language study app.
 
 ## Технические подробности / Technical details
 
-**Запуск / Run.** Скачайте `Shorashim-vX.Y.Z-windows-x64.zip` со страницы [Releases](../../releases) и запустите `Shorashim.exe`; установка не нужна. В архиве есть папка `music` с фоновой музыкой. Один `.exe` без этой папки тоже запускается, но без музыки. В «Настройках» программу можно установить в систему — папка `music` копируется вместе с ней. / Download the portable `.zip` from Releases and run `Shorashim.exe`; no installer. The zip includes a `music` folder. A lone `.exe` still runs, but without background music.
+**Установка / Install.** Скачайте `Shorashim-Setup.exe` со страницы [Releases](../../releases) и запустите: он установит программу для текущего пользователя (без прав администратора) вместе с папкой `content` (уроки, карточки, вопросы, молитвы, календарь) и музыкой, создаст ярлыки и запустит «Шорашим». Прогресс хранится отдельно (`%APPDATA%\Shorashim`) и при переустановке не меняется. / Download `Shorashim-Setup.exe` from Releases and run it: a per-user install of the app, its `content` folder and music. Course content is plain JSON read at run time — see [docs/CONTENT-UPDATES.md](docs/CONTENT-UPDATES.md).
 
 **Прогресс / Progress.** `%APPDATA%\Shorashim\progress.json`.
 

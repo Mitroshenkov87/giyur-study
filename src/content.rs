@@ -1,5 +1,6 @@
 //! Content access, level filtering, progress & unlocking ported from
-//! js/content.js. Content is embedded at build time from content/*.json.
+//! js/content.js. Content is read at run time from content/<lang>/*.json
+//! beside the exe (src/content_store.rs).
 
 use std::collections::HashMap;
 
@@ -450,6 +451,7 @@ pub struct QLoc {
     pub q: usize,
 }
 
+#[derive(Clone)]
 pub struct SectionMeta {
     pub id: String,
     pub index: usize,
@@ -460,6 +462,7 @@ pub struct SectionMeta {
     pub icon: String,
 }
 
+#[derive(Clone)]
 pub struct Library {
     pub manifest: Manifest,
     pub sections: Vec<SectionMeta>,
@@ -469,20 +472,17 @@ pub struct Library {
 }
 
 impl Library {
-    /// Load the content embedded at build time.
+    /// The course content in use (read from `content/<lang>/` at start-up,
+    /// src/content_store.rs).
+    pub fn current() -> Library {
+        crate::content_store::get().library.clone()
+    }
+
+    /// Old name of [`Library::current`]: nothing is built into the program
+    /// any more; kept so branches written before the move still compile.
+    #[doc(hidden)]
     pub fn embedded() -> Library {
-        const MANIFEST: &str = include_str!("../content/manifest.json");
-        const SECTIONS: &[&str] = &[
-            include_str!("../content/sections/01-osnovy.json"),
-            include_str!("../content/sections/02-ivrit.json"),
-            include_str!("../content/sections/03-shabbat.json"),
-            include_str!("../content/sections/04-kashrut.json"),
-            include_str!("../content/sections/05-prazdniki.json"),
-            include_str!("../content/sections/06-semya.json"),
-            include_str!("../content/sections/07-etika.json"),
-            include_str!("../content/sections/08-beit-din.json"),
-        ];
-        Library::from_json(MANIFEST, SECTIONS).expect("embedded content must parse")
+        Self::current()
     }
 
     /// Build from raw JSON strings (manifest + section files).
@@ -866,7 +866,7 @@ mod tests {
     use chrono::NaiveDate;
 
     fn lib() -> Library {
-        Library::embedded()
+        Library::current()
     }
 
     #[test]
@@ -1211,14 +1211,14 @@ mod tests {
             "старом завете",
         ];
         for raw in [
-            include_str!("../content/sections/01-osnovy.json"),
-            include_str!("../content/sections/02-ivrit.json"),
-            include_str!("../content/sections/03-shabbat.json"),
-            include_str!("../content/sections/04-kashrut.json"),
-            include_str!("../content/sections/05-prazdniki.json"),
-            include_str!("../content/sections/06-semya.json"),
-            include_str!("../content/sections/07-etika.json"),
-            include_str!("../content/sections/08-beit-din.json"),
+            include_str!("../content/ru/sections/01-osnovy.json"),
+            include_str!("../content/ru/sections/02-ivrit.json"),
+            include_str!("../content/ru/sections/03-shabbat.json"),
+            include_str!("../content/ru/sections/04-kashrut.json"),
+            include_str!("../content/ru/sections/05-prazdniki.json"),
+            include_str!("../content/ru/sections/06-semya.json"),
+            include_str!("../content/ru/sections/07-etika.json"),
+            include_str!("../content/ru/sections/08-beit-din.json"),
         ] {
             let low = raw.to_lowercase();
             for b in banned {

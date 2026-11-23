@@ -20,6 +20,8 @@ Shorashim automation (docs/AUTOMATION.md)
   shorashim mcp [--headless]          MCP server on stdio (attach to the app, or headless)
   shorashim --headless [--script FILE] [--data FILE] [--today YYYY-MM-DD] [--reviewer] [--keep-going]
                                       run JSON-line commands without a window
+  shorashim validate-content [DIR]    check the course files (content/<lang>/) and exit
+  shorashim ctl reload-content        re-read edited course files in the running app
   shorashim --reviewer                start in the «Открытый режим рецензента» for this run
                                       (also SHORASHIM_REVIEWER=1; ctl launch --reviewer)
 Options for ctl/mcp: --file PATH (control.json location)
@@ -36,7 +38,7 @@ pub fn companion_main() -> i32 {
     let mut args: Vec<String> = std::env::args().skip(1).collect();
     let known = matches!(
         args.first().map(String::as_str),
-        Some("ctl" | "mcp" | "--headless" | "headless" | "--automation-help")
+        Some("ctl" | "mcp" | "--headless" | "headless" | "--automation-help" | "validate-content")
     );
     if !known {
         args.insert(0, "ctl".into());
@@ -58,6 +60,10 @@ fn main_hook_with(args: Vec<String>) -> Option<i32> {
         "--headless" | "headless" => {
             attach_console();
             headless(&args[1..])
+        }
+        "validate-content" | "--validate-content" => {
+            attach_console();
+            validate_content(&args[1..])
         }
         "--automation-help" => {
             attach_console();
@@ -111,6 +117,10 @@ pub fn session_options(args: &mut Vec<String>) -> Result<Options, String> {
 
 fn headless(args: &[String]) -> i32 {
     let mut args = args.to_vec();
+    if let Err(e) = crate::content_store::init(crate::content_store::DEFAULT_LANG) {
+        eprintln!("course content not loaded: {e}");
+        return 2;
+    }
     let script = take_opt(&mut args, "--script");
     let keep_going = take_flag(&mut args, "--keep-going");
     let opts = match session_options(&mut args) {
@@ -137,6 +147,30 @@ fn headless(args: &[String]) -> i32 {
         },
     };
     i32::from(failed > 0)
+}
+
+/// `validate-content [DIR] [--lang ru]`: check one language folder (or
+/// `content/` with language folders inside, or the copy the app would use)
+/// and print what is in it. Exit 0 = good, 1 = a broken file (named).
+fn validate_content(args: &[String]) -> i32 {
+    use crate::content_store as cs;
+    let mut args = args.to_vec();
+    let lang = take_opt(&mut args, "--lang").unwrap_or_else(|| cs::DEFAULT_LANG.to_string());
+    let roots = match args.first() {
+        Some(d) => vec![PathBuf::from(d)],
+        None => cs::candidate_roots(),
+    };
+    let result = cs::locate_in(&roots, &lang).and_then(|dir| cs::load_dir(&dir, &lang));
+    match result {
+        Ok(c) => {
+            println!("OK {}: {}", c.dir.display(), cs::summary(&c));
+            0
+        }
+        Err(e) => {
+            eprintln!("ОШИБКА {e}");
+            1
+        }
+    }
 }
 
 /// `key=value` → JSON (numbers / bools / JSON literals parsed, else string).

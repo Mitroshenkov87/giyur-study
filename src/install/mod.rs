@@ -14,6 +14,8 @@ use std::path::{Path, PathBuf};
 #[cfg(windows)]
 mod win;
 
+pub mod payload;
+
 /// Folder name under `%LOCALAPPDATA%\Programs`.
 pub const DIR_NAME: &str = "Shorashim";
 /// Installed executable name.
@@ -227,19 +229,67 @@ pub fn status() -> Status {
     }
 }
 
-/// Copy LICENSE, NOTICE and the `music/` playlist from beside a portable
-/// exe into the install folder. Missing sidecars are skipped.
-pub fn copy_sidecars(from_parent: &Path, to_dir: &Path) {
-    for f in ["LICENSE", "NOTICE"] {
-        let src = from_parent.join(f);
+/// Console companion shipped beside the app (docs/AUTOMATION.md).
+pub fn ctl_name() -> String {
+    format!("shorashim-ctl{}", std::env::consts::EXE_SUFFIX)
+}
+
+/// Copy LICENSE, NOTICE, the console companion, the `music/` playlist and
+/// the course files `content/` from beside a portable exe (or the unpacked
+/// setup) into the install folder. Missing optional sidecars are skipped;
+/// the course files replace the installed ones as a whole (an edited or
+/// removed card does not linger), and a failure there is an error, since
+/// the app cannot run without them.
+pub fn copy_sidecars(from_parent: &Path, to_dir: &Path) -> Result<(), String> {
+    let same = match (from_parent.canonicalize(), to_dir.canonicalize()) {
+        (Ok(a), Ok(b)) => a == b,
+        _ => false,
+    };
+    if same {
+        return Ok(());
+    }
+    for f in ["LICENSE".to_string(), "NOTICE".to_string(), ctl_name()] {
+        let src = from_parent.join(&f);
         if src.is_file() {
-            let _ = std::fs::copy(&src, to_dir.join(f));
+            let _ = std::fs::copy(&src, to_dir.join(&f));
         }
     }
     if let Some(src) = crate::music::sidecar_dir(from_parent) {
         let dest = to_dir.join("music");
         let _ = crate::music::copy_dir(&src, &dest);
     }
+    let content = from_parent.join(crate::content_store::DIR_NAME);
+    if content.is_dir() {
+        replace_dir(&content, &to_dir.join(crate::content_store::DIR_NAME))
+            .map_err(|e| format!("Не удалось скопировать материалы курса: {e}"))?;
+    }
+    Ok(())
+}
+
+/// Replace `dest` with a copy of `src`: copy next to it first, then swap,
+/// so a failed copy leaves the old folder in place.
+pub fn replace_dir(src: &Path, dest: &Path) -> std::io::Result<()> {
+    let name = dest
+        .file_name()
+        .map(|n| n.to_string_lossy().to_string())
+        .unwrap_or_else(|| "dir".into());
+    let staged = dest.with_file_name(format!("{name}.new"));
+    let old = dest.with_file_name(format!("{name}.old"));
+    let _ = std::fs::remove_dir_all(&staged);
+    if let Err(e) = crate::music::copy_dir(src, &staged) {
+        let _ = std::fs::remove_dir_all(&staged);
+        return Err(e);
+    }
+    let _ = std::fs::remove_dir_all(&old);
+    if dest.exists() {
+        std::fs::rename(dest, &old)?;
+    }
+    if let Err(e) = std::fs::rename(&staged, dest) {
+        let _ = std::fs::rename(&old, dest);
+        return Err(e);
+    }
+    let _ = std::fs::remove_dir_all(&old);
+    Ok(())
 }
 
 /// Install (or update) this exe. Returns the installed exe path.
@@ -288,11 +338,16 @@ pub fn handle_cli(args: &[String]) -> bool {
             Ok(p) => eprintln!("installed: {}", p.display()),
             Err(e) => eprintln!("install failed: {e}"),
         }
+        let failed = res.is_err();
         #[cfg(windows)]
         if !quiet {
             win::report(res.map(|_| {
                 "«Шорашим» установлен: ярлык в меню «Пуск», запись в «Приложениях».".to_string()
             }));
+        }
+        // Shorashim-Setup.exe runs `--install --quiet` and reads the result.
+        if failed && quiet {
+            std::process::exit(1);
         }
         return true;
     }
@@ -418,7 +473,7 @@ mod tests {
         assert!(!handle_cli(&["x".into()]));
     }
     #[test]
-    fn copy_sidecars_copies_license_and_music() {
+    fn copy_sidecars_copies_license_music_and_content() {
         use std::time::{SystemTime, UNIX_EPOCH};
         let n = SystemTime::now()
             .duration_since(UNIX_EPOCH)
@@ -433,7 +488,21 @@ mod tests {
         std::fs::write(from.join("NOTICE"), b"N").unwrap();
         std::fs::write(from.join("music").join("manifest.json"), b"{}").unwrap();
         std::fs::write(from.join("music").join("a.ogg"), b"ogg").unwrap();
-        copy_sidecars(&from, &to);
+        std::fs::create_dir_all(from.join("content/ru")).unwrap();
+        std::fs::write(from.join("content/ru/manifest.json"), b"new").unwrap();
+        // An old install has a file the new content no longer has.
+        std::fs::create_dir_all(to.join("content/ru")).unwrap();
+        std::fs::write(to.join("content/ru/gone.json"), b"old").unwrap();
+        copy_sidecars(&from, &to).unwrap();
+        assert_eq!(
+            std::fs::read(to.join("content/ru/manifest.json")).unwrap(),
+            b"new"
+        );
+        assert!(!to.join("content/ru/gone.json").exists());
+        assert!(!to.join("content.old").exists() && !to.join("content.new").exists());
+        // Installing from the install folder itself leaves it alone.
+        copy_sidecars(&to, &to).unwrap();
+        assert!(to.join("content/ru/manifest.json").is_file());
         assert_eq!(std::fs::read(to.join("LICENSE")).unwrap(), b"L");
         assert_eq!(std::fs::read(to.join("NOTICE")).unwrap(), b"N");
         assert!(to.join("music").join("manifest.json").is_file());

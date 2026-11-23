@@ -473,7 +473,7 @@ mod tests {
     use crate::storage::QuestionStat;
 
     fn lib() -> Library {
-        Library::embedded()
+        Library::current()
     }
 
     fn know(state: &mut State, id: &str) {

@@ -12,7 +12,7 @@
 //!   bundled offline city list.
 //! * [`prefs`]   — calendar settings, stored locally inside the progress
 //!   file (`settings.calendar`), never sent anywhere.
-//! * [`texts`]   — the Russian content (content/calendar/*.json).
+//! * [`texts`]   — the Russian content (content/ru/calendar/*.json).
 
 pub mod days;
 pub mod geo;

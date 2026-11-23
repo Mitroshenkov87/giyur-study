@@ -2042,7 +2042,7 @@ mod tests {
         let mut state = State::default();
         state.settings.unlock_all = true;
         Ctx {
-            lib: Library::embedded(),
+            lib: Library::current(),
             state,
             path: std::env::temp_dir().join("shorashim-ladder-ui-test.json"),
             toasts: Vec::new(),

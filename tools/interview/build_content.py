@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Source of content/interview.json («Тренажёр собеседования с бейт-дином»).
+"""Source of content/ru/interview.json («Тренажёр собеседования с бейт-дином»).
 
 Edit the questions here, then run:
     python3 tools/interview/build_content.py
-It writes content/interview.json and refreshes the interview block in
+It writes content/ru/interview.json and refreshes the interview block in
 docs/RABBI-REVIEW.md (between the interview markers).
 """
 import json
@@ -1408,7 +1408,7 @@ def build():
         "topics": topics,
         "questions": Q,
     }
-    out = ROOT / "content" / "interview.json"
+    out = ROOT / "content" / "ru" / "interview.json"
     out.write_text(json.dumps(data, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     return data
 
@@ -1441,7 +1441,7 @@ def format_options(x):
 def review_md(data):
     titles = {t["id"]: t["title"] for t in data["topics"]}
     lines = [
-        "## Тренажёр собеседования с бейт-дином (content/interview.json)",
+        "## Тренажёр собеседования с бейт-дином (content/ru/interview.json)",
         "",
         f"Новый раздел: {len(data['questions'])} типичных вопросов бейт-дина в "
         f"{len(data['topics'])} темах. Для каждого вопроса указано, что судьи хотят "

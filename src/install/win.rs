@@ -110,7 +110,7 @@ pub fn install(opts: Options) -> Result<PathBuf, String> {
         let _ = std::fs::remove_file(&old);
     }
     if let Some(parent) = me.parent() {
-        crate::install::copy_sidecars(parent, &dir);
+        crate::install::copy_sidecars(parent, &dir)?;
     }
 
     let mut links = Vec::new();

@@ -64,7 +64,7 @@ impl Session {
             .unwrap_or_else(|| chrono::Local::now().date_naive());
         let (state, writable) = storage::load_checked(&path, &crate::util::day_key(today));
         let mut ctx = Ctx {
-            lib: Library::embedded(),
+            lib: Library::current(),
             state,
             path,
             toasts: Vec::new(),

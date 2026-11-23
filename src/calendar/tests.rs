@@ -461,8 +461,8 @@ fn texts_cover_every_portion_and_day() {
     // Jewish framing only.
     let all = format!(
         "{}{}",
-        include_str!("../../content/calendar/parashot.json"),
-        include_str!("../../content/calendar/days.json")
+        include_str!("../../content/ru/calendar/parashot.json"),
+        include_str!("../../content/ru/calendar/days.json")
     )
     .to_lowercase();
     for bad in ["библи", "ветхий завет", "новый завет", "христ", "моисей"]
