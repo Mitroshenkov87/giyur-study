@@ -20,7 +20,7 @@ pub struct Item {
 }
 
 /// The sidebar, top to bottom (index = `group` of a route).
-pub const ITEMS: [Item; 8] = [
+pub const ITEMS: [Item; 9] = [
     Item {
         label: "Уроки",
         subtitle: "тексты по темам",
@@ -34,6 +34,13 @@ pub const ITEMS: [Item; 8] = [
         tooltip: "Еврейский календарь",
         old_label: None,
         art: "calendar",
+    },
+    Item {
+        label: "Молитвы",
+        subtitle: "на каждый день",
+        tooltip: "Молитвы и благословения на каждый день: иврит, чтение русскими буквами и перевод, чтобы молиться и по-русски",
+        old_label: None,
+        art: "prayers",
     },
     Item {
         label: "Карточки",
@@ -85,11 +92,12 @@ pub fn route(index: usize) -> Route {
     match index {
         0 => Route::Map,
         1 => Route::Calendar,
-        2 => Route::Cards(Deck::Review),
-        3 => Route::Timed,
-        4 => Route::Exam(None),
-        5 => Route::Progress,
-        6 => Route::Settings,
+        2 => Route::Prayers(None),
+        3 => Route::Cards(Deck::Review),
+        4 => Route::Timed,
+        5 => Route::Exam(None),
+        6 => Route::Progress,
+        7 => Route::Settings,
         _ => Route::Sources,
     }
 }
@@ -99,13 +107,14 @@ pub fn group(r: &Route) -> Option<usize> {
     Some(match r {
         Route::Map | Route::Section(_) | Route::Lesson(_) | Route::Interview(_) => 0,
         Route::Calendar => 1,
-        Route::Cards(Deck::Review) => 2,
+        Route::Prayers(_) => 2,
+        Route::Cards(Deck::Review) => 3,
         Route::Cards(_) => 0,
-        Route::Timed | Route::TimedRun { .. } => 3,
-        Route::Exam(_) | Route::ExamRun(_) => 4,
-        Route::Progress => 5,
-        Route::Settings | Route::Level { .. } => 6,
-        Route::Sources => 7,
+        Route::Timed | Route::TimedRun { .. } => 4,
+        Route::Exam(_) | Route::ExamRun(_) => 5,
+        Route::Progress => 6,
+        Route::Settings | Route::Level { .. } => 7,
+        Route::Sources => 8,
         Route::Welcome => return None,
     })
 }
@@ -136,9 +145,10 @@ mod tests {
             }
         }
         assert_eq!(find("Карта"), Some(0));
-        assert_eq!(find("повторение"), Some(2));
-        assert_eq!(find("Экзамен"), Some(3));
-        assert_eq!(find("Прогресс"), Some(5));
+        assert_eq!(find("повторение"), Some(3));
+        assert_eq!(find("Экзамен"), Some(4));
+        assert_eq!(find("Прогресс"), Some(6));
+        assert_eq!(find("молитвы"), Some(2));
         assert_eq!(find("Нет такого"), None);
     }
 }

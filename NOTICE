@@ -10,6 +10,14 @@ Bundled third-party components:
 - DejaVu Sans font (assets/fonts/DejaVuSans.ttf), used as a symbol
   fallback; Bitstream Vera / DejaVu free licence (see
   assets/fonts/DejaVu-LICENSE.txt).
+- Hebrew prayer texts in content/prayers.json («Молитвы на каждый день»):
+  from The Metsudah Siddur (1981), Hebrew text, licensed CC-BY
+  (https://creativecommons.org/licenses/by/3.0/), and from Siddur Daat
+  (daat.ac.il), public domain; both obtained through Sefaria
+  (https://www.sefaria.org/Siddur_Ashkenaz). Cantillation marks and meteg
+  were removed and the Divine Name is written יְיָ. The Russian
+  translations and transliterations are original work of this project
+  (Apache-2.0). Hebrew in the reader is set in Noto Serif Hebrew (OFL, above).
 - Rust crates listed in Cargo.lock, under their own licenses.
 
 Study content in content/ requires review by a rabbi; conversion programs

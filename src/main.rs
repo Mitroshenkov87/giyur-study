@@ -377,6 +377,13 @@ impl App {
                     .style(move |_| theme::tooltip(&main_p)),
             );
         }
+        // Nine items and more no longer fit a short window: let the list
+        // scroll (no visible bar) instead of clipping the last items.
+        let col = scrollable(col)
+            .direction(scrollable::Direction::Vertical(
+                scrollable::Scrollbar::new().width(0).scroller_width(0),
+            ))
+            .height(Length::Fill);
         let panel = container(col)
             .width(layout::NAV)
             .height(Length::Fill)
@@ -681,6 +688,7 @@ fn parse_route(r: &str) -> Option<Route> {
         "settings" => Route::Settings,
         "sources" => Route::Sources,
         "interview" => Route::Interview(shorashim::interview::Mode::parse(&v)?),
+        "prayers" | "prayer" => Route::Prayers((!v.is_empty()).then_some(v)),
         // A sidebar label, current or pre-v0.5 («Уроки», «Карта», …).
         _ => return nav::find(r).map(nav::route),
     })

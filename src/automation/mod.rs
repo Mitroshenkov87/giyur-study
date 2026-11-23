@@ -126,7 +126,7 @@ pub const COMMANDS: &[(&str, &str)] = &[
     ("help", "This list."),
     ("screens", "Routes, sidebar items, sections and lessons you can navigate to."),
     ("state", "Current screen: route, visible texts, clickable controls (stable ids), inputs, progress, settings, toasts. Args: texts (bool, default true)."),
-    ("navigate", "Go to a route: to = \"map\" | \"calendar[:today|month|settings|YYYY-MM-DD]\" | \"section:<id>\" | \"lesson:<id>\" | \"cards:<lessonId>\" | \"deck:<sectionId>\" | \"cards:review\" | \"exam[:<sectionId>]\" | \"examrun:section:<id>[:n]\" | \"examrun:general[:n]\" | \"examrun:beitdin[:n]\" | \"timed\" | \"timedrun\" | \"progress\" | \"settings\" | \"sources\" | \"interview[:practice|rehearsal]\" | \"level\" | \"welcome\", or a sidebar label, current or old («Уроки» / «Карта», «Карточки» / «Повторение», «Викторина» / «Экзамен», «Успехи» / «Прогресс», «Календарь», «Тесты», «Настройки», «Источники»)."),
+    ("navigate", "Go to a route: to = \"map\" | \"calendar[:today|month|settings|YYYY-MM-DD]\" | \"section:<id>\" | \"lesson:<id>\" | \"cards:<lessonId>\" | \"deck:<sectionId>\" | \"cards:review\" | \"exam[:<sectionId>]\" | \"examrun:section:<id>[:n]\" | \"examrun:general[:n]\" | \"examrun:beitdin[:n]\" | \"timed\" | \"timedrun\" | \"progress\" | \"settings\" | \"sources\" | \"interview[:practice|rehearsal]\" | \"prayers[:<prayerId>]\" | \"level\" | \"welcome\", or a sidebar label, current or old («Уроки» / «Карта», «Карточки» / «Повторение», «Викторина» / «Экзамен», «Успехи» / «Прогресс», «Календарь», «Молитвы», «Тесты», «Настройки», «Источники»)."),
     ("back", "«Назад»: previous screen."),
     ("press", "Press a control from `state`: id (exact), or label (exact, case-insensitive), or contains (substring); nth picks among several matches (0-based). Links, file dialogs and the installer (OpenUrl, Export, ImportPick, Install, AskUninstall) need allow_external=true and work only in the windowed app."),
     ("answer", "Answer the current question: choice (0-based, in the order shown), tf (true/false), text (typed answer, submitted), knew (flashcard: flips if needed, then grades), self_grade (0..1, open answers), auto=true (any answer, for smoke tests); next=true then presses «Далее»."),
@@ -202,6 +202,12 @@ pub fn parse_route(r: &str) -> Option<(Route, Option<screens::calendar::Msg>)> {
         "settings" => Route::Settings,
         "sources" => Route::Sources,
         "interview" => Route::Interview(crate::interview::Mode::parse(&v)?),
+        "prayers" | "prayer" => Route::Prayers(if v.is_empty() {
+            None
+        } else {
+            crate::prayers::book().prayer(&v)?;
+            Some(v)
+        }),
         _ => return None,
     };
     Some((route, follow))
@@ -236,6 +242,8 @@ pub fn route_str(r: &Route) -> String {
         Route::Sources => "sources".into(),
         Route::Interview(m) if m.key().is_empty() => "interview".into(),
         Route::Interview(m) => format!("interview:{}", m.key()),
+        Route::Prayers(None) => "prayers".into(),
+        Route::Prayers(Some(id)) => format!("prayers:{id}"),
     }
 }
 
@@ -254,6 +262,7 @@ pub fn screen_name(s: &Current) -> &'static str {
         Current::Progress(_) => "progress",
         Current::Settings(_) => "settings",
         Current::Interview(_) => "interview",
+        Current::Prayers(_) => "prayers",
     }
 }
 
@@ -496,8 +505,13 @@ fn screens_json(ctx: &Ctx) -> Value {
         .collect();
     json!({
         "nav": nav_items(),
-        "routes": ["welcome", "level", "map", "calendar", "calendar:today", "calendar:month", "calendar:settings", "calendar:YYYY-MM-DD", "section:<id>", "lesson:<id>", "cards:<lessonId>", "deck:<sectionId>", "cards:review", "exam", "exam:<sectionId>", "examrun:section:<id>[:n]", "examrun:general[:n]", "examrun:beitdin[:n]", "timed", "timedrun", "progress", "settings", "sources", "interview", "interview:practice", "interview:rehearsal"],
+        "routes": ["welcome", "level", "map", "calendar", "calendar:today", "calendar:month", "calendar:settings", "calendar:YYYY-MM-DD", "section:<id>", "lesson:<id>", "cards:<lessonId>", "deck:<sectionId>", "cards:review", "exam", "exam:<sectionId>", "examrun:section:<id>[:n]", "examrun:general[:n]", "examrun:beitdin[:n]", "timed", "timedrun", "progress", "settings", "sources", "interview", "interview:practice", "interview:rehearsal", "prayers", "prayers:<prayerId>"],
         "sections": sections,
+        "prayers": crate::prayers::book()
+            .prayers
+            .iter()
+            .map(|p| json!({"id": p.id, "title": p.title, "groups": p.groups}))
+            .collect::<Vec<_>>(),
     })
 }
 

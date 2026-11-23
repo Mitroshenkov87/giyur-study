@@ -84,7 +84,8 @@ failure, `error`. Action commands reply with a short summary (`screen`,
 `examrun:section:<id>[:n]`, `examrun:general[:n]`, `examrun:beitdin[:n]`,
 `timed`, `timedrun`, `progress`, `settings`, `sources`, `interview`
 («Тренажёр собеседования»: `interview:practice`, `interview:rehearsal` open
-its tabs). Until the first-run
+its tabs), `prayers`, `prayers:<id>` (e.g. `prayers:shma`; `screens` lists
+the ids). Until the first-run
 level choice is made, every route goes to the welcome screen, as in the app.
 
 **Sidebar labels.** `navigate` takes the sidebar names from the app's own
@@ -96,6 +97,7 @@ subtitles and tooltips.
 |---|---|---|
 | Уроки | Карта | `map` |
 | Календарь | | `calendar` |
+| Молитвы | | `prayers` |
 | Карточки | Повторение | `cards:review` |
 | Викторина | Экзамен | `timed` |
 | Тесты | | `exam` |
@@ -175,7 +177,7 @@ or a folder: an existing folder, or a path ending in `/` or `\`, means
 
 CI runs `tests/automation.rs`, which plays `tests/scripts/*.jsonl` (first
 run and navigation, a lesson, flashcards, a section test, the timed quiz («Викторина») and
-a mock beit-din, the calendar, settings, the «Тесты» mode tiles) and checks the MCP server.
+a mock beit-din, the calendar, settings, the «Тесты» mode tiles, «Молитвы») and checks the MCP server.
 
 ## MCP
 

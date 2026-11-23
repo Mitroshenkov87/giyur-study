@@ -6,6 +6,7 @@ pub mod interview;
 pub mod lesson;
 pub mod level;
 pub mod map;
+pub mod prayers;
 pub mod progress;
 pub mod section;
 pub mod settings;
@@ -32,6 +33,7 @@ pub enum Current {
     Progress(progress::Screen),
     Settings(settings::Screen),
     Interview(interview::Screen),
+    Prayers(prayers::Screen),
 }
 
 #[derive(Debug, Clone)]
@@ -49,6 +51,7 @@ pub enum Msg {
     Progress(progress::Msg),
     Settings(settings::Msg),
     Interview(interview::Msg),
+    Prayers(prayers::Msg),
 }
 
 impl Current {
@@ -67,6 +70,7 @@ impl Current {
             Route::Progress => Current::Progress(progress::Screen::new(ctx, route)),
             Route::Settings => Current::Settings(settings::Screen::new(ctx, route)),
             Route::Interview(_) => Current::Interview(interview::Screen::new(ctx, route)),
+            Route::Prayers(_) => Current::Prayers(prayers::Screen::new(ctx, route)),
         }
     }
 
@@ -85,6 +89,7 @@ impl Current {
             (Current::Progress(s), Msg::Progress(m)) => s.update(ctx, m),
             (Current::Settings(s), Msg::Settings(m)) => s.update(ctx, m),
             (Current::Interview(s), Msg::Interview(m)) => s.update(ctx, m),
+            (Current::Prayers(s), Msg::Prayers(m)) => s.update(ctx, m),
             _ => Action::None, // stale message from a previous screen
         }
     }
@@ -104,6 +109,7 @@ impl Current {
             Current::Progress(s) => s.view(ctx).map(Msg::Progress),
             Current::Settings(s) => s.view(ctx).map(Msg::Settings),
             Current::Interview(s) => s.view(ctx).map(Msg::Interview),
+            Current::Prayers(s) => s.view(ctx).map(Msg::Prayers),
         }
     }
 
@@ -135,6 +141,7 @@ impl Current {
             Current::Progress(s) => s.subscription().map(Msg::Progress),
             Current::Settings(s) => s.subscription().map(Msg::Settings),
             Current::Interview(s) => s.subscription().map(Msg::Interview),
+            Current::Prayers(s) => s.subscription().map(Msg::Prayers),
         }
     }
 
