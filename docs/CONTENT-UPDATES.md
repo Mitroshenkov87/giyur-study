@@ -10,7 +10,7 @@ Rust is not compiled again.
 
 | | Path |
 |---|---|
-| In the repo | `content/ru/…` and, when ready, `content/en/…` (same file names, same ids) |
+| In the repo | `content/ru/…` and `content/en/…` (same file names, same ids) |
 | On a user's computer | `%LOCALAPPDATA%\Programs\Shorashim\content\<lang>\…`, beside `shorashim.exe` |
 
 ```text
@@ -55,21 +55,31 @@ stay built in.
 
 ## Language parity (`content/en` vs `content/ru`)
 
-English course files may appear gradually. Until `content/en/manifest.json`
-exists, CI prints `SKIP` and exits 0. Once the folder is there, every
-language must keep the **same JSON files**, the **same ids** (sections,
-lessons, cards, questions, prayers, interview items, calendar days and
-parashot — progress is stored under those ids) and the **same JSON shape**:
-a field present in Russian must be present in English, with the same type.
-Array lengths of id-bearing lists must match. Extra English keys are
-allowed. Do not rename, reuse or drop an id; a new card gets a new id.
+Both languages ship: `content/ru/` and `content/en/`. Every language must
+keep the **same JSON files**, the **same ids** (sections, lessons, cards,
+questions, prayers, interview items, calendar days and parashot — progress
+is stored under those ids, so it carries over when the language is switched)
+and the **same JSON shape**: a field present in Russian must be present in
+English, with the same type. Field names stay as they are (`ru`, `name_ru`
+hold the English text in `content/en`). Do not rename, reuse or drop an id;
+a new card gets a new id in both languages. A fix to a Russian text should
+get the same fix in English (and the other way round), and both go to the
+rabbi: docs/RABBI-REVIEW.md and docs/RABBI-REVIEW.en.md use the same ids.
+
+English framing rules are the same as in Russian: Torah, Tanakh, Written and
+Oral Torah; never "Bible" or "Old Testament", Christianity is never named,
+never "heresy" (`cargo test` checks `content/en` for these words).
+
+The app's own interface text (buttons, menus, map and 3D-object captions) is
+in the code in Russian and translated by `src/i18n/en.json` (a test fails if a
+`tr("…")` string has no English).
 
 Check both languages:
 
 ```sh
-tools/validate-content.sh content            # Russian (default)
-shorashim-ctl validate-content content --lang en
-shorashim-ctl validate-parity content        # files, ids, fields; SKIP if no en/
+tools/validate-content.sh content            # ru and en, then parity
+shorashim-ctl validate-content content --lang en   # one language only
+shorashim-ctl validate-parity content        # files, ids, fields
 ```
 
 A failure names the relative file and the missing id or field, for example

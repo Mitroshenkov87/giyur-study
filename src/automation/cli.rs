@@ -207,11 +207,7 @@ fn validate_content(args: &[String]) -> i32 {
                 cs::ParityResult::Skipped { missing } => {
                     eprintln!(
                         "{}",
-                        crate::trf!(
-                            "ОШИБКА нет {}",
-                            "ERROR missing {}",
-                            missing.display()
-                        )
+                        crate::trf!("ОШИБКА нет {}", "ERROR missing {}", missing.display())
                     );
                     failed = true;
                 }
@@ -254,11 +250,11 @@ fn validate_parity(args: &[String]) -> i32 {
             0
         }
         cs::ParityResult::Skipped { missing } => {
-            println!(
-                "SKIP no {} (English course files are optional until they exist)",
-                missing.display()
+            eprintln!(
+                "{}",
+                crate::trf!("ОШИБКА нет {}", "ERROR missing {}", missing.display())
             );
-            0
+            1
         }
         cs::ParityResult::Failed(issues) => {
             for i in &issues {
