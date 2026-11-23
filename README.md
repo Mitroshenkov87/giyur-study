@@ -6,7 +6,7 @@ The course is written in the language of Torah and Tanakh — the Written and Or
 
 **[Download Shorashim-Setup.exe](https://github.com/Mitroshenkov87/shorashim/releases/latest)** — Windows 10 or 11, for the current user, no administrator rights needed.
 
-**[Download Shorashim-macOS.dmg](https://github.com/Mitroshenkov87/shorashim/releases/latest/download/Shorashim-macOS.dmg)** — macOS 11 or later, Apple Silicon and Intel.
+**[Download Shorashim-macOS.dmg](https://github.com/Mitroshenkov87/shorashim/releases/latest/download/Shorashim-macOS.dmg)** — Apple Silicon Mac (M1 or newer), macOS 11 or later.
 
 **[User guide](docs/Shorashim-User-Guide.pdf)** — a short PDF on installing the app and using each part of it.
 
