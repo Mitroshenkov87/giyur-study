@@ -852,7 +852,9 @@ impl Screen {
 
         stack![
             backdrop,
-            container(modal).center(Length::Fill).padding(20.0)
+            container(widgets::modal_fit(modal))
+                .center(Length::Fill)
+                .padding(20.0)
         ]
         .into()
     }

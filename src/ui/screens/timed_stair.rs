@@ -23,8 +23,13 @@ pub const CLIMB: Duration = Duration::from_millis(700);
 /// Canvas height of the stair in the ladder column.
 pub const HEIGHT: f32 = 540.0;
 
-/// Canvas width of the stair (the ladder column minus its padding).
-pub const WIDTH: f32 = 176.0;
+/// Canvas width of the stair (the full ladder column width): the
+/// stair itself ([`STAIR_W`]) plus a margin on each side for the lamp,
+/// which stands on the left parapet beside its step, so it never covers
+/// the step names on the risers.
+pub const WIDTH: f32 = 200.0;
+/// Width the stair's own geometry is laid out for (widest step + walls).
+pub const STAIR_W: f32 = 176.0;
 
 /// Eased (cubic in-out) progress 0–1 of an animation started at `at`.
 pub fn ease(at: Instant, now: Instant) -> f32 {
@@ -108,16 +113,27 @@ pub fn layout(n: usize, w: f32, h: f32) -> Vec<StepGeom> {
         .collect()
 }
 
+/// Parapet (side wall) width at the bottom and at the top of the stair.
+fn parapet_w() -> (f32, f32) {
+    (STAIR_W * 0.06, STAIR_W * 0.035)
+}
+
 /// Where the lamp stands for a position `pos` (0 = floor, k = tread k),
-/// with a hop between steps; also its scale (farther = smaller).
+/// with a hop between steps; also its scale (farther = smaller). The lamp
+/// stands on the left parapet at the level of its tread, beside the step
+/// labels rather than on them.
 pub fn climber_at(steps: &[StepGeom], cx: f32, pos: f32) -> (Point, f32) {
+    let n = steps.len().max(1) as f32;
+    let (pw0, pw1) = parapet_w();
     let spot = |k: usize| -> Point {
+        let pw = lerp(pw0, pw1, k as f32 / n);
         if k == 0 {
             let g = steps[0];
-            Point::new(cx, g.y_bottom + 2.0)
+            Point::new(cx - g.hw_bottom - pw * 0.5, g.y_bottom + 2.0)
         } else {
             let g = steps[(k - 1).min(steps.len() - 1)];
-            Point::new(cx, (g.y_riser + g.y_top) / 2.0)
+            let hw = (g.hw_riser + g.hw_top) / 2.0;
+            Point::new(cx - hw - pw * 0.5, (g.y_riser + g.y_top) / 2.0)
         }
     };
     let max = steps.len() as f32;
@@ -227,12 +243,13 @@ impl<Message> canvas::Program<Message> for Stair {
         let (w, h) = (bounds.width, bounds.height);
         let cx = w / 2.0;
         let n = self.states.len().max(1);
-        let steps = layout(n, w, h);
+        let steps = layout(n, STAIR_W, h);
         let first = steps[0];
         let last = steps[n - 1];
 
         // Light from the top landing (the goal) and a floor shadow.
-        for (r, a) in [(w * 0.46, 0.05), (w * 0.32, 0.07), (w * 0.2, 0.09)] {
+        let sw = STAIR_W;
+        for (r, a) in [(sw * 0.46, 0.05), (sw * 0.32, 0.07), (sw * 0.2, 0.09)] {
             frame.fill(
                 &ellipse(Point::new(cx, last.y_top - 8.0), r, r * 0.55),
                 alpha(p.gold, a),
@@ -248,8 +265,7 @@ impl<Message> canvas::Program<Message> for Stair {
         );
 
         // Side parapets: darker stone walls from the floor to the landing.
-        let pw0 = w * 0.06;
-        let pw1 = w * 0.035;
+        let (pw0, pw1) = parapet_w();
         let cap = 10.0;
         let stone_side_hi = mix(p.surface2, p.bg0, 0.25);
         let stone_side_lo = mix(p.surface2, p.bg0, 0.65);
@@ -430,7 +446,7 @@ impl<Message> canvas::Program<Message> for Stair {
 fn labels<'a, M: 'a>(states: &[RungState]) -> Element<'a, M> {
     let p = theme::current();
     let n = states.len().max(1);
-    let steps = layout(n, WIDTH, HEIGHT);
+    let steps = layout(n, STAIR_W, HEIGHT);
     let cx = WIDTH / 2.0;
     let mut layer: Stack<'a, M> = Stack::new()
         .width(Length::Fixed(WIDTH))
@@ -541,5 +557,29 @@ mod tests {
         let (floor, big) = climber_at(&s, 88.0, 0.0);
         let (top, small) = climber_at(&s, 88.0, 15.0);
         assert!(floor.y > top.y && big > small);
+    }
+
+    #[test]
+    fn the_lamp_stays_clear_of_the_step_labels() {
+        let s = layout(15, STAIR_W, HEIGHT);
+        let cx = WIDTH / 2.0;
+        for k in 0..=15 {
+            for f in [0.0, 0.5] {
+                let pos = (k as f32 + f).min(15.0);
+                let (c, scale) = climber_at(&s, cx, pos);
+                let r = 10.0 * scale;
+                // Whole lamp (body and shadow) inside the canvas.
+                assert!(c.x - r * 1.3 >= 0.0, "pos {pos}: x {}", c.x);
+                // The body ends left of the text of every label row it is
+                // level with (labels start 7 px inside the riser).
+                let core_y = c.y - r * 1.1;
+                for g in s
+                    .iter()
+                    .filter(|g| core_y + r > g.y_riser && core_y - r < g.y_bottom)
+                {
+                    assert!(c.x + r <= cx - g.hw_riser + 7.0, "pos {pos}");
+                }
+            }
+        }
     }
 }

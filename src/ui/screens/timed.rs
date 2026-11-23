@@ -329,7 +329,7 @@ fn confirm_dialog<'a>(title: String, body: String, yes: String) -> Element<'a, M
     .width(Length::Fill)
     .height(Length::Fill)
     .on_press(Msg::ConfirmNo);
-    stack![backdrop, center(dialog)]
+    stack![backdrop, center(widgets::modal_fit(dialog)).padding(16)]
         .width(Length::Fill)
         .height(Length::Fill)
         .into()
@@ -529,17 +529,22 @@ fn ladder_stair<'a>(states: Vec<RungState>, pos: f32) -> Element<'a, Msg> {
     let col = column![
         container(muted("Пятнадцать ступеней").size(11.5)).center_x(Length::Fill),
         container(stair::view(states, pos)).center_x(Length::Fill),
-        row![
-            icons::icon(icons::Kind::Shield, 13.0, p.gold),
-            muted("Золотой кант — надёжная ступень").size(12.0),
-        ]
-        .spacing(6)
-        .align_y(Alignment::Center),
+        container(
+            row![
+                icons::icon(icons::Kind::Shield, 13.0, p.gold),
+                muted("Золотой кант — надёжная ступень").size(12.0),
+            ]
+            .spacing(6)
+            .align_y(Alignment::Center),
+        )
+        .padding([0.0, 12.0]),
     ]
     .spacing(6)
     .width(Length::Fill);
+    // No side padding: the stair canvas is the full column width, its
+    // margins hold the lamp beside the steps.
     container(col)
-        .padding([12.0, 12.0])
+        .padding([12.0, 0.0])
         .width(Length::Fixed(LADDER_W))
         .style(|_| theme::card(&tp()))
         .into()

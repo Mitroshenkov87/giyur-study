@@ -109,6 +109,7 @@ impl Current {
             Current::Settings(s) => s.dialog(ctx).map(|d| d.map(Msg::Settings)),
             Current::Exam(s) => s.dialog(ctx).map(|d| d.map(Msg::Exam)),
             Current::Timed(s) => s.dialog(ctx).map(|d| d.map(Msg::Timed)),
+            Current::Calendar(s) => s.dialog(ctx).map(|d| d.map(Msg::Calendar)),
             _ => None,
         }
     }
