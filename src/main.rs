@@ -9,6 +9,7 @@ use iced::{Alignment, Element, Font, Length, Subscription, Task, Theme};
 use shorashim::storage;
 use shorashim::ui::app::{Action, Ctx, Deck, Route};
 use shorashim::ui::screens::{self, Current};
+use shorashim::ui::splash::{self, Splash};
 use shorashim::ui::theme::{self, ThemeKind};
 use shorashim::ui::{assets, fonts, layout, nav, widgets};
 
@@ -25,6 +26,8 @@ struct App {
     /// Sidebar item under the mouse (its 3D icon shows the hover frame).
     nav_hover: Option<usize>,
     music: shorashim::music::Controller,
+    /// The start-up splash while it is shown (src/ui/splash.rs).
+    splash: Option<Splash>,
 }
 
 #[derive(Debug, Clone)]
@@ -38,6 +41,10 @@ enum Message {
     ScrollTo(f32),
     /// Mouse entered (`true`) or left (`false`) a sidebar item.
     NavHover(usize, bool),
+    /// Splash frame (its fade); drops the splash when the fade is over.
+    SplashTick(Instant),
+    /// A click or a key on the splash: fade out now.
+    SplashSkip,
 }
 
 fn theme_kind(ctx: &Ctx) -> ThemeKind {
@@ -79,7 +86,9 @@ impl App {
             // sidebar icon in its hover frame without a mouse.
             nav_hover: shorashim::util::env_hook("NAV_HOVER").and_then(|v| v.parse().ok()),
             music: shorashim::music::Controller::start(),
+            splash: splash::wanted().then(|| Splash::new(Instant::now())),
         };
+        shorashim::ui::model3d::suppress_live(app.splash.is_some());
         app.maybe_music_hint();
         app.sync_music();
         (
@@ -128,6 +137,20 @@ impl App {
 
     fn update(&mut self, message: Message) -> Task<Message> {
         match message {
+            Message::SplashTick(now) => {
+                if let Some(s) = &mut self.splash {
+                    s.tick(now);
+                    if s.done(now) {
+                        self.splash = None;
+                        shorashim::ui::model3d::suppress_live(false);
+                    }
+                }
+            }
+            Message::SplashSkip => {
+                if let Some(s) = &mut self.splash {
+                    s.skip(Instant::now());
+                }
+            }
             Message::NavHover(i, inside) => {
                 if inside {
                     self.nav_hover = Some(i);
@@ -523,13 +546,30 @@ impl App {
                     .style(move |_| theme::vignette(&p)),
             );
         }
-        bg = bg.push(content);
+        // While the splash covers the window, the page is not built (no
+        // layout, no 3D work behind it); it appears when the fade begins.
+        let now = Instant::now();
+        let covered = self.splash.is_some_and(|s| !s.fading(now));
+        if covered {
+            bg = bg.push(
+                iced::widget::space()
+                    .width(Length::Fill)
+                    .height(Length::Fill),
+            );
+        } else {
+            bg = bg.push(content);
+        }
 
         // Always the same root widget, so scroll position and focus survive
         // toasts and dialogs appearing and expiring.
         let mut layers = stack![bg, self.toasts()];
         if let Some(d) = self.screen.dialog(&self.ctx) {
             layers = layers.push(iced::widget::opaque(d.map(Message::Screen)));
+        }
+        if let Some(s) = &self.splash {
+            layers = layers.push(iced::widget::opaque(
+                iced::widget::mouse_area(splash::view(s, now)).on_press(Message::SplashSkip),
+            ));
         }
         layers.into()
     }
@@ -539,6 +579,20 @@ impl App {
             self.screen.subscription().map(Message::Screen),
             control::subscription(&self.ctx).map(Message::Control),
         ]);
+        let screen = if let Some(s) = self.splash {
+            // A slow tick until the fade starts, then smooth frames.
+            let gap = if s.fading(Instant::now()) { 16 } else { 100 };
+            Subscription::batch([
+                screen,
+                iced::time::every(Duration::from_millis(gap)).map(Message::SplashTick),
+                iced::keyboard::listen().filter_map(|event| match event {
+                    iced::keyboard::Event::KeyPressed { .. } => Some(Message::SplashSkip),
+                    _ => None,
+                }),
+            ])
+        } else {
+            screen
+        };
         let tick = !self.ctx.toasts.is_empty()
             || matches!(self.route, Route::Settings)
             || self.ctx.state.settings.music_enabled;

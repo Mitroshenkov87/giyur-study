@@ -11,5 +11,6 @@ pub mod layout;
 pub mod model3d;
 pub mod nav;
 pub mod screens;
+pub mod splash;
 pub mod theme;
 pub mod widgets;
