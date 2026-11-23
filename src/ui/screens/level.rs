@@ -10,7 +10,7 @@ use crate::content;
 use crate::i18n::tr;
 use crate::storage::Level;
 use crate::ui::app::{Action, Ctx, Route};
-use crate::ui::screens::map::{heading_owned, icons, kicker_owned, txt};
+use crate::ui::screens::map::{heading_owned, icons, txt};
 use crate::ui::{assets, fonts, theme, widgets};
 
 pub struct Screen {
