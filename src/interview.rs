@@ -2,6 +2,12 @@
 //! (content/interview.json, built by tools/interview/build_content.py) and
 //! the practice rules. The screen is `ui::screens::interview`.
 //!
+//! «Практика» and «Репетиция» are multiple-choice (3–4 options, one of
+//! them right); a right or wrong pick drives the same SRS ladder as the
+//! flashcards. «Темы» is a reading mode (question + model answer, no
+//! typing). «Репетиция» also has an optional «Ответить вслух»: speak,
+//! reveal the model answer, self-mark «знал» / «не знал» — not scored.
+//!
 //! Progress lives in the progress file under the top-level key
 //! `"interview"` (kept by `State::extra`, so older builds round-trip it):
 //! one SRS card per question (the same 1 → 3 → 7 → 14 → 30 day ladder as
@@ -15,7 +21,7 @@ use chrono::NaiveDate;
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 
-use crate::storage::{CardState, State};
+use crate::storage::{CardState, Level, State};
 use crate::{srs, util};
 
 /// Key of the trainer's progress in the progress file.
@@ -49,6 +55,20 @@ pub struct Item {
     /// How the movements differ on this question, when they do.
     #[serde(default)]
     pub movements: Option<String>,
+    /// Default options (used when `options_by_level` has no entry for the learner).
+    pub options: Vec<String>,
+    /// Index of the right option in `options`.
+    pub answer: usize,
+    /// Movement-specific options, keyed `orthodox` / `conservative` / `reform`.
+    #[serde(default)]
+    pub options_by_level: Option<HashMap<String, ChoiceSet>>,
+}
+
+/// One multiple-choice set (the default options, or one movement's variant).
+#[derive(Debug, Clone, Deserialize)]
+pub struct ChoiceSet {
+    pub options: Vec<String>,
+    pub answer: usize,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -71,6 +91,68 @@ impl Bank {
 
     pub fn in_topic<'a>(&'a self, topic: &'a str) -> impl Iterator<Item = &'a Item> + 'a {
         self.questions.iter().filter(move |q| q.topic == topic)
+    }
+}
+
+impl Item {
+    /// Options and the index of the right one for this learner's movement.
+    pub fn choices(&self, level: Level) -> (&[String], usize) {
+        if let Some(map) = &self.options_by_level {
+            let key = match level {
+                Level::Reform => "reform",
+                Level::Conservative => "conservative",
+                Level::Orthodox => "orthodox",
+            };
+            if let Some(c) = map.get(key) {
+                return (&c.options, c.answer);
+            }
+        }
+        (&self.options, self.answer)
+    }
+}
+
+/// Movement used for movement-specific options (unset → orthodox, as elsewhere).
+pub fn user_level(state: &State) -> Level {
+    state.settings.level.unwrap_or(Level::Orthodox)
+}
+
+/// One-line explanation of the current tab, shown under the mode switch.
+pub fn mode_hint(mode: Mode) -> &'static str {
+    match mode {
+        Mode::Browse => {
+            "Темы: читайте вопросы и образцы ответов, чтобы спокойно изучить материал."
+        }
+        Mode::Practice => {
+            "Практика: выберите верный ответ из нескольких вариантов. Результат проверяется сразу и учитывается в повторениях."
+        }
+        Mode::Rehearsal => {
+            "Репетиция: десять вопросов с вариантами ответа, как пробная беседа. В конце — счёт. По желанию можно сначала ответить вслух."
+        }
+    }
+}
+
+/// Neighbouring topic in bank order. `id = None` (the topic list): next is the
+/// first topic, previous is none.
+pub fn neighbor_topic(id: Option<&str>, dir: i32) -> Option<&'static str> {
+    let topics = &bank().topics;
+    if topics.is_empty() {
+        return None;
+    }
+    let i = match id {
+        None => {
+            return if dir > 0 {
+                Some(topics[0].id.as_str())
+            } else {
+                None
+            };
+        }
+        Some(cur) => topics.iter().position(|t| t.id == cur)?,
+    };
+    let j = i as i32 + dir;
+    if j >= 0 && (j as usize) < topics.len() {
+        Some(topics[j as usize].id.as_str())
+    } else {
+        None
     }
 }
 
@@ -403,6 +485,39 @@ mod tests {
             for l in &q.lessons {
                 assert!(lib.lesson(l).is_some(), "{}: no lesson {l}", q.id);
             }
+            for level in [Level::Orthodox, Level::Conservative, Level::Reform] {
+                let (opts, ans) = q.choices(level);
+                assert!(
+                    (3..=4).contains(&opts.len()),
+                    "{} {:?}: {} options",
+                    q.id,
+                    level,
+                    opts.len()
+                );
+                assert!(ans < opts.len(), "{} {:?}: answer", q.id, level);
+                let uniq: std::collections::HashSet<_> = opts.iter().map(|s| s.as_str()).collect();
+                assert_eq!(
+                    uniq.len(),
+                    opts.len(),
+                    "{} {:?}: duplicate option",
+                    q.id,
+                    level
+                );
+                assert!(
+                    opts.iter().all(|s| !s.trim().is_empty()),
+                    "{} empty option",
+                    q.id
+                );
+            }
+            if q.movements.is_some() {
+                let map = q
+                    .options_by_level
+                    .as_ref()
+                    .unwrap_or_else(|| panic!("{}: movements without optionsByLevel", q.id));
+                for key in ["orthodox", "conservative", "reform"] {
+                    assert!(map.contains_key(key), "{}: missing {key} options", q.id);
+                }
+            }
         }
         for t in &b.topics {
             assert!(b.in_topic(&t.id).count() >= 4, "topic {} too small", t.id);
@@ -543,5 +658,33 @@ mod tests {
         assert_eq!(st.best_run, Some(75));
         assert_eq!(st.readiness, util::pct(1.5 / st.total as f64));
         assert_eq!(topic_ready(&s, "motivation").0, 1);
+    }
+
+    #[test]
+    fn neighbor_topic_walks_the_list() {
+        let b = bank();
+        assert_eq!(neighbor_topic(None, -1), None);
+        assert_eq!(neighbor_topic(None, 1), Some(b.topics[0].id.as_str()));
+        let first = b.topics[0].id.as_str();
+        let second = b.topics[1].id.as_str();
+        let last = b.topics[b.topics.len() - 1].id.as_str();
+        assert_eq!(neighbor_topic(Some(first), -1), None);
+        assert_eq!(neighbor_topic(Some(first), 1), Some(second));
+        assert_eq!(neighbor_topic(Some(last), 1), None);
+        assert_eq!(
+            neighbor_topic(Some(last), -1),
+            Some(b.topics[b.topics.len() - 2].id.as_str())
+        );
+    }
+
+    #[test]
+    fn movement_options_differ_where_expected() {
+        let b = bank();
+        let q = b.item("mitz-accept").unwrap();
+        let (o, _) = q.choices(Level::Orthodox);
+        let (r, _) = q.choices(Level::Reform);
+        assert_ne!(o[0], r[0]);
+        assert!(o[0].contains("все заповеди") || o[0].contains("кабалат"));
+        assert!(r[0].to_lowercase().contains("реформ"));
     }
 }

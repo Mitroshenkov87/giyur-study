@@ -1,19 +1,20 @@
 //! «Тренажёр собеседования с бейт-дином» (map banner; route `interview`).
 //!
 //! Three tabs over the bank in `crate::interview`:
-//! - «Темы»: questions by topic; each opens to what the rabbis check, the
-//!   points of an honest answer, common mistakes and links to lessons;
-//! - «Практика»: one question at a time (weak ones come back more often),
-//!   think or write the answer, reveal the guidance, rate yourself;
-//! - «Репетиция»: a mock interview of ten questions in a row and a summary.
+//! - «Темы»: reading mode — topic list with progress, then question + model
+//!   answer; no text input;
+//! - «Практика»: multiple choice (3–4 options), checked at once, feeds SRS;
+//! - «Репетиция»: ten multiple-choice questions and a score, plus an optional
+//!   «Ответить вслух» (speak, reveal the model, self-mark — not scored).
 //!
 //! All rules live in `crate::interview`; this screen owns only view state.
 
 use iced::widget::text::Shaping;
-use iced::widget::{button, column, container, row, text, text_editor, Column, Row, Text};
+use iced::widget::{button, column, container, row, space, text, Column, Row, Text};
 use iced::{Alignment, Background, Border, Color, Element, Length};
 
 use crate::interview::{self, Item, Mode, Rating, Run};
+use crate::storage::Level;
 use crate::ui::app::{Action, Ctx, Route};
 use crate::ui::fonts::{SANS, SANS_BOLD, SERIF_BOLD};
 use crate::ui::screens::map::icons;
@@ -44,21 +45,39 @@ fn tinted<'a, M: 'a>(inner: impl Into<Element<'a, M>>, bg: Color, edge: Color) -
         .into()
 }
 
+fn level(ctx: &Ctx) -> Level {
+    interview::user_level(&ctx.state)
+}
+
 /// One question being answered (practice and rehearsal).
 struct Answering {
     id: String,
-    notes: text_editor::Content,
-    revealed: bool,
-    rated: Option<Rating>,
+    /// Display order of option indices (shuffled).
+    order: Vec<usize>,
+    /// Original-index of the option the learner picked.
+    picked: Option<usize>,
+    /// «Ответить вслух» is open (rehearsal only).
+    oral: bool,
+    oral_revealed: bool,
+    oral_knew: Option<bool>,
 }
 
 impl Answering {
-    fn new(id: String) -> Self {
+    fn new(id: String, ctx: &Ctx) -> Self {
+        let (opts, _) = interview::bank()
+            .item(&id)
+            .map(|q| q.choices(level(ctx)))
+            .unwrap_or((&[], 0));
+        let mut order: Vec<usize> = (0..opts.len()).collect();
+        use rand::seq::SliceRandom;
+        order.shuffle(&mut rand::thread_rng());
         Answering {
             id,
-            notes: text_editor::Content::new(),
-            revealed: false,
-            rated: None,
+            order,
+            picked: None,
+            oral: false,
+            oral_revealed: false,
+            oral_knew: None,
         }
     }
 }
@@ -73,7 +92,7 @@ struct Rehearsal {
 
 pub struct Screen {
     mode: Mode,
-    /// «Темы» and «Практика» topic filter (None = all topics).
+    /// «Темы» and «Практика» topic filter (None = all topics / the topic list).
     topic: Option<String>,
     /// Questions opened in «Темы».
     open: Vec<String>,
@@ -85,12 +104,21 @@ pub struct Screen {
 pub enum Msg {
     Tab(Mode),
     Topic(Option<String>),
+    PrevTopic,
+    NextTopic,
     Toggle(String),
     /// «Отработать»: practise this question now.
     PracticeOne(String),
-    Edit(text_editor::Action),
-    Reveal,
-    Rate(Rating),
+    /// Pick a multiple-choice option (index in the item's option list).
+    Pick(usize),
+    /// Open the optional oral path in a rehearsal.
+    Speak,
+    /// Leave the oral path and go back to the options (before the model is shown).
+    CloseOral,
+    /// Show the model answer on the oral path.
+    RevealOral,
+    /// Self-mark after speaking; not scored.
+    Knew(bool),
     /// «Следующий вопрос» (practice) / «Дальше» (rehearsal).
     Next,
     /// «Новая репетиция».
@@ -120,12 +148,25 @@ impl Screen {
         s
     }
 
+    /// The question now on screen (practice or an in-progress rehearsal).
+    pub fn current_id(&self) -> Option<&str> {
+        match self.mode {
+            Mode::Practice => self.practice.as_ref().map(|a| a.id.as_str()),
+            Mode::Rehearsal => self
+                .rehearsal
+                .as_ref()
+                .filter(|r| !r.done)
+                .map(|r| r.cur.id.as_str()),
+            Mode::Browse => None,
+        }
+    }
+
     fn enter(&mut self, ctx: &Ctx, mode: Mode) {
         self.mode = mode;
         match mode {
             Mode::Browse => {}
             Mode::Practice => {
-                if self.practice.as_ref().is_none_or(|a| a.rated.is_some()) {
+                if self.practice.as_ref().is_none_or(|a| a.picked.is_some()) {
                     self.next_practice(ctx);
                 }
             }
@@ -146,13 +187,13 @@ impl Screen {
             today(ctx),
             &mut rand::thread_rng(),
         );
-        self.practice = id.map(Answering::new);
+        self.practice = id.map(|id| Answering::new(id, ctx));
     }
 
     fn new_rehearsal(&mut self, ctx: &Ctx) {
         let ids = interview::rehearsal(&ctx.state, today(ctx), &mut rand::thread_rng());
         self.rehearsal = ids.first().cloned().map(|first| Rehearsal {
-            cur: Answering::new(first),
+            cur: Answering::new(first, ctx),
             ids,
             ratings: Vec::new(),
             done: false,
@@ -171,6 +212,17 @@ impl Screen {
         }
     }
 
+    fn shift_topic(&mut self, ctx: &Ctx, dir: i32) {
+        let next = interview::neighbor_topic(self.topic.as_deref(), dir);
+        if next != self.topic.as_deref() {
+            self.topic = next.map(str::to_string);
+            if self.mode == Mode::Practice {
+                self.practice = None;
+                self.next_practice(ctx);
+            }
+        }
+    }
+
     pub fn update(&mut self, ctx: &mut Ctx, msg: Msg) -> Action {
         match msg {
             Msg::Tab(m) => self.enter(ctx, m),
@@ -181,6 +233,8 @@ impl Screen {
                     self.next_practice(ctx);
                 }
             }
+            Msg::PrevTopic => self.shift_topic(ctx, -1),
+            Msg::NextTopic => self.shift_topic(ctx, 1),
             Msg::Toggle(id) => {
                 if let Some(i) = self.open.iter().position(|x| *x == id) {
                     self.open.remove(i);
@@ -190,44 +244,66 @@ impl Screen {
             }
             Msg::PracticeOne(id) => {
                 self.mode = Mode::Practice;
-                self.practice = Some(Answering::new(id));
+                self.practice = Some(Answering::new(id, ctx));
             }
-            Msg::Edit(a) => {
-                if let Some(cur) = self.current_mut() {
-                    if !cur.revealed {
-                        cur.notes.perform(a);
-                    }
-                }
-            }
-            Msg::Reveal => {
-                if let Some(cur) = self.current_mut() {
-                    cur.revealed = true;
-                }
-            }
-            Msg::Rate(r) => {
+            Msg::Pick(idx) => {
                 let day = today(ctx);
                 let Some(cur) = self.current_mut() else {
                     return Action::None;
                 };
-                if !cur.revealed || cur.rated.is_some() {
+                if cur.picked.is_some() {
                     return Action::None;
                 }
-                cur.rated = Some(r);
                 let id = cur.id.clone();
-                interview::rate(&mut ctx.state, &id, r, day);
-                if r == Rating::Ready {
+                cur.picked = Some(idx);
+                let Some(q) = interview::bank().item(&id) else {
+                    return Action::None;
+                };
+                let (_, right) = q.choices(level(ctx));
+                let ok = idx == right;
+                let rating = if ok { Rating::Ready } else { Rating::NotYet };
+                interview::rate(&mut ctx.state, &id, rating, day);
+                if ok {
                     ctx.award(interview::XP_READY);
                 }
                 if self.mode == Mode::Rehearsal {
                     if let Some(reh) = self.rehearsal.as_mut() {
-                        reh.ratings.push(r);
+                        reh.ratings.push(rating);
                     }
                 }
                 ctx.save();
             }
+            Msg::Speak => {
+                if self.mode == Mode::Rehearsal {
+                    if let Some(cur) = self.current_mut() {
+                        cur.oral = true;
+                    }
+                }
+            }
+            Msg::CloseOral => {
+                if let Some(cur) = self.current_mut() {
+                    if cur.oral && !cur.oral_revealed {
+                        cur.oral = false;
+                    }
+                }
+            }
+            Msg::RevealOral => {
+                if let Some(cur) = self.current_mut() {
+                    if cur.oral {
+                        cur.oral_revealed = true;
+                    }
+                }
+            }
+            Msg::Knew(knew) => {
+                if let Some(cur) = self.current_mut() {
+                    if cur.oral && cur.oral_revealed && cur.oral_knew.is_none() {
+                        cur.oral_knew = Some(knew);
+                    }
+                }
+            }
             Msg::Next => match self.mode {
                 Mode::Practice => {
-                    if self.practice.as_ref().is_some_and(|a| a.rated.is_some()) {
+                    if self.practice.as_ref().is_some_and(|a| a.picked.is_some()) {
                         self.next_practice(ctx);
                     }
                 }
@@ -235,10 +311,10 @@ impl Screen {
                     let day = ctx.today_key();
                     let mut finished = None;
                     if let Some(reh) = self.rehearsal.as_mut() {
-                        if reh.cur.rated.is_some() && !reh.done {
+                        if reh.cur.picked.is_some() && !reh.done {
                             let i = reh.ratings.len();
                             if let Some(id) = reh.ids.get(i) {
-                                reh.cur = Answering::new(id.clone());
+                                reh.cur = Answering::new(id.clone(), ctx);
                             } else {
                                 reh.done = true;
                                 finished = Some(Run {
@@ -284,7 +360,7 @@ impl Screen {
             ]
             .spacing(6),
         );
-        if self.mode == Mode::Browse {
+        if self.mode == Mode::Browse && self.topic.is_none() {
             page = page.push(
                 txt(bank.intro.as_str())
                     .size(theme::text::BODY)
@@ -316,6 +392,12 @@ impl Screen {
             ],
             tabs.iter().position(|m| *m == self.mode),
         ));
+        page = page.push(
+            txt(interview::mode_hint(self.mode))
+                .size(theme::text::SMALL)
+                .color(p.muted)
+                .width(Length::Fill),
+        );
 
         page = match self.mode {
             Mode::Browse => page.push(self.browse(ctx, p)),
@@ -325,33 +407,58 @@ impl Screen {
         page.into()
     }
 
-    fn topic_chips<'a>(&'a self) -> Element<'a, Msg> {
-        let bank = interview::bank();
-        let mut chips = Row::new().spacing(8);
-        chips = chips.push(chip("Все темы", self.topic.is_none(), Msg::Topic(None)));
-        for t in &bank.topics {
-            chips = chips.push(chip(
-                t.title.as_str(),
-                self.topic.as_deref() == Some(t.id.as_str()),
-                Msg::Topic(Some(t.id.clone())),
-            ));
-        }
-        chips.wrap().vertical_spacing(8).into()
+    fn topic_nav<'a>(&'a self) -> Element<'a, Msg> {
+        let prev = interview::neighbor_topic(self.topic.as_deref(), -1);
+        let next = interview::neighbor_topic(self.topic.as_deref(), 1);
+        row![
+            widgets::btn(
+                "Предыдущая тема",
+                widgets::Btn::Ghost,
+                widgets::BtnSize::Sm,
+                prev.map(|_| Msg::PrevTopic),
+            ),
+            widgets::btn(
+                "Следующая тема",
+                widgets::Btn::Ghost,
+                widgets::BtnSize::Sm,
+                next.map(|_| Msg::NextTopic),
+            ),
+        ]
+        .spacing(8)
+        .into()
     }
 
     // ---- «Темы» --------------------------------------------------------
 
     fn browse<'a>(&'a self, ctx: &'a Ctx, p: Palette) -> Element<'a, Msg> {
         let bank = interview::bank();
+        if self.topic.is_none() {
+            return self.topic_list(ctx, p, false);
+        }
         let mut col = Column::new().spacing(16).width(Length::Fill);
-        col = col.push(self.topic_chips());
+        col = col.push(self.topic_nav());
+        col = col.push(widgets::btn(
+            "Ко всем темам",
+            widgets::Btn::Ghost,
+            widgets::BtnSize::Sm,
+            Some(Msg::Topic(None)),
+        ));
         for t in &bank.topics {
-            if self.topic.as_deref().is_some_and(|x| x != t.id) {
+            if self.topic.as_deref() != Some(t.id.as_str()) {
                 continue;
             }
+            col = col.push(self.topic_card(ctx, t, p, true));
+        }
+        col.into()
+    }
+
+    fn topic_list<'a>(&'a self, ctx: &'a Ctx, p: Palette, pickable: bool) -> Element<'a, Msg> {
+        let bank = interview::bank();
+        let mut col = Column::new().spacing(12).width(Length::Fill);
+        for t in &bank.topics {
             let (ready, n) = interview::topic_ready(&ctx.state, &t.id);
-            let mut list = Column::new().spacing(8).width(Length::Fill);
-            list = list.push(
+            let selected = self.topic.as_deref() == Some(t.id.as_str());
+            let body = column![
                 row![
                     column![
                         widgets::heading(&t.title, 3),
@@ -365,43 +472,97 @@ impl Screen {
                 ]
                 .align_y(Alignment::Center)
                 .spacing(10),
-            );
-            for q in bank.in_topic(&t.id) {
-                let opened = self.open.contains(&q.id);
-                list = list.push(question_row(q, opened, p));
-                if opened {
-                    list = list.push(
-                        container(
-                            column![
-                                guidance(ctx, q, p),
-                                row![widgets::btn(
-                                    "Отработать этот вопрос",
-                                    widgets::Btn::Secondary,
-                                    widgets::BtnSize::Sm,
-                                    Some(Msg::PracticeOne(q.id.clone())),
-                                )],
-                            ]
-                            .spacing(12),
-                        )
-                        .padding(iced::Padding {
-                            top: 4.0,
-                            right: 0.0,
-                            bottom: 10.0,
-                            left: 34.0,
-                        }),
-                    );
-                }
+                topic_bar(ready, n, p),
+            ]
+            .spacing(8)
+            .width(Length::Fill);
+            if pickable || self.mode == Mode::Browse {
+                let msg = if selected && self.mode == Mode::Practice {
+                    Msg::Topic(None)
+                } else {
+                    Msg::Topic(Some(t.id.clone()))
+                };
+                col = col.push(widgets::card(
+                    button(body)
+                        .on_press(msg)
+                        .style(|_, s| {
+                            let pal = theme::current();
+                            theme::button_ghost(&pal, s)
+                        })
+                        .padding(0)
+                        .width(Length::Fill),
+                ));
+            } else {
+                col = col.push(widgets::card(body));
             }
-            col = col.push(widgets::card(list));
         }
         col.into()
+    }
+
+    fn topic_card<'a>(
+        &'a self,
+        ctx: &'a Ctx,
+        t: &'a interview::Topic,
+        p: Palette,
+        reading: bool,
+    ) -> Element<'a, Msg> {
+        let bank = interview::bank();
+        let (ready, n) = interview::topic_ready(&ctx.state, &t.id);
+        let mut list = Column::new().spacing(8).width(Length::Fill);
+        list = list.push(
+            row![
+                column![
+                    widgets::heading(&t.title, 3),
+                    txt(t.blurb.as_str())
+                        .size(theme::text::SMALL)
+                        .color(p.muted),
+                ]
+                .spacing(2)
+                .width(Length::Fill),
+                widgets::pill(format!("готов {ready} из {n}"), widgets::Pill::Tag),
+            ]
+            .align_y(Alignment::Center)
+            .spacing(10),
+        );
+        list = list.push(topic_bar(ready, n, p));
+        for q in bank.in_topic(&t.id) {
+            let opened = self.open.contains(&q.id);
+            let _ = reading;
+            list = list.push(question_row(q, opened, p));
+            if opened {
+                list = list.push(
+                    container(
+                        column![
+                            guidance(ctx, q, p),
+                            row![widgets::btn(
+                                "Отработать этот вопрос",
+                                widgets::Btn::Secondary,
+                                widgets::BtnSize::Sm,
+                                Some(Msg::PracticeOne(q.id.clone())),
+                            )],
+                        ]
+                        .spacing(12),
+                    )
+                    .padding(iced::Padding {
+                        top: 4.0,
+                        right: 0.0,
+                        bottom: 10.0,
+                        left: 34.0,
+                    }),
+                );
+            }
+        }
+        widgets::card(list)
     }
 
     // ---- «Практика» ----------------------------------------------------
 
     fn practice_view<'a>(&'a self, ctx: &'a Ctx, p: Palette) -> Element<'a, Msg> {
         let mut col = Column::new().spacing(16).width(Length::Fill);
-        col = col.push(self.topic_chips());
+        col = col.push(self.practice_topics(ctx, p));
+        if self.topic.is_some() {
+            col = col.push(self.topic_nav());
+        }
         let Some(a) = &self.practice else {
             return col
                 .push(widgets::card(
@@ -412,8 +573,8 @@ impl Screen {
         let Some(q) = interview::bank().item(&a.id) else {
             return col.into();
         };
-        let mut body = answering(ctx, q, a, p, None);
-        if a.rated.is_some() {
+        let mut body = answering(ctx, q, a, p, None, false);
+        if a.picked.is_some() {
             body = body.push(
                 row![widgets::btn(
                     "Следующий вопрос",
@@ -425,6 +586,26 @@ impl Screen {
             );
         }
         col.push(widgets::card(body)).into()
+    }
+
+    fn practice_topics<'a>(&'a self, ctx: &'a Ctx, p: Palette) -> Element<'a, Msg> {
+        let bank = interview::bank();
+        let mut chips = Row::new().spacing(8);
+        chips = chips
+            .push(column![chip("Все темы", self.topic.is_none(), Msg::Topic(None),)].spacing(4));
+        for t in &bank.topics {
+            let (ready, n) = interview::topic_ready(&ctx.state, &t.id);
+            let selected = self.topic.as_deref() == Some(t.id.as_str());
+            chips = chips.push(
+                column![
+                    chip(t.title.as_str(), selected, Msg::Topic(Some(t.id.clone())),),
+                    container(topic_bar(ready, n, p)).width(Length::Fixed(92.0)),
+                ]
+                .spacing(4)
+                .align_x(Alignment::Center),
+            );
+        }
+        chips.wrap().vertical_spacing(10).into()
     }
 
     // ---- «Репетиция» ---------------------------------------------------
@@ -439,10 +620,10 @@ impl Screen {
         let Some(q) = interview::bank().item(&r.cur.id) else {
             return column![].into();
         };
-        let no = r.ratings.len() + usize::from(r.cur.rated.is_none());
+        let no = r.ratings.len() + usize::from(r.cur.picked.is_none());
         let no = no.max(1);
-        let mut body = answering(ctx, q, &r.cur, p, Some((no, r.ids.len())));
-        if r.cur.rated.is_some() {
+        let mut body = answering(ctx, q, &r.cur, p, Some((no, r.ids.len())), true);
+        if r.cur.picked.is_some() {
             let last = r.ratings.len() >= r.ids.len();
             body = body.push(row![widgets::btn(
                 if last {
@@ -480,6 +661,55 @@ fn chip<'a>(label: &'a str, selected: bool, msg: Msg) -> Element<'a, Msg> {
     .style(move |_, status| theme::choice(&theme::current(), selected, true, status))
     .on_press(msg)
     .into()
+}
+
+fn topic_bar<'a, M: 'a>(ready: usize, total: usize, p: Palette) -> Element<'a, M> {
+    let total = total.max(1);
+    let filled = ((ready.min(total) as f32 / total as f32) * 200.0).round() as u16;
+    let rest = 200u16.saturating_sub(filled);
+    let mut r = Row::new().height(8.0).width(Length::Fill);
+    if filled > 0 {
+        r = r.push(
+            container(space::horizontal())
+                .width(Length::FillPortion(filled))
+                .height(8.0)
+                .style(move |_| container::Style {
+                    background: Some(Background::Color(p.gold)),
+                    border: Border {
+                        radius: theme::radius::SEGMENT.into(),
+                        ..Border::default()
+                    },
+                    ..container::Style::default()
+                }),
+        );
+    }
+    if rest > 0 {
+        r = r.push(
+            container(space::horizontal())
+                .width(Length::FillPortion(rest.max(1)))
+                .height(8.0)
+                .style(move |_| container::Style {
+                    background: Some(Background::Color(p.surface3)),
+                    border: Border {
+                        radius: theme::radius::SEGMENT.into(),
+                        ..Border::default()
+                    },
+                    ..container::Style::default()
+                }),
+        );
+    }
+    container(r)
+        .width(Length::Fill)
+        .height(8.0)
+        .style(move |_| container::Style {
+            background: Some(Background::Color(p.surface3)),
+            border: Border {
+                radius: theme::radius::SEGMENT.into(),
+                ..Border::default()
+            },
+            ..container::Style::default()
+        })
+        .into()
 }
 
 fn question_row<'a>(q: &'a Item, opened: bool, p: Palette) -> Element<'a, Msg> {
@@ -588,14 +818,85 @@ fn guidance<'a>(ctx: &'a Ctx, q: &'a Item, p: Palette) -> Element<'a, Msg> {
     col.into()
 }
 
-/// A question to answer: prompt, notes, «Показать подсказки», guidance,
-/// self-rating. `step` = (number, of) in a rehearsal.
+/// A shorter model answer for the oral path (what to say, without the
+/// "common mistakes" block shouting at the learner mid-rehearsal).
+fn model_answer<'a>(q: &'a Item, p: Palette) -> Element<'a, Msg> {
+    column![
+        tinted(
+            column![
+                label("Образец ответа", p.gold2),
+                txt(q.purpose.as_str())
+                    .size(theme::text::BODY)
+                    .color(p.text),
+            ]
+            .spacing(6),
+            p.gold_soft,
+            alpha(p.gold, 0.3),
+        ),
+        column![
+            label("О чём сказать своими словами", p.ok),
+            bullets(&q.key_points, "•", p.ok),
+        ]
+        .spacing(6),
+    ]
+    .spacing(12)
+    .into()
+}
+
+fn option_buttons<'a>(q: &'a Item, a: &'a Answering, p: Palette, lvl: Level) -> Element<'a, Msg> {
+    let (opts, right) = q.choices(lvl);
+    let mut list = Column::new().spacing(10).width(Length::Fill);
+    for (k, oi) in a.order.iter().enumerate() {
+        let oi = *oi;
+        if oi >= opts.len() {
+            continue;
+        }
+        let is_right = a.picked.is_some() && oi == right;
+        let is_chosen_wrong = a.picked == Some(oi) && oi != right;
+        let label = row![
+            txt(format!("{}.", k + 1))
+                .size(theme::text::SMALL)
+                .font(SANS_BOLD)
+                .color(p.muted),
+            txt(opts[oi].as_str())
+                .size(theme::text::BODY)
+                .color(p.text)
+                .width(Length::Fill),
+        ]
+        .spacing(12)
+        .align_y(Alignment::Center)
+        .width(Length::Fill);
+        let b = button(label)
+            .width(Length::Fill)
+            .padding([10.0, 14.0])
+            .style(move |_, s| {
+                if is_right {
+                    theme::option_correct(&p, s)
+                } else if is_chosen_wrong {
+                    theme::option_wrong(&p, s)
+                } else {
+                    theme::option_normal(&p, s)
+                }
+            });
+        let b = if a.picked.is_some() {
+            b
+        } else {
+            b.on_press(Msg::Pick(oi))
+        };
+        list = list.push(b);
+    }
+    list.into()
+}
+
+/// A question to answer: prompt, options, feedback; in rehearsal, the
+/// optional oral path. `step` = (number, of) in a rehearsal.
 fn answering<'a>(
     ctx: &'a Ctx,
     q: &'a Item,
     a: &'a Answering,
     p: Palette,
     step: Option<(usize, usize)>,
+    rehearsal: bool,
 ) -> Column<'a, Msg> {
     let bank = interview::bank();
     let topic = bank.topic(&q.topic).map(|t| t.title.as_str()).unwrap_or("");
@@ -611,88 +912,118 @@ fn answering<'a>(
             .size(theme::text::H3 + 2.0)
             .color(p.text),
     );
-    if !a.revealed {
-        col = col.push(
-            txt(bank.sincerity.as_str())
-                .size(theme::text::SMALL)
-                .color(p.muted),
-        );
-        col = col.push(
-            text_editor(&a.notes)
-                .placeholder("Ответьте вслух или запишите ответ здесь (необязательно)")
-                .on_action(Msg::Edit)
-                .height(Length::Fixed(4.0 * 26.0))
-                .padding(12.0)
-                .size(theme::text::BODY),
-        );
+
+    let hide_options = rehearsal && a.oral && !a.oral_revealed && a.picked.is_none();
+
+    if rehearsal && a.oral {
+        col = col.push(oral_panel(q, a, p));
+    } else if rehearsal && a.picked.is_none() {
         col = col.push(row![widgets::btn(
-            "Показать подсказки",
-            widgets::Btn::Primary,
-            widgets::BtnSize::Md,
-            Some(Msg::Reveal),
+            "Ответить вслух",
+            widgets::Btn::Ghost,
+            widgets::BtnSize::Sm,
+            Some(Msg::Speak),
         )]);
-        return col;
     }
-    let written = a.notes.text();
-    if !written.trim().is_empty() {
+
+    if !hide_options {
+        col = col.push(option_buttons(q, a, p, level(ctx)));
+    }
+
+    if let Some(idx) = a.picked {
+        let (_, right) = q.choices(level(ctx));
+        let ok = idx == right;
+        let (opts, _) = q.choices(level(ctx));
+        let right_text = opts.get(right).map(|s| s.as_str()).unwrap_or("");
+        let note = if ok {
+            "Верно. Этот вопрос вернётся через несколько дней.".to_string()
+        } else {
+            format!("Неверно. Верный ответ: {right_text} Вопрос вернётся завтра.")
+        };
         col = col.push(
-            column![
-                txt("Ваш ответ").size(theme::text::SMALL).color(p.muted),
-                txt(written).size(theme::text::BODY).color(p.text),
-            ]
-            .spacing(4),
+            txt(note)
+                .size(theme::text::SMALL)
+                .color(if ok { p.ok } else { p.bad }),
         );
+        col = col.push(guidance(ctx, q, p));
     }
-    col = col.push(guidance(ctx, q, p));
-    match a.rated {
-        None => {
-            col = col.push(
-                txt("Как вы ответили? Оцените честно: слабые вопросы будут возвращаться чаще.")
-                    .size(theme::text::SMALL)
-                    .color(p.text),
-            );
-            col = col.push(
-                row![
-                    widgets::btn(
-                        Rating::Ready.label(),
-                        widgets::Btn::Primary,
-                        widgets::BtnSize::Md,
-                        Some(Msg::Rate(Rating::Ready)),
-                    ),
-                    widgets::btn(
-                        Rating::Partly.label(),
-                        widgets::Btn::Secondary,
-                        widgets::BtnSize::Md,
-                        Some(Msg::Rate(Rating::Partly)),
-                    ),
-                    widgets::btn(
-                        Rating::NotYet.label(),
-                        widgets::Btn::Ghost,
-                        widgets::BtnSize::Md,
-                        Some(Msg::Rate(Rating::NotYet)),
-                    ),
-                ]
-                .spacing(10)
-                .wrap()
-                .vertical_spacing(8),
-            );
-        }
-        Some(r) => {
-            let note = match r {
-                Rating::Ready => "Отлично. Этот вопрос вернётся через несколько дней.",
-                Rating::Partly => "Вопрос вернётся завтра. Перечитайте уроки по теме.",
-                Rating::NotYet => {
-                    "Ничего страшного: вопрос вернётся завтра. Начните с урока по теме."
-                }
-            };
-            col = col.push(
-                txt(format!("Ваша оценка: {}. {note}", r.label()))
-                    .size(theme::text::SMALL)
-                    .color(if r == Rating::Ready { p.ok } else { p.muted }),
-            );
-        }
+
+    if rehearsal && a.picked.is_some() && !a.oral {
+        col = col.push(row![widgets::btn(
+            "Ответить вслух",
+            widgets::Btn::Ghost,
+            widgets::BtnSize::Sm,
+            Some(Msg::Speak),
+        )]);
     }
     col
+}
+
+fn oral_panel<'a>(q: &'a Item, a: &'a Answering, p: Palette) -> Element<'a, Msg> {
+    let mut col = Column::new().spacing(12).width(Length::Fill);
+    if !a.oral_revealed {
+        col = col.push(
+            txt("Проговорите ответ вслух своими словами. Когда будете готовы, откройте образец. Это не входит в счёт репетиции.")
+                .size(theme::text::BODY)
+                .color(p.text),
+        );
+        col = col.push(
+            row![
+                widgets::btn(
+                    "Показать образец",
+                    widgets::Btn::Primary,
+                    widgets::BtnSize::Md,
+                    Some(Msg::RevealOral),
+                ),
+                widgets::btn(
+                    "К вариантам ответа",
+                    widgets::Btn::Ghost,
+                    widgets::BtnSize::Sm,
+                    Some(Msg::CloseOral),
+                ),
+            ]
+            .spacing(10),
+        );
+    } else {
+        col = col.push(model_answer(q, p));
+        match a.oral_knew {
+            None => {
+                col = col.push(
+                    txt("Отметьте честно: это не входит в счёт репетиции.")
+                        .size(theme::text::SMALL)
+                        .color(p.muted),
+                );
+                col = col.push(
+                    row![
+                        widgets::btn(
+                            "Знал",
+                            widgets::Btn::Primary,
+                            widgets::BtnSize::Md,
+                            Some(Msg::Knew(true)),
+                        ),
+                        widgets::btn(
+                            "Не знал",
+                            widgets::Btn::Secondary,
+                            widgets::BtnSize::Md,
+                            Some(Msg::Knew(false)),
+                        ),
+                    ]
+                    .spacing(10),
+                );
+            }
+            Some(knew) => {
+                let mark = if knew { "знал" } else { "не знал" };
+                col = col.push(
+                    txt(format!(
+                        "Вы отметили: {mark}. В счёт репетиции это не входит."
+                    ))
+                    .size(theme::text::SMALL)
+                    .color(p.muted),
+                );
+            }
+        }
+    }
+    tinted(col, p.gold_soft, alpha(p.gold, 0.3))
 }
 
 fn summary<'a>(_ctx: &'a Ctx, r: &'a Rehearsal, p: Palette) -> Element<'a, Msg> {
@@ -706,7 +1037,7 @@ fn summary<'a>(_ctx: &'a Ctx, r: &'a Rehearsal, p: Palette) -> Element<'a, Msg> 
     let verdict = if pct >= 80 {
         "Вы уверенно говорите о своём пути. Продолжайте жить так, как рассказываете."
     } else if pct >= 50 {
-        "Хорошая основа. Отработайте вопросы, где ответ был неполным."
+        "Хорошая основа. Отработайте вопросы, где ответ был неверным."
     } else {
         "Есть над чем поработать. Начните с вопросов ниже и уроков по их темам."
     };
@@ -721,10 +1052,9 @@ fn summary<'a>(_ctx: &'a Ctx, r: &'a Rehearsal, p: Palette) -> Element<'a, Msg> 
                     .size(theme::text::H2)
                     .color(p.gold2),
                 txt(format!(
-                    "Готов: {} · Частично: {} · Ещё не готов: {}",
+                    "Верно: {} · Неверно: {}",
                     run.count(Rating::Ready),
-                    run.count(Rating::Partly),
-                    run.count(Rating::NotYet)
+                    run.count(Rating::NotYet),
                 ))
                 .size(theme::text::SMALL)
                 .color(p.muted),
@@ -738,14 +1068,13 @@ fn summary<'a>(_ctx: &'a Ctx, r: &'a Rehearsal, p: Palette) -> Element<'a, Msg> 
     );
     for (id, rating) in r.ids.iter().zip(&r.ratings) {
         let Some(q) = bank.item(id) else { continue };
-        let color = match rating {
-            Rating::Ready => p.ok,
-            Rating::Partly => p.gold2,
-            Rating::NotYet => p.bad,
+        let (label, color) = match rating {
+            Rating::Ready => ("Верно", p.ok),
+            Rating::NotYet => ("Неверно", p.bad),
+            Rating::Partly => ("Частично", p.gold2),
         };
         let mut line = row![
-            container(widgets::pill(rating.label(), widgets::Pill::Tint(color)))
-                .width(Length::Fixed(140.0)),
+            container(widgets::pill(label, widgets::Pill::Tint(color))).width(Length::Fixed(140.0)),
             txt(q.question.as_str())
                 .size(theme::text::BODY)
                 .color(p.text)
