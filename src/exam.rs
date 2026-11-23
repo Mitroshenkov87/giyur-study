@@ -1013,7 +1013,7 @@ mod tests {
     use std::collections::HashSet;
 
     fn lib() -> Library {
-        Library::embedded()
+        Library::current()
     }
 
     fn day() -> NaiveDate {
@@ -1124,7 +1124,7 @@ mod tests {
 
     #[test]
     fn level_filtering_respected() {
-        let lib = Library::embedded();
+        let lib = Library::current();
         let mut state = unlocked_state();
         state.settings.level = Some(crate::storage::Level::Reform);
         let pool = timed_pool(&lib, &state);

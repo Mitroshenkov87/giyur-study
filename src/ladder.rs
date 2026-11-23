@@ -906,7 +906,7 @@ mod tests {
 
     #[test]
     fn ladder_has_15_steps_rising_in_difficulty_mc_first() {
-        let lib = Library::embedded();
+        let lib = Library::current();
         let state = open_state();
         let l = build(&lib, &state, &mut rng()).unwrap();
         assert_eq!(l.len(), STEPS);
@@ -928,7 +928,7 @@ mod tests {
     #[test]
     fn every_tier_has_enough_mc_for_several_ladders() {
         // With everything open the pool must fill many different ladders.
-        let lib = Library::embedded();
+        let lib = Library::current();
         for (d, mc, _tf) in pool_counts(&lib, &open_state()) {
             assert!(
                 mc >= PER_TIER * 6,
@@ -939,7 +939,7 @@ mod tests {
 
     #[test]
     fn small_pool_borrows_from_neighbour_tiers() {
-        let lib = Library::embedded();
+        let lib = Library::current();
         // The first section alone at the reform level.
         let state = State::default();
         let p = pool(&lib, &state);
@@ -949,7 +949,7 @@ mod tests {
 
     #[test]
     fn climbing_to_the_top_and_finishing() {
-        let lib = Library::embedded();
+        let lib = Library::current();
         let mut state = open_state();
         let mut l = build(&lib, &state, &mut rng()).unwrap();
         for _ in 0..STEPS {
@@ -972,7 +972,7 @@ mod tests {
 
     #[test]
     fn falling_keeps_the_last_safe_step() {
-        let lib = Library::embedded();
+        let lib = Library::current();
         let mut state = open_state();
         let mut l = build(&lib, &state, &mut rng()).unwrap();
         for _ in 0..7 {
@@ -994,7 +994,7 @@ mod tests {
 
     #[test]
     fn time_out_counts_as_a_fall_below_the_first_safe_step() {
-        let lib = Library::embedded();
+        let lib = Library::current();
         let mut state = open_state();
         let mut l = build(&lib, &state, &mut rng()).unwrap();
         for _ in 0..3 {
@@ -1008,7 +1008,7 @@ mod tests {
 
     #[test]
     fn walking_away_keeps_everything_and_best_is_kept() {
-        let lib = Library::embedded();
+        let lib = Library::current();
         let mut state = open_state();
         state.counters.insert(BEST_KEY.into(), 12);
         let mut l = build(&lib, &state, &mut rng()).unwrap();
@@ -1027,7 +1027,7 @@ mod tests {
 
     #[test]
     fn lifelines_once_each() {
-        let lib = Library::embedded();
+        let lib = Library::current();
         let mut state = open_state();
         let mut l = build(&lib, &state, &mut rng()).unwrap();
         let mut r = rng();
@@ -1150,7 +1150,7 @@ mod tests {
 
     #[test]
     fn rabbi_never_leaks_the_right_option_on_the_whole_bank() {
-        let lib = Library::embedded();
+        let lib = Library::current();
         let mut r = rng();
         let mut leaks = Vec::new();
         let (mut fallbacks, mut mc) = (0, 0);

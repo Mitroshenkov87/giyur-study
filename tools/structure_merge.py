@@ -3,7 +3,7 @@
 questions) into a section file, after validating it. See docs/STRUCTURE.md.
 
 usage: structure_merge.py PATCH.json SECTION.json [--check]
-       structure_merge.py --lint content/sections/*.json
+       structure_merge.py --lint content/ru/sections/*.json
 """
 import json, re, sys
 from collections import Counter

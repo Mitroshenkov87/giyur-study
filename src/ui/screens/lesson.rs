@@ -700,7 +700,7 @@ mod tests {
         state.settings.level = Some(level);
         state.settings.unlock_all = true;
         Ctx {
-            lib: content::Library::embedded(),
+            lib: content::Library::current(),
             state,
             path: std::env::temp_dir().join("shorashim-lesson-test.json"),
             toasts: Vec::new(),

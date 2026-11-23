@@ -191,7 +191,7 @@ mod tests {
     }
 
     fn orthodox_with_progress() -> State {
-        let lib = crate::content::Library::embedded();
+        let lib = crate::content::Library::current();
         let mut s = State {
             onboarded: true,
             ..Default::default()

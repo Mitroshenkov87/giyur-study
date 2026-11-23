@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Write the «Еврейский календарь» part of docs/RABBI-REVIEW.md from
-content/calendar/*.json (dev tool). Replaces the block between the
+content/ru/calendar/*.json (dev tool). Replaces the block between the
 CALENDAR-BEGIN / CALENDAR-END markers, or appends it."""
 import json, os
 
@@ -27,10 +27,10 @@ RULES = """### Правила расчёта (просьба проверить)
 
 
 def main():
-    par = json.load(open(os.path.join(ROOT, "content/calendar/parashot.json")))["parashot"]
-    days = json.load(open(os.path.join(ROOT, "content/calendar/days.json")))
+    par = json.load(open(os.path.join(ROOT, "content/ru/calendar/parashot.json")))["parashot"]
+    days = json.load(open(os.path.join(ROOT, "content/ru/calendar/days.json")))
     out = [BEGIN, "## Еврейский календарь", "",
-           "Все тексты раздела «Еврейский календарь» (content/calendar/). Сгенерировано tools/gen_rabbi_review_calendar.py.", "",
+           "Все тексты раздела «Еврейский календарь» (content/ru/calendar/). Сгенерировано tools/gen_rabbi_review_calendar.py.", "",
            RULES, "### Дни и праздники", ""]
     for d in days["days"]:
         out.append(f"#### `{d['id']}` {d.get('name_he', '')}")

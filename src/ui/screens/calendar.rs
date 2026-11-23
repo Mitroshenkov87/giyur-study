@@ -3,7 +3,7 @@
 //! (diaspora/Israel, the location used for candle / havdalah / fast times,
 //! and compact reference rules).
 //!
-//! Texts come from `content/calendar/*.json` ([`texts`]); while those files
+//! Texts come from `content/ru/calendar/*.json` ([`texts`]); while those files
 //! are still being written every block degrades gracefully: whatever has no
 //! text is simply omitted. Location is off by default and uses the OS permission flow
 //! ([`prefs`]); coordinates are never logged or shown.

@@ -31,7 +31,7 @@ pub enum Kind {
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Event {
-    /// Key into content/calendar/days.json.
+    /// Key into content/ru/calendar/days.json.
     pub id: &'static str,
     pub kind: Kind,
     /// Russian title for this day, e.g. «Ханука, 3-я свеча».

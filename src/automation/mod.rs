@@ -128,6 +128,7 @@ pub const COMMANDS: &[(&str, &str)] = &[
     ("state", "Current screen: route, visible texts, clickable controls (stable ids), inputs, progress, settings, toasts. Args: texts (bool, default true)."),
     ("navigate", "Go to a route: to = \"map\" | \"calendar[:today|month|settings|YYYY-MM-DD]\" | \"section:<id>\" | \"lesson:<id>\" | \"cards:<lessonId>\" | \"deck:<sectionId>\" | \"cards:review\" | \"exam[:<sectionId>]\" | \"examrun:section:<id>[:n]\" | \"examrun:general[:n]\" | \"examrun:beitdin[:n]\" | \"timed\" | \"timedrun\" | \"progress\" | \"settings\" | \"sources\" | \"interview[:practice|rehearsal]\" | \"prayers[:<prayerId>]\" | \"level\" | \"welcome\", or a sidebar label, current or old («Уроки» / «Карта», «Карточки» / «Повторение», «Викторина» / «Экзамен», «Успехи» / «Прогресс», «Календарь», «Молитвы», «Тесты», «Настройки», «Источники»)."),
     ("back", "«Назад»: previous screen."),
+    ("reload_content", "Read the course files in content/<lang>/ again (after editing a card) and reopen the current screen. On an error the content in use stays and the reply names the file and line."),
     ("press", "Press a control from `state`: id (exact), or label (exact, case-insensitive), or contains (substring); nth picks among several matches (0-based). Links, file dialogs and the installer (OpenUrl, Export, ImportPick, Install, AskUninstall) need allow_external=true and work only in the windowed app."),
     ("answer", "Answer the current question: choice (0-based, in the order shown), tf (true/false), text (typed answer, submitted), knew (flashcard: flips if needed, then grades), self_grade (0..1, open answers or interview: ≥0.75 picks the right option, else a wrong one), auto=true (any answer, for smoke tests); next=true then presses «Далее»."),
     ("type", "Type into an input field: text, input (index from `state`, default 0), append (keep current text), submit (press Enter)."),
@@ -871,6 +872,19 @@ pub fn execute(host: &mut dyn Host, req: &Value) -> Outcome {
         })),
         "screens" => Outcome::ok(screens_json(host.ctx())),
         "state" => Outcome::ok(state_json(host, arg_bool(a, "texts").unwrap_or(true))),
+        "reload_content" | "reload-content" => match crate::content_store::reload() {
+            Ok(c) => {
+                host.ctx_mut().lib = c.library.clone();
+                let route = host.route().clone();
+                host.navigate(route);
+                Outcome::ok(json!({
+                    "dir": c.dir.display().to_string(),
+                    "content_version": c.meta.content_version,
+                    "summary": crate::content_store::summary(c),
+                }))
+            }
+            Err(e) => Outcome::err(format!("content not reloaded: {e}")),
+        },
         "navigate" | "nav" | "go" => {
             let Some(to) = arg_str(a, "to").or_else(|| arg_str(a, "route")) else {
                 return Outcome::err("navigate needs to");

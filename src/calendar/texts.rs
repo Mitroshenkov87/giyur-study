@@ -1,8 +1,7 @@
-//! Russian calendar content, embedded at build time from content/calendar/.
+//! Russian calendar content, embedded at build time from content/ru/calendar/.
 //! Every text here is listed in docs/RABBI-REVIEW.md for review.
 
 use std::collections::HashMap;
-use std::sync::OnceLock;
 
 use serde::Deserialize;
 
@@ -76,24 +75,21 @@ pub struct Texts {
 }
 
 impl Texts {
-    fn parse(parashot: &str, days: &str) -> Texts {
-        let p: ParashotFile = serde_json::from_str(parashot).unwrap_or_default();
-        let d: DaysFile = serde_json::from_str(days).unwrap_or_default();
-        Texts {
+    /// Parse `calendar/parashot.json` and `calendar/days.json`. The error
+    /// says which file is broken: 0 = parashot, 1 = days.
+    pub fn try_parse(parashot: &str, days: &str) -> Result<Texts, (u8, serde_json::Error)> {
+        let p: ParashotFile = serde_json::from_str(parashot).map_err(|e| (0, e))?;
+        let d: DaysFile = serde_json::from_str(days).map_err(|e| (1, e))?;
+        Ok(Texts {
             parashot: p.parashot.into_iter().map(|x| (x.id.clone(), x)).collect(),
             days: d.days.into_iter().map(|x| (x.id.clone(), x)).collect(),
             months: d.months.into_iter().map(|x| (x.key.clone(), x)).collect(),
-        }
+        })
     }
 
+    /// The calendar texts in use (`content/<lang>/calendar/`).
     pub fn get() -> &'static Texts {
-        static T: OnceLock<Texts> = OnceLock::new();
-        T.get_or_init(|| {
-            Texts::parse(
-                include_str!("../../content/calendar/parashot.json"),
-                include_str!("../../content/calendar/days.json"),
-            )
-        })
+        &crate::content_store::get().calendar
     }
 
     /// Text for portion index `n` (0 = Bereshit).

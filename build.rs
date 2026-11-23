@@ -1,9 +1,8 @@
-//! Build script: re-run when content/assets change, and on Windows convert the
+//! Build script: re-run when assets change (content/ is read at run time, not built in), and on Windows convert the
 //! WebP app icon to a .ico (in OUT_DIR only, nothing committed) and embed it.
 use std::path::PathBuf;
 
 fn main() {
-    println!("cargo:rerun-if-changed=content");
     println!("cargo:rerun-if-changed=assets");
     println!("cargo:rerun-if-changed=build.rs");
 

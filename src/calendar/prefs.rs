@@ -31,7 +31,7 @@ pub struct Place {
     pub name: String,
     pub lat: f64,
     pub lon: f64,
-    /// Time-zone rule id from content/calendar/cities.json (`il`, `eu`, `us`, …)
+    /// Time-zone rule id from content/ru/calendar/cities.json (`il`, `eu`, `us`, …)
     /// or `local` = use this computer's time zone.
     #[serde(default = "local_tz")]
     pub tz: String,

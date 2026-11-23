@@ -6,6 +6,7 @@
 pub mod app;
 pub mod aside;
 pub mod assets;
+pub mod content_error;
 pub mod fonts;
 pub mod layout;
 pub mod model3d;

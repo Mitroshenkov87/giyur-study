@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Write the «Молитвы на каждый день» part of docs/RABBI-REVIEW.md from
-content/prayers.json (dev tool). Replaces the block between the
+content/ru/prayers.json (dev tool). Replaces the block between the
 PRAYERS-BEGIN / PRAYERS-END markers, or appends it."""
 import json, os
 
@@ -28,10 +28,10 @@ DOUBTS = """### Что проверить в первую очередь
 
 
 def main():
-    book = json.load(open(os.path.join(ROOT, "content/prayers.json")))
+    book = json.load(open(os.path.join(ROOT, "content/ru/prayers.json")))
     groups = {g["id"]: g["title"] for g in book["groups"]}
     out = [BEGIN, "## Молитвы на каждый день", "",
-           "Все тексты раздела «Молитвы» (content/prayers.json). Сгенерировано tools/gen_rabbi_review_prayers.py. "
+           "Все тексты раздела «Молитвы» (content/ru/prayers.json). Сгенерировано tools/gen_rabbi_review_prayers.py. "
            f"Нусах: {book.get('nusach', '')}. Статус: {book.get('reviewStatus', '')}.", "",
            DOUBTS, "", "### Общие заметки раздела", ""]
     for n in book["notes"]:

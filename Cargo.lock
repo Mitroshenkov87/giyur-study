@@ -3733,6 +3733,7 @@ dependencies = [
  "bytemuck",
  "chrono",
  "dirs",
+ "flate2",
  "iced",
  "iced_runtime",
  "image",

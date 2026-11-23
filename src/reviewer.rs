@@ -57,7 +57,7 @@ mod tests {
 
     #[test]
     fn every_gate_opens_in_the_mode() {
-        let lib = Library::embedded();
+        let lib = Library::current();
         let mut s = State {
             onboarded: true,
             ..Default::default()
@@ -82,7 +82,7 @@ mod tests {
 
     #[test]
     fn nothing_is_awarded_in_the_mode() {
-        let lib = Library::embedded();
+        let lib = Library::current();
         let mut s = State::default();
         s.settings.reviewer_mode = true;
         let today = chrono::NaiveDate::from_ymd_opt(2026, 11, 23).unwrap();

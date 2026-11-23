@@ -239,8 +239,8 @@ Attached mode reconnects when the app restarts; `launch` starts it.
 ## Windows notes
 
 The release `.exe` is a GUI program, so shells don't wait for it. Use the
-console companion **`shorashim-ctl.exe`** (built next to it, shipped in the CI
-artifact) for commands: it waits, prints normally and sets `%ERRORLEVEL%` /
+console companion **`shorashim-ctl.exe`** (built next to it, installed by `Shorashim-Setup.exe` next to the app; inside the CI
+setup) for commands: it waits, prints normally and sets `%ERRORLEVEL%` /
 `$LASTEXITCODE`. A bare command means `ctl`:
 
 ```powershell

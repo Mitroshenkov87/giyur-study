@@ -868,6 +868,11 @@ fn main() -> iced::Result {
         return Ok(());
     }
     shorashim::install::cleanup_after_update();
+    // Course content is read from `content/<lang>/` beside the exe; when it
+    // is missing or broken, a calm window names the file instead.
+    if let Err(e) = shorashim::content_store::init(shorashim::content_store::DEFAULT_LANG) {
+        return shorashim::ui::content_error::run(e);
+    }
     // Screenshot hook: `SHORASHIM_WINDOW_SIZE=1440x900`.
     let size = shorashim::util::env_hook("WINDOW_SIZE")
         .and_then(|v| {
