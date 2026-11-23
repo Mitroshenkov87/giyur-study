@@ -10,7 +10,7 @@ use crate::content;
 use crate::i18n::tr;
 use crate::storage::Level;
 use crate::ui::app::{Action, Ctx, Route};
-use crate::ui::screens::map::{heading_owned, icons, kicker_owned, txt};
+use crate::ui::screens::map::{heading_owned, icons, txt};
 use crate::ui::{assets, fonts, theme, widgets};
 
 pub struct Screen {
@@ -112,7 +112,7 @@ impl Screen {
         }));
         page = page.push(widgets::heading(tr("Выберите течение"), 1));
         page = page.push(
-            txt(tr("Уровни вложены друг в друга: консервативный включает всё реформистское, ортодоксальный — всё. У каждого течения своё прохождение: уроки, тесты, «Маалот», карточки, опыт и коллекция. При смене прогресс этого течения сохранится и вернётся, когда вы снова его выберете."))
+            txt(tr("Три течения — три полноценных пути к гиюру, у каждого свои принципы и свой бейт-дин. У каждого течения своё прохождение: уроки, тесты, «Маалот», карточки, опыт и коллекция. При смене прогресс этого течения сохранится и вернётся, когда вы снова его выберете."))
                 .size(theme::text::BODY)
                 .color(p.muted)
                 .width(Length::Fill),
@@ -161,7 +161,6 @@ fn level_card<'a>(
     button(
         column![
             emblem,
-            kicker_owned(crate::trf!("Уровень {number}", "Level {number}")),
             txt(tr(info.title))
                 .size(theme::text::H3)
                 .font(fonts::SANS_BOLD)

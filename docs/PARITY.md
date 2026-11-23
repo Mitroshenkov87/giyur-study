@@ -76,7 +76,7 @@ Optional back link (chevron + label, default «Назад»; muted, hover surfac
 - Button (primary lg, right): «Начать» → `#/level`.
 
 ## 2. Movement / level choice (`#/level`)
-**Header:** back → `#/welcome` (first run) or `levelReturn` (`#/map` or `#/settings`, default `#/settings`), label «Назад». Kicker «Шаг 2 из 2» (first run) / «Течение». h1 «Выберите течение». Sub «Уровни вложены друг в друга: консервативный включает всё реформистское, ортодоксальный — всё. Прогресс сохранится; уроки и вопросы другого уровня появятся или скроются.»
+**Header:** back → `#/welcome` (first run) or `levelReturn` (`#/map` or `#/settings`, default `#/settings`), label «Назад». Kicker «Шаг 2 из 2» (first run) / «Течение». h1 «Выберите течение». Sub «Три течения — три полноценных пути к гиюру, у каждого свои принципы и свой бейт-дин. …»
 **Cards** (3, grid 3-col ≥ 720 px, centered; selected = gold border + 2px gold-soft ring; hover lift −3px):
 image `assets/img/level-{reform|conservative|orthodox}.webp` in 104 px circle (fallback: nested-rings SVG, 1/2/3 rings filled) → «Уровень {1|2|3}» (gold uppercase) → title → text:
 | id | title | short | text |
