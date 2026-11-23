@@ -1,4 +1,4 @@
-> **English.** This is the Russian rabbi-review checklist for the Shorashim study app. The English edition is [`docs/RABBI-REVIEW.en.md`](RABBI-REVIEW.en.md). Both files share the same item ids (lessons, cards, questions, interview items, prayers, calendar days, map notes), so a remark on an item applies to both languages. All course content is checked by a rabbi. If you are a rabbi or a knowledgeable reader and would like to help, please [open a GitHub issue](https://github.com/Mitroshenkov87/shorashim/issues/new) and cite the item id.
+> **English.** This is the Russian rabbi-review checklist for the Shorashim study app. The English edition is [`docs/RABBI-REVIEW.en.md`](RABBI-REVIEW.en.md). Both files share the same item ids (lessons, cards, questions, interview items, prayers, calendar days, map notes), so a remark on an item applies to both languages. All course content must be checked by a rabbi. If you are a rabbi or a knowledgeable reader and would like to help, please [open a GitHub issue](https://github.com/Mitroshenkov87/shorashim/issues/new) and cite the item id.
 
 # Чек-лист проверки содержания (для общинного раввина)
 

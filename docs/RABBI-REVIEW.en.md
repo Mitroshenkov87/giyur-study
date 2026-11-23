@@ -1,6 +1,6 @@
 # Content review checklist (for a community rabbi)
 
-> English edition of docs/RABBI-REVIEW.md. Every item keeps the same ids (lesson, card, question, interview, calendar, prayer and map ids) as the Russian checklist, so a note on an item applies to both languages: the English texts are in content/en/, the Russian ones in content/ru/. All course content is checked by a rabbi. If you are a rabbi or a knowledgeable reader and would like to help, please [open a GitHub issue](https://github.com/Mitroshenkov87/shorashim/issues/new) and cite the item id.
+> English edition of docs/RABBI-REVIEW.md. Every item keeps the same ids (lesson, card, question, interview, calendar, prayer and map ids) as the Russian checklist, so a note on an item applies to both languages: the English texts are in content/en/, the Russian ones in content/ru/. All course content must be checked by a rabbi. If you are a rabbi or a knowledgeable reader and would like to help, please [open a GitHub issue](https://github.com/Mitroshenkov87/shorashim/issues/new) and cite the item id.
 
 This document is compiled from the reports of the authors of the eight sections of the Shorashim app. Each author attached a “RABBI REVIEW” list — items about which he himself is unsure and which require a rabbi’s review: exact source references, disputed formulations, and communal customs.
 

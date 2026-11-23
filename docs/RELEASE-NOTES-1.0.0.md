@@ -32,7 +32,7 @@ The course is written in the language of Torah and Tanakh. It is consistently pr
 
 Lessons, cards, questions, prayers and calendar texts live as JSON files in a `content` folder next to the program, not inside the `.exe`. A wording fix is an edit to a file and a short repack of the installer. If a file is missing or invalid, the app shows a calm message with the file, the line and what is wrong.
 
-All course content is checked by a rabbi. The checklists [`docs/RABBI-REVIEW.md`](https://github.com/Mitroshenkov87/shorashim/blob/main/docs/RABBI-REVIEW.md) and [`docs/RABBI-REVIEW.en.md`](https://github.com/Mitroshenkov87/shorashim/blob/main/docs/RABBI-REVIEW.en.md) share the same item ids. If you are a rabbi or a knowledgeable reader and would like to help, please open a GitHub issue and cite the item id. The app helps you study; it does not replace a teacher.
+All course content must be checked by a rabbi. The checklists [`docs/RABBI-REVIEW.md`](https://github.com/Mitroshenkov87/shorashim/blob/main/docs/RABBI-REVIEW.md) and [`docs/RABBI-REVIEW.en.md`](https://github.com/Mitroshenkov87/shorashim/blob/main/docs/RABBI-REVIEW.en.md) share the same item ids. If you are a rabbi or a knowledgeable reader and would like to help, please open a GitHub issue and cite the item id. The app helps you study; it does not replace a teacher.
 
 ## Support
 

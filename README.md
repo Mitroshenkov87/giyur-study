@@ -58,7 +58,7 @@ A short guide to editing and checking the files is in [`docs/CONTENT-UPDATES.md`
 
 ## Rabbi review
 
-All course content is checked by a rabbi. The checklists are:
+All course content must be checked by a rabbi. The checklists are:
 
 - [`docs/RABBI-REVIEW.md`](docs/RABBI-REVIEW.md)
 - [`docs/RABBI-REVIEW.en.md`](docs/RABBI-REVIEW.en.md)
