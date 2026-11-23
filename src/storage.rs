@@ -505,6 +505,29 @@ pub const DATA_DIR: &str = "Shorashim";
 /// Folder used before the rename to Shorashim (v0.1.x).
 pub const LEGACY_DATA_DIR: &str = "GiyurStudy";
 
+/// A progress-file path given by the user (`SHORASHIM_DATA`, `--data`):
+/// a file is used as is; an existing folder, or a path ending in a
+/// separator, means `progress.json` inside it.
+pub fn resolve_data_path(given: impl Into<PathBuf>) -> PathBuf {
+    let p: PathBuf = given.into();
+    let s = p.as_os_str().to_string_lossy();
+    let trailing = s.ends_with('/') || s.ends_with(std::path::MAIN_SEPARATOR);
+    if trailing || p.is_dir() {
+        p.join("progress.json")
+    } else {
+        p
+    }
+}
+
+/// `SHORASHIM_DATA` (or the pre-rename `GIYUR_STUDY_DATA`), resolved with
+/// [`resolve_data_path`].
+pub fn data_path_from_env() -> Option<PathBuf> {
+    std::env::var_os("SHORASHIM_DATA")
+        .or_else(|| std::env::var_os("GIYUR_STUDY_DATA"))
+        .filter(|v| !v.is_empty())
+        .map(resolve_data_path)
+}
+
 /// Default progress file path: config_dir()/Shorashim/progress.json
 /// (%APPDATA%\Shorashim\progress.json on Windows). Progress saved by
 /// v0.1.x under GiyurStudy is copied over on first start.
@@ -583,6 +606,27 @@ pub fn save(path: &Path, state: &State) -> std::io::Result<()> {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn data_path_may_be_a_folder() {
+        let dir = std::env::temp_dir().join(format!("shorashim-datadir-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        // An existing folder → progress.json inside it.
+        assert_eq!(super::resolve_data_path(&dir), dir.join("progress.json"));
+        // A file path stays as it is.
+        let file = dir.join("mine.json");
+        assert_eq!(super::resolve_data_path(&file), file);
+        // A missing folder written with a trailing separator.
+        let new = format!("{}/", dir.join("new").display());
+        assert_eq!(
+            super::resolve_data_path(&new),
+            std::path::PathBuf::from(&new).join("progress.json")
+        );
+        // Saving there creates the folder and the profile is writable.
+        let p = super::resolve_data_path(&new);
+        super::save(&p, &super::State::default()).unwrap();
+        assert!(p.is_file());
+        let _ = std::fs::remove_dir_all(&dir);
+    }
     use super::*;
 
     const TODAY: &str = "2026-11-22";

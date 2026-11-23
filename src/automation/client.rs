@@ -18,10 +18,8 @@ pub fn control_file(explicit: Option<PathBuf>) -> PathBuf {
     if let Some(p) = std::env::var_os("SHORASHIM_CONTROL_FILE") {
         return PathBuf::from(p);
     }
-    if let Some(p) =
-        std::env::var_os("SHORASHIM_DATA").or_else(|| std::env::var_os("GIYUR_STUDY_DATA"))
-    {
-        return super::server::control_path_for(&PathBuf::from(p));
+    if let Some(p) = crate::storage::data_path_from_env() {
+        return super::server::control_path_for(&p);
     }
     dirs::config_dir()
         .unwrap_or_else(|| PathBuf::from("."))

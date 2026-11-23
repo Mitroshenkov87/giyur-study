@@ -24,6 +24,9 @@ pub const CONTENT_PAD: f32 = 32.0;
 pub const ASIDE: f32 = 300.0;
 /// Empty space kept on each side before the aside is shown.
 pub const MIN_MARGIN: f32 = 40.0;
+/// Extra room under every page, so its last buttons and captions can be
+/// scrolled clear of a toast in the bottom-right corner.
+pub const TOAST_CLEARANCE: f32 = 96.0;
 
 /// Column positions for one window width (logical pixels).
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -84,7 +87,12 @@ pub fn page<'a, Message: 'a>(
     reserved: f32,
 ) -> Element<'a, Message> {
     let body = container(screen)
-        .padding([28.0, CONTENT_PAD])
+        .padding(iced::Padding {
+            top: 28.0,
+            bottom: 28.0 + TOAST_CLEARANCE,
+            left: CONTENT_PAD,
+            right: CONTENT_PAD,
+        })
         .width(width)
         .height(Length::Shrink)
         .clip(true);
