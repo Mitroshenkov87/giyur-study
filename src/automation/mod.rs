@@ -129,7 +129,7 @@ pub const COMMANDS: &[(&str, &str)] = &[
     ("navigate", "Go to a route: to = \"map\" | \"calendar[:today|month|settings|YYYY-MM-DD]\" | \"section:<id>\" | \"lesson:<id>\" | \"cards:<lessonId>\" | \"deck:<sectionId>\" | \"cards:review\" | \"exam[:<sectionId>]\" | \"examrun:section:<id>[:n]\" | \"examrun:general[:n]\" | \"examrun:beitdin[:n]\" | \"timed\" | \"timedrun\" | \"progress\" | \"settings\" | \"sources\" | \"interview[:practice|rehearsal]\" | \"prayers[:<prayerId>]\" | \"level\" | \"welcome\", or a sidebar label, current or old («Уроки» / «Карта», «Карточки» / «Повторение», «Викторина» / «Экзамен», «Успехи» / «Прогресс», «Календарь», «Молитвы», «Тесты», «Настройки», «Источники»)."),
     ("back", "«Назад»: previous screen."),
     ("press", "Press a control from `state`: id (exact), or label (exact, case-insensitive), or contains (substring); nth picks among several matches (0-based). Links, file dialogs and the installer (OpenUrl, Export, ImportPick, Install, AskUninstall) need allow_external=true and work only in the windowed app."),
-    ("answer", "Answer the current question: choice (0-based, in the order shown), tf (true/false), text (typed answer, submitted), knew (flashcard: flips if needed, then grades), self_grade (0..1, open answers), auto=true (any answer, for smoke tests); next=true then presses «Далее»."),
+    ("answer", "Answer the current question: choice (0-based, in the order shown), tf (true/false), text (typed answer, submitted), knew (flashcard: flips if needed, then grades), self_grade (0..1, open answers or interview: ≥0.75 picks the right option, else a wrong one), auto=true (any answer, for smoke tests); next=true then presses «Далее»."),
     ("type", "Type into an input field: text, input (index from `state`, default 0), append (keep current text), submit (press Enter)."),
     ("select", "Pick from a drop-down listed under `choices` in `state`: choice (index) or target (shown text, substring; nth for several), option (option text, exact or substring)."),
     ("reviewer", "«Открытый режим рецензента»: on=true|false switches it (like the settings switch; persist=false: for this run only, like --reviewer). Without on, reports it. The reply has `progress` = the real progress, which the mode never changes."),
@@ -608,6 +608,7 @@ fn answer(host: &mut dyn Host, a: &Map<String, Value>) -> Result<(), String> {
         let prefixes: &[&str] = match screen {
             "exam" => &["Exam(PickMc(", "Exam(PickTf("],
             "timed" => &["Timed(Pick("],
+            "interview" => &["Interview(Pick("],
             _ => return Err(format!("choice: no question on screen «{screen}»")),
         };
         let view = inspect(host);
@@ -650,7 +651,7 @@ fn answer(host: &mut dyn Host, a: &Map<String, Value>) -> Result<(), String> {
         }
         msgs.push(S::Cards(screens::cards::Msg::Grade(knew)));
     } else if let Some(g) = arg_num(a, "self_grade").filter(|_| screen == "interview") {
-        msgs.extend(interview_grade(g));
+        msgs.extend(interview_grade(host, g)?);
     } else if let Some(g) = arg_num(a, "self_grade") {
         if screen != "exam" {
             return Err(format!("self_grade: no open question on screen «{screen}»"));
@@ -676,22 +677,34 @@ fn answer(host: &mut dyn Host, a: &Map<String, Value>) -> Result<(), String> {
     Ok(())
 }
 
-/// Interview trainer self-rating: reveal the guidance, then rate
-/// (≥ 0.75 «Готов», ≥ 0.25 «Частично», else «Ещё не готов»).
-fn interview_grade(g: f64) -> Vec<screens::Msg> {
-    use crate::interview::Rating;
+/// Interview trainer: ≥ 0.75 picks the right option, otherwise a wrong one.
+fn interview_grade(host: &dyn Host, g: f64) -> Result<Vec<screens::Msg>, String> {
+    interview_pick(host, g >= 0.75)
+}
+
+/// Pick the right (or a wrong) option of the question now on screen.
+fn interview_pick(host: &dyn Host, correct: bool) -> Result<Vec<screens::Msg>, String> {
+    use crate::interview;
     use screens::interview::Msg as I;
-    let r = if g >= 0.75 {
-        Rating::Ready
-    } else if g >= 0.25 {
-        Rating::Partly
-    } else {
-        Rating::NotYet
+    let Current::Interview(s) = host.screen() else {
+        return Err("interview: not on the trainer screen".into());
     };
-    vec![
-        screens::Msg::Interview(I::Reveal),
-        screens::Msg::Interview(I::Rate(r)),
-    ]
+    let id = s
+        .current_id()
+        .ok_or_else(|| "interview: no question on screen".to_string())?;
+    let q = interview::bank()
+        .item(id)
+        .ok_or_else(|| format!("interview: unknown question {id}"))?;
+    let (opts, right) = q.choices(interview::user_level(&host.ctx().state));
+    if opts.is_empty() {
+        return Err("interview: question has no options".into());
+    }
+    let idx = if correct {
+        right
+    } else {
+        (0..opts.len()).find(|&i| i != right).unwrap_or(right)
+    };
+    Ok(vec![screens::Msg::Interview(I::Pick(idx))])
 }
 
 /// Give *some* answer to whatever question is shown (smoke tests): the
@@ -700,7 +713,7 @@ fn interview_grade(g: f64) -> Vec<screens::Msg> {
 fn auto_answer(host: &mut dyn Host, screen: &str) -> Result<(), String> {
     use screens::Msg as S;
     if screen == "interview" {
-        for m in interview_grade(0.5) {
+        for m in interview_grade(host, 0.5)? {
             host.dispatch(m);
         }
         return Ok(());
@@ -712,9 +725,14 @@ fn auto_answer(host: &mut dyn Host, screen: &str) -> Result<(), String> {
     }
     let view = inspect(host);
     let first = view.controls.iter().find(|c| {
-        ["Exam(PickMc(", "Exam(PickTf(", "Timed(Pick("]
-            .iter()
-            .any(|p| c.id.starts_with(p))
+        [
+            "Exam(PickMc(",
+            "Exam(PickTf(",
+            "Timed(Pick(",
+            "Interview(Pick(",
+        ]
+        .iter()
+        .any(|p| c.id.starts_with(p))
     });
     if let Some(c) = first {
         let msgs = c.msgs.clone();
