@@ -464,7 +464,7 @@ mod tests {
                     match chars.next() {
                         Some('n') => s.push('\n'),
                         Some('t') => s.push('\t'),
-                        Some('\n') => {
+                        Some('\n') | Some('\r') => {
                             // Line continuation: skip the next line's indent.
                             let t = chars.as_str().trim_start();
                             chars = t.chars();
