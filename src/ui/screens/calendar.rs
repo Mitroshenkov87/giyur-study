@@ -813,7 +813,7 @@ impl Screen {
                 );
             }
             Some(place) => {
-                let name = display_place_name(&place.name);
+                let name = display_place_name(&place.name, place.lat, place.lon);
                 col = col.push(
                     txt(trf!("Место: {name}", "Place: {name}"))
                         .size(theme::text::SMALL)
@@ -1236,7 +1236,7 @@ impl Screen {
         let status = match self.prefs.active_place() {
             Some(pl) => {
                 let mode = mode_title(self.prefs.location_mode);
-                let place = display_place_name(&pl.name);
+                let place = display_place_name(&pl.name, pl.lat, pl.lon);
                 format!("{mode}: {place}")
             }
             None => tr("Место не выбрано — время свечей и постов не показывается").to_string(),
@@ -1638,8 +1638,14 @@ fn reading_name(reading: parasha::Reading) -> String {
 /// Synthetic place labels are stored in Russian (so the saved value stays a
 /// stable key) and translated here. City names from the list stay as stored:
 /// they are content text and the text the city search matches.
-fn display_place_name(name: &str) -> String {
+/// A place from Windows shows the nearest bundled city when one is close
+/// (the rounded point itself is not a name people recognise).
+fn display_place_name(name: &str, lat: f64, lon: f64) -> String {
     if name == "Примерное местоположение" {
+        if let Some(city) = crate::calendar::geo::nearest(lat, lon, 40.0) {
+            let city = city.name_ru.as_str();
+            return trf!("{city} (примерно)", "{city} (approximately)");
+        }
         return tr("Примерное местоположение").to_string();
     }
     if name == "Координаты вручную" {

@@ -297,11 +297,18 @@ fn leave_note(climbed: usize) -> String {
         tr("Эта попытка не будет засчитана — ничего страшного, подняться можно в любой момент.")
             .to_string()
     } else {
-        crate::trf!(
-            "Восхождение на этом закончится, а {climbed} {steps} останутся за вами. Продолжить можно и позже — новой попыткой.",
-            "The climb ends here, but your {climbed} {steps} remain yours. You can continue later with a new attempt.",
-            steps = ladder::steps_word(climbed)
-        )
+        let steps = ladder::steps_word(climbed);
+        if ladder::ru_singular(climbed) {
+            crate::trf!(
+                "Восхождение на этом закончится, а {climbed} {steps} останется за вами. Продолжить можно и позже — новой попыткой.",
+                "The climb ends here, but your {climbed} {steps} remains yours. You can continue later with a new attempt."
+            )
+        } else {
+            crate::trf!(
+                "Восхождение на этом закончится, а {climbed} {steps} останутся за вами. Продолжить можно и позже — новой попыткой.",
+                "The climb ends here, but your {climbed} {steps} remain yours. You can continue later with a new attempt."
+            )
+        }
     }
 }
 
@@ -1674,11 +1681,20 @@ fn reveal_view<'a>(run: &'a Run, rv: &'a Reveal) -> Element<'a, Msg> {
         Some((
             icons::Kind::Shield,
             if kept > 0 {
-                crate::trf!(
-                    "Вы спускаетесь к надёжной ступени {kept}: {kept} {steps} остаются за вами.",
-                    "You drop back to safe step {kept}: your {kept} {steps} stay yours.",
-                    steps = ladder::steps_word(kept)
-                )
+                {
+                    let steps = ladder::steps_word(kept);
+                    if ladder::ru_singular(kept) {
+                        crate::trf!(
+                            "Вы спускаетесь к надёжной ступени {kept}: {kept} {steps} остаётся за вами.",
+                            "You drop back to safe step {kept}: your {kept} {steps} stays yours."
+                        )
+                    } else {
+                        crate::trf!(
+                            "Вы спускаетесь к надёжной ступени {kept}: {kept} {steps} остаются за вами.",
+                            "You drop back to safe step {kept}: your {kept} {steps} stay yours."
+                        )
+                    }
+                }
             } else {
                 tr("Надёжная ступень ещё не пройдена, поэтому в этот раз ступеней нет.").to_string()
             },
@@ -1956,13 +1972,21 @@ fn view_results<'a>(ctx: &'a Ctx, res: &'a Results, w: f32) -> Element<'a, Msg> 
     info = info.push(muted(sub).size(theme::text::BODY));
     if r.outcome == Outcome::Fell && r.climbed > r.kept {
         info = info.push(
-            txt(crate::trf!(
-                "Вы поднялись до ступени {climbed}; за вами остаются {kept} {steps}.",
-                "You climbed to step {climbed}; you keep {kept} {steps}.",
-                climbed = r.climbed,
-                kept = r.kept,
-                steps = ladder::steps_word(r.kept)
-            ))
+            txt({
+                let (climbed, kept) = (r.climbed, r.kept);
+                let steps = ladder::steps_word(kept);
+                if ladder::ru_singular(kept) {
+                    crate::trf!(
+                        "Вы поднялись до ступени {climbed}; за вами остаётся {kept} {steps}.",
+                        "You climbed to step {climbed}; you keep {kept} {steps}."
+                    )
+                } else {
+                    crate::trf!(
+                        "Вы поднялись до ступени {climbed}; за вами остаются {kept} {steps}.",
+                        "You climbed to step {climbed}; you keep {kept} {steps}."
+                    )
+                }
+            })
             .size(theme::text::BODY)
             .color(p.text),
         );

@@ -114,6 +114,9 @@ pub enum Action {
     Quit,
     /// Skip to the next background track (settings «Следующий трек»).
     MusicNext,
+    /// Same screen, new content (e.g. the next interview question): scroll
+    /// the page back to the top.
+    ScrollTop,
 }
 
 #[derive(Debug, Clone)]

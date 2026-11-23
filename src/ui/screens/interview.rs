@@ -306,6 +306,7 @@ impl Screen {
                 Mode::Practice => {
                     if self.practice.as_ref().is_some_and(|a| a.picked.is_some()) {
                         self.next_practice(ctx);
+                        return Action::ScrollTop;
                     }
                 }
                 Mode::Rehearsal => {
@@ -330,6 +331,7 @@ impl Screen {
                         interview::finish_run(&mut ctx.state, run);
                         ctx.save();
                     }
+                    return Action::ScrollTop;
                 }
                 Mode::Browse => {}
             },
@@ -504,9 +506,24 @@ impl Screen {
                 col = col.push(widgets::card(
                     button(body)
                         .on_press(msg)
+                        // No frame of its own: the card is the frame (a ghost
+                        // button here drew a second box inside the card).
                         .style(|_, s| {
                             let pal = theme::current();
-                            theme::button_ghost(&pal, s)
+                            button::Style {
+                                background: matches!(
+                                    s,
+                                    button::Status::Hovered | button::Status::Pressed
+                                )
+                                .then(|| {
+                                    Background::Color(iced::Color {
+                                        a: 0.35,
+                                        ..pal.surface2
+                                    })
+                                }),
+                                text_color: pal.text,
+                                ..button::Style::default()
+                            }
                         })
                         .padding(0)
                         .width(Length::Fill),

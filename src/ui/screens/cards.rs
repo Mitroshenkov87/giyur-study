@@ -408,7 +408,7 @@ impl Screen {
             if let Some(el) = differs_view(&card.differs, ctx, &mut group, &self.open_others) {
                 back = back.push(el);
             }
-            flip_container(back.into(), true)
+            flip_container(back.height(Length::Shrink).into(), true)
         } else {
             let hint = txt(tr("Вспомните ответ и нажмите, чтобы перевернуть"))
                 .size(theme::text::SMALL)
@@ -616,10 +616,15 @@ fn flip_container<'a>(content: Element<'a, Msg>, back: bool) -> Element<'a, Msg>
         // back side grow for long answers.
         row![Space::new().width(0.0).height(300.0), content]
             .spacing(0)
-            .width(Length::Fill),
+            .width(Length::Fill)
+            // Explicit Shrink: a «differs» note (vertical accent rule)
+            // makes the row's height hint Fill, and a Fill card inside the
+            // page's scrollable collapses to an empty strip.
+            .height(Length::Shrink),
     )
     .padding(24.0)
     .width(Length::Fill)
+    .height(Length::Shrink)
     .style(move |_| container::Style {
         text_color: Some(p.text),
         background: Some(Background::Color(bg)),
@@ -839,7 +844,7 @@ fn differs_view<'a>(
             }
         }
     }
-    Some(col.into())
+    Some(col.height(Length::Shrink).into())
 }
 
 // ---------------------------------------------------------------------------

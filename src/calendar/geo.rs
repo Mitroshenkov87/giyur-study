@@ -141,6 +141,25 @@ pub fn cities() -> &'static [City] {
     &crate::content_store::get().cities
 }
 
+/// The bundled city closest to a point, if it is within `max_km`.
+pub fn nearest(lat: f64, lon: f64, max_km: f64) -> Option<&'static City> {
+    cities()
+        .iter()
+        .map(|c| (c, distance_km(lat, lon, c.lat, c.lon)))
+        .filter(|(_, d)| *d <= max_km)
+        .min_by(|a, b| a.1.total_cmp(&b.1))
+        .map(|(c, _)| c)
+}
+
+/// Great-circle distance (haversine), km.
+fn distance_km(lat1: f64, lon1: f64, lat2: f64, lon2: f64) -> f64 {
+    let (p1, p2) = (lat1.to_radians(), lat2.to_radians());
+    let dp = p2 - p1;
+    let dl = (lon2 - lon1).to_radians();
+    let a = (dp / 2.0).sin().powi(2) + p1.cos() * p2.cos() * (dl / 2.0).sin().powi(2);
+    6371.0 * 2.0 * a.sqrt().asin()
+}
+
 /// Case-insensitive substring search over Russian names and countries.
 /// `ё` and `е` match. Name-prefix hits come before other hits.
 pub fn search(query: &str) -> Vec<&'static City> {
@@ -166,6 +185,14 @@ fn normalize(s: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn nearest_city_is_found_only_when_close() {
+        let jerusalem = city("Иерусалим");
+        let near = nearest(jerusalem.lat + 0.05, jerusalem.lon, 40.0).unwrap();
+        assert_eq!(near.name_ru, "Иерусалим");
+        assert!(nearest(0.0, -150.0, 40.0).is_none());
+    }
 
     fn city(name: &str) -> &City {
         cities()

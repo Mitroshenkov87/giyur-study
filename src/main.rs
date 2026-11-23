@@ -213,6 +213,13 @@ impl App {
                     self.music.next();
                     self.sync_music();
                 }
+                Action::ScrollTop => {
+                    self.sync_music();
+                    return iced::widget::operation::snap_to(
+                        MAIN_SCROLL,
+                        iced::widget::operation::RelativeOffset::START,
+                    );
+                }
             },
             Message::Nav(r) => {
                 // A sidebar jump out of a run in progress asks first.
