@@ -13,6 +13,8 @@ use super::cli::{session_options, take_flag, take_opt};
 use super::client::{self, Client};
 use super::session::Session;
 
+use crate::i18n::tr;
+
 enum Backend {
     Headless(Box<Session>),
     Attach {
@@ -68,7 +70,7 @@ fn tools(attach: bool) -> Vec<Value> {
         ("select", "Choose an option in a drop-down from `state.choices`: choice = its index (or target = its shown text), option = option text.",
             obj(json!({"choice": {"type": "integer", "minimum": 0, "description": "Index from state.choices"}, "target": {"type": "string", "description": "Shown text of the drop-down (substring)"}, "option": {"type": "string"}, "nth": {"type": "integer", "minimum": 0}, "state": state_flag}), &["option"])),
         ("set", "Change a setting.",
-            obj(json!({"key": {"type": "string", "enum": ["theme", "font_step", "translit", "unlock_all", "reviewer_mode", "timed_sound", "timed_auto", "timed_seconds", "daily_goal"]}, "value": {"description": "theme: dark|leather (parchment = old name); font_step: 0..3; booleans; timed_seconds: 20|30; daily_goal: 10|20|30|50"}}), &["key", "value"])),
+            obj(json!({"key": {"type": "string", "enum": ["theme", "font_step", "translit", "unlock_all", "reviewer_mode", "timed_sound", "timed_auto", "timed_seconds", "daily_goal", "lang"]}, "value": {"description": "theme: dark|leather (parchment = old name); font_step: 0..3; booleans; timed_seconds: 20|30; daily_goal: 10|20|30|50; lang: ru|en"}}), &["key", "value"])),
         ("reviewer", "«Открытый режим рецензента» (for a rabbi or a beta tester): on=true opens every section, lesson, «Маалот» step, exam question, collection object and badge; progress is not counted and comes back unchanged with on=false. persist=false: for this run only. Without on, reports the mode and the real progress.",
             obj(json!({"on": {"type": "boolean"}, "persist": {"type": "boolean"}, "state": state_flag}), &[])),
         ("screenshot", "Save a WebP screenshot (the real window when attached; the rendered page when headless). inline=true also returns the image.",
@@ -96,7 +98,7 @@ fn tools(attach: bool) -> Vec<Value> {
         ));
     }
     t.into_iter()
-        .map(|(name, d, schema)| json!({"name": name, "description": d, "inputSchema": schema}))
+        .map(|(name, d, schema)| json!({"name": name, "description": tr(d), "inputSchema": schema}))
         .collect()
 }
 
@@ -166,7 +168,13 @@ pub fn main(args: &[String]) -> i32 {
     let file = client::control_file(take_opt(&mut args, "--file").map(PathBuf::from));
     let mut backend = if headless {
         match session_options(&mut args) {
-            Ok(o) => Backend::Headless(Box::new(Session::new(o))),
+            Ok(o) => {
+                if let Err(e) = crate::content_store::start(o.data.as_deref()) {
+                    eprintln!("course content not loaded: {e}");
+                    return 2;
+                }
+                Backend::Headless(Box::new(Session::new(o)))
+            }
             Err(e) => {
                 eprintln!("{e}");
                 return 2;

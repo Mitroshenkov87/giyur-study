@@ -1,0 +1,41 @@
+{
+ "version": "1.0.0",
+ "contentVersion": "2026-11-23",
+ "reviewStatus": "awaiting rabbinic review",
+ "minAppVersion": "0.5.6",
+ "contentFormat": 1,
+ "sections": [
+  {
+   "id": "osnovy",
+   "file": "sections/01-osnovy.json"
+  },
+  {
+   "id": "ivrit",
+   "file": "sections/02-ivrit.json"
+  },
+  {
+   "id": "shabbat",
+   "file": "sections/03-shabbat.json"
+  },
+  {
+   "id": "kashrut",
+   "file": "sections/04-kashrut.json"
+  },
+  {
+   "id": "prazdniki",
+   "file": "sections/05-prazdniki.json"
+  },
+  {
+   "id": "semya",
+   "file": "sections/06-semya.json"
+  },
+  {
+   "id": "etika",
+   "file": "sections/07-etika.json"
+  },
+  {
+   "id": "beit-din",
+   "file": "sections/08-beit-din.json"
+  }
+ ]
+}

@@ -29,6 +29,7 @@ use rand::SeedableRng;
 
 use crate::content::{Difficulty, Question};
 use crate::game::{self, AwardOutcome};
+use crate::i18n::tr;
 use crate::ladder::{self, Help, Ladder, LadderResult, Lifeline, Outcome, Step};
 use crate::ui::app::{Action, Ctx, Route, Toast};
 use crate::ui::fonts::{HEBREW, SANS, SANS_BOLD, SERIF_BOLD};
@@ -148,9 +149,9 @@ fn divider<'a>() -> Element<'a, Msg> {
 
 fn tier_word(d: Option<Difficulty>) -> &'static str {
     match d {
-        Some(Difficulty::Easy) => "лёгкая",
-        Some(Difficulty::Hard) => "трудная",
-        _ => "средняя",
+        Some(Difficulty::Easy) => tr("лёгкая"),
+        Some(Difficulty::Hard) => tr("трудная"),
+        _ => tr("средняя"),
     }
 }
 
@@ -277,10 +278,10 @@ fn celebrate_award(ctx: &mut Ctx, award: &AwardOutcome) {
 /// first. Rendered as a shell layer above the whole window.
 fn confirm_dialog<'a>(body: String) -> Element<'a, Msg> {
     widgets::confirm_modal(
-        LEAVE_TITLE,
+        tr(LEAVE_TITLE),
         body,
-        "Продолжить",
-        "Выйти",
+        tr("Продолжить"),
+        tr("Выйти"),
         Msg::ConfirmNo,
         Msg::ConfirmYes,
     )
@@ -293,12 +294,13 @@ const LEAVE_TITLE: &str = "Прервать восхождение?";
 /// the run does not count; steps climbed — they stay (as «Забрать»).
 fn leave_note(climbed: usize) -> String {
     if climbed == 0 {
-        "Эта попытка не будет засчитана — ничего страшного, подняться можно в любой момент."
+        tr("Эта попытка не будет засчитана — ничего страшного, подняться можно в любой момент.")
             .to_string()
     } else {
-        format!(
-            "Восхождение на этом закончится, а {climbed} {} останутся за вами. Продолжить можно и позже — новой попыткой.",
-            ladder::steps_word(climbed)
+        crate::trf!(
+            "Восхождение на этом закончится, а {climbed} {steps} останутся за вами. Продолжить можно и позже — новой попыткой.",
+            "The climb ends here, but your {climbed} {steps} remain yours. You can continue later with a new attempt.",
+            steps = ladder::steps_word(climbed)
         )
     }
 }
@@ -445,7 +447,7 @@ fn ladder_column<'a>(states: &[RungState]) -> Element<'a, Msg> {
                 .align_x(Alignment::Center),
             container(txt(n.to_string()).size(13.5).font(SANS_BOLD).color(ink))
                 .width(Length::Fixed(20.0)),
-            txt(r.name)
+            txt(tr(r.name))
                 .size(13.0)
                 .font(if bold { SANS_BOLD } else { SANS })
                 .color(ink)
@@ -475,7 +477,7 @@ fn ladder_column<'a>(states: &[RungState]) -> Element<'a, Msg> {
         container(
             row![
                 icons::icon(icons::Kind::Shield, 13.0, p.gold),
-                muted("надёжная ступень").size(12.5),
+                muted(tr("надёжная ступень")).size(12.5),
             ]
             .spacing(6)
             .align_y(Alignment::Center),
@@ -495,12 +497,12 @@ fn ladder_column<'a>(states: &[RungState]) -> Element<'a, Msg> {
 fn ladder_stair<'a>(states: Vec<RungState>, pos: f32) -> Element<'a, Msg> {
     let p = tp();
     let col = column![
-        container(muted("Пятнадцать ступеней").size(11.5)).center_x(Length::Fill),
+        container(muted(tr("Пятнадцать ступеней")).size(11.5)).center_x(Length::Fill),
         container(stair::view(states, pos)).center_x(Length::Fill),
         container(
             row![
                 icons::icon(icons::Kind::Shield, 13.0, p.gold),
-                muted("Золотой кант — надёжная ступень").size(12.0),
+                muted(tr("Золотой кант — надёжная ступень")).size(12.0),
             ]
             .spacing(6)
             .align_y(Alignment::Center),
@@ -555,7 +557,7 @@ fn ladder_strip<'a>(states: &[RungState]) -> Element<'a, Msg> {
         groups,
         row![
             icons::icon(icons::Kind::Shield, 13.0, p.gold),
-            muted("Надёжные ступени — 5 «Микра» и 10 «Мишна»").size(12.5),
+            muted(tr("Надёжные ступени — 5 «Микра» и 10 «Мишна»")).size(12.5),
         ]
         .spacing(6)
         .align_y(Alignment::Center),
@@ -1127,7 +1129,7 @@ impl Screen {
             Phase::Run(run) if run.ladder.outcome.is_none() && !run.frozen => {
                 let n = run.ladder.climbed;
                 Some(super::LeaveGuard {
-                    title: LEAVE_TITLE.to_string(),
+                    title: tr(LEAVE_TITLE).to_string(),
                     body: leave_note(n),
                 })
             }
@@ -1176,10 +1178,10 @@ impl Screen {
 fn view_setup<'a>(ctx: &'a Ctx, w: f32) -> Element<'a, Msg> {
     let p = tp();
     let mut col = Column::new().spacing(18).width(Length::Fill);
-    col = col.push(widgets::kicker("Лестница знаний"));
+    col = col.push(widgets::kicker(tr("Лестница знаний")));
     col = col.push(
         row![
-            widgets::heading("Маалот", 1),
+            widgets::heading(tr("Маалот"), 1),
             txt("מַעֲלוֹת")
                 .font(HEBREW)
                 .size(theme::text::H1 * 0.9)
@@ -1190,17 +1192,17 @@ fn view_setup<'a>(ctx: &'a Ctx, w: f32) -> Element<'a, Msg> {
     );
     col = col.push(
         column![
-            muted(
+            muted(tr(
                 "Пятнадцать ступеней — от лёгких вопросов к трудным. Ступени 5 «Микра» \
-                 и 10 «Мишна» надёжные: после ошибки вы спускаетесь к последней \
-                 надёжной ступени, которую прошли.",
-            )
+                    и 10 «Мишна» надёжные: после ошибки вы спускаетесь к последней \
+                    надёжной ступени, которую прошли."
+            ),)
             .size(theme::text::BODY),
-            muted(
+            muted(tr(
                 "Три подсказки — «50 на 50», «Подсказка из урока» и «Спросить раввина» — \
-                 по одному разу за игру. Остановиться можно в любой момент: пройденные \
-                 ступени останутся за вами.",
-            )
+                    по одному разу за игру. Остановиться можно в любой момент: пройденные \
+                    ступени останутся за вами."
+            ),)
             .size(theme::text::BODY),
         ]
         .spacing(10)
@@ -1208,7 +1210,7 @@ fn view_setup<'a>(ctx: &'a Ctx, w: f32) -> Element<'a, Msg> {
     );
     if ctx.reviewer() {
         col = col.push(widgets::reviewer_jumps(
-            "Начать сразу с любой ступени: нажмите номер.",
+            tr("Начать сразу с любой ступени: нажмите номер."),
             ladder::STEPS,
             0,
             Msg::Jump,
@@ -1216,9 +1218,11 @@ fn view_setup<'a>(ctx: &'a Ctx, w: f32) -> Element<'a, Msg> {
         ));
     }
     col = col.push(widgets::quote_block(
-        "В пять лет — к Микре, в десять — к Мишне, в тринадцать — к мицвот, … \
-         в пятнадцать — к Гмаре",
-        Some("Пиркей Авот 5:21"),
+        tr(
+            "В пять лет — к Микре, в десять — к Мишне, в тринадцать — к мицвот, … \
+             в пятнадцать — к Гмаре",
+        ),
+        Some(tr("Пиркей Авот 5:21")),
     ));
 
     let counts = ladder::pool_counts(&ctx.lib, &ctx.state);
@@ -1226,8 +1230,10 @@ fn view_setup<'a>(ctx: &'a Ctx, w: f32) -> Element<'a, Msg> {
     if total == 0 {
         col = col.push(map::notice(
             icons::Kind::Book,
-            "Для лестницы пока нет вопросов. Откройте первый раздел и прочитайте \
-             его уроки — тогда здесь можно будет начать восхождение.",
+            tr(
+                "Для лестницы пока нет вопросов. Откройте первый раздел и прочитайте \
+                 его уроки — тогда здесь можно будет начать восхождение.",
+            ),
             p,
         ));
         return col.into();
@@ -1239,9 +1245,9 @@ fn view_setup<'a>(ctx: &'a Ctx, w: f32) -> Element<'a, Msg> {
     let mut tiles = Row::new().spacing(10).width(Length::Fill);
     for (d, mc, tf) in counts {
         let (title, steps) = match d {
-            Difficulty::Easy => ("Лёгкие", "ступени 1–5"),
-            Difficulty::Medium => ("Средние", "ступени 6–10"),
-            Difficulty::Hard => ("Трудные", "ступени 11–15"),
+            Difficulty::Easy => (tr("Лёгкие"), tr("ступени 1–5")),
+            Difficulty::Medium => (tr("Средние"), tr("ступени 6–10")),
+            Difficulty::Hard => (tr("Трудные"), tr("ступени 11–15")),
         };
         tiles = tiles.push(
             container(
@@ -1275,10 +1281,10 @@ fn view_setup<'a>(ctx: &'a Ctx, w: f32) -> Element<'a, Msg> {
     }
     card = card.push(
         column![
-            txt("Вопросы для лестницы")
+            txt(tr("Вопросы для лестницы"))
                 .size(theme::text::BODY)
                 .color(p.text),
-            muted("Из открытых разделов, по вашему уровню").size(theme::text::SMALL),
+            muted(tr("Из открытых разделов, по вашему уровню")).size(theme::text::SMALL),
         ]
         .spacing(2),
     );
@@ -1290,7 +1296,7 @@ fn view_setup<'a>(ctx: &'a Ctx, w: f32) -> Element<'a, Msg> {
     let seg = widgets::segmented(
         ladder::TIMER_CHOICES
             .iter()
-            .map(|&(v, label)| (label.to_string(), Msg::Secs(v)))
+            .map(|&(v, label)| (tr(label).to_string(), Msg::Secs(v)))
             .collect(),
         ladder::TIMER_CHOICES.iter().position(|&(v, _)| v == secs),
     );
@@ -1298,13 +1304,13 @@ fn view_setup<'a>(ctx: &'a Ctx, w: f32) -> Element<'a, Msg> {
         column![
             row![
                 icons::icon(icons::Kind::Timer, 18.0, p.gold),
-                txt("Таймер на вопрос")
+                txt(tr("Таймер на вопрос"))
                     .size(theme::text::BODY)
                     .color(p.text),
             ]
             .spacing(8)
             .align_y(Alignment::Center),
-            muted("Если время выйдет, ответ считается неверным.").size(theme::text::SMALL),
+            muted(tr("Если время выйдет, ответ считается неверным.")).size(theme::text::SMALL),
             container(seg).max_width(420),
         ]
         .spacing(8)
@@ -1317,20 +1323,24 @@ fn view_setup<'a>(ctx: &'a Ctx, w: f32) -> Element<'a, Msg> {
     let record: Element<'a, Msg> = if best > 0 {
         row![
             icons::icon(icons::Kind::Star, 18.0, p.gold),
-            txt(format!("Рекорд: {best} из {}", ladder::STEPS))
-                .size(theme::text::BODY)
-                .font(SANS_BOLD)
-                .color(p.gold2),
+            txt(crate::trf!(
+                "Рекорд: {best} из {total}",
+                "Record: {best} of {total}",
+                total = ladder::STEPS
+            ))
+            .size(theme::text::BODY)
+            .font(SANS_BOLD)
+            .color(p.gold2),
         ]
         .spacing(8)
         .align_y(Alignment::Center)
         .into()
     } else {
-        muted("Рекорда пока нет").size(theme::text::BODY).into()
+        muted(tr("Рекорда пока нет")).size(theme::text::BODY).into()
     };
     let start = widgets::btn_icon(
         icons::icon(icons::Kind::Ladder, 18.0, p.on_gold),
-        "Начать восхождение",
+        tr("Начать восхождение"),
         widgets::Btn::Primary,
         widgets::BtnSize::Lg,
         Some(Msg::Start),
@@ -1459,7 +1469,7 @@ fn options<'a>(
             None => OptLook::Normal,
         };
         let on = (active && look == OptLook::Normal).then_some(Msg::Pick(k));
-        items.push(option_button(k, opt.text.as_str(), look, on, tf));
+        items.push(option_button(k, tr(opt.text.as_str()), look, on, tf));
     }
     if tf {
         Row::with_children(items)
@@ -1484,8 +1494,8 @@ fn lifeline_button<'a>(l: Lifeline, usable: bool, short: bool) -> Element<'a, Ms
     let label = if short {
         match l {
             Lifeline::Fifty => "50/50",
-            Lifeline::Lesson => "Урок",
-            Lifeline::Rabbi => "Раввин",
+            Lifeline::Lesson => tr("Урок"),
+            Lifeline::Rabbi => tr("Раввин"),
         }
     } else {
         l.title()
@@ -1540,7 +1550,7 @@ fn help_view<'a>(l: Lifeline, h: &'a Help) -> Element<'a, Msg> {
         Help::Fifty(_) => help_panel(
             icons::Kind::Half,
             l.title(),
-            muted("Два неверных варианта убраны.").size(theme::text::SMALL),
+            muted(tr("Два неверных варианта убраны.")).size(theme::text::SMALL),
         ),
         Help::Lesson {
             section,
@@ -1566,23 +1576,31 @@ fn help_view<'a>(l: Lifeline, h: &'a Help) -> Element<'a, Msg> {
                 Some(i) => c = c.push(widgets::quote_block(i.as_str(), None)),
                 None => {
                     c = c.push(
-                        muted("Ответ — в этом уроке: вспомните его главные мысли.")
+                        muted(tr("Ответ — в этом уроке: вспомните его главные мысли."))
                             .size(theme::text::SMALL),
                     )
                 }
             }
             if let Some(s) = source {
-                c = c.push(muted(format!("Источник: {s}")).size(theme::text::SMALL));
+                c = c.push(
+                    muted(crate::trf!("Источник: {s}", "Source: {s}")).size(theme::text::SMALL),
+                );
             }
             help_panel(icons::Kind::Book, l.title(), c)
         }
         Help::Rabbi(t) => help_panel(
             icons::Kind::Speech,
             l.title(),
-            txt(format!("{}{t}", ladder::RABBI_LEAD))
-                .size(theme::text::BODY)
-                .color(p.text)
-                .width(Length::Fill),
+            txt({
+                let lead = ladder::RABBI_LEAD;
+                crate::trf!(
+                    "{lead}{t}",
+                    "The rabbi doesn't name the answer, only points the way: {t}"
+                )
+            })
+            .size(theme::text::BODY)
+            .color(p.text)
+            .width(Length::Fill),
         ),
     }
 }
@@ -1592,11 +1610,11 @@ fn reveal_view<'a>(run: &'a Run, rv: &'a Reveal) -> Element<'a, Msg> {
     let p = tp();
     let c = rv.step.q.common();
     let (title, color, bg) = if rv.right {
-        ("Верно!", p.ok, p.ok_soft)
+        (tr("Верно!"), p.ok, p.ok_soft)
     } else if rv.pick.is_none() {
-        ("Время вышло", p.bad, p.bad_soft)
+        (tr("Время вышло"), p.bad, p.bad_soft)
     } else {
-        ("Неверно", p.bad, p.bad_soft)
+        (tr("Неверно"), p.bad, p.bad_soft)
     };
     let mut col = Column::new().spacing(8).width(Length::Fill);
     col = col.push(
@@ -1608,10 +1626,10 @@ fn reveal_view<'a>(run: &'a Run, rv: &'a Reveal) -> Element<'a, Msg> {
     if !rv.right {
         col = col.push(
             iced::widget::rich_text::<(), Msg, Theme, Renderer>(vec![
-                iced::widget::text::Span::new("Правильный ответ: ")
+                iced::widget::text::Span::new(tr("Правильный ответ: "))
                     .font(SANS)
                     .color(p.text),
-                iced::widget::text::Span::new(rv.step.right_text())
+                iced::widget::text::Span::new(tr(rv.step.right_text()))
                     .font(SANS_BOLD)
                     .color(p.text),
             ])
@@ -1623,23 +1641,28 @@ fn reveal_view<'a>(run: &'a Run, rv: &'a Reveal) -> Element<'a, Msg> {
         col = col.push(widgets::rich_paragraph(e));
     }
     if let Some(s) = &c.source {
-        col = col.push(muted(format!("Источник: {s}")).size(theme::text::SMALL));
+        col = col.push(muted(crate::trf!("Источник: {s}", "Source: {s}")).size(theme::text::SMALL));
     }
     // What the answer means on the ladder.
     let note: Option<(icons::Kind, String, Color)> = if rv.right {
         if run.ladder.outcome == Some(Outcome::Top) {
             Some((
                 icons::Kind::Star,
-                format!("Вершина: все {} ступеней пройдены.", run.ladder.len()),
+                crate::trf!(
+                    "Вершина: все {n} ступеней пройдены.",
+                    "The top: all {n} steps climbed.",
+                    n = run.ladder.len()
+                ),
                 p.gold2,
             ))
         } else if ladder::SAFE.contains(&rv.no) {
             Some((
                 icons::Kind::Shield,
-                format!(
-                    "Надёжная ступень: {} {} уже ваши.",
-                    rv.no,
-                    ladder::steps_word(rv.no)
+                crate::trf!(
+                    "Надёжная ступень: {no} {steps} уже ваши.",
+                    "Safe step: the {no} {steps} are yours now.",
+                    no = rv.no,
+                    steps = ladder::steps_word(rv.no)
                 ),
                 p.gold2,
             ))
@@ -1651,12 +1674,13 @@ fn reveal_view<'a>(run: &'a Run, rv: &'a Reveal) -> Element<'a, Msg> {
         Some((
             icons::Kind::Shield,
             if kept > 0 {
-                format!(
-                    "Вы спускаетесь к надёжной ступени {kept}: {kept} {} остаются за вами.",
-                    ladder::steps_word(kept)
+                crate::trf!(
+                    "Вы спускаетесь к надёжной ступени {kept}: {kept} {steps} остаются за вами.",
+                    "You drop back to safe step {kept}: your {kept} {steps} stay yours.",
+                    steps = ladder::steps_word(kept)
                 )
             } else {
-                "Надёжная ступень ещё не пройдена, поэтому в этот раз ступеней нет.".to_string()
+                tr("Надёжная ступень ещё не пройдена, поэтому в этот раз ступеней нет.").to_string()
             },
             p.muted,
         ))
@@ -1693,14 +1717,18 @@ fn view_run<'a>(run: &'a Run, w: f32, three_d: bool, reviewer: bool) -> Element<
         .align_y(Alignment::Center)
         .width(Length::Fill);
     top = top.push(widgets::kicker(if wide {
-        "Маалот · лестница знаний"
+        tr("Маалот · лестница знаний")
     } else {
-        "Маалот"
+        tr("Маалот")
     }));
     top = top.push(space::horizontal());
     if safe > 0 {
         top = top.push(widgets::pill(
-            format!("Надёжно: {safe} {}", ladder::steps_word(safe)),
+            crate::trf!(
+                "Надёжно: {safe} {steps}",
+                "Safe: {safe} {steps}",
+                steps = ladder::steps_word(safe)
+            ),
             widgets::Pill::Chip,
         ));
     }
@@ -1721,14 +1749,19 @@ fn view_run<'a>(run: &'a Run, w: f32, three_d: bool, reviewer: bool) -> Element<
     let r = ladder::rung(no);
 
     let mut card = Column::new().spacing(14).width(Length::Fill);
-    let mut meta = format!("Ступень {no} из {}", l.len());
+    let mut meta = crate::trf!(
+        "Ступень {no} из {total}",
+        "Step {no} of {total}",
+        no = no,
+        total = l.len()
+    );
     if !r.name.is_empty() {
-        meta.push_str(&format!(" · «{}»", r.name));
+        meta.push_str(&crate::trf!(" · «{name}»", " · {name}", name = tr(r.name)));
     }
     meta.push_str(" · ");
     meta.push_str(tier_word(c.difficulty));
     if matches!(step.q, Question::Tf { .. }) {
-        meta.push_str(" · верно или неверно?");
+        meta.push_str(tr(" · верно или неверно?"));
     }
     card = card.push(
         row![
@@ -1772,9 +1805,14 @@ fn view_run<'a>(run: &'a Run, w: f32, three_d: bool, reviewer: bool) -> Element<
     card = card.push(divider());
     let walk: Option<Element<'a, Msg>> = l.outcome.is_none().then(|| {
         let label = if l.climbed == 0 {
-            "Выйти".to_string()
+            tr("Выйти").to_string()
         } else {
-            format!("Забрать {} {}", l.climbed, ladder::steps_word(l.climbed))
+            crate::trf!(
+                "Забрать {n} {steps}",
+                "Take the {n} {steps}",
+                n = l.climbed,
+                steps = ladder::steps_word(l.climbed)
+            )
         };
         widgets::btn(
             label,
@@ -1788,11 +1826,11 @@ fn view_run<'a>(run: &'a Run, w: f32, three_d: bool, reviewer: bool) -> Element<
         None if compact => None,
         None => Some(
             row![
-                muted("Ответ — клавиши").size(theme::text::SMALL),
+                muted(tr("Ответ — клавиши")).size(theme::text::SMALL),
                 kbd("A"),
                 muted("–").size(theme::text::SMALL),
                 kbd("D"),
-                muted("или").size(theme::text::SMALL),
+                muted(tr("или")).size(theme::text::SMALL),
                 kbd("1"),
                 muted("–").size(theme::text::SMALL),
                 kbd("4"),
@@ -1803,9 +1841,9 @@ fn view_run<'a>(run: &'a Run, w: f32, three_d: bool, reviewer: bool) -> Element<
         ),
         Some(_) => {
             let label = if l.outcome.is_some() {
-                "Итоги"
+                tr("Итоги")
             } else {
-                "Следующая ступень"
+                tr("Следующая ступень")
             };
             Some(if compact {
                 widgets::btn(
@@ -1870,7 +1908,7 @@ fn view_run<'a>(run: &'a Run, w: f32, three_d: bool, reviewer: bool) -> Element<
     let mut page = column![top].spacing(16).width(Length::Fill);
     if reviewer {
         page = page.push(widgets::reviewer_jumps(
-            "Любая ступень сразу: нажмите номер. Ответы и рекорды не засчитываются.",
+            tr("Любая ступень сразу: нажмите номер. Ответы и рекорды не засчитываются."),
             l.len(),
             run.reveal.as_ref().map_or(l.step_no(), |rv| rv.no),
             Msg::Jump,
@@ -1889,7 +1927,7 @@ fn view_results<'a>(ctx: &'a Ctx, res: &'a Results, w: f32) -> Element<'a, Msg> 
     let r = &res.r;
     let (title, sub) = ladder::result_title(r);
     let mut col = Column::new().spacing(18).width(Length::Fill);
-    col = col.push(widgets::kicker("Маалот · итоги"));
+    col = col.push(widgets::kicker(tr("Маалот · итоги")));
     col = col.push(widgets::heading(title, 1));
 
     let frac = if r.total > 0 {
@@ -1906,7 +1944,8 @@ fn view_results<'a>(ctx: &'a Ctx, res: &'a Results, w: f32) -> Element<'a, Msg> 
                 .size(44.0)
                 .font(SERIF_BOLD)
                 .color(p.gold2),
-            muted(format!("из {}", r.total)).size(theme::text::SMALL),
+            muted(crate::trf!("из {total}", "of {total}", total = r.total))
+                .size(theme::text::SMALL),
         ]
         .spacing(0)
         .align_x(Alignment::Center)
@@ -1917,11 +1956,12 @@ fn view_results<'a>(ctx: &'a Ctx, res: &'a Results, w: f32) -> Element<'a, Msg> 
     info = info.push(muted(sub).size(theme::text::BODY));
     if r.outcome == Outcome::Fell && r.climbed > r.kept {
         info = info.push(
-            txt(format!(
-                "Вы поднялись до ступени {}; за вами остаются {} {}.",
-                r.climbed,
-                r.kept,
-                ladder::steps_word(r.kept)
+            txt(crate::trf!(
+                "Вы поднялись до ступени {climbed}; за вами остаются {kept} {steps}.",
+                "You climbed to step {climbed}; you keep {kept} {steps}.",
+                climbed = r.climbed,
+                kept = r.kept,
+                steps = ladder::steps_word(r.kept)
             ))
             .size(theme::text::BODY)
             .color(p.text),
@@ -1930,7 +1970,7 @@ fn view_results<'a>(ctx: &'a Ctx, res: &'a Results, w: f32) -> Element<'a, Msg> 
     let record: Element<'a, Msg> = if r.new_best {
         row![
             icons::icon(icons::Kind::Star, 18.0, p.gold2),
-            txt("Новый рекорд!")
+            txt(tr("Новый рекорд!"))
                 .size(theme::text::BODY)
                 .font(SANS_BOLD)
                 .color(p.gold2),
@@ -1939,40 +1979,53 @@ fn view_results<'a>(ctx: &'a Ctx, res: &'a Results, w: f32) -> Element<'a, Msg> 
         .align_y(Alignment::Center)
         .into()
     } else if r.best_before > 0 {
-        txt(format!("Рекорд: {} из {}", r.best_before, ladder::STEPS))
-            .size(theme::text::BODY)
-            .color(p.text)
-            .into()
+        txt(crate::trf!(
+            "Рекорд: {best} из {total}",
+            "Record: {best} of {total}",
+            best = r.best_before,
+            total = ladder::STEPS
+        ))
+        .size(theme::text::BODY)
+        .color(p.text)
+        .into()
     } else {
-        muted("Рекорда пока нет").size(theme::text::BODY).into()
+        muted(tr("Рекорда пока нет")).size(theme::text::BODY).into()
     };
     info = info.push(record);
     let today_xp = game::today_xp(&ctx.state, ctx.today());
     let goal = game::goal(&ctx.state);
     let xp = if r.xp > 0 {
-        format!("+{} XP · сегодня {today_xp} / {goal} XP", r.xp)
+        crate::trf!(
+            "+{xp} XP · сегодня {today_xp} / {goal} XP",
+            "+{xp} XP · today {today_xp} / {goal} XP",
+            xp = r.xp
+        )
     } else {
-        format!("Без XP: ступеней нет · сегодня {today_xp} / {goal} XP")
+        crate::trf!(
+            "Без XP: ступеней нет · сегодня {today_xp} / {goal} XP",
+            "No XP: no steps · today {today_xp} / {goal} XP"
+        )
     };
     info = info.push(txt(xp).size(theme::text::BODY).color(p.gold2));
     info = info.push(
-        muted(format!(
-            "Подсказок использовано: {} из {}",
-            r.lifelines_used,
-            Lifeline::ALL.len()
+        muted(crate::trf!(
+            "Подсказок использовано: {used} из {total}",
+            "Lifelines used: {used} of {total}",
+            used = r.lifelines_used,
+            total = Lifeline::ALL.len()
         ))
         .size(theme::text::SMALL),
     );
     info = info.push(
         row![
             widgets::btn(
-                "Ещё раз",
+                tr("Ещё раз"),
                 widgets::Btn::Primary,
                 widgets::BtnSize::Md,
                 Some(Msg::Again),
             ),
             widgets::btn(
-                "На карту",
+                tr("На карту"),
                 widgets::Btn::Ghost,
                 widgets::BtnSize::Md,
                 Some(Msg::ToMap),
@@ -2001,7 +2054,11 @@ fn view_results<'a>(ctx: &'a Ctx, res: &'a Results, w: f32) -> Element<'a, Msg> 
 
     if let Some(rv) = &res.review {
         let mut c = Column::new().spacing(8).width(Length::Fill);
-        c = c.push(gold_meta(format!("РАЗБОР · СТУПЕНЬ {}", rv.no)));
+        c = c.push(gold_meta(crate::trf!(
+            "РАЗБОР · СТУПЕНЬ {no}",
+            "REVIEW · STEP {no}",
+            no = rv.no
+        )));
         c = c.push(
             txt(rv.prompt.as_str())
                 .font(SERIF_BOLD)
@@ -2010,22 +2067,26 @@ fn view_results<'a>(ctx: &'a Ctx, res: &'a Results, w: f32) -> Element<'a, Msg> 
         );
         c = c.push(
             txt(match &rv.yours {
-                Some(y) => format!("Ваш ответ: {y}"),
-                None => "Ваш ответ: время вышло".to_string(),
+                Some(y) => crate::trf!("Ваш ответ: {y}", "Your answer: {y}", y = tr(y.as_str())),
+                None => tr("Ваш ответ: время вышло").to_string(),
             })
             .size(theme::text::BODY)
             .color(p.bad),
         );
         c = c.push(
-            txt(format!("Правильно: {}", rv.right))
-                .size(theme::text::BODY)
-                .color(p.ok),
+            txt(crate::trf!(
+                "Правильно: {right}",
+                "Correct: {right}",
+                right = tr(rv.right.as_str())
+            ))
+            .size(theme::text::BODY)
+            .color(p.ok),
         );
         if let Some(e) = &rv.explanation {
             c = c.push(widgets::rich_paragraph(e.as_str()));
         }
         if let Some(s) = &rv.source {
-            c = c.push(muted(format!("Источник: {s}")).size(theme::text::SMALL));
+            c = c.push(muted(crate::trf!("Источник: {s}", "Source: {s}")).size(theme::text::SMALL));
         }
         col = col.push(widgets::card(c));
     }

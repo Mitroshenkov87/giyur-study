@@ -30,6 +30,7 @@ use iced::widget::{container, scrollable, stack};
 use iced::{Element, Length, Size};
 use serde_json::{json, Map, Value};
 
+use crate::i18n::tr;
 use crate::storage;
 use crate::ui::app::{Ctx, Deck, ExamSpec, Route};
 use crate::ui::nav;
@@ -55,6 +56,12 @@ pub trait Host {
     fn back(&mut self);
     /// Theme / font / level changed outside a screen.
     fn settings_changed(&mut self);
+    /// Interface language switched: drop history and open a safe home.
+    fn language_changed(&mut self) {
+        self.settings_changed();
+        let home = self.ctx().home_route();
+        self.navigate(home);
+    }
     /// True for the windowed app (screenshots of the real window, scroll).
     fn windowed(&self) -> bool;
 }
@@ -111,10 +118,10 @@ pub fn nav_items() -> Vec<Value> {
         .enumerate()
         .map(|(i, it)| {
             json!({
-                "label": it.label,
+                "label": tr(it.label),
                 "old_label": it.old_label,
-                "subtitle": it.subtitle,
-                "tooltip": it.tooltip,
+                "subtitle": tr(it.subtitle),
+                "tooltip": tr(it.tooltip),
                 "route": route_str(&nav::route(i)),
             })
         })
@@ -134,7 +141,7 @@ pub const COMMANDS: &[(&str, &str)] = &[
     ("type", "Type into an input field: text, input (index from `state`, default 0), append (keep current text), submit (press Enter)."),
     ("select", "Pick from a drop-down listed under `choices` in `state`: choice (index) or target (shown text, substring; nth for several), option (option text, exact or substring)."),
     ("reviewer", "«Открытый режим рецензента»: on=true|false switches it (like the settings switch; persist=false: for this run only, like --reviewer). Without on, reports it. The reply has `progress` = the real progress, which the mode never changes."),
-    ("set", "Change a setting: key = theme (dark|leather; parchment = old name of leather) | font_step (0..3) | translit | unlock_all | reviewer_mode | timed_sound | timed_auto (bool) | timed_seconds (20|30) | daily_goal (10|20|30|50), value."),
+    ("set", "Change a setting: key = theme (dark|leather; parchment = old name of leather) | font_step (0..3) | translit | unlock_all | reviewer_mode | timed_sound | timed_auto (bool) | timed_seconds (20|30) | daily_goal (10|20|30|50) | lang (ru|en), value."),
     ("screenshot", "Save a WebP screenshot: path (.webp). Windowed: the real window. Headless: the page; full_page=true for the whole page, width/height optional."),
     ("scroll", "Windowed only: to = \"top\" | \"bottom\" | 0..1."),
     ("wait", "Let time pass: ms (default 1000, max 60000). Timers run (the timed quiz reveals options after a pause)."),
@@ -410,6 +417,7 @@ fn settings_json(ctx: &Ctx) -> Value {
     json!({
         "level": s.level.as_ref().map(|l| format!("{l:?}").to_lowercase()),
         "theme": s.theme,
+        "lang": s.lang.map(|l| l.code()),
         "font_step": s.font_step,
         "translit": s.translit,
         "unlock_all": s.unlock_all,
@@ -720,6 +728,13 @@ fn interview_pick(host: &dyn Host, correct: bool) -> Result<Vec<screens::Msg>, S
     Ok(vec![screens::Msg::Interview(I::Pick(idx))])
 }
 
+/// Empty match-row drop-down. The probe reads the visible placeholder, so
+/// both the Russian source and its English are accepted.
+fn is_blank_choice(shown: &str) -> bool {
+    const RU: &str = "— выберите —";
+    shown == RU || shown == tr(RU)
+}
+
 /// Give *some* answer to whatever question is shown (smoke tests): the
 /// first option, a placeholder typed answer, the first option of every
 /// match row, or a middle self-grade for open questions.
@@ -771,7 +786,7 @@ fn auto_answer(host: &mut dyn Host, screen: &str) -> Result<(), String> {
     let mut picked = 0;
     for _ in 0..12 {
         let view = inspect(host);
-        let Some(c) = view.choices.iter().find(|c| c.shown == "— выберите —") else {
+        let Some(c) = view.choices.iter().find(|c| is_blank_choice(&c.shown)) else {
             break;
         };
         let msgs = pick(host, c, 0);
@@ -800,6 +815,16 @@ fn set_setting(host: &mut dyn Host, a: &Map<String, Value>) -> Result<(), String
     if key == "reviewer_mode" {
         host.ctx_mut().set_reviewer(b()?, true);
         host.settings_changed();
+        return Ok(());
+    }
+    if key == "lang" || key == "language" {
+        let raw = val.as_str().unwrap_or_default();
+        let lang = crate::i18n::Lang::from_code(raw)
+            .ok_or_else(|| format!("lang: ru | en (got {raw})"))?;
+        host.ctx_mut()
+            .switch_lang(lang)
+            .map_err(|e| format!("content not switched: {e}"))?;
+        host.language_changed();
         return Ok(());
     }
     {
@@ -868,7 +893,7 @@ pub fn execute(host: &mut dyn Host, req: &Value) -> Outcome {
     };
     match cmd {
         "help" => Outcome::ok(json!({
-            "commands": COMMANDS.iter().map(|(c, d)| json!({"cmd": c, "about": d})).collect::<Vec<_>>(),
+            "commands": COMMANDS.iter().map(|(c, d)| json!({"cmd": c, "about": tr(d)})).collect::<Vec<_>>(),
         })),
         "screens" => Outcome::ok(screens_json(host.ctx())),
         "state" => Outcome::ok(state_json(host, arg_bool(a, "texts").unwrap_or(true))),

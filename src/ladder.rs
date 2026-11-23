@@ -17,6 +17,7 @@ use rand::Rng;
 use crate::content::{Difficulty, Library, Question, SectionMeta};
 use crate::exam::{self, CheckResult};
 use crate::game::{self, AwardOutcome};
+use crate::i18n::tr;
 use crate::storage::State;
 use crate::util;
 
@@ -85,9 +86,9 @@ pub fn tier_of(n: usize) -> Difficulty {
 /// Title of a difficulty tier on the ladder.
 pub fn tier_title(d: Difficulty) -> &'static str {
     match d {
-        Difficulty::Easy => "Ступени 1–5 · лёгкие",
-        Difficulty::Medium => "Ступени 6–10 · средние",
-        Difficulty::Hard => "Ступени 11–15 · трудные",
+        Difficulty::Easy => tr("Ступени 1–5 · лёгкие"),
+        Difficulty::Medium => tr("Ступени 6–10 · средние"),
+        Difficulty::Hard => tr("Ступени 11–15 · трудные"),
     }
 }
 
@@ -111,7 +112,11 @@ pub fn timer_seconds(state: &State) -> i64 {
 
 /// Plural of «ступень» after a number: «1 ступень», «3 ступени», «5 ступеней».
 pub fn steps_word(n: usize) -> &'static str {
-    util::plural(n as i64, &["ступень", "ступени", "ступеней"])
+    util::plural_l(
+        n as i64,
+        &["ступень", "ступени", "ступеней"],
+        &["step", "steps"],
+    )
 }
 
 /// Steps kept after falling with `climbed` steps already answered.
@@ -297,9 +302,9 @@ impl Lifeline {
 
     pub fn title(self) -> &'static str {
         match self {
-            Lifeline::Fifty => "50 на 50",
-            Lifeline::Lesson => "Подсказка из урока",
-            Lifeline::Rabbi => "Спросить раввина",
+            Lifeline::Fifty => tr("50 на 50"),
+            Lifeline::Lesson => tr("Подсказка из урока"),
+            Lifeline::Rabbi => tr("Спросить раввина"),
         }
     }
 
@@ -559,9 +564,13 @@ pub fn help(lib: &Library, step: &Step, line: Lifeline, rng: &mut impl Rng) -> H
             let right = squash(step.right_text());
             let fallback = match &lesson {
                 Some(t) if right.chars().count() < 3 || !squash(t).contains(&right) => {
-                    format!("вспомните урок «{t}», из которого взят этот вопрос.")
+                    crate::trf!(
+                        "вспомните урок «{t}», из которого взят этот вопрос.",
+                        "recall the lesson “{t}” this question comes from.",
+                        t = t
+                    )
                 }
-                _ => "вспомните урок, из которого взят этот вопрос.".to_string(),
+                _ => tr("вспомните урок, из которого взят этот вопрос.").to_string(),
             };
             let masked = match (&step.q, c.explanation.as_deref()) {
                 (Question::Mc { .. }, Some(e)) if !e.trim().is_empty() => {
@@ -769,23 +778,24 @@ pub struct LadderResult {
 pub fn result_title(r: &LadderResult) -> (&'static str, &'static str) {
     match r.outcome {
         Outcome::Top => (
-            "Вся лестница пройдена",
-            "Пятнадцать ступеней: от Микры до Гмары.",
+            tr("Вся лестница пройдена"),
+            tr("Пятнадцать ступеней: от Микры до Гмары."),
         ),
-        Outcome::WalkedAway if r.kept >= 10 => {
-            ("Мудрое решение", "Знать, где остановиться, — тоже знание.")
-        }
+        Outcome::WalkedAway if r.kept >= 10 => (
+            tr("Мудрое решение"),
+            tr("Знать, где остановиться, — тоже знание."),
+        ),
         Outcome::WalkedAway => (
-            "Вы остановились",
-            "Ступени, которые вы прошли, остаются за вами.",
+            tr("Вы остановились"),
+            tr("Ступени, которые вы прошли, остаются за вами."),
         ),
         Outcome::Fell if r.kept > 0 => (
-            "Вы удержались на надёжной ступени",
-            "Разберите вопрос ниже — в следующий раз он не застанет врасплох.",
+            tr("Вы удержались на надёжной ступени"),
+            tr("Разберите вопрос ниже — в следующий раз он не застанет врасплох."),
         ),
         Outcome::Fell => (
-            "Начало пути",
-            "Разберите вопрос ниже и попробуйте снова: каждая попытка учит.",
+            tr("Начало пути"),
+            tr("Разберите вопрос ниже и попробуйте снова: каждая попытка учит."),
         ),
     }
 }

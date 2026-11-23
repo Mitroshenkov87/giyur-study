@@ -7,6 +7,7 @@ use iced::advanced::widget::{Tree, Widget};
 use iced::widget::{column, container, row, space, stack, Column};
 use iced::{Alignment, Background, Border, Color, Element, Length, Rectangle, Size};
 
+use crate::i18n::{app_name, tr};
 use crate::ui::app::{Action, Ctx, Route};
 use crate::ui::screens::map::{alpha, icons, txt, v_gradient};
 use crate::ui::{assets, fonts, theme, widgets};
@@ -87,16 +88,16 @@ impl Screen {
         let over_gold = Color::from_rgb8(0xe6, 0xc3, 0x6a);
         let overlay = container(
             column![
-                txt("Добро пожаловать".to_uppercase())
+                txt(tr("Добро пожаловать").to_uppercase())
                     .size(theme::text::KICKER)
                     .font(fonts::SANS_BOLD)
                     .color(over_gold),
-                txt("Шорашим")
+                txt(app_name())
                     .size(42.0)
                     .font(fonts::SERIF_BOLD)
                     .color(over_text),
                 container(
-                    txt("Основы иудаизма и спокойная, последовательная подготовка к гиюру и собеседованию в бейт-дине.")
+                    txt(tr("Основы иудаизма и спокойная, последовательная подготовка к гиюру и собеседованию в бейт-дине."))
                         .size(theme::text::H3)
                         .color(over_text)
                         .width(Length::Fill),
@@ -153,20 +154,20 @@ impl Screen {
             column![
                 feature(
                     icons::Kind::Book,
-                    "**8 разделов** — от основ веры до бейт-дина, уроки по 5–10 минут.",
+                    tr("**8 разделов** — от основ веры до бейт-дина, уроки по 5–10 минут."),
                 ),
                 feature(
                     icons::Kind::Cards,
-                    "**Карточки** с интервальным повторением: 1 → 3 → 7 → 14 → 30 дней.",
+                    tr("**Карточки** с интервальным повторением: 1 → 3 → 7 → 14 → 30 дней."),
                 ),
                 feature(
                     icons::Kind::Exam,
-                    "**Тесты и пробный бейт-дин** с разбором ошибок.",
+                    tr("**Тесты и пробный бейт-дин** с разбором ошибок."),
                 ),
                 container(
                     row![
                         icons::icon(icons::Kind::Sources, 20.0, p.gold2),
-                        txt("Материалы требуют проверки раввином вашей общины. Приложение — помощник в учёбе, а не замена учителю.")
+                        txt(tr("Материалы требуют проверки раввином вашей общины. Приложение — помощник в учёбе, а не замена учителю."))
                             .size(theme::text::SMALL + 1.0)
                             .color(p.text)
                             .width(Length::Fill),
@@ -185,11 +186,11 @@ impl Screen {
                     },
                     ..iced::widget::container::Style::default()
                 }),
-                txt("Всё работает без интернета; прогресс хранится только на этом устройстве.")
+                txt(tr("Всё работает без интернета; прогресс хранится только на этом устройстве."))
                     .size(theme::text::SMALL)
                     .color(p.muted),
                 widgets::centered(widgets::btn(
-                    "Начать",
+                    tr("Начать"),
                     widgets::Btn::Primary,
                     widgets::BtnSize::Lg,
                     Some(Msg::Start),

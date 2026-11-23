@@ -13,6 +13,7 @@ use iced::widget::text::Shaping;
 use iced::widget::{button, column, container, row, space, text, Column, Row, Text};
 use iced::{Alignment, Background, Border, Color, Element, Length};
 
+use crate::i18n::tr;
 use crate::interview::{self, Item, Mode, Rating, Run};
 use crate::storage::Level;
 use crate::ui::app::{Action, Ctx, Route};
@@ -352,10 +353,10 @@ impl Screen {
         let st = interview::stats(&ctx.state, today(ctx));
 
         let mut page = Column::new().spacing(16).width(Length::Fill);
-        page = page.push(widgets::back_button("Уроки", Msg::Go(Route::Map)));
+        page = page.push(widgets::back_button(tr("Уроки"), Msg::Go(Route::Map)));
         page = page.push(
             column![
-                widgets::kicker("Подготовка к бейт-дину"),
+                widgets::kicker(tr("Подготовка к бейт-дину")),
                 widgets::heading(&bank.title, 1),
             ]
             .spacing(6),
@@ -371,11 +372,22 @@ impl Screen {
         page = page.push(
             row![
                 widgets::pill(
-                    format!("Отработано {} из {}", st.practiced, st.total),
+                    crate::trf!(
+                        "Отработано {} из {}",
+                        "Practiced {} of {}",
+                        st.practiced,
+                        st.total
+                    ),
                     widgets::Pill::Tag
                 ),
-                widgets::pill(format!("Готов: {}", st.ready), widgets::Pill::Tag),
-                widgets::pill(format!("Репетиций: {}", st.runs), widgets::Pill::Tag),
+                widgets::pill(
+                    crate::trf!("Готов: {}", "Ready: {}", st.ready),
+                    widgets::Pill::Tag
+                ),
+                widgets::pill(
+                    crate::trf!("Репетиций: {}", "Rehearsals: {}", st.runs),
+                    widgets::Pill::Tag
+                ),
             ]
             .spacing(8)
             .wrap(),
@@ -383,10 +395,14 @@ impl Screen {
         let tabs = [Mode::Browse, Mode::Practice, Mode::Rehearsal];
         page = page.push(widgets::segmented(
             vec![
-                ("Темы".to_string(), Msg::Tab(Mode::Browse)),
-                ("Практика".to_string(), Msg::Tab(Mode::Practice)),
+                (tr("Темы").to_string(), Msg::Tab(Mode::Browse)),
+                (tr("Практика").to_string(), Msg::Tab(Mode::Practice)),
                 (
-                    format!("Репетиция · {} вопросов", interview::REHEARSAL_LEN),
+                    crate::trf!(
+                        "Репетиция · {} вопросов",
+                        "Rehearsal · {} questions",
+                        interview::REHEARSAL_LEN
+                    ),
                     Msg::Tab(Mode::Rehearsal),
                 ),
             ],
@@ -412,13 +428,13 @@ impl Screen {
         let next = interview::neighbor_topic(self.topic.as_deref(), 1);
         row![
             widgets::btn(
-                "Предыдущая тема",
+                tr("Предыдущая тема"),
                 widgets::Btn::Ghost,
                 widgets::BtnSize::Sm,
                 prev.map(|_| Msg::PrevTopic),
             ),
             widgets::btn(
-                "Следующая тема",
+                tr("Следующая тема"),
                 widgets::Btn::Ghost,
                 widgets::BtnSize::Sm,
                 next.map(|_| Msg::NextTopic),
@@ -438,7 +454,7 @@ impl Screen {
         let mut col = Column::new().spacing(16).width(Length::Fill);
         col = col.push(self.topic_nav());
         col = col.push(widgets::btn(
-            "Ко всем темам",
+            tr("Ко всем темам"),
             widgets::Btn::Ghost,
             widgets::BtnSize::Sm,
             Some(Msg::Topic(None)),
@@ -468,7 +484,10 @@ impl Screen {
                     ]
                     .spacing(2)
                     .width(Length::Fill),
-                    widgets::pill(format!("готов {ready} из {n}"), widgets::Pill::Tag),
+                    widgets::pill(
+                        crate::trf!("готов {ready} из {n}", "{ready} of {n} ready"),
+                        widgets::Pill::Tag
+                    ),
                 ]
                 .align_y(Alignment::Center)
                 .spacing(10),
@@ -519,7 +538,10 @@ impl Screen {
                 ]
                 .spacing(2)
                 .width(Length::Fill),
-                widgets::pill(format!("готов {ready} из {n}"), widgets::Pill::Tag),
+                widgets::pill(
+                    crate::trf!("готов {ready} из {n}", "{ready} of {n} ready"),
+                    widgets::Pill::Tag
+                ),
             ]
             .align_y(Alignment::Center)
             .spacing(10),
@@ -535,7 +557,7 @@ impl Screen {
                         column![
                             guidance(ctx, q, p),
                             row![widgets::btn(
-                                "Отработать этот вопрос",
+                                tr("Отработать этот вопрос"),
                                 widgets::Btn::Secondary,
                                 widgets::BtnSize::Sm,
                                 Some(Msg::PracticeOne(q.id.clone())),
@@ -566,7 +588,7 @@ impl Screen {
         let Some(a) = &self.practice else {
             return col
                 .push(widgets::card(
-                    txt("В этой теме пока нет вопросов.").color(p.muted),
+                    txt(tr("В этой теме пока нет вопросов.")).color(p.muted),
                 ))
                 .into();
         };
@@ -577,7 +599,7 @@ impl Screen {
         if a.picked.is_some() {
             body = body.push(
                 row![widgets::btn(
-                    "Следующий вопрос",
+                    tr("Следующий вопрос"),
                     widgets::Btn::Primary,
                     widgets::BtnSize::Md,
                     Some(Msg::Next),
@@ -591,8 +613,9 @@ impl Screen {
     fn practice_topics<'a>(&'a self, ctx: &'a Ctx, p: Palette) -> Element<'a, Msg> {
         let bank = interview::bank();
         let mut chips = Row::new().spacing(8);
-        chips = chips
-            .push(column![chip("Все темы", self.topic.is_none(), Msg::Topic(None),)].spacing(4));
+        chips = chips.push(
+            column![chip(tr("Все темы"), self.topic.is_none(), Msg::Topic(None),)].spacing(4),
+        );
         for t in &bank.topics {
             let (ready, n) = interview::topic_ready(&ctx.state, &t.id);
             let selected = self.topic.as_deref() == Some(t.id.as_str());
@@ -612,7 +635,7 @@ impl Screen {
 
     fn rehearsal_view<'a>(&'a self, ctx: &'a Ctx, p: Palette) -> Element<'a, Msg> {
         let Some(r) = &self.rehearsal else {
-            return widgets::card(txt("Нет вопросов для репетиции.").color(p.muted));
+            return widgets::card(txt(tr("Нет вопросов для репетиции.")).color(p.muted));
         };
         if r.done {
             return summary(ctx, r, p);
@@ -627,9 +650,9 @@ impl Screen {
             let last = r.ratings.len() >= r.ids.len();
             body = body.push(row![widgets::btn(
                 if last {
-                    "Итоги репетиции"
+                    tr("Итоги репетиции")
                 } else {
-                    "Дальше"
+                    tr("Дальше")
                 },
                 widgets::Btn::Primary,
                 widgets::BtnSize::Md,
@@ -770,7 +793,7 @@ fn guidance<'a>(ctx: &'a Ctx, q: &'a Item, p: Palette) -> Element<'a, Msg> {
     let mut col = Column::new().spacing(12).width(Length::Fill);
     col = col.push(tinted(
         column![
-            label("Что хотят услышать раввины", p.gold2),
+            label(tr("Что хотят услышать раввины"), p.gold2),
             txt(q.purpose.as_str())
                 .size(theme::text::BODY)
                 .color(p.text),
@@ -781,20 +804,20 @@ fn guidance<'a>(ctx: &'a Ctx, q: &'a Item, p: Palette) -> Element<'a, Msg> {
     ));
     col = col.push(
         column![
-            label("О чём сказать честно, своими словами", p.ok),
+            label(tr("О чём сказать честно, своими словами"), p.ok),
             bullets(&q.key_points, "•", p.ok),
         ]
         .spacing(6),
     );
     col = col.push(
         column![
-            label("Частые ошибки", p.bad),
+            label(tr("Частые ошибки"), p.bad),
             bullets(&q.mistakes, "×", p.bad),
         ]
         .spacing(6),
     );
     if let Some(m) = &q.movements {
-        col = col.push(widgets::note_block("Различия течений", m.as_str()));
+        col = col.push(widgets::note_block(tr("Различия течений"), m.as_str()));
     }
     let mut links = Row::new().spacing(8);
     for id in &q.lessons {
@@ -810,7 +833,7 @@ fn guidance<'a>(ctx: &'a Ctx, q: &'a Item, p: Palette) -> Element<'a, Msg> {
     }
     col = col.push(
         column![
-            label("Уроки по теме", p.muted),
+            label(tr("Уроки по теме"), p.muted),
             links.wrap().vertical_spacing(6)
         ]
         .spacing(6),
@@ -824,7 +847,7 @@ fn model_answer<'a>(q: &'a Item, p: Palette) -> Element<'a, Msg> {
     column![
         tinted(
             column![
-                label("Образец ответа", p.gold2),
+                label(tr("Образец ответа"), p.gold2),
                 txt(q.purpose.as_str())
                     .size(theme::text::BODY)
                     .color(p.text),
@@ -834,7 +857,7 @@ fn model_answer<'a>(q: &'a Item, p: Palette) -> Element<'a, Msg> {
             alpha(p.gold, 0.3),
         ),
         column![
-            label("О чём сказать своими словами", p.ok),
+            label(tr("О чём сказать своими словами"), p.ok),
             bullets(&q.key_points, "•", p.ok),
         ]
         .spacing(6),
@@ -901,7 +924,10 @@ fn answering<'a>(
     let bank = interview::bank();
     let topic = bank.topic(&q.topic).map(|t| t.title.as_str()).unwrap_or("");
     let meta = match step {
-        Some((n, of)) => format!("Вопрос {n} из {of} · {topic}"),
+        Some((n, of)) => crate::trf!(
+            "Вопрос {n} из {of} · {topic}",
+            "Question {n} of {of} · {topic}"
+        ),
         None => topic.to_string(),
     };
     let mut col = Column::new().spacing(14).width(Length::Fill);
@@ -919,7 +945,7 @@ fn answering<'a>(
         col = col.push(oral_panel(q, a, p));
     } else if rehearsal && a.picked.is_none() {
         col = col.push(row![widgets::btn(
-            "Ответить вслух",
+            tr("Ответить вслух"),
             widgets::Btn::Ghost,
             widgets::BtnSize::Sm,
             Some(Msg::Speak),
@@ -936,9 +962,12 @@ fn answering<'a>(
         let (opts, _) = q.choices(level(ctx));
         let right_text = opts.get(right).map(|s| s.as_str()).unwrap_or("");
         let note = if ok {
-            "Верно. Этот вопрос вернётся через несколько дней.".to_string()
+            tr("Верно. Этот вопрос вернётся через несколько дней.").to_string()
         } else {
-            format!("Неверно. Верный ответ: {right_text} Вопрос вернётся завтра.")
+            crate::trf!(
+                "Неверно. Верный ответ: {right_text} Вопрос вернётся завтра.",
+                "Incorrect. The right answer: {right_text} The question will come back tomorrow."
+            )
         };
         col = col.push(
             txt(note)
@@ -950,7 +979,7 @@ fn answering<'a>(
 
     if rehearsal && a.picked.is_some() && !a.oral {
         col = col.push(row![widgets::btn(
-            "Ответить вслух",
+            tr("Ответить вслух"),
             widgets::Btn::Ghost,
             widgets::BtnSize::Sm,
             Some(Msg::Speak),
@@ -963,20 +992,20 @@ fn oral_panel<'a>(q: &'a Item, a: &'a Answering, p: Palette) -> Element<'a, Msg>
     let mut col = Column::new().spacing(12).width(Length::Fill);
     if !a.oral_revealed {
         col = col.push(
-            txt("Проговорите ответ вслух своими словами. Когда будете готовы, откройте образец. Это не входит в счёт репетиции.")
+            txt(tr("Проговорите ответ вслух своими словами. Когда будете готовы, откройте образец. Это не входит в счёт репетиции."))
                 .size(theme::text::BODY)
                 .color(p.text),
         );
         col = col.push(
             row![
                 widgets::btn(
-                    "Показать образец",
+                    tr("Показать образец"),
                     widgets::Btn::Primary,
                     widgets::BtnSize::Md,
                     Some(Msg::RevealOral),
                 ),
                 widgets::btn(
-                    "К вариантам ответа",
+                    tr("К вариантам ответа"),
                     widgets::Btn::Ghost,
                     widgets::BtnSize::Sm,
                     Some(Msg::CloseOral),
@@ -989,20 +1018,20 @@ fn oral_panel<'a>(q: &'a Item, a: &'a Answering, p: Palette) -> Element<'a, Msg>
         match a.oral_knew {
             None => {
                 col = col.push(
-                    txt("Отметьте честно: это не входит в счёт репетиции.")
+                    txt(tr("Отметьте честно: это не входит в счёт репетиции."))
                         .size(theme::text::SMALL)
                         .color(p.muted),
                 );
                 col = col.push(
                     row![
                         widgets::btn(
-                            "Знал",
+                            tr("Знал"),
                             widgets::Btn::Primary,
                             widgets::BtnSize::Md,
                             Some(Msg::Knew(true)),
                         ),
                         widgets::btn(
-                            "Не знал",
+                            tr("Не знал"),
                             widgets::Btn::Secondary,
                             widgets::BtnSize::Md,
                             Some(Msg::Knew(false)),
@@ -1012,14 +1041,18 @@ fn oral_panel<'a>(q: &'a Item, a: &'a Answering, p: Palette) -> Element<'a, Msg>
                 );
             }
             Some(knew) => {
-                let mark = if knew { "знал" } else { "не знал" };
-                col = col.push(
-                    txt(format!(
-                        "Вы отметили: {mark}. В счёт репетиции это не входит."
-                    ))
-                    .size(theme::text::SMALL)
-                    .color(p.muted),
-                );
+                let note = if knew {
+                    crate::trf!(
+                        "Вы отметили: знал. В счёт репетиции это не входит.",
+                        "You marked: knew it. This doesn't count toward the rehearsal score."
+                    )
+                } else {
+                    crate::trf!(
+                        "Вы отметили: не знал. В счёт репетиции это не входит.",
+                        "You marked: didn't know. This doesn't count toward the rehearsal score."
+                    )
+                };
+                col = col.push(txt(note).size(theme::text::SMALL).color(p.muted));
             }
         }
     }
@@ -1035,14 +1068,14 @@ fn summary<'a>(_ctx: &'a Ctx, r: &'a Rehearsal, p: Palette) -> Element<'a, Msg> 
     };
     let pct = run.pct();
     let verdict = if pct >= 80 {
-        "Вы уверенно говорите о своём пути. Продолжайте жить так, как рассказываете."
+        tr("Вы уверенно говорите о своём пути. Продолжайте жить так, как рассказываете.")
     } else if pct >= 50 {
-        "Хорошая основа. Отработайте вопросы, где ответ был неверным."
+        tr("Хорошая основа. Отработайте вопросы, где ответ был неверным.")
     } else {
-        "Есть над чем поработать. Начните с вопросов ниже и уроков по их темам."
+        tr("Есть над чем поработать. Начните с вопросов ниже и уроков по их темам.")
     };
     let mut col = Column::new().spacing(14).width(Length::Fill);
-    col = col.push(widgets::kicker("Итоги репетиции"));
+    col = col.push(widgets::kicker(tr("Итоги репетиции")));
     col = col.push(
         row![
             widgets::progress_ring(pct as f32 / 100.0),
@@ -1051,8 +1084,9 @@ fn summary<'a>(_ctx: &'a Ctx, r: &'a Rehearsal, p: Palette) -> Element<'a, Msg> 
                     .font(SERIF_BOLD)
                     .size(theme::text::H2)
                     .color(p.gold2),
-                txt(format!(
+                txt(crate::trf!(
                     "Верно: {} · Неверно: {}",
+                    "Correct: {} · Incorrect: {}",
                     run.count(Rating::Ready),
                     run.count(Rating::NotYet),
                 ))
@@ -1069,9 +1103,9 @@ fn summary<'a>(_ctx: &'a Ctx, r: &'a Rehearsal, p: Palette) -> Element<'a, Msg> 
     for (id, rating) in r.ids.iter().zip(&r.ratings) {
         let Some(q) = bank.item(id) else { continue };
         let (label, color) = match rating {
-            Rating::Ready => ("Верно", p.ok),
-            Rating::NotYet => ("Неверно", p.bad),
-            Rating::Partly => ("Частично", p.gold2),
+            Rating::Ready => (tr("Верно"), p.ok),
+            Rating::NotYet => (tr("Неверно"), p.bad),
+            Rating::Partly => (tr("Частично"), p.gold2),
         };
         let mut line = row![
             container(widgets::pill(label, widgets::Pill::Tint(color))).width(Length::Fixed(140.0)),
@@ -1084,7 +1118,7 @@ fn summary<'a>(_ctx: &'a Ctx, r: &'a Rehearsal, p: Palette) -> Element<'a, Msg> 
         .align_y(Alignment::Center);
         if *rating != Rating::Ready {
             line = line.push(widgets::btn(
-                "Отработать",
+                tr("Отработать"),
                 widgets::Btn::Ghost,
                 widgets::BtnSize::Sm,
                 Some(Msg::PracticeOne(id.clone())),
@@ -1095,13 +1129,13 @@ fn summary<'a>(_ctx: &'a Ctx, r: &'a Rehearsal, p: Palette) -> Element<'a, Msg> 
     col = col.push(
         row![
             widgets::btn(
-                "Новая репетиция",
+                tr("Новая репетиция"),
                 widgets::Btn::Primary,
                 widgets::BtnSize::Md,
                 Some(Msg::Restart),
             ),
             widgets::btn(
-                "К темам",
+                tr("К темам"),
                 widgets::Btn::Secondary,
                 widgets::BtnSize::Md,
                 Some(Msg::Tab(Mode::Browse)),

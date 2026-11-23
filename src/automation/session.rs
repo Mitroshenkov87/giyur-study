@@ -82,6 +82,9 @@ impl Session {
         // As `Ctx::load`: earned objects (and the Torah scroll, open from the
         // start) join the collection quietly.
         crate::collection::sync(&mut ctx.state, &crate::util::day_key(today));
+        if crate::i18n::persist_detected(ctx.state.settings.lang) {
+            ctx.state.settings.lang = Some(crate::i18n::lang());
+        }
         ctx.save();
         if opts.reviewer {
             ctx.set_reviewer(true, false);
@@ -290,6 +293,7 @@ impl Host for Session {
             Action::Go(r) => self.go(r),
             Action::Back => self.back(),
             Action::SettingsChanged => self.settings_changed(),
+            Action::LanguageChanged => self.language_changed(),
             #[allow(unreachable_patterns)]
             _ => {}
         }
@@ -304,6 +308,13 @@ impl Host for Session {
     }
     fn settings_changed(&mut self) {
         theme::set_current(super::theme_kind(&self.ctx));
+    }
+    fn language_changed(&mut self) {
+        theme::set_current(super::theme_kind(&self.ctx));
+        self.history.clear();
+        let home = self.ctx.home_route();
+        self.go(home);
+        self.history.clear();
     }
     fn windowed(&self) -> bool {
         false

@@ -1,0 +1,3759 @@
+{
+ "id": "etika",
+ "order": 7,
+ "title": "Ethics",
+ "subtitle": "From Pirkei Avot to tikkun olam",
+ "icon": "⚖️",
+ "intro": "The ethics of Jewish life: the wisdom of Pirkei Avot, love of one's neighbor and of the ger, tzedakah and chesed, purity of speech, honesty in business, and the commandment to repair the world. These are precisely the topics the beit din will almost certainly ask about.",
+ "overview": {
+  "why": "Judaism is not only faith and rituals, but also a way of treating people: how to speak, how to trade, how to help those in need, and how to treat the stranger. This section shows that ethics in Judaism is not “good wishes,” but the commandments of the Torah that touch every day: helping one's neighbor, the workplace, and conversation with another person.",
+  "examFocus": "At the beit din they ask about ethics almost every time: your favorite saying from Pirkei Avot, the story of Hillel “on one foot,” tzedakah, lashon hara, honesty in business, and honoring parents. The rabbis do not expect quotations by heart, but understanding and concrete examples from your own life, so prepare for each topic the source, its meaning, and a personal example.",
+  "goals": [
+   "After this section you will be able to explain what Pirkei Avot is and name several sayings with their sources",
+   "Retell the story of Hillel “on one foot” and explain how the Torah requires us to treat the ger",
+   "Describe the eight levels of Rambam's tzedakah and tell how you will give tzedakah",
+   "Distinguish lashon hara, rechilut, and motzi shem ra and apply the laws of speech in life and online",
+   "Name the commandments of business honesty, explain tikkun olam and honoring parents"
+  ]
+ },
+ "sources": [
+  {
+   "id": "tanakh",
+   "title": "Tanakh, Russian transl. by D. Yosifon (Mossad HaRav Kook)",
+   "url": "https://shabat-shalom.info/books/Tanach-ru/Chumash_Mosad_Rav_Cook/index.htm",
+   "movement": "all"
+  },
+  {
+   "id": "avot",
+   "title": "Pirkei Avot (Tractate Avot), Russian transl. ed. by Prof. H. Branover",
+   "url": "https://chassidus.ru/library/avot/",
+   "movement": "all"
+  },
+  {
+   "id": "chumash-gurevich",
+   "title": "Torah with Rashi’s commentary, Russian transl. by F. Gurfinkel (Mosad HaRav Kook / Soncino Chumash, Russian)",
+   "url": "",
+   "movement": "orthodox"
+  },
+  {
+   "id": "ksa",
+   "title": "Kitzur Shulchan Aruch, R. Shlomo Ganzfried, Russian transl. by A. Kutukov (KEROOR, 1999)",
+   "url": "https://libcat.ru/knigi/religioznaya-literatura/15623-shlomo-gancfrid-kicur-shulhan-aruh.html",
+   "movement": "orthodox"
+  },
+  {
+   "id": "rambam-mt",
+   "title": "Rambam, Mishneh Torah (Laws of Gifts to the Poor, ch. 10)",
+   "url": "https://ru.chabad.org (раздел «Рамбам»)",
+   "movement": "orthodox"
+  },
+  {
+   "id": "eee",
+   "title": "ORT Electronic Jewish Encyclopedia (EEE)",
+   "url": "https://eleven.co.il",
+   "movement": "neutral"
+  },
+  {
+   "id": "masorti",
+   "title": "Masorti / Conservative Judaism: Rabbinical Assembly; overview of the movement in Russian (Derakhim)",
+   "url": "https://ru.derakhim.com/zramim/conservative ; https://www.masorti.org.il/about-masorti/",
+   "movement": "conservative"
+  },
+  {
+   "id": "reform-spb",
+   "title": "Giyur school of the “Shaarei Shalom” community (Progressive Judaism, ROOPI)",
+   "url": "https://reformspb.ru/giura",
+   "movement": "reform"
+  },
+  {
+   "id": "ccar",
+   "title": "Central Conference of American Rabbis (CCAR): resolutions and responsa",
+   "url": "https://www.ccarnet.org/",
+   "movement": "reform"
+  },
+  {
+   "id": "urj",
+   "title": "Union for Reform Judaism (URJ): practice and introduction to Judaism",
+   "url": "https://www.urj.org/",
+   "movement": "reform"
+  }
+ ],
+ "deeper": [
+  {
+   "title": "Pirkei Avot in full",
+   "sourceRef": "avot",
+   "text": "Read the tractate one chapter a week, as is customary between Pesach and Shavuot, and copy into your “Avot notebook” 3–4 sayings that you will be able to explain at the beit din.",
+   "minLevel": "reform"
+  },
+  {
+   "title": "The Torah portion “Kedoshim”",
+   "sourceRef": "tanakh",
+   "text": "Read Vayikra 19 in full: there “love your neighbor,” love of the ger, leaving the pe'ah for the poor, paying the worker, and accurate measures stand side by side — the foundation of this entire section.",
+   "minLevel": "reform"
+  },
+  {
+   "title": "Rambam: Laws of Gifts to the Poor, ch. 10",
+   "sourceRef": "rambam-mt",
+   "text": "Read chapter 10 in full: there are the eight levels of tzedakah with examples, and instructions on with what expression and how one should give.",
+   "minLevel": "reform"
+  },
+  {
+   "title": "Kitzur Shulchan Aruch on tzedakah, speech, and trade",
+   "sourceRef": "ksa",
+   "text": "Chapters 30 (slander and revenge), 34 (tzedakah), 62–63 (honesty in trade and verbal offense) and 65 (interest) — practical halacha for the topics of this section.",
+   "minLevel": "orthodox"
+  },
+  {
+   "title": "Tikkun olam in Conservative Judaism",
+   "sourceRef": "masorti",
+   "text": "Read an overview of the Masorti movement and note how social responsibility stands alongside Shabbat, kashrut, and halacha.",
+   "minLevel": "conservative"
+  },
+  {
+   "title": "Tikkun olam in Progressive Judaism",
+   "sourceRef": "ccar",
+   "text": "In the Reform movement, repairing the world is not a slogan “on top of” the commandments, but one of the central religious duties: justice, human dignity, peace, and care for creation. Read CCAR materials and the practice of your own community together with the lesson on tikkun olam.",
+   "minLevel": "reform"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "etika-1",
+   "title": "Pirkei Avot: the wisdom of generations",
+   "minLevel": "reform",
+   "minutes": 8,
+   "sourceRefs": [
+    "avot"
+   ],
+   "citations": [
+    "Pirkei Avot 1:1",
+    "Pirkei Avot 1:2",
+    "Pirkei Avot 1:14",
+    "Pirkei Avot 2:4–5",
+    "Pirkei Avot 2:16",
+    "Pirkei Avot 4:1"
+   ],
+   "keyIdeas": [
+    "Pirkei Avot is a tractate of the Mishnah in the order Nezikin: not laws, but the ethical sayings of the Tannaim about human character.",
+    "The tractate opens with the chain of transmission of the Torah from Moshe at Sinai to the men of the Great Assembly: the ethics of Avot is part of the single chain of the Torah's transmission.",
+    "Shimon ha-Tzaddik: the world stands on three pillars — the Torah, worship (avodah), and acts of kindness (gemilut chasadim).",
+    "Hillel teaches responsibility for oneself, openness to others, and the urgency of the task; do not judge your fellow until you have stood in his place.",
+    "Rabbi Tarfon: “It is not your duty to finish the work, but neither are you free to withdraw from it”; Ben Zoma: wise is the one who learns from every person."
+   ],
+   "blocks": [
+    {
+     "type": "h",
+     "text": "What is Pirkei Avot"
+    },
+    {
+     "type": "p",
+     "text": "In the order Nezikin — the fourth order of the Mishnah, devoted to civil and criminal law — stands a tractate unlike the others. If the whole Mishnah is halacha, legal rulings and the disputes of the Sages about the commandments, then the tractate Avot (“Fathers”), also known as Pirkei Avot (“Chapters of the Fathers”), gathers the personal sayings of the Tannaim — the Sages of the Mishnah era, roughly from the 3rd century BCE to the 2nd century CE. Here there are almost no debates about purity and titles: here it is about humility, patience, learning, one's attitude to people and to G-d. That is why the tractate is often called the “ethics of the fathers,” and it is from it that the Jewish tradition learns to speak about character, and not only about law."
+    },
+    {
+     "type": "p",
+     "text": "Originally the tractate consisted of five chapters. The sixth chapter, “Kinyan Torah” (“The Acquisition of the Torah”), was added later, from other sources. A special custom is connected with Pirkei Avot: in the interval between Pesach and Shavuot, on Shabbat afternoons after minchah, it is customary to study one chapter a week. Thus the period of Sefirat HaOmer (the counting of the Omer) is joined with ethical reflection, and by Shavuot — the festival of the giving of the Torah — the entire tractate has been gone through “in hand.” One preparing for giyur finds in Pirkei Avot the language in which Judaism speaks about personality; many batei din love to ask: “Which saying from Avot is especially dear to you?”"
+    },
+    {
+     "type": "h",
+     "text": "The chain of transmission (1:1)"
+    },
+    {
+     "type": "p",
+     "text": "The tractate opens not with an instruction but with a genealogy: the Mishnah names those through whom the Torah reached the compilers of the Mishnah."
+    },
+    {
+     "type": "hebrew",
+     "he": "מֹשֶׁה קִבֵּל תּוֹרָה מִסִּינַי, וּמְסָרָהּ לִיהוֹשֻׁעַ, וִיהוֹשֻׁעַ לִזְקֵנִים, וּזְקֵנִים לִנְבִיאִים, וּנְבִיאִים מְסָרוּהָ לְאַנְשֵׁי כְּנֶסֶת הַגְּדוֹלָה",
+     "translit": "Moshe kibel Torah mi-Sinai, u-mesarah le-Yehoshua, ve-Yehoshua le-zekenim, u-zekenim le-nevi'im, u-nevi'im mesaruha le-anshei Knesset ha-Gedolah",
+     "ru": "Moshe received the Torah at Sinai and handed it down to Yehoshua; Yehoshua to the elders; the elders to the prophets; the prophets to the men of the Great Assembly",
+     "ref": "Pirkei Avot 1:1"
+    },
+    {
+     "type": "p",
+     "text": "Five links — from Moshe to the Great Assembly (Knesset HaGedolah), the council which, according to tradition, was headed by the prophet Ezra and which laid the foundations of Judaism in the era of the Second Temple. The point of such a beginning is this: the ethics of Avot is not the opinions of individual thinkers, but part of the single chain of the Torah's transmission. It is no accident that the men of the Great Assembly formulate three things: “Be patient in judgment, raise up many disciples, and make a fence around the Torah” (1:1) — patience, scholarship, and precaution. Such is the program from which the whole book takes off."
+    },
+    {
+     "type": "h",
+     "text": "The three pillars of the world (1:2)"
+    },
+    {
+     "type": "p",
+     "text": "The first instruction belongs to Shimon HaTzaddik, the High Priest, described as “one of the last of the Great Assembly.” Note: knowledge (Torah) without worship and without good deeds does not hold the world together. The commentators emphasize: Shimon HaTzaddik lists precisely what makes a person needed by others — learning, prayer, and care."
+    },
+    {
+     "type": "quote",
+     "text": "“On three things the world stands: on the Torah, on worship, and on acts of kindness”",
+     "ref": "Pirkei Avot 1:2"
+    },
+    {
+     "type": "hebrew",
+     "he": "עַל שְׁלֹשָׁה דְבָרִים הָעוֹלָם עוֹמֵד, עַל הַתּוֹרָה וְעַל הָעֲבוֹדָה וְעַל גְּמִילוּת חֲסָדִים",
+     "translit": "Al shlosha dvarim ha-olam omed: al ha-Torah, ve-al ha-avodah, ve-al gemilut chasadim",
+     "ru": "On three things the world stands: on the Torah, on the worship, and on acts of kindness",
+     "ref": "Pirkei Avot 1:2"
+    },
+    {
+     "type": "p",
+     "text": "“Avodah” here is the service in the Temple (in the later understanding — prayer), and “gemilut chasadim” is acts of kindness performed not out of obligation but out of love: visiting the sick, welcoming guests, escorting the deceased. The three pillars form a triangle: learning without prayer is cold, prayer without deeds is empty, deeds without Torah are without wings."
+    },
+    {
+     "type": "h",
+     "text": "The questions of Hillel (1:14; 2:4–5)"
+    },
+    {
+     "type": "p",
+     "text": "Hillel, the head of the Sanhedrin around the end of the 1st century BCE, a native of Babylonia, was famous for his patience and humility. His saying is one of the most quoted in Judaism:"
+    },
+    {
+     "type": "hebrew",
+     "he": "אִם אֵין אֲנִי לִי, מִי לִי; וּכְשֶׁאֲנִי לְעַצְמִי, מָה אֲנִי; וְאִם לֹא עַכְשָׁיו, אֵימָתָי",
+     "translit": "Im ein ani li, mi li; ucheshe-ani le-atzmi, mah ani; ve-im lo achshav, eimatay",
+     "ru": "If I am not for myself, who is for me? And if I am only for myself, what am I? And if not now — when?",
+     "ref": "Pirkei Avot 1:14"
+    },
+    {
+     "type": "p",
+     "text": "Three short questions describe a mature personality: responsibility for oneself, openness to others, and the urgency of action. A little further on Hillel adds the cautions necessary for one who judges people: do not separate yourself from the community, do not rely on your own infallibility, and do not judge until you have stood in the other's place. And he also remarks (2:5) that there is no ignorant person who fears sin, the bashful cannot learn, the impatient cannot teach, and that “in a place where there are no people — strive to be a person.” For one preparing for giyur this is a friendly reminder: patience with oneself and with one's teachers is part of the Torah itself."
+    },
+    {
+     "type": "quote",
+     "text": "“Do not separate yourself from the community; do not trust in yourself until the day of your death; do not judge your fellow until you have come to his place”",
+     "ref": "Pirkei Avot 2:4"
+    },
+    {
+     "type": "hebrew",
+     "he": "אַל תִּפְרֹשׁ מִן הַצִּבּוּר, וְאַל תַּאֲמִין בְּעַצְמְךָ עַד יוֹם מוֹתְךָ, וְאַל תָּדִין אֶת חֲבֵרְךָ עַד שֶׁתַּגִּיעַ לִמְקוֹמוֹ",
+     "translit": "Al tifrosh min ha-tzibbur, ve-al ta'amin be-atzmecha ad yom motcha, ve-al tadin et chavercha ad she-tagia limkomo",
+     "ru": "Do not separate yourself from the community, do not trust in yourself until the day of your death, do not judge your fellow until you have come to his place",
+     "ref": "Pirkei Avot 2:4"
+    },
+    {
+     "type": "h",
+     "text": "“It is not for you to finish the work” (2:16)"
+    },
+    {
+     "type": "p",
+     "text": "Rabbi Tarfon, a disciple of Rabban Yochanan ben Zakkai and a contemporary of Rabbi Akiva, kept count of time: “The day is short, and the work is great; the workers are lazy; the reward is great; and the Master of the house presses” (2:16). And right after — the most encouraging saying for anyone who takes on a great task:"
+    },
+    {
+     "type": "hebrew",
+     "he": "לֹא עָלֶיךָ הַמְּלָאכָה לִגְמֹר, וְלֹא אַתָּה בֶן חוֹרִין לִבָּטֵל מִמֶּנָּה",
+     "translit": "Lo alecha ha-melachah ligmor, ve-lo atah ben chorin levatel mimena",
+     "ru": "It is not upon you to finish the work, but neither are you free to withdraw from it",
+     "ref": "Pirkei Avot 2:16"
+    },
+    {
+     "type": "p",
+     "text": "Then the Mishnah adds: “If you have learned much Torah, great reward will be given to you, for faithful is your Employer to pay the reward of your labor.” In some editions (according to the numbering of the Vilna Talmud) this saying bears the number 2:21 — the essence does not change. A person is not obliged to bring a great work to its end, but is obliged to enter into it and not abandon it. This is an encouraging thought for one who is only beginning the Jewish path: the work of the Torah is greater than each of us, but none of us is exempt from it."
+    },
+    {
+     "type": "h",
+     "text": "The four questions of Ben Zoma (4:1)"
+    },
+    {
+     "type": "p",
+     "text": "Ben Zoma, a contemporary of Rabbi Akiva, overturns the usual notions of wisdom, strength, wealth, and honor. Each answer is supported by a verse: learning from everyone — from Tehillim 119:99; mastering oneself — from Mishlei 16:32 (“one who is slow to anger is better than the mighty”); contentment — from Tehillim 128:2; honoring others — from Shmuel I 2:30 (“those who honor Me I will honor”). Ben Zoma shows: ethical qualities are measured not by external scales but by one's attitude."
+    },
+    {
+     "type": "quote",
+     "text": "“Who is wise? One who learns from every person. Who is strong? One who conquers his desire. Who is rich? One who is content with his portion. Who is honored? One who honors the creatures”",
+     "ref": "Pirkei Avot 4:1"
+    },
+    {
+     "type": "hebrew",
+     "he": "אֵיזֶהוּ חָכָם? הַלּוֹמֵד מִכָּל אָדָם; אֵיזֶהוּ גִבּוֹר? הַכּוֹבֵשׁ אֶת יִצְרוֹ; אֵיזֶהוּ עָשִׁיר? הַשָּׂמֵחַ בְּחֶלְקוֹ; אֵיזֶהוּ מְכֻבָּד? הַמְכַבֵּד אֶת הַבְּרִיּוֹת",
+     "translit": "Eizehu chacham? Ha-lomed mi-kol adam. Eizehu gibor? Ha-kovesh et yitzro. Eizehu ashir? Ha-same'ach be-chelko. Eizehu mechubad? Ha-mechabed et ha-briyot",
+     "ru": "Who is wise? One who learns from every person. Who is strong? One who subdues his inclination. Who is rich? One who rejoices in his portion. Who is honored? One who honors the creatures",
+     "ref": "Pirkei Avot 4:1"
+    },
+    {
+     "type": "note",
+     "text": "Practical advice: start an “Avot notebook” — copy out three or four sayings that resonate with you personally, and be ready to explain at the beit din why you chose exactly those."
+    },
+    {
+     "type": "note",
+     "text": "Pirkei Avot speaks more than once of the *yetzer*, a person's inclination. In Judaism everyone has a *yetzer ha-tov* and a *yetzer hara* — a pull toward good and toward evil. A person is not born already condemned, as if only another could remove the guilt. He answers for his own deeds and is able to return, as the Days of Awe and Yechezkel 18 speak of in detail."
+    }
+   ],
+   "cards": [
+    {
+     "id": "etika-1-c1",
+     "front": "What is Pirkei Avot?",
+     "back": "A tractate of the Mishnah in the order Nezikin, a collection of the ethical sayings of the Tannaim; the “ethics of the fathers”",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-1-c2",
+     "front": "How many chapters does Pirkei Avot have?",
+     "back": "Five chapters; a sixth (“Kinyan Torah”) was added later from other sources",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-1-c3",
+     "front": "When is it customary to study Pirkei Avot?",
+     "back": "Between Pesach and Shavuot, one chapter each Shabbat (after Minchah), during the counting of the Omer",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-1-c4",
+     "front": "The chain of Torah transmission according to Avot 1:1",
+     "back": "Moshe → Yehoshua → the elders → the prophets → the men of the Great Assembly",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-1-c5",
+     "front": "Three things said of the men of the Great Assembly (1:1)",
+     "back": "Patience in judgment; raising many disciples; making a fence around the Torah",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-1-c6",
+     "front": "The three pillars of the world according to Shimon HaTzadik (1:2)",
+     "back": "Torah, divine service (avodah), and acts of kindness (gemilut chasadim)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-1-c7",
+     "front": "Who was Shimon HaTzadik?",
+     "back": "The High Priest, “one of the last” members of the Great Assembly (Avot 1:2)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-1-c8",
+     "front": "The essence of Hillel's three questions (1:14)",
+     "back": "“If I am not for myself, who is for me? If I am only for myself, what am I? If not now, when?” — responsibility, openness, urgency",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-1-c9",
+     "front": "What does Hillel forbid in 2:4?",
+     "back": "Separating yourself from the community; trusting yourself until the day of your death; judging your fellow before you have stood in his place",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-1-c10",
+     "front": "The meaning of the saying in 2:5 about the unlearned",
+     "back": "There is no unlearned person who fears sin; the bashful cannot learn, the impatient cannot teach; where there are no people, be a person",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-1-c11",
+     "front": "The essence of Rabbi Tarfon's saying (2:16)",
+     "back": "“It is not your duty to finish the work, but neither are you free to withdraw from it”; faithful is the Employer to pay the reward",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-1-c12",
+     "front": "The four questions of Ben Zoma (4:1)",
+     "back": "Wise — learns from everyone; strong — masters himself; rich — content with his portion; honored — honors creatures",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-1-c13",
+     "front": "What other number does the saying “It is not your duty to finish the work” bear?",
+     "back": "In the Vilna edition of the Talmud — Avot 2:21",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-1-n1",
+     "front": "Who, according to tradition, headed the Great Assembly?",
+     "back": "The prophet Ezra; this council laid the foundations of Judaism in the Second Temple era",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-1-n2",
+     "front": "What is the purpose of the “Avot notebook” that the lesson recommends?",
+     "back": "Copy out 3–4 sayings that resonate with you personally, and be ready to explain at the beit din why you chose exactly those",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-1-n3",
+     "front": "The prologue to Rabbi Tarfon's saying (2:16)",
+     "back": "“The day is short, and the work is great; the workers are sluggish; the reward is great; and the Master of the house is pressing”",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-1-n4",
+     "front": "The verses on which Ben Zoma relies (4:1)",
+     "back": "Tehillim 119:99 — learning from everyone; Mishlei 16:32 — the patient in spirit is better than the brave; Tehillim 128:2 — contentment; Shmuel I 2:30 — honor",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-1-n5",
+     "front": "Who was Rabbi Tarfon?",
+     "back": "A disciple of Rabban Yochanan ben Zakkai and a contemporary of Rabbi Akiva (Avot 2:16)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-1-n6",
+     "front": "Who was Hillel by origin and standing?",
+     "back": "A native of Babylon, president of the Sanhedrin roughly at the end of the 1st century BCE; renowned for patience and humility",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-1-n7",
+     "front": "The triangle of the three pillars of the world (1:2)",
+     "back": "Learning without prayer is cold, prayer without deeds is empty, deeds without Torah are wingless",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-1-z1",
+     "front": "What are the yetzer hatov and the yetzer hara?",
+     "back": "The inclinations toward good and toward evil. A person is not born with an unremovable debt of another's sin and can return.",
+     "minLevel": "reform"
+    }
+   ]
+  },
+  {
+   "id": "etika-2",
+   "title": "“Love your neighbor”: love of one's fellow and of the ger",
+   "minLevel": "reform",
+   "minutes": 8,
+   "sourceRefs": [
+    "tanakh",
+    "avot",
+    "chumash-gurevich"
+   ],
+   "citations": [
+    "Vayikra 19:18",
+    "Sifra, Kedoshim 4:12",
+    "Talmud, Shabbat 31a",
+    "Devarim 10:19",
+    "Vayikra 19:33–34",
+    "Shemot 22:20; 23:9",
+    "Talmud, Bava Metzia 58b"
+   ],
+   "keyIdeas": [
+    "“Love your neighbor as yourself” (Vayikra 19:18) — Rabbi Akiva calls it the great principle of the Torah, while Ben Azzai places alongside it the principle: a human being is an image of G-d.",
+    "The same verse forbids taking revenge and bearing a grudge: the mitzvah requires breaking the chain of hurts.",
+    "A non-Jew asked for the whole Torah “while standing on one foot”; Hillel accepted him: “That which is hateful to you, do not do to your neighbor — that is the whole Torah; the rest is commentary. Go and learn.”",
+    "The Torah commands us to love the ger, “for you were gerim in Egypt,” and places him on equal footing with the native-born.",
+    "Reminding a ger of his past is forbidden: this is ona'at devarim, verbal oppression (Bava Metzia 58b)."
+   ],
+   "blocks": [
+    {
+     "type": "h",
+     "text": "“Love your neighbor as yourself” (Vayikra 19:18)"
+    },
+    {
+     "type": "p",
+     "text": "The chapter “Kedoshim” (“Holy Ones”) of the book of Vayikra gathers the mitzvot of holiness for everyday life. Among them is the famous verse that Rabbi Akiva calls “the great principle of the Torah” (as the Sifra cites it in Rashi's interpretation). His contemporary Ben Azzai proposes an even broader principle: “A human being is an image of G-d” (Bereshit 5:1). The word re'a (“neighbor”) is interpreted in different ways: some commentators understand it as one who is your equal in observance of the mitzvot — love above all for those with whom you share the path of the Torah; others, in the spirit of Ben Azzai (“a human being is an image of G-d,” Bereshit 5:1) — as any human being."
+    },
+    {
+     "type": "hebrew",
+     "he": "וְאָהַבְתָּ לְרֵעֲךָ כָּמוֹךָ",
+     "translit": "Ve'ahavta lerei'acha kamocha",
+     "ru": "And you shall love your neighbor as yourself",
+     "ref": "Vayikra 19:18"
+    },
+    {
+     "type": "p",
+     "text": "Note the scale: “as yourself.” The Torah does not ask you to love your neighbor more than yourself — it sets the two loves side by side and teaches you to see the same “I” in the other. Hence the natural bridge to the theme of the ger: one who has come into Judaism from outside becomes a neighbor in the full sense."
+    },
+    {
+     "type": "h",
+     "text": "Revenge and bearing a grudge (19:18)"
+    },
+    {
+     "type": "p",
+     "text": "The same verse opens with two prohibitions: “You shall not take revenge and not bear a grudge against the children of your people.” Rashi explains them with everyday examples. Revenge: you asked a neighbor to lend you a sickle — he refused; the next day he asks you for an axe, and you answer: “I won't give it, just as you did not give yesterday.” Bearing a grudge (netirah): you lend, but with a reproach: “Take it — I am not like you.” The mitzvah requires breaking the chain of hurts, not keeping a tally: the past must not govern today's attitude toward a person."
+    },
+    {
+     "type": "h",
+     "text": "Hillel and the ger standing on one foot (Shabbat 31a)"
+    },
+    {
+     "type": "p",
+     "text": "The Talmud (Shabbat 31a) tells that a non-Jew came to Shammai and demanded: “Accept me into Judaism on the condition that you teach me the whole Torah while I stand on one foot.” Shammai drove him away with the builder's measuring rod (Shammai was a builder). The same man came to Hillel — and Hillel accepted him. Alongside this, the Talmud cites two more stories about Hillel's forbearance toward those who came with absurd conditions (one wanted to accept Judaism only “by the Written Torah,” rejecting the Oral Torah; another — to be made High Priest immediately). In all three cases Hillel answers calmly and leads his interlocutor to learning."
+    },
+    {
+     "type": "hebrew",
+     "he": "דְּשָׁנֵי עָלָךְ לְחַבְרָךְ — לָא תַּעֲבֵיד; זוֹ הִיא כָּל הַתּוֹרָה כֻּלָּהּ, וְאִידָּךְ פֵּירוּשָׁהּ הִיא, זִיל גְּמֹר",
+     "translit": "Dishani alach lechavrach — lo ta'avid; zo hi kol haTorah kullah, ve'idach peirushah hi, zil g'mor (Aram.)",
+     "ru": "That which is hateful to you, do not do to your neighbor; this is the whole Torah, and the rest is its commentary. Go and learn",
+     "ref": "Talmud, Shabbat 31a"
+    },
+    {
+     "type": "p",
+     "text": "Hillel's answer is a “negative formulation” of the Golden Rule: not “do to another what you want for yourself,” but “do not do to another what is hateful to you.” It holds realistic wisdom: it is easier to agree on what may not be inflicted than on what each person considers good. For you who are preparing for giyur, this text is especially close: it teaches that entering Judaism is not a speed exam, but an invitation to learn."
+    },
+    {
+     "type": "p",
+     "text": "All three stories of chapter Shabbat 31a say one thing: a seeker must not be driven away, even if his conditions sound naive or insolent. Shammai drove them away — and the Talmud shows this as a loss: that same person would have left Judaism forever. Hillel was patient, accepted, answered — and every interlocutor stayed to learn. A community that meets a ger must remember this lesson: a person's first impression of Jewishness comes from Jews."
+    },
+    {
+     "type": "h",
+     "text": "Love of the ger in the Torah"
+    },
+    {
+     "type": "p",
+     "text": "The commandment of love is formulated regarding the ger as well — for one who has accepted Judaism:"
+    },
+    {
+     "type": "hebrew",
+     "he": "וַאֲהַבְתֶּם אֶת הַגֵּר, כִּי גֵרִים הֱיִיתֶם בְּאֶרֶץ מִצְרָיִם",
+     "translit": "Va'ahavtem et hager, ki gerim heyitem be'eretz Mitzrayim",
+     "ru": "And you shall love the ger, for you were gerim in the land of Egypt",
+     "ref": "Devarim 10:19"
+    },
+    {
+     "type": "p",
+     "text": "The motif “and you were gerim in Egypt” sounds repeatedly in the Torah: the memory of one's own powerlessness is the foundation of ethics toward the stranger, the widow, and the orphan (cf. Shemot 22:20; 23:9). Vayikra 19:34 adds an equalization of rights: one must not remind a ger of his past, must not oppress him — and he becomes “as the native-born among you” (ezrach). The Torah does not offer compassion from above: it offers recognition of oneself in the other's situation."
+    },
+    {
+     "type": "hebrew",
+     "he": "כְּאֶזְרָח מִכֶּם יִהְיֶה לָכֶם הַגֵּר, וְאָהַבְתָּ לוֹ כָּמוֹךָ",
+     "translit": "Ke'ezrach michem yihyeh lachem hager, ve'ahavta lo kamocha",
+     "ru": "As the native-born among you shall the ger be for you, and you shall love him as yourself",
+     "ref": "Vayikra 19:33–34"
+    },
+    {
+     "type": "h",
+     "text": "“Do not wrong the ger”: ona'at hager"
+    },
+    {
+     "type": "p",
+     "text": "The Talmud explains (Bava Metzia 58b) that there is not only material wronging (ona'at mamon) but also verbal wronging (ona'at devarim): “If a person has repented — do not say to him: ‘Remember your former deeds'; if he is the son of converts — do not say: ‘Remember the deeds of your ancestors,' as it is said: ‘And you shall not wrong a ger' (Shemot 22:20).” The Torah creates a protection for human dignity: one may not remind a ger of his past, a sick person of his illness, a penitent of his mistakes. Hillel's reflection “do not judge your fellow until you stand in his place” (Avot 2:4) here receives a concrete law."
+    },
+    {
+     "type": "note",
+     "text": "For a candidate for giyur this is encouraging: Judaism itself requires the community to meet you without reproaches about your “past life” and to count you as its own from the first day."
+    }
+   ],
+   "cards": [
+    {
+     "id": "etika-2-c1",
+     "front": "What does Vayikra 19:18 command?",
+     "back": "“Love your neighbor as yourself”",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-2-c2",
+     "front": "Who called this verse “the great principle of the Torah”?",
+     "back": "Rabbi Akiva (Sifra, Kedoshim 4:12; cited by Rashi)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-2-c3",
+     "front": "What “great principle” did Ben Azzai propose?",
+     "back": "“A human being is an image of G-d” (Bereshit 5:1) — love and respect for every human being",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-2-c4",
+     "front": "What did Hillel say to the non-Jew “on one foot”?",
+     "back": "“That which is hateful to you, do not do to your neighbor; that is the whole Torah, and the rest is commentary. Go and learn”",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-2-c5",
+     "front": "How did Shammai respond to that same petitioner?",
+     "back": "He drove him away with the measuring rod (a builder's tool)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-2-c6",
+     "front": "The content of the commandment in Devarim 10:19",
+     "back": "“And you shall love the ger, for you were gerim in the land of Egypt”",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-2-c7",
+     "front": "On what does the Torah ground love of the ger?",
+     "back": "On one's own experience: “for you were gerim in Egypt” — the memory of powerlessness",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-2-c8",
+     "front": "What equalization of rights does Vayikra 19:34 give?",
+     "back": "“As the native-born (ezrach) among you shall the ger be for you”",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-2-c9",
+     "front": "What does the Talmud (Bava Metzia 58b) forbid regarding a ger?",
+     "back": "Reminding him of his past and his origins — this is ona'at devarim",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-2-c10",
+     "front": "What is ona'at devarim?",
+     "back": "Verbal hurt or oppression (as distinct from material ona'at mamon)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-2-c11",
+     "front": "Where else does the Torah protect the ger?",
+     "back": "Shemot 22:20; 23:9; Vayikra 19:33 — “do not wrong, do not oppress,” alongside the widow and the orphan",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-2-c12",
+     "front": "What does Hillel's patience in the stories of Shabbat 31a teach?",
+     "back": "To meet one who wishes to accept Judaism with calm and lead him to learning, not to drive him away",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-2-c13",
+     "front": "Hillel's “negative formulation”: what is its meaning?",
+     "back": "“Do not do to another what is hateful to you” — it is more realistic to agree on the harm that is impermissible than on goods",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-2-n1",
+     "front": "An example of revenge according to Rashi (Vayikra 19:18)",
+     "back": "A neighbor refused to lend a sickle — the next day you refuse him an axe: “I won't give it, just as you did not give yesterday”",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-2-n2",
+     "front": "An example of bearing a grudge (netirah) according to Rashi",
+     "back": "You lend, but with a reproach: “Take it — I am not like you”",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-2-n3",
+     "front": "Two more insolent conditions in Shabbat 31a",
+     "back": "To accept Judaism only by the Written Torah, rejecting the Oral Torah; to make the convert High Priest immediately",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-2-n4",
+     "front": "How does the Talmud present Shammai's refusal?",
+     "back": "As a loss: that same person would have left Judaism forever; Hillel left each one learning (Shabbat 31a)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-2-n5",
+     "front": "The scale of the mitzvah “as yourself”",
+     "back": "The Torah does not demand loving your neighbor more than yourself; it sets the two loves side by side and teaches seeing the same “I” in the other",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-2-n6",
+     "front": "Two interpretations of the word re'a (“neighbor”)",
+     "back": "As one equal to you in observance of the mitzvot — love above all for those with whom you share the path of the Torah; or as any human being (in the spirit of Ben Azzai)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-2-n7",
+     "front": "What does it mean to “count the ger as one's own from the first day”?",
+     "back": "The community is obligated to meet the ger without reproaches about his “past life” — Judaism itself demands this",
+     "minLevel": "reform"
+    }
+   ]
+  },
+  {
+   "id": "etika-3",
+   "title": "Tzedakah and Chesed",
+   "minLevel": "reform",
+   "minutes": 9,
+   "sourceRefs": [
+    "tanakh",
+    "avot",
+    "rambam-mt",
+    "ksa"
+   ],
+   "citations": [
+    "Devarim 15:7–8",
+    "Devarim 14:22",
+    "Vayikra 25:35",
+    "Mishlei 21:3",
+    "Bava Batra 9a",
+    "Mishneh Torah, Matanot Ani'im 10:7–14",
+    "Kitzur Shulchan Aruch 34:4–7",
+    "Sotah 14a",
+    "Pirkei Avot 1:2; 1:5"
+   ],
+   "keyIdeas": [
+    "Tzedakah comes from the root tzedek, justice: it is a duty, not mercy according to mood; the Talmud equates it with all the mitzvot together.",
+    "The custom of setting aside a tenth of one's income (maaser) grew out of the tithe of the harvest; the generous level is a fifth, but no more.",
+    "The Torah gave the poor rights to peah, shikhechah, and leket, so that help would preserve their dignity.",
+    "In Rambam there are eight levels of tzedakah: the highest is to help a person become self-sufficient, the lowest is to give with sadness.",
+    "Gemilut chasadim — acts of kindness that cannot be reduced to money: visiting the sick, welcoming guests, comforting mourners, imitating the Almighty."
+   ],
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Why “tzedakah” is not charity"
+    },
+    {
+     "type": "term",
+     "term": "Tzedakah",
+     "he": "צְדָקָה",
+     "text": "righteousness, justice; righteous giving to one in need. From the root tzedek — justice."
+    },
+    {
+     "type": "p",
+     "text": "The word “tzedakah” comes from the root tzedek — justice. Giving in Judaism is not an act of generosity according to mood, but a duty of justice: property is given to a person as a holding that carries the obligation to share with those in need. The Talmud expresses this in scale: “Tzedakah is equal to all the mitzvot combined” (Bava Batra 9a), and the book of Mishlei adds: “To do righteousness (tzedakah) and justice is more pleasing to the Almighty than sacrifice” (Mishlei 21:3). The mitzvah is formulated in the Torah directly: “Do not harden your heart and do not close your hand against your poor brother… open your hand to him” (Devarim 15:7–8)."
+    },
+    {
+     "type": "h",
+     "text": "The tithe — maaser"
+    },
+    {
+     "type": "hebrew",
+     "he": "עַשֵּׂר תְּעַשֵּׂר אֵת כָּל תְּבוּאַת זַרְעֲךָ הַיֹּצֵא הַשָּׂדֶה שָׁנָה שָׁנָה",
+     "translit": "Aser te'aser et kol tevu'at zar'echa hayotze hasadeh shanah shanah",
+     "ru": "You shall tithe all the produce of your seed that comes out of the field, year by year",
+     "ref": "Devarim 14:22"
+    },
+    {
+     "type": "p",
+     "text": "The tithe (maaser) is the setting aside of a tenth of the harvest and of income for sacred and communal needs, including help for the poor (the tithe for the poor — “maaser ani” in the third year of the seven-year cycle, Devarim 26:12). In the agricultural land of Israel the tithe was collected from the harvest; in a money economy the custom arose of setting aside a tenth of one's income, while the “generous level” is a fifth. Kitzur Shulchan Aruch (34:4) cautions: do not give away more than a fifth of your property, lest you yourself end up in need — tzedakah should be built on reason, not impulse.",
+     "differs": [
+      {
+       "level": "reform",
+       "text": "In Reform Judaism maaser is not preserved as an obligatory halachic tithe; progressive communities recommend regular proportional donations according to one's means (for example, a percentage of income)."
+      }
+     ]
+    },
+    {
+     "type": "h",
+     "text": "The rights of the poor in the Torah: leket, shikhechah, peah"
+    },
+    {
+     "type": "p",
+     "text": "Before any question of giving, the Torah arranged a system in which the poor receive help while preserving their dignity. “The corners of your field you shall not reap… and the gleanings of your harvest you shall not gather” (Vayikra 19:9–10) — the corners of the field (peah), the sheaves accidentally left behind (shikhechah), and the gleanings (leket) belong to the poor, the widows, and the orphans (Devarim 24:19–21). The poor person gathers the gift himself: he works rather than waits for alms. Thus the Torah mixes justice and respect: one in need is not an object of mercy, but a person with rights written into the very land."
+    },
+    {
+     "type": "p",
+     "text": "Halacha also sets an order of priority: relatives and household members come before the poor of your city, the poor of your city before the poor of other cities, but the administrators of the communal fund must not favor relatives (KSA 34:6). Giving with a displeased face loses its merit even for a large sum — one should give “with a friendly expression and with joy” (34:7).",
+     "minLevel": "orthodox"
+    },
+    {
+     "type": "h",
+     "text": "The eight levels of tzedakah according to Rambam"
+    },
+    {
+     "type": "p",
+     "text": "In the Mishneh Torah (Laws of Gifts to the Poor 10:7–14) Rambam sets out eight levels, from highest to lowest. The conclusion surprises the modern person: the highest tzedakah is not money, but restoring independence. And note: it is not the size of the gift but the attitude that determines the level of the mitzvah — giving with sadness ranks below a small gift given with a kind face."
+    },
+    {
+     "type": "list",
+     "ordered": true,
+     "items": [
+      "The highest level, above which there is none, is to support one who has become impoverished with a gift or a loan, by taking him into partnership or finding him work, “so as to strengthen his hand so that he need not ask” (10:7; the basis — “and you shall support him,” Vayikra 25:35).",
+      "Giving in which the giver does not know to whom he gives, and the recipient does not know from whom he receives (the example is the Chamber of Secrets in the Temple, 10:8).",
+      "The giver knows to whom he gives, but the recipient does not know from whom he receives (the sages secretly placed coins at the doors of the poor, 10:9).",
+      "The recipient knows from whom he takes, but the giver does not know to whom he gives (coins in a cloth on the shoulder, 10:10).",
+      "To give into the hand of one in need before he asks (10:11).",
+      "To give after he asks (10:12).",
+      "To give less than is fitting, but with a kind face (10:13).",
+      "The lowest level is to give with sadness (10:14)."
+     ]
+    },
+    {
+     "type": "p",
+     "text": "How to apply the ladder today? If an acquaintance loses his job, the highest level is to help him find one or to support him with a loan until his paycheck, not simply to transfer money; anonymity is possible through the communal tzedakah fund; “before he asks” means noticing need before a person resolves to ask. Kitzur Shulchan Aruch (34:13) adds: give in secret, as far as possible — and do not pride yourself on the size of the gift."
+    },
+    {
+     "type": "h",
+     "text": "Gemilut chasadim"
+    },
+    {
+     "type": "term",
+     "term": "Gemilut chasadim",
+     "he": "גְּמִילוּת חֲסָדִים",
+     "text": "acts of kindness performed without external obligation: care for the living — the sick, mourners, guests."
+    },
+    {
+     "type": "p",
+     "text": "The third “pillar of the world” from Pirkei Avot 1:2 is precisely gemilut chasadim. Acts of kindness do not always fall under the heading of “tzedakah,” because they cannot be reduced to money: visiting the sick, comforting mourners, going out to meet a guest, accompanying the dead. The Talmud asks: how can one cultivate compassion? And it answers: walk in the ways of G-d — just as He visits the sick, comforts mourners, buries the dead, so shall you (Sotah 14a). The model of care is the Creator Himself."
+    },
+    {
+     "type": "h",
+     "text": "Bikur cholim and hospitality"
+    },
+    {
+     "type": "p",
+     "text": "Bikur cholim — visiting the sick — is a mitzvah that the Talmud teaches precisely through imitating G-d: “As the Almighty visited the sick Avraham (“and he appeared to him,” Bereshit 18:1) — so you shall visit the sick” (Sotah 14a). The order and details of visiting are collected in halachic literature (in Kitzur Shulchan Aruch — ch. 193); the essence, however, is being present beside a person in a difficult hour, and this is common to all movements."
+    },
+    {
+     "type": "p",
+     "text": "Hospitality (hachnasat orchim) is a trait of Avraham, who himself stood at the entrance of his tent in the heat of the day, watching for travelers. Yose ben Yochanan of Jerusalem formulates it (Pirkei Avot 1:5):"
+    },
+    {
+     "type": "quote",
+     "text": "“Let your house be wide open, and let the poor be members of your household”",
+     "ref": "Pirkei Avot 1:5"
+    },
+    {
+     "type": "hebrew",
+     "he": "יְהִי בֵיתְךָ פָתוּחַ לִרְוָחָה, וְיִהְיוּ עֲנִיִּים בְּנֵי בֵיתֶךָ",
+     "translit": "Yehi beitecha patuach lirvachah, ve'yihyu aniyim bnei beitecha",
+     "ru": "Let your house be wide open, and let the poor be members of your household",
+     "ref": "Pirkei Avot 1:5"
+    },
+    {
+     "type": "note",
+     "text": "Practical advice: set up a “tzedakah box” — set aside a share of your income as soon as it arrives. Rambam notes: the great sages gave a coin to a poor person before every prayer (Matanot Ani'im 10:15)."
+    },
+    {
+     "type": "note",
+     "text": "In the days of awe tzedakah stands next to teshuvah and tefillah not by chance: it is one of the paths of return to the Almighty, without an intermediary and without another's sacrifice. A good deed does not “buy” forgiveness automatically, but it is part of the work that a person does himself, before G-d and before people."
+    }
+   ],
+   "cards": [
+    {
+     "id": "etika-3-c1",
+     "front": "What does the word “tzedakah” mean?",
+     "back": "Justice (from the root tzedek): giving is a duty of justice, not mercy",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-3-c2",
+     "front": "What does the Talmud say about the measure of tzedakah?",
+     "back": "“Tzedakah is equal to all the mitzvot combined” (Bava Batra 9a)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-3-c3",
+     "front": "Which verse places tzedakah above sacrifice?",
+     "back": "Mishlei 21:3 — “to do righteousness and justice is more pleasing to the Almighty than sacrifice”",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-3-c4",
+     "front": "How does the mitzvah of maaser sound?",
+     "back": "“You shall tithe all the produce…” (Devarim 14:22); in a money economy — a tithe of income",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-3-c5",
+     "front": "What is the upper limit of tzedakah?",
+     "back": "No more than a fifth of one's property, lest you yourself become needy (KSA 34:4)",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "etika-3-c6",
+     "front": "The order of priority in tzedakah",
+     "back": "Relatives and household members → the poor of your city → the poor of other cities; the fund's administrators do not favor relatives (KSA 34:6)",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "etika-3-c7",
+     "front": "How should one's face be when giving tzedakah?",
+     "back": "With a friendly face and joy; with a displeased face the merit is lost even for 1000 gold coins (KSA 34:7; Rambam 10:4)",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "etika-3-c8",
+     "front": "The highest level of tzedakah (Rambam)",
+     "back": "To support one who has become impoverished with a loan, partnership, or work, so that he need not ask (Matanot Ani'im 10:7; Vayikra 25:35)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-3-c9",
+     "front": "The second level of tzedakah",
+     "back": "Anonymous giving: neither the giver nor the recipient knows (the Chamber of Secrets in the Temple)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-3-c10",
+     "front": "The lowest (8th) level of tzedakah",
+     "back": "Giving with sadness (Matanot Ani'im 10:14)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-3-c11",
+     "front": "The level of “less than is fitting”",
+     "back": "To give less than is proper, but with a kind face — the 7th level (10:13)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-3-c12",
+     "front": "What is gemilut chasadim?",
+     "back": "Acts of kindness without external obligation; the third pillar of the world (Avot 1:2)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-3-c13",
+     "front": "The basis of the mitzvah of bikur cholim",
+     "back": "Imitating G-d: He visited the sick Avraham (Bereshit 18:1) — so shall you (Sotah 14a)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-3-c14",
+     "front": "The formula of hospitality (Avot 1:5)",
+     "back": "“Let your house be wide open, and let the poor be members of your household”",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-3-n1",
+     "front": "What is maaser ani?",
+     "back": "The tithe for the poor, set aside in the third year of the seven-year cycle (Devarim 26:12)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-3-n2",
+     "front": "What are pe'ah, shikhechah, and leket?",
+     "back": "The corners of the field, sheaves left behind by accident, and dropped ears of grain, which belong to the poor, to widows, and to orphans (Vayikra 19:9–10; Devarim 24:19–21)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-3-n3",
+     "front": "The third level of tzedakah (Rambam)",
+     "back": "The giver knows to whom he gives, but the recipient does not know: the sages would secretly place coins in the doorways of the poor (10:9)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-3-n4",
+     "front": "The fourth level of tzedakah (Rambam)",
+     "back": "The recipient knows from whom he receives, but the giver does not know: coins were placed in a cloth on the shoulder (10:10)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-3-n5",
+     "front": "A custom of the great sages (Matnot Aniyim 10:15)",
+     "back": "They would give a coin to a poor person before every prayer",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-3-n6",
+     "front": "The advice of KSA 34:13 on giving in secret",
+     "back": "Give in secret, as far as possible — and do not take pride in the size of the gift",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-3-n7",
+     "front": "The verse from which the lesson derives the mitzvah of tzedakah",
+     "back": "“Do not harden your heart and do not close your hand before your poor brother… open your hand to him” (Devarim 15:7–8)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-3-n8",
+     "front": "What is hachnasat orchim?",
+     "back": "Hospitality — a trait of Avraham: he would stand at the entrance of the tent in the heat of the day, waiting for travelers",
+     "minLevel": "reform"
+    }
+   ]
+  },
+  {
+   "id": "etika-4",
+   "title": "The ethics of speech",
+   "minLevel": "reform",
+   "minutes": 8,
+   "sourceRefs": [
+    "tanakh",
+    "ksa",
+    "eee"
+   ],
+   "citations": [
+    "Mishlei 18:21",
+    "Tehillim 34:13–14",
+    "Shemot 23:1; 23:7",
+    "Vayikra 19:11",
+    "Vayikra 25:17",
+    "Talmud, Arakhin 15b",
+    "Talmud, Bava Metzia 58b",
+    "Kitzur Shulchan Aruch 30; 63:1",
+    "Chafetz Chaim, “Shmirat ha-Lashon”"
+   ],
+   "keyIdeas": [
+    "“Death and life are in the power of the tongue”: the tradition distinguishes lashon hara, rechilut, and motzi shem ra.",
+    "Lashon hara is speech that is true but harmful; the Talmud equates evil speech with the three gravest sins, and listening to it with taking part in the sin.",
+    "One may speak about a person only in order to prevent real harm: the facts have been checked, there is no other way, the aim is protection, and it is said in private.",
+    "The Chafetz Chaim systematized the laws of speech; today they apply also to forwarding messages in messaging apps and on social networks.",
+    "Ona'at devarim — hurt caused by words — is more serious than cheating on a price: money can be returned, words cannot; if you have lashed out, you need to apologize."
+   ],
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Three kinds of forbidden speech"
+    },
+    {
+     "type": "p",
+     "text": "Jewish ethics gives the word exceptional weight: “Death and life are in the power of the tongue” (Mishlei 18:21). The tradition distinguishes three main kinds of forbidden speech about a person: speech that is true but harmful (lashon hara), carrying words in order to stir up strife (rechilut), and a defaming lie (motzi shem ra). The psalmist states the ideal in positive form — and it is precisely his words that become the name of the great code of speech:"
+    },
+    {
+     "type": "hebrew",
+     "he": "מִי הָאִישׁ הֶחָפֵץ חַיִּים, אֹהֵב יָמִים לִרְאוֹת טוֹב; נְצֹר לְשׁוֹנְךָ מֵרָע, וּשְׂפָתֶיךָ מִדַּבֵּר מִרְמָה",
+     "translit": "Mi ha-ish he-chafetz chayim, ohev yamim lir'ot tov; netzor leshoncha me-ra, u-sfatecha midaber mirmah",
+     "ru": "Who is the person who desires life, who loves days in which to see good? Guard your tongue from evil and your lips from deceitful words",
+     "ref": "Tehillim 34:13–14"
+    },
+    {
+     "type": "term",
+     "term": "Lashon hara",
+     "he": "לָשׁוֹן הָרָע",
+     "text": "“an evil tongue”: true speech about a person that harms him, or behind which there is malicious intent."
+    },
+    {
+     "type": "term",
+     "term": "Rechilut",
+     "he": "רְכִילוּת",
+     "text": "talebearing, gossip: carrying words from one person to another in order to sow strife or hurt."
+    },
+    {
+     "type": "term",
+     "term": "Motzi shem ra",
+     "he": "מוֹצִיא שֵׁם רָע",
+     "text": "“bringing out an evil name”: slander — a lie that defames another person."
+    },
+    {
+     "type": "h",
+     "text": "The measure of the sin (Arakhin 15b)"
+    },
+    {
+     "type": "p",
+     "text": "The Talmud does not play down the difficulty of the commandment: evil speech is equated with the three gravest sins — idolatry, forbidden relations, and murder (Arakhin 15b; for this the method of interpretation called “gezerah shavah” is used, by way of the word “great”). “One who speaks lashon hara is as if he rejects the faith” (there). The Talmud also teaches about the listener: to accept evil speech is to take part in the sin, and so the prohibition concerns not only the tongue but also the ear."
+    },
+    {
+     "type": "p",
+     "text": "The prohibition of lying is broader than the prohibition of evil speech: “Keep far from falsehood” (Shemot 23:7); “Do not lie to one another” (Vayikra 19:11). Even a readiness to listen to gossip violates a commandment: “Do not accept a false report” (Shemot 23:1) — that is, an ear tuned to evil speech is already in the wrong. The Kitzur Shulchan Aruch (ch. 30) joins together the prohibitions of gossip, an evil tongue, revenge, and a grudge kept hidden: the weight we conceal in the heart is compared, in its gravity, to revenge itself."
+    },
+    {
+     "type": "h",
+     "text": "When words are nevertheless permitted"
+    },
+    {
+     "type": "p",
+     "text": "The prohibition does not mean that one may not speak about problems at all. The classic source (the Chafetz Chaim) permits speech about a person when the prevention of real harm depends on it — for example, to warn a swindler’s victim, or to report an unreliable partner. But the conditions are strict: the facts have been checked in person, and not by “I was told”; there is no other way to prevent the harm; the intention is protection, not condemnation; the words are said privately to someone who is able to act. If even one condition is not met, silence is the mitzvah, and the speech becomes lashon hara even when the facts are true."
+    },
+    {
+     "type": "h",
+     "text": "The Chafetz Chaim"
+    },
+    {
+     "type": "p",
+     "text": "The most influential code of the ethics of speech was the work of Rabbi Yisrael Meir ha-Kohen (1838–1933) of Radin, known as the “Chafetz Chaim” — “one who desires life,” from the opening words of Tehillim 34, which we have just quoted. The books “Chafetz Chaim” (1873) and “Shmirat ha-Lashon” (“Guarding the Tongue,” 1876) set out dozens of situations in order: when one may not speak under any circumstances, when words are permitted in order to prevent harm (but even then with strict limits), how to find a defense for someone who is absent, and what one must keep silent about. The Chafetz Chaim makes practical the ideal that is heard in prayer: the tongue is an instrument of life, not a weapon. He also wrote the book “Ahavat Chesed” — on the love of kindness and on interest-free loans: for him, the ethics of speech and the ethics of money are one whole."
+    },
+    {
+     "type": "p",
+     "text": "Today the commandment has gained a new dimension: lashon hara in messaging apps and on social networks spreads in an instant and remains forever. Contemporary teachers carry the rules of the Chafetz Chaim over to digital speech: do not forward defamatory material, do not subscribe to evil speech, delete gossip from group chats — pressing “share” is the same as retelling, and the responsibility for it is the same as for one’s own words."
+    },
+    {
+     "type": "note",
+     "text": "A practice: before you retell anything about a person, ask yourself: is it true? is it necessary? is it said gently? what will change if I stay silent?"
+    },
+    {
+     "type": "h",
+     "text": "Ona'at devarim — hurt by words"
+    },
+    {
+     "type": "p",
+     "text": "The ethics of speech is not limited to talk “about third parties.” “Do not hurt one another” (Vayikra 25:17) is explained in the Talmud this way: just as there is fraud in buying and selling, so there is hurt in words (Bava Metzia 58b). Examples from the sages: do not ask a seller the price if you do not intend to buy; do not say to someone who has repented, “remember your former deeds”; do not put to a person a question that requires knowledge he does not have. The Kitzur Shulchan Aruch (63:3) adds: if a person has a shameful nickname — even if he has grown used to it — it is forbidden to call him by it in order to humiliate him. And 63:1 stresses: to hurt someone with words is more serious than to cheat him on the price — money can be returned, words cannot."
+    },
+    {
+     "type": "p",
+     "text": "If your speech has nevertheless broken loose — apologize and repair the harm as far as you can: tell the person to whom you carried the words that they were not accurate, and ask forgiveness of the one who was hurt. Jewish tradition does not demand an unattainable perfection of speech; it demands honest work on it, day after day. It is here, in the small things of daily speech, that genuine spiritual work begins."
+    },
+    {
+     "type": "p",
+     "text": "Guarding against hurt begins with the worth we grow used to assigning to another person’s dignity. Rabbi Eliezer advises (Pirkei Avot 2:10): “Let your friend’s honor be as dear to you as your own.”",
+     "minLevel": "reform"
+    }
+   ],
+   "cards": [
+    {
+     "id": "etika-4-c1",
+     "front": "What is lashon hara?",
+     "back": "Speech about a person that is true but harmful — it is forbidden, even if the facts are correct",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-4-c2",
+     "front": "What is rechilut?",
+     "back": "Talebearing: carrying words in order to cause strife or hurt",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-4-c3",
+     "front": "What is motzi shem ra?",
+     "back": "Slander — a defaming lie about a person",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-4-c4",
+     "front": "The verse “Keep far from falsehood”",
+     "back": "Shemot 23:7 — the prohibition of lying; “do not lie to one another” — Vayikra 19:11",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-4-c5",
+     "front": "What does Shemot 23:1 forbid?",
+     "back": "“Do not accept a false report” — listening to gossip is already a violation",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-4-c6",
+     "front": "To what does the Talmud equate lashon hara (Arakhin 15b)?",
+     "back": "To the three gravest sins: idolatry, forbidden relations, and murder; one who speaks it is “as if he rejects the faith”",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-4-c7",
+     "front": "Who is the Chafetz Chaim?",
+     "back": "Rabbi Yisrael Meir ha-Kohen of Radin (1838–1933), author of the code of the laws of speech",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-4-c8",
+     "front": "Where does the name “Chafetz Chaim” come from?",
+     "back": "From Tehillim 34:13 — “who is the person who desires (chafetz) life (chayim)?”",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-4-c9",
+     "front": "The Chafetz Chaim’s principal books on speech",
+     "back": "“Chafetz Chaim” (1873) and “Shmirat ha-Lashon” (“Guarding the Tongue,” 1876)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-4-c10",
+     "front": "What is ona'at devarim?",
+     "back": "Hurt by words (Vayikra 25:17; Bava Metzia 58b): leading questions about a price, nicknames, “remember the past”",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-4-c11",
+     "front": "Why is hurt by words more serious than a monetary one?",
+     "back": "Money can be returned, but words cannot; the harm is done to the person himself (KSA 63:1)",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "etika-4-c12",
+     "front": "What does KSA, chapter 30, bring together?",
+     "back": "The prohibition of gossip, an evil tongue, revenge, and a grudge kept hidden",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "etika-4-n1",
+     "front": "The principal verse of the ethics of speech in this lesson",
+     "back": "“Death and life are in the power of the tongue” (Mishlei 18:21)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-4-n2",
+     "front": "What question may one not ask a person who does not know?",
+     "back": "A question that requires knowledge he does not have: this is ona'at devarim (Bava Metzia 58b)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-4-n3",
+     "front": "The four conditions for speech aimed at preventing harm",
+     "back": "The facts have been checked in person; there is no other way; the intention is protection; it is said privately to someone who is able to act",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-4-n4",
+     "front": "Lashon hara in messaging apps and on social networks",
+     "back": "Do not forward defamatory material and do not subscribe to evil speech; pressing “share” is the same as retelling",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-4-n5",
+     "front": "Four questions before retelling something about a person",
+     "back": "Is it true? Is it necessary? Is it said gently? What will change if I stay silent?",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-4-n6",
+     "front": "The rule of shameful nicknames (KSA 63:3)",
+     "back": "Even if a person has grown used to a nickname, it is forbidden to call him by it in order to humiliate him",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-4-n7",
+     "front": "The advice of Rabbi Eliezer (Avot 2:10)",
+     "back": "“Let your friend’s honor be as dear to you as your own” — a safeguard against hurt",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-4-n8",
+     "front": "Which book about chesed did the Chafetz Chaim write?",
+     "back": "“Ahavat Chesed” — on the love of kindness and on interest-free loans",
+     "minLevel": "reform"
+    }
+   ]
+  },
+  {
+   "id": "etika-5",
+   "title": "Honesty in one’s dealings",
+   "minLevel": "reform",
+   "minutes": 8,
+   "sourceRefs": [
+    "tanakh",
+    "ksa"
+   ],
+   "citations": [
+    "Vayikra 19:35–36",
+    "Devarim 25:13–15",
+    "Vayikra 19:13",
+    "Devarim 24:14–15",
+    "Vayikra 25:14; 25:36–37",
+    "Devarim 23:20–21",
+    "Talmud, Bava Metzia 50b–51a",
+    "Vayikra 22:32",
+    "Pirkei Avot 2:12",
+    "Kitzur Shulchan Aruch 62; 63; 65"
+   ],
+   "keyIdeas": [
+    "The Torah requires accurate measures and weights and forbids keeping two weights — one for buying and one for selling.",
+    "A day laborer’s wage must be paid on the same day: for him it is a matter of survival.",
+    "Taking interest from a fellow Jew is forbidden: a loan should rescue a person from need; out of this grew the gemach — a fund for interest-free loans.",
+    "Ona'ah — fraud in the price — is forbidden; keeping one’s word is also part of honesty: let your “yes” be “yes,” and your “no” be “no.”",
+    "Honest deeds sanctify the Name of G-d (kiddush Hashem), and dishonesty desecrates it (chillul Hashem)."
+   ],
+   "blocks": [
+    {
+     "type": "h",
+     "text": "Accurate measures"
+    },
+    {
+     "type": "p",
+     "text": "The Torah makes demands of trade that were ahead of their time: “Just measures, just weights, a just ephah, and a just hin shall you have” (Vayikra 19:35–36); “You shall not have in your bag two weights — a large one and a small one… a full and true weight shall you have” (Devarim 25:13–15). Double scales are a symbol of fraud: one weight for buying, another for selling. The sages add the other side as well: measure “heaped up,” setting aside a little of your own — that is how the word “true” in the commandment about measures is explained (KSA 62:9)."
+    },
+    {
+     "type": "hebrew",
+     "he": "מֹאזְנֵי צֶדֶק אַבְנֵי־צֶדֶק אֵיפַת־צֶדֶק וְהִין־צֶדֶק יִהְיֶה לָכֶם",
+     "translit": "Moznei tzedek, avnei-tzedek, eifat-tzedek ve-hin-tzedek yihyeh lachem",
+     "ru": "Just scales, just weights, a just ephah, and a just hin shall you have",
+     "ref": "Vayikra 19:35–36"
+    },
+    {
+     "type": "p",
+     "text": "It is forbidden to keep in the house even an unused short measure — someone might use it without knowing (KSA 62:12). Short weight and short measure are forbidden even in trade with a non-Jew (KSA 62:7), and repentance for cheating in measure is especially hard: the cheater does not know from whom, and exactly how much, he stole.",
+     "minLevel": "orthodox"
+    },
+    {
+     "type": "h",
+     "text": "A worker’s pay — on the same day"
+    },
+    {
+     "type": "p",
+     "text": "The Torah protects the hired worker, for whom the day of payment is a matter of survival:"
+    },
+    {
+     "type": "hebrew",
+     "he": "לֹא תָלִין פְּעֻלַּת שָׂכִיר אִתְּךָ עַד־בֹּקֶר",
+     "translit": "Lo talin pe'ulat sachir itcha ad boker",
+     "ru": "Do not keep a hired worker’s wage with you until morning",
+     "ref": "Vayikra 19:13"
+    },
+    {
+     "type": "hebrew",
+     "he": "בְּיוֹמוֹ תִתֵּן שְׂכָרוֹ, וְלֹא־תָבוֹא עָלָיו הַשֶּׁמֶשׁ",
+     "translit": "Be-yomo titen secharo, ve-lo tavo alav ha-shemesh",
+     "ru": "On his day give him his wage, and let the sun not set because of it",
+     "ref": "Devarim 24:15"
+    },
+    {
+     "type": "p",
+     "text": "The obligation applies first of all to a day laborer who lives on that day’s earnings: he is waiting for this money in order to live, and in the tradition a delay in pay is compared to taking a life. In a broader sense the commandment teaches: do not make your neighbor a hostage to your financial “hygiene.”"
+    },
+    {
+     "type": "h",
+     "text": "Without interest"
+    },
+    {
+     "type": "p",
+     "text": "A loan at interest to a fellow Jew is forbidden by the Torah: “Do not lend at interest to your brother…” (Devarim 23:20–21); “Do not take from him interest or increase, and fear your G-d” (Vayikra 25:36–37). The logic of the commandment is this: a loan should rescue a person from need, and not be a way to grow rich on someone else’s trouble. By the letter of the Torah, interest was permitted from a non-Jew (Devarim 23:21), so as not to suffer a loss in a competitive setting; later, halacha limited this as well. From the commandment grew a beautiful communal institution — the gemach (a communal fund for interest-free loans), which is still at work today."
+    },
+    {
+     "type": "p",
+     "text": "The Kitzur Shulchan Aruch (ch. 65) sets out the prohibition in detail: it is violated not only by the lender and the borrower, but also by the scribe, the witnesses, and the guarantor of a note at interest; “prior” and “subsequent” interest is interest as well: one may neither inflate the debt before the money is given, nor “make a gift” to the lender after repayment, in gratitude for the use of the money.",
+     "minLevel": "orthodox"
+    },
+    {
+     "type": "h",
+     "text": "Geneivah (ona'ah) and deception"
+    },
+    {
+     "type": "term",
+     "term": "Ona'ah (geneivah)",
+     "he": "אוֹנָאָה",
+     "text": "fraud in the price in buying and selling; literally, “oppression.” Separately there is ona'at devarim, hurt by words."
+    },
+    {
+     "type": "p",
+     "text": "“When you sell to your neighbor, or buy from the hand of your neighbor, do not cheat one another” (Vayikra 25:14). Halacha sets a measure for the fraud: if the price is raised or lowered by a sixth or more, the transaction may be annulled and the difference returned (Bava Metzia 50b–51a; Shulchan Aruch, Choshen Mishpat 227). The Kitzur Shulchan Aruch (62:1) remarks wisely: the first question that will be asked of a person in the Heavenly Court is, “Did you trade honestly?”"
+    },
+    {
+     "type": "p",
+     "text": "The prohibition also covers leasing, contract work, and exchange; misleading a person — even a non-Jew, even without a monetary loss — is forbidden (KSA 63:4): one may not sell non-kosher meat while passing it off as kosher. And verbal ona'ah (ch. 63) is more serious than monetary ona'ah: money can be returned, words cannot.",
+     "minLevel": "orthodox"
+    },
+    {
+     "type": "h",
+     "text": "One’s word, and “yes”"
+    },
+    {
+     "type": "p",
+     "text": "Honesty in Judaism is broader than the accuracy of the scales: what matters is keeping one’s very word. “Let the hin be true” (Vayikra 19:36) the sages explain in two ways: let your measure be true — and let your “yes” (in Aramaic, “hen”) be a true “yes,” and your “no” a true “no” (KSA 62:16). Those who have agreed on a price must not back out of the deal; and a beit din will pronounce a curse on one who breaks his word, in this formula: “He Who exacted retribution from the generation of the Flood, from the generation of the Tower of Babel, from Sodom, and from the Egyptians will exact it from the one who does not keep his word” (KSA 62:15). A G-d-fearing person tries to carry out even what he has only thought of agreeing to. The KSA (62:17) adds: a promise of a gift to a poor person becomes a vow — one may no longer change one’s mind."
+    },
+    {
+     "type": "h",
+     "text": "Kiddush HaShem and chillul HaShem"
+    },
+    {
+     "type": "term",
+     "term": "Kiddush HaShem",
+     "he": "קִדּוּשׁ הַשֵּׁם",
+     "text": "“sanctification of the Name”: deeds by which a Jew brings glory to the Name of G-d in the eyes of people."
+    },
+    {
+     "type": "term",
+     "term": "Chillul HaShem",
+     "he": "חִלּוּל הַשֵּׁם",
+     "text": "“desecration of the Name”: deeds because of which piety toward G-d is called into question."
+    },
+    {
+     "type": "p",
+     "text": "“Do not profane My holy Name — and I will be sanctified among the children of Israel” (Vayikra 22:32). The Name of G-d is “sanctified” through people: idolaters, the commentators say, ought to say of the Jews, “blessed is the people that has such a G-d.” From this follows an ethical consequence: kiddush Hashem is not only martyrdom for the faith, but everyday honesty, decency, courtesy, and a kind word. Rabbi Yose formulates it (Pirkei Avot 2:12): “Let all your deeds be for the sake of Heaven.”"
+    },
+    {
+     "type": "note",
+     "text": "A practical word of advice: in business, in an argument, and on the internet, ask yourself: will my action strengthen a good opinion of the Jewish people and of G-d — or will it spoil it?"
+    }
+   ],
+   "cards": [
+    {
+     "id": "etika-5-c1",
+     "front": "The commandment of accurate measures",
+     "back": "Vayikra 19:35–36 — “just measures, weights, an ephah, and a hin”; Vayikra 19:36 concludes: “for I am the Almighty, your G-d”",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-5-c2",
+     "front": "The prohibition of double weights",
+     "back": "Devarim 25:13–15 — not to have a large weight and a small one; keeping a short measure even without using it is forbidden (KSA 62:12)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-5-c3",
+     "front": "The rule “measure generously”",
+     "back": "KSA 62:9 — give it “heaped up”; the word “true” is explained: “set aside a little of your own and give it to him”",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "etika-5-c4",
+     "front": "Paying a hired worker (Vayikra 19:13)",
+     "back": "“Do not keep a hired worker’s wage with you until morning”",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-5-c5",
+     "front": "The time for paying a day laborer (Devarim 24:15)",
+     "back": "On the same day, “before the sun sets”",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-5-c6",
+     "front": "The commandment concerning interest",
+     "back": "“Do not lend at interest to your brother” (Devarim 23:20–21); “do not take interest or increase” (Vayikra 25:36–37)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-5-c7",
+     "front": "What is a gemach?",
+     "back": "A communal fund for interest-free loans (from “gemilut chasadim”)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-5-c8",
+     "front": "What is ona'ah (geneivah)?",
+     "back": "Fraud in the price in buying and selling (Vayikra 25:14); the measure of the fraud is one sixth (Bava Metzia 50b–51a)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-5-c9",
+     "front": "The measure of fraud in the price",
+     "back": "Overcharging or undercharging by 1/6 or more — the deal is annulled and the difference is returned (Shulchan Aruch, Choshen Mishpat 227)",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "etika-5-c10",
+     "front": "“The first question in the Heavenly Court”",
+     "back": "“Did you trade honestly?” (KSA 62:1)",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "etika-5-c11",
+     "front": "Kiddush Hashem — a definition",
+     "back": "Sanctification of the Name of G-d through one’s deeds; the source is Vayikra 22:32 (“and I will be sanctified among the children of Israel”)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-5-c12",
+     "front": "The formula of kiddush Hashem in everyday life",
+     "back": "“Let all your deeds be for the sake of Heaven” (Pirkei Avot 2:12)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-5-n1",
+     "front": "Short weight and short measure in trade with a non-Jew",
+     "back": "They are forbidden in trade with a non-Jew as well (KSA 62:7)",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "etika-5-n2",
+     "front": "Why is repentance for cheating in measure especially hard?",
+     "back": "The cheater does not know from whom, and exactly how much, he stole",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "etika-5-n3",
+     "front": "The formula of the curse on one who breaks his word (KSA 62:15)",
+     "back": "“He Who exacted retribution from the generation of the Flood, from the Tower of Babel, from Sodom, and from the Egyptians will exact it from the one who does not keep his word”",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-5-n4",
+     "front": "A promise of a gift to a poor person (KSA 62:17)",
+     "back": "It becomes a vow — one may no longer change one’s mind",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-5-n5",
+     "front": "To what is a delay in a day laborer’s pay compared in the tradition?",
+     "back": "To taking a life: he is waiting for this money in order to live",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-5-n6",
+     "front": "The logic of the prohibition of interest",
+     "back": "A loan should rescue a person from need, and not be a way to grow rich on someone else’s trouble",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-5-n7",
+     "front": "“Prior” and “subsequent” interest (KSA 65)",
+     "back": "This too is interest: one may neither inflate the debt before it is given, nor “bestow a gift” on the lender after repayment",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "etika-5-n8",
+     "front": "Besides buying and selling, where else does the prohibition of fraud apply?",
+     "back": "To leasing, to contract work, and to the exchange of money (KSA 62:2)",
+     "minLevel": "orthodox"
+    }
+   ]
+  },
+  {
+   "id": "etika-6",
+   "title": "Tikkun olam: repairing the world",
+   "minLevel": "reform",
+   "minutes": 8,
+   "sourceRefs": [
+    "tanakh",
+    "ksa",
+    "avot",
+    "masorti",
+    "reform-spb"
+   ],
+   "citations": [
+    "Mishnah, Gittin 4:2–3",
+    "Siddur, the “Aleinu” prayer",
+    "Devarim 20:19",
+    "Devarim 25:4",
+    "Shemot 23:5",
+    "Devarim 22:10",
+    "Shemot 20:12; Devarim 5:16",
+    "Talmud, Kiddushin 31a–b",
+    "Vayikra 19:3",
+    "Kitzur Shulchan Aruch 190; 191; 193"
+   ],
+   "keyIdeas": [
+    "Tikkun olam — “repair of the world”: enactments of the sages “for the sake of the repair of the world” (Gittin 4:2–3), and the “Aleinu” prayer.",
+    "Hillel’s prosbul preserves a debt through the seventh year, so that people will not stop lending to the poor — for the good of the world.",
+    "All the movements value tikkun olam; the emphases differ: Reform places it at the center alongside Torah and prayer, Masorti places it within halacha, and Orthodoxy places it in the mitzvot and in holiness.",
+    "The Torah forbids causing animals to suffer (tza'ar ba'alei chayim) and destroying trees, food, and things for no purpose (bal tashchit).",
+    "Honoring parents is the fifth commandment: the Talmud distinguishes “fear” and “honor”; the example is the non-Jew Dama ben Netina."
+   ],
+   "blocks": [
+    {
+     "type": "h",
+     "text": "What tikkun olam is"
+    },
+    {
+     "type": "term",
+     "term": "Tikkun olam",
+     "he": "תִּקּוּן עוֹלָם",
+     "text": "“repair of the world”: enactments for the public good and, in a later understanding, the social responsibility of a Jew."
+    },
+    {
+     "type": "p",
+     "text": "The concept has two sources. The first is the Mishnah (Gittin 4:2–3): a series of enactments of the sages is accompanied by the formula “for the sake of the repair of the world” (mipnei tikkun ha-olam); there, too, is Hillel’s prosbul, an agreement that preserves a debt through the seventh year, when debts are cancelled, so that people will not be afraid to lend. In this way halacha itself teaches: the law can and should be set right for the good of the world. The second source is the “Aleinu” prayer, which closes every service:"
+    },
+    {
+     "type": "hebrew",
+     "he": "לְתַקֵּן עוֹלָם בְּמַלְכוּת שַׁדַּי",
+     "translit": "Letaken olam be-malchut Shaddai",
+     "ru": "To repair the world in the kingdom of the Almighty",
+     "ref": "Siddur, the “Aleinu” prayer"
+    },
+    {
+     "type": "p",
+     "text": "By the sixteenth century, Kabbalah (the teaching of the Arizal) fills the concept with a new meaning: through the mitzvot and good deeds a person “repairs” the world, restoring to it its original harmony. In modern times “tikkun olam” became the common name for a Jew’s social responsibility. Today all the movements use the concept; the debate is over what counts as “repair.” The prosbul is a telling example: the seventh year cancels debts, but Hillel saw that a good law had led to a hardening of hearts — people stopped lending to the poor — and he arranged a document that preserves the debt, so as to give people back the possibility of helping. Repairing the world begins with one’s neighbor, with the community, and with one’s own deeds. When the talk turns to social justice or to ecology, tikkun olam is a reminder that Judaism has long had its own language for these obligations — and that they grow out of the mitzvot, not out of fashion."
+    },
+    {
+     "type": "p",
+     "text": "All movements share the value of repairing the world, but they place the emphasis differently. In Conservative (Masorti) Judaism, tikkun olam is understood as a communal obligation within a halachic life: social justice — together with the observance of Shabbat, kashrut, and family purity (Masorti). The Orthodox tradition emphasizes that the main repair of the world is achieved through the mitzvot and personal holiness, from which good deeds grow.",
+     "differs": [
+      {
+       "level": "reform",
+       "text": "In Reform Judaism, tikkun olam has become one of the central slogans of identity: Reform platforms of the late 20th century call the repair of the world (social justice, care for the poor, and peace) a central task of Jewish life alongside the Torah and prayer."
+      }
+     ]
+    },
+    {
+     "type": "h",
+     "text": "Tzaar baalei chayim — the suffering of living beings"
+    },
+    {
+     "type": "term",
+     "term": "Tzaar baalei chayim",
+     "he": "צַעַר בַּעֲלֵי חַיִּים",
+     "text": "the prohibition of causing suffering to animals; the obligation to care for them."
+    },
+    {
+     "type": "p",
+     "text": "The Torah forbids muzzling an ox while it chews (Devarim 25:4), commands helping a donkey to its feet, even one belonging to an enemy (Shemot 23:5), and forbids plowing with an ox and a donkey together (Devarim 22:10) — given the different natures of the animals. Halacha extends this care to how to load and unload an animal (KSA 189), to feeding it on time, and to working animals on Shabbat (KSA 186, 191). The parable of the prophet Bilaam, whose donkey saw the angel before he did (Bamidbar 22), hints: cruelty blinds a person's eyes. Man is the highest of creatures, and therefore responsibility for living beings lies first of all upon him. Shabbat extends rest to them as well: “so that your ox and your donkey may rest” (Shemot 23:12) — another's labor, even the labor of an animal, is not our property."
+    },
+    {
+     "type": "h",
+     "text": "Bal tashchit — “do not destroy”"
+    },
+    {
+     "type": "p",
+     "text": "“When you besiege a city… do not cut down its tree… for the tree of the field is not a man, to retreat from you into the besieged city” (Devarim 20:19). From this verse the prohibition of bal tashchit is derived: do not destroy fruit trees needlessly, and by analogy — food, things, water, energy. Destruction for destruction's sake contradicts the design of the Creator: man is not the owner of the world but its tenant. The Kitzur Shulchan Aruch (ch. 190) connects the prohibition of bal tashchit with care for one's own body: guarding one's health and guarding the world are two sides of one responsibility for what does not belong to us."
+    },
+    {
+     "type": "h",
+     "text": "Honoring parents"
+    },
+    {
+     "type": "p",
+     "text": "The fifth of the Ten Mitzvot — the first that concerns a fellow human being, and the first with a promised reward. It is addressed to an adult, independent person and continues even after the parents' death: one speaks of them with respect and carries out their will (Kiddushin 31b):"
+    },
+    {
+     "type": "hebrew",
+     "he": "כַּבֵּד אֶת־אָבִיךָ וְאֶת־אִמֶּךָ, לְמַעַן יַאֲרִכוּן יָמֶיךָ",
+     "translit": "Kabbed et avicha ve'et imecha, lema'an ya'arikhun yamecha",
+     "ru": "Honor your father and your mother, so that your days may be long",
+     "ref": "Shemot 20:12"
+    },
+    {
+     "type": "p",
+     "text": "The Talmud distinguishes “fear” (morah) — not standing in one's parent's place, not sitting in their seat, not contradicting them by tone of voice — and “honor” (kavod): feeding, giving drink, clothing, escorting them in and out with honor (Kiddushin 31b–32a); a parallel formulation of the Torah itself is “every person shall fear his mother and his father” (Vayikra 19:3). The Talmud notes a subtlety: a son fears his father more than his mother (the father teaches him Torah and is stricter), therefore in the verse about fear the mother is named first, to emphasize her honor as well (Kiddushin 31a). An example to emulate is Dama ben Netina, a non-Jew from Ashkelon, who did not wake his sleeping father for the sake of a deal worth six hundred thousand gold dinars; the following year a red heifer was born in his herd, and he received back everything he had lost (Kiddushin 31a). The Talmud's conclusion: “If one who is not commanded to do so acts this way — all the more so one who is commanded.” Honoring parents is a bridge between ethics and mitzvah: the first of the mitzvot connected with a fellow human being, and the first with a promised reward."
+    },
+    {
+     "type": "note",
+     "text": "For the beit din a useful link: tikkun olam begins with correcting one's own deeds — in the very spirit of Pirkei Avot, with which this section opens."
+    }
+   ],
+   "cards": [
+    {
+     "id": "etika-6-c1",
+     "front": "Two sources of the concept of “tikkun olam”",
+     "back": "Mishnah Gittin 4:2–3 (“for the sake of the repair of the world”) and the prayer Aleinu",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-6-c2",
+     "front": "What is a prozbul?",
+     "back": "Hillel's enactment: the debt survives the seventh year — for the sake of tikkun olam (Gittin 4:3)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-6-c3",
+     "front": "The formula from “Aleinu”",
+     "back": "“To repair the world in the kingdom of the Almighty” (le-takein olam be-malchut Shaddai)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-6-c4",
+     "front": "What is tzaar baalei chayim?",
+     "back": "The prohibition of causing suffering to animals; care for feeding and loading (Devarim 25:4 and elsewhere)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-6-c5",
+     "front": "Which verse is the basis of the prohibition of bal tashchit?",
+     "back": "Devarim 20:19 — “for is the tree of the field a man, to come against you in the siege?”",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-6-c6",
+     "front": "The Fifth Commandment",
+     "back": "“Honor your father and your mother, so that your days may be long” (Shemot 20:12)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-6-c7",
+     "front": "Morah and kavod",
+     "back": "“Fear”: not his place, not his seat, not contradicting him by tone of voice; “honor”: feeding, giving drink, clothing, escorting (Kiddushin 31b–32a)",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "etika-6-c8",
+     "front": "The parable of Dama ben Netina",
+     "back": "He did not wake his father for the sake of a huge deal; as a reward — a red heifer; the lesson: one who is not commanded — all the more so one who is commanded (Kiddushin 31a)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-6-c9",
+     "front": "KSA 190 — what is the chapter about?",
+     "back": "Care for the body and the prohibition “do not destroy” (bal tashchit)",
+     "minLevel": "orthodox"
+    },
+    {
+     "id": "etika-6-c10",
+     "front": "The Masorti position on tikkun olam",
+     "back": "A communal obligation within a halachic life: social justice together with the observance of the mitzvot",
+     "minLevel": "conservative"
+    },
+    {
+     "id": "etika-6-c11",
+     "front": "The emphasis of Reform Judaism",
+     "back": "Tikkun olam — one of the central slogans of identity; the repair of the world is placed at the center of Jewish life",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-6-c12",
+     "front": "Which mitzvot concern animals? (3)",
+     "back": "Do not muzzle an ox (Devarim 25:4); help an enemy's donkey (Shemot 23:5); do not plow with an ox and a donkey together (Devarim 22:10)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-6-n1",
+     "front": "The new meaning of tikkun olam in Kabbalah (16th century)",
+     "back": "Through the mitzvot and good deeds a person returns to the world its original harmony (the teaching of the Ari)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-6-n2",
+     "front": "What do the movements argue about in their understanding of tikkun olam?",
+     "back": "About what to count as “repair”; all share the value but place the emphasis differently",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-6-n3",
+     "front": "What image of man is contained in the mitzvah of bal tashchit?",
+     "back": "Man is not the owner of the world but its tenant",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-6-n4",
+     "front": "Which parable does the lesson on tzaar baalei chayim cite?",
+     "back": "About the prophet Bilaam, whose donkey saw the angel before he did (Bamidbar 22): cruelty blinds a person's eyes",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-6-n5",
+     "front": "Shabbat and animals",
+     "back": "“So that your ox and your donkey may rest” (Shemot 23:12): another's labor, even the labor of an animal, is not our property",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-6-n6",
+     "front": "The subtlety of the verse “fear your mother and father”",
+     "back": "A son fears his father more, therefore the mother is named first — to emphasize her honor as well (Kiddushin 31a)",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-6-n7",
+     "front": "Where does the repair of the world begin?",
+     "back": "With one's neighbor, the community, and one's own deeds",
+     "minLevel": "reform"
+    },
+    {
+     "id": "etika-6-n8",
+     "front": "How does halacha broaden the care for animals?",
+     "back": "Helping to unload and load an animal (KSA 189), feeding it on time, and giving it rest on Shabbat",
+     "minLevel": "orthodox"
+    }
+   ]
+  }
+ ],
+ "questions": [
+  {
+   "id": "etika-q1",
+   "lessonId": "etika-1",
+   "format": "mc",
+   "minLevel": "reform",
+   "prompt": "What is Pirkei Avot?",
+   "options": [
+    "A tractate of the Mishnah in the order Nezikin — a collection of the ethical sayings of the Tannaim",
+    "A section of the Talmud on civil law",
+    "A book of the Prophets about the end of days",
+    "A collection of weekday prayers"
+   ],
+   "answer": 0,
+   "explanation": "Pirkei Avot (tractate Avot) is the only tractate of the Mishnah dedicated not to halacha but to the moral sayings of the Sages; it belongs to the order Nezikin.",
+   "source": "Pirkei Avot (a tractate of the Mishnah, order Nezikin)",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-q2",
+   "lessonId": "etika-1",
+   "format": "mc",
+   "minLevel": "reform",
+   "prompt": "What chain of the transmission of the Torah is given at the beginning of Pirkei Avot (1:1)?",
+   "options": [
+    "Moshe → Yehoshua → the elders → the prophets → the men of the Great Assembly",
+    "Moshe → Aharon → the elders → the kings → the prophets",
+    "Avraham → Yitzchak → Yaakov → Moshe → Yehoshua",
+    "Moshe → the seventy elders → the judges → the High Priests"
+   ],
+   "answer": 0,
+   "explanation": "Mishnah 1:1 names five links: Moshe, Yehoshua, the elders, the prophets, the men of the Great Assembly.",
+   "source": "Pirkei Avot 1:1",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q3",
+   "lessonId": "etika-1",
+   "format": "mc",
+   "minLevel": "reform",
+   "prompt": "According to Shimon HaTzadik, what does the world stand on?",
+   "options": [
+    "On the Torah, on divine service (avodah), and on acts of kindness (gemilut chasadim)",
+    "On prayer, fasting, and tzedakah",
+    "On love of G-d, fear of G-d, and hope",
+    "On the observance of Shabbat, kashrut, and family purity"
+   ],
+   "answer": 0,
+   "explanation": "Avot 1:2: “The world stands on three things: on the Torah, on the service, and on acts of kindness.”",
+   "source": "Pirkei Avot 1:2",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q4",
+   "lessonId": "etika-1",
+   "format": "mc",
+   "minLevel": "reform",
+   "prompt": "To whom does the saying belong: “If I am not for myself, who is for me? And if I am only for myself, what am I? And if not now — when?”?",
+   "options": [
+    "To Hillel",
+    "To Shimon HaTzadik",
+    "To Rabbi Tarfon",
+    "To Ben Zoma"
+   ],
+   "answer": 0,
+   "explanation": "This famous three-part saying is from the teaching of Hillel (Avot 1:14).",
+   "source": "Pirkei Avot 1:14",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-q5",
+   "lessonId": "etika-1",
+   "format": "mc",
+   "minLevel": "reform",
+   "prompt": "What is the meaning of Rabbi Tarfon's saying “It is not your duty to finish the work, but neither are you free to withdraw from it” (2:16)?",
+   "options": [
+    "A person is not obliged to bring the work of the Torah to completion, but is obliged to enter into it and not abandon it",
+    "The study of the Torah must be completed by each person by the end of life",
+    "The work of repairing the world will be completed only by Mashiach",
+    "A reward is given only for a fully completed deed"
+   ],
+   "answer": 0,
+   "explanation": "Tarfon removes both the pressure of perfectionism and the temptation of inaction: enter into the work and stay in it — the faithful Employer will pay the reward.",
+   "source": "Pirkei Avot 2:16",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q6",
+   "lessonId": "etika-1",
+   "format": "tf",
+   "minLevel": "reform",
+   "prompt": "Pirkei Avot is a tractate of the Talmud.",
+   "answer": false,
+   "explanation": "Pirkei Avot is a tractate of the Mishnah (in the order Nezikin), although it is also studied by the tradition of the Talmudic era.",
+   "source": "Pirkei Avot (a tractate of the Mishnah)",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-q7",
+   "lessonId": "etika-1",
+   "format": "tf",
+   "minLevel": "reform",
+   "prompt": "Shimon HaTzadik is called in the Mishnah “one of the last” of the men of the Great Assembly.",
+   "answer": true,
+   "explanation": "“Shimon HaTzadik was one of the remnant of the Great Assembly” (Avot 1:2).",
+   "source": "Pirkei Avot 1:2",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-q8",
+   "lessonId": "etika-1",
+   "format": "match",
+   "minLevel": "reform",
+   "prompt": "Match the sayings with their authors.",
+   "pairs": [
+    [
+     "“The world stands on three things…”",
+     "Shimon HaTzadik"
+    ],
+    [
+     "“If I am not for myself, who is for me?…”",
+     "Hillel"
+    ],
+    [
+     "“It is not your duty to finish the work…”",
+     "Rabbi Tarfon"
+    ],
+    [
+     "“Who is wise? One who learns from every person”",
+     "Ben Zoma"
+    ],
+    [
+     "“Do not judge your fellow until you have stood in his place”",
+     "Hillel"
+    ]
+   ],
+   "explanation": "All five sayings are from the opening chapters of Pirkei Avot; the authors are named in the mishnayot themselves.",
+   "source": "Pirkei Avot 1:2; 1:14; 2:4; 2:16; 4:1",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q9",
+   "lessonId": "etika-1",
+   "format": "typed",
+   "minLevel": "reform",
+   "prompt": "What is the name of the tractate of the Mishnah that is traditionally studied between Pesach and Shavuot (one chapter each Shabbat)?",
+   "answer": "Pirkei Avot",
+   "accept": [
+    "pirkei avot"
+   ],
+   "explanation": "A special custom formed of studying Pirkei Avot on the Shabbatot of the Omer period.",
+   "source": "Pirkei Avot (a tractate of the Mishnah)",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q10",
+   "lessonId": "etika-1",
+   "format": "open",
+   "minLevel": "reform",
+   "prompt": "Name any saying from Pirkei Avot and explain why it is important to you personally.",
+   "modelAnswer": "The candidate names a saying (for example, “It is not your duty to finish the work” — Avot 2:16) and states its meaning in English. Then explains the personal connection: why the saying resonates with them, and how it influences their decision to embrace Judaism or their daily behavior. A good answer shows that the ethics of Avot is absorbed not as a collection of quotations but as a living compass.",
+   "keyPoints": [
+    "The exact source of the saying is given (chapter:mishnah)",
+    "The saying is retold accurately",
+    "There is a personal explanation, not just a retelling",
+    "The answer connects the saying with Jewish practice or giyur"
+   ],
+   "explanation": "At the beit din they often ask about a favorite saying from Avot; accuracy of citation and personal engagement matter.",
+   "source": "Pirkei Avot 1:2; 1:14; 2:16; 4:1",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-q11",
+   "lessonId": "etika-2",
+   "format": "mc",
+   "minLevel": "reform",
+   "prompt": "What mitzvah does Vayikra 19:18 contain?",
+   "options": [
+    "Love your fellow as yourself",
+    "Honor your father and your mother",
+    "Do not bear false witness",
+    "Love the Almighty with all your heart"
+   ],
+   "answer": 0,
+   "explanation": "“You shall not take revenge nor bear a grudge… and you shall love your fellow as yourself” (Vayikra 19:18).",
+   "source": "Vayikra 19:18",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-q12",
+   "lessonId": "etika-2",
+   "format": "mc",
+   "minLevel": "reform",
+   "prompt": "Who called the mitzvah “love your fellow” the great principle of the Torah?",
+   "options": [
+    "Rabbi Akiva",
+    "Shimon HaTzadik",
+    "Hillel",
+    "Ben Zoma"
+   ],
+   "answer": 0,
+   "explanation": "“Rabbi Akiva said: this is the great principle in the Torah” (Sifra, Kedoshim 4:12; cited by Rashi to Vayikra 19:18).",
+   "source": "Sifra, Kedoshim 4:12; Rashi to Vayikra 19:18",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q13",
+   "lessonId": "etika-2",
+   "format": "mc",
+   "minLevel": "reform",
+   "prompt": "What did Hillel answer the non-Jew who demanded to be taught the whole Torah “while I stand on one foot”?",
+   "options": [
+    "“What is hateful to you, do not do to your fellow — that is the whole Torah; the rest is commentary; go and learn”",
+    "“Come back in a year, when you have learned the alphabet”",
+    "“First take upon yourself all 613 mitzvot”",
+    "“That is impossible — choose another faith”"
+   ],
+   "answer": 0,
+   "explanation": "Hillel accepted the petitioner and gave the “negative formulation” of the golden rule (Shabbat 31a).",
+   "source": "Talmud, Shabbat 31a",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-q14",
+   "lessonId": "etika-2",
+   "format": "mc",
+   "minLevel": "reform",
+   "prompt": "What does the Talmud forbid in relation to a ger (Bava Metzia 58b)?",
+   "options": [
+    "Reminding him of his past and ancestry",
+    "Accepting him into the community",
+    "Teaching him Torah",
+    "Giving him ritual objects"
+   ],
+   "answer": 0,
+   "explanation": "“If he is the son of gerim — do not say to him: remember the deeds of your ancestors” — this is onaat devarim, verbal oppression of a ger.",
+   "source": "Talmud, Bava Metzia 58b",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q15",
+   "lessonId": "etika-2",
+   "format": "tf",
+   "minLevel": "reform",
+   "prompt": "The mitzvah of love for the ger is motivated in the Torah by the memory of Egyptian slavery: “for you were gerim in the land of Egypt.”",
+   "answer": true,
+   "explanation": "The motive “and you were gerim in Egypt” is repeated many times in the Torah (Devarim 10:19; Shemot 22:20; 23:9).",
+   "source": "Devarim 10:19",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q16",
+   "lessonId": "etika-2",
+   "format": "match",
+   "minLevel": "reform",
+   "prompt": "Match the concepts with their meanings.",
+   "pairs": [
+    [
+     "Re'a",
+     "one's fellow"
+    ],
+    [
+     "Ger",
+     "one who embraced Judaism"
+    ],
+    [
+     "Ezrach",
+     "native resident"
+    ],
+    [
+     "Onaah",
+     "oppression, deception"
+    ]
+   ],
+   "explanation": "“Re'a” — one's fellow (Vayikra 19:18); “ger” — one who embraced Judaism; “ezrach” — native (Vayikra 19:34); “onaah” — oppression (Vayikra 25:14,17).",
+   "source": "Vayikra 19:18, 19:34, 25:14",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q17",
+   "lessonId": "etika-2",
+   "format": "typed",
+   "minLevel": "reform",
+   "prompt": "What is a person who has embraced Judaism called?",
+   "answer": "ger",
+   "accept": [
+    "ger"
+   ],
+   "explanation": "Ger — one who embraced Judaism; “gerim” is the plural.",
+   "source": "Devarim 10:19",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q18",
+   "lessonId": "etika-2",
+   "format": "open",
+   "minLevel": "reform",
+   "prompt": "Retell the story of Hillel and the non-Jew “on one foot” and explain why Hillel gave exactly that answer.",
+   "modelAnswer": "A non-Jew came to Shammai with a condition: teach me the whole Torah while I stand on one foot; Shammai drove him away with a builder's measuring rod. Hillel accepted the petitioner and said: “What is hateful to you, do not do to your fellow — that is the whole Torah; the rest is commentary; go and learn” (Shabbat 31a). The answer in the “negative formulation” is more realistic: it is easier to agree about harm that is unacceptable than about goods. Besides, Hillel showed that giyur is entry into learning, not an instant exam.",
+   "keyPoints": [
+    "Shammai drove the petitioner away; Hillel accepted him",
+    "The formulation: “do not do to your fellow what is hateful to you”",
+    "The “rest is commentary; go and learn” is mentioned",
+    "The meaning: tolerance toward one who enters, and the priority of practical ethics"
+   ],
+   "explanation": "This is a classic beit din question about tolerance and the essence of the Torah; accuracy of retelling and understanding of the meaning matter.",
+   "source": "Talmud, Shabbat 31a",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-q19",
+   "lessonId": "etika-3",
+   "format": "mc",
+   "minLevel": "reform",
+   "prompt": "What does the word “tzedakah” mean?",
+   "options": [
+    "Justice, righteousness — giving as a duty of justice",
+    "Mercy given according to one's mood",
+    "Forgiveness of sins",
+    "A vow over property"
+   ],
+   "answer": 0,
+   "explanation": "Tzedakah comes from the root “tzedek” (righteousness); KSA 34:1 calls giving a mitzvah of the Torah, not charity.",
+   "source": "Kitzur Shulchan Aruch 34:1",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-q20",
+   "lessonId": "etika-3",
+   "format": "mc",
+   "minLevel": "reform",
+   "prompt": "What level of tzedakah is the highest according to the Rambam (Matnot Aniim 10:7)?",
+   "options": [
+    "Supporting one who has become poor with a loan, a partnership, or work, so that he does not need help",
+    "Giving anonymously through a public fund",
+    "Feeding the hungry before a holiday",
+    "Building a synagogue or a school"
+   ],
+   "answer": 0,
+   "explanation": "The highest level, “above which there is none,” is restoring a person's independence (the basis — “and you shall support him,” Vayikra 25:35).",
+   "source": "Mishneh Torah, Matnot Aniim 10:7",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-q21",
+   "lessonId": "etika-3",
+   "format": "mc",
+   "minLevel": "reform",
+   "prompt": "What level of tzedakah is the lowest according to the Rambam?",
+   "options": [
+    "Giving with sadness",
+    "Giving after being asked",
+    "Giving less than is fitting, but with a friendly face",
+    "Giving before being asked"
+   ],
+   "answer": 0,
+   "explanation": "“Below this level is one who gives with sadness” (10:14): it is not the size of the gift but the attitude that determines the level of the mitzvah.",
+   "source": "Mishneh Torah, Matnot Aniim 10:14",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q22",
+   "lessonId": "etika-3",
+   "format": "mc",
+   "minLevel": "reform",
+   "prompt": "What portion of one's income does the custom of maaser set aside?",
+   "options": [
+    "A tenth",
+    "A fifth",
+    "A third",
+    "A hundredth"
+   ],
+   "answer": 0,
+   "explanation": "“You shall tithe all the produce of your sowing…” (Devarim 14:22); in a money economy — a tithe of income; the “generous level” is a fifth.",
+   "source": "Devarim 14:22",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-q23",
+   "lessonId": "etika-3",
+   "format": "tf",
+   "minLevel": "reform",
+   "prompt": "According to the Rambam, anonymous giving is the highest level of tzedakah.",
+   "answer": false,
+   "explanation": "Anonymous giving is the second level; the highest is supporting a person before he becomes destitute (a loan, work, a partnership), 10:7–8.",
+   "source": "Mishneh Torah, Matnot Aniim 10:7–8",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q24",
+   "lessonId": "etika-3",
+   "format": "tf",
+   "minLevel": "orthodox",
+   "prompt": "According to KSA 34:7, giving with a displeased face forfeits the merit even for a very large sum.",
+   "answer": true,
+   "explanation": "“One who gives with a displeased expression… even if he gave a thousand gold coins, his merit is lost” (KSA 34:7; cf. Rambam 10:4).",
+   "source": "Kitzur Shulchan Aruch 34:7",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-q25",
+   "lessonId": "etika-3",
+   "format": "match",
+   "minLevel": "reform",
+   "prompt": "Match the Rambam's levels of tzedakah with their place on the ladder (from 1st — the highest, to 8th — the lowest).",
+   "pairs": [
+    [
+     "A gift, a loan, a partnership, or work",
+     "1st (highest)"
+    ],
+    [
+     "Neither the giver nor the recipient knows",
+     "2nd"
+    ],
+    [
+     "Giving before being asked",
+     "5th"
+    ],
+    [
+     "Less than is fitting, but with a friendly face",
+     "7th"
+    ],
+    [
+     "Giving with sadness",
+     "8th (lowest)"
+    ]
+   ],
+   "explanation": "The Rambam's ladder: 10:7 — work/a loan; 10:8 — double anonymity; 10:11 — before being asked; 10:13 — less than is fitting with a friendly face; 10:14 — with sadness.",
+   "source": "Mishneh Torah, Matanot Ani'im 10:7–14",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q26",
+   "lessonId": "etika-3",
+   "format": "typed",
+   "minLevel": "reform",
+   "prompt": "What is the name of the tithe set aside from the harvest or from income?",
+   "answer": "maaser",
+   "accept": [
+    "maaser",
+    "masar"
+   ],
+   "explanation": "Maaser — “a tenth part” (Devarim 14:22).",
+   "source": "Devarim 14:22",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q27",
+   "lessonId": "etika-3",
+   "format": "open",
+   "minLevel": "reform",
+   "prompt": "Set out the eight levels of tzedakah according to the Rambam (at least the top three) and explain why restoring independence ranks above almsgiving.",
+   "modelAnswer": "Eight levels (Matnot Aniim 10:7–14): 1) supporting one who has become poor with a loan, a partnership, or work; 2) giving where neither party knows the other; 3) the giver knows, the recipient does not; 4) the recipient knows, the giver does not; 5) before being asked; 6) after being asked; 7) less than is fitting with a friendly face; 8) with sadness. The highest level restores a person's dignity and independence — “to strengthen his hand” — whereas a handout sustains dependence. The goal of tzedakah is not handouts but the exit from need.",
+   "keyPoints": [
+    "All 8 levels are named (or the top 3 with the source 10:7–14 given)",
+    "The correct order and the essence of the highest level",
+    "The dignity of the needy person is mentioned (Vayikra 25:35)",
+    "Understanding of the difference between a handout and independence"
+   ],
+   "explanation": "The Rambam's ladder is one of the most famous sections of ethics; at the beit din they expect confident knowledge of the highest levels.",
+   "source": "Mishneh Torah, Matanot Ani'im 10:7–14",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-q28",
+   "lessonId": "etika-4",
+   "format": "mc",
+   "minLevel": "reform",
+   "prompt": "What is lashon hara?",
+   "options": [
+    "Truthful speech about a person that harms him",
+    "A lie told to save someone",
+    "The language of prayer",
+    "A scholarly debate"
+   ],
+   "answer": 0,
+   "explanation": "Lashon hara — “evil speech”: true facts that harm a person or are backed by malicious intent (KSA 30; Chafetz Chaim).",
+   "source": "Kitzur Shulchan Aruch 30",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-q29",
+   "lessonId": "etika-4",
+   "format": "mc",
+   "minLevel": "reform",
+   "prompt": "Who was the “Chafetz Chaim”?",
+   "options": [
+    "Rabbi Yisrael Meir ha-Kohen of Radin (1838–1933), author of the code of the laws of speech",
+    "The High Priest of the Second Temple",
+    "The commentator Rashi",
+    "The founder of the Hasidic movement"
+   ],
+   "answer": 0,
+   "explanation": "The “Chafetz Chaim” is Rabbi Israel Meir HaKohen Kagan of Radin; his books Chafetz Chaim and Shemirat HaLashon are classics of the ethics of speech.",
+   "source": "Electronic Jewish Encyclopedia, entry “Kagan, Israel Meir”",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q30",
+   "lessonId": "etika-4",
+   "format": "mc",
+   "minLevel": "reform",
+   "prompt": "To which sins does the Talmud equate the sin of lashon hara (Arachin 15b)?",
+   "options": [
+    "Idolatry, forbidden relations, and murder",
+    "Theft and robbery",
+    "The violation of Shabbat",
+    "The violation of kashrut"
+   ],
+   "answer": 0,
+   "explanation": "“One who speaks lashon hara multiplies sins corresponding to the three transgressions: idolatry, adultery, and murder” (Arachin 15b).",
+   "source": "Talmud, Arakhin 15b",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-q31",
+   "lessonId": "etika-4",
+   "format": "tf",
+   "minLevel": "reform",
+   "prompt": "Lashon hara is always a lie.",
+   "answer": false,
+   "explanation": "Lashon hara is true but harmful speech; a lie about a person is motzi shem ra (slander), which is prohibited separately.",
+   "source": "Kitzur Shulchan Aruch 30",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-q32",
+   "lessonId": "etika-4",
+   "format": "tf",
+   "minLevel": "reform",
+   "prompt": "The Torah forbids not only speaking but also accepting a false rumor: “You shall not accept a false rumor.”",
+   "answer": true,
+   "explanation": "“Lo tisa shema shav” (Shemot 23:1) — even listening to gossip is already a violation of the mitzvah.",
+   "source": "Shemot 23:1",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q33",
+   "lessonId": "etika-4",
+   "format": "match",
+   "minLevel": "reform",
+   "prompt": "Match the types of forbidden speech with their definitions.",
+   "pairs": [
+    [
+     "Lashon hara",
+     "true but harmful speech"
+    ],
+    [
+     "Rechilut",
+     "carrying words to stir up strife"
+    ],
+    [
+     "Motzi shem ra",
+     "slander — a defaming lie"
+    ],
+    [
+     "Onaat devarim",
+     "verbal offense"
+    ]
+   ],
+   "explanation": "Lashon hara, rechilut, and motzi shem ra are speech about third parties; onaat devarim is an offense inflicted on the person addressed with words (Vayikra 25:17).",
+   "source": "Kitzur Shulchan Aruch 30; Vayikra 25:17",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q34",
+   "lessonId": "etika-4",
+   "format": "typed",
+   "minLevel": "reform",
+   "prompt": "What was the name (after the title of his book) of the rabbi from Radin, the author of the classic codex on the prohibition of gossip?",
+   "answer": "The Chafetz Chaim",
+   "accept": [
+    "chafetz chaim"
+   ],
+   "explanation": "The pseudonym of Israel Meir HaKohen comes from the words of the psalm “who is the man who desires life” (Tehillim 34:13).",
+   "source": "Tehillim 34:13; EJE",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q35",
+   "lessonId": "etika-4",
+   "format": "open",
+   "minLevel": "reform",
+   "prompt": "How does lashon hara differ from motzi shem ra? Why does the tradition consider speech so dangerous?",
+   "modelAnswer": "Lashon hara is true but harmful speech about a person; motzi shem ra is a lie that defames him (slander). Both are forbidden, but the latter is worse, for it adds a lie to the harm. The tradition considers speech dangerous because it wounds three — the speaker, the listener, and the one spoken about (Arachin 15b) — and its sin is equated with idolatry, adultery, and murder. Therefore the mitzvah covers the ear as well: “do not accept a false rumor” (Shemot 23:1).",
+   "keyPoints": [
+    "The distinction: truth, but harmful / a lie (slander)",
+    "The verse “death and life are in the power of the tongue” (Mishlei 18:21) or a parallel is cited",
+    "Arachin 15b is mentioned (the three gravest sins; the three parties harmed)",
+    "Listening as complicity is mentioned (Shemot 23:1)"
+   ],
+   "explanation": "The distinction between the types of forbidden speech and an understanding of its danger are basic topics of the beit din conversation about speech.",
+   "source": "Talmud, Arachin 15b; Shemot 23:1",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-q36",
+   "lessonId": "etika-5",
+   "format": "mc",
+   "minLevel": "reform",
+   "prompt": "What does the Torah forbid in Devarim 25:13–15?",
+   "options": [
+    "Having two weights — a large one and a small one (for buying and for selling)",
+    "Selling on Shabbat",
+    "Taking a pledge from a widow",
+    "Storing grain until the price rises"
+   ],
+   "answer": 0,
+   "explanation": "“You shall not have in your pouch two weights — a large one and a small one…” — the prohibition of double measures and scales.",
+   "source": "Devarim 25:13–15",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q37",
+   "lessonId": "etika-5",
+   "format": "mc",
+   "minLevel": "reform",
+   "prompt": "According to Devarim 24:15, when should a day laborer be paid his wages?",
+   "options": [
+    "On the same day, before sunset",
+    "At the end of the week",
+    "At the end of the month",
+    "Whenever it is convenient for the employer"
+   ],
+   "answer": 0,
+   "explanation": "“On his day you shall give him his wages… lest he cry out against you to the Almighty, and there be sin upon you.”",
+   "source": "Devarim 24:14–15",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q38",
+   "lessonId": "etika-5",
+   "format": "mc",
+   "minLevel": "reform",
+   "prompt": "What is ona'ah (geneivah)?",
+   "options": [
+    "Deception in price in buying and selling",
+    "Interest on a loan",
+    "A gift to a debtor",
+    "A tithe from income"
+   ],
+   "answer": 0,
+   "explanation": "“You shall not deceive one another” (Vayikra 25:14) — the prohibition of onaah, deception in price.",
+   "source": "Vayikra 25:14",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q39",
+   "lessonId": "etika-5",
+   "format": "tf",
+   "minLevel": "reform",
+   "prompt": "The Torah permits lending money at interest to a fellow Jew, if the interest is small.",
+   "answer": false,
+   "explanation": "“You shall not lend your brother on interest” (Devarim 23:20–21); “you shall not take from him interest or increase” (Vayikra 25:36–37).",
+   "source": "Devarim 23:20–21",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-q40",
+   "lessonId": "etika-5",
+   "format": "tf",
+   "minLevel": "orthodox",
+   "prompt": "According to Kitzur Shulchan Aruch 62:12, it is permitted to keep a reduced measure in the house if it is not used.",
+   "answer": false,
+   "explanation": "Keeping a reduced measure is forbidden even if it is not used — someone else might use it without knowing (Kitzur Shulchan Aruch 62:12).",
+   "source": "Kitzur Shulchan Aruch 62:12",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-q41",
+   "lessonId": "etika-5",
+   "format": "match",
+   "minLevel": "reform",
+   "prompt": "Match the commandments of business honesty with the verses of the Torah.",
+   "pairs": [
+    [
+     "Accurate measures and weights",
+     "Vayikra 19:35–36"
+    ],
+    [
+     "Paying a worker the same day",
+     "Devarim 24:15"
+    ],
+    [
+     "The prohibition of double weights",
+     "Devarim 25:13–15"
+    ],
+    [
+     "The prohibition of interest",
+     "Vayikra 25:36–37"
+    ],
+    [
+     "Not withholding wages until morning",
+     "Vayikra 19:13"
+    ]
+   ],
+   "explanation": "Five explicit commandments of the Torah regulate honesty in trade and employment.",
+   "source": "Vayikra 19:13; 19:35; 25:36; Devarim 24:15; 25:13",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q42",
+   "lessonId": "etika-5",
+   "format": "typed",
+   "minLevel": "reform",
+   "prompt": "What is the community fund of interest-free loans called (from “gemilut chasadim”)?",
+   "answer": "gemach",
+   "accept": [
+    "gemach"
+   ],
+   "explanation": "A gemach comes from gemilut chasadim; it operates in many communities to this day.",
+   "source": "The tradition of community funds; Kitzur Shulchan Aruch 65",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q43",
+   "lessonId": "etika-5",
+   "format": "open",
+   "minLevel": "reform",
+   "prompt": "Name at least three commandments of the Torah about business honesty and explain the meaning of one of them.",
+   "modelAnswer": "Examples: accurate measures and weights (Vayikra 19:35–36); the prohibition of double weights (Devarim 25:13–15); timely payment of a worker (Vayikra 19:13; Devarim 24:15); the prohibition of interest (Vayikra 25:36–37; Devarim 23:20–21); the prohibition of deceiving in price (Vayikra 25:14). The meaning, for example, of the prohibition of interest: a loan must rescue from need, not enrich someone at another’s misfortune — trust matters more than gain. Each of these commandments turns the marketplace into a place of serving G-d.",
+   "keyPoints": [
+    "At least three commandments named with exact verses",
+    "A correct explanation of the meaning of one of them",
+    "A mention of the link between honesty and G-d’s name (kiddush Hashem) — a plus"
+   ],
+   "explanation": "Honesty in business is a required topic of the beit din interview; it is important to know the primary sources.",
+   "source": "Vayikra 19:13; 19:35–36; 25:14; 25:36–37",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-q44",
+   "lessonId": "etika-6",
+   "format": "mc",
+   "minLevel": "reform",
+   "prompt": "What is the concept of “repairing the world,” of which the Mishnah (Gittin 4) says: “for the sake of repairing the world”?",
+   "options": [
+    "Tikkun olam",
+    "Pikuach nefesh",
+    "Teshuvah",
+    "Giyur"
+   ],
+   "answer": 0,
+   "explanation": "“Mipnei tikkun ha-olam” — the formula for the sages’ enactments made for the public good (Gittin 4:2–3).",
+   "source": "Mishnah, Gittin 4:2–3",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-q45",
+   "lessonId": "etika-6",
+   "format": "mc",
+   "minLevel": "reform",
+   "prompt": "What does bal tashchit forbid?",
+   "options": [
+    "Senseless destruction — of trees, food, things",
+    "Building roads",
+    "Hunting kosher animals",
+    "Work on holidays"
+   ],
+   "answer": 0,
+   "explanation": "“For man is a tree of the field” (Devarim 20:19) — from this verse the prohibition of senseless destruction is derived (Kitzur Shulchan Aruch 190).",
+   "source": "Devarim 20:19; Kitzur Shulchan Aruch 190",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q46",
+   "lessonId": "etika-6",
+   "format": "mc",
+   "minLevel": "reform",
+   "prompt": "What is the prohibition against causing suffering to animals called?",
+   "options": [
+    "Tzaar baalei chayim",
+    "Bal tashchit",
+    "Shiluach ha-ken",
+    "Leket, shikhehah and peah"
+   ],
+   "answer": 0,
+   "explanation": "Tzaar baalei chayim — “suffering of living beings”; its sources: “you shall not muzzle an ox” (Devarim 25:4), helping a donkey (Shemot 23:5).",
+   "source": "Devarim 25:4; Shemot 23:5",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q47",
+   "lessonId": "etika-6",
+   "format": "mc",
+   "minLevel": "conservative",
+   "prompt": "How does Masorti (Conservative Judaism) understand tikkun olam?",
+   "options": [
+    "As a communal obligation within a halachic life — social justice together with observance of the mitzvot",
+    "As the cancellation of all the mitzvot for the sake of social ideals",
+    "Only as personal meditation",
+    "As a ritual connected only with Purim"
+   ],
+   "answer": 0,
+   "explanation": "In Masorti, repairing the world is part of a full Jewish life, not a replacement for it.",
+   "source": "Masorti movement (Derakhim), overview of the movement: ru.derakhim.com/zramim/conservative",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q48",
+   "lessonId": "etika-6",
+   "format": "tf",
+   "minLevel": "reform",
+   "prompt": "The commandment “honor your father and your mother” is the only one of the Ten Commandments to which a promise of reward is attached (“that your days may be prolonged”).",
+   "answer": true,
+   "explanation": "“Kabbed et avicha… lemaan ya’arichun yamecha” (Shemot 20:12; cf. Devarim 5:16).",
+   "source": "Shemot 20:12; Devarim 5:16",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-q49",
+   "lessonId": "etika-6",
+   "format": "open",
+   "minLevel": "reform",
+   "prompt": "What is tikkun olam? Name its two sources and explain how you understand this commandment in your own life.",
+   "modelAnswer": "Tikkun olam is “repairing the world.” The first source is the Mishnah Gittin 4:2–3: the sages’ enactments “for the sake of repairing the world,” including Hillel’s prozbul, which preserves a debt through the seventh year. The second is the prayer “Aleinu”: “to repair the world in the kingdom of the Almighty.” In the later understanding, it is the social responsibility of a Jew. My personal understanding: repairing the world begins with those near you, with the community, and with your own deeds — for example, through tzedakah, honesty, and care for the vulnerable.",
+   "keyPoints": [
+    "A definition of tikkun olam is given",
+    "Both sources named: Gittin 4:2–3 and “Aleinu”",
+    "Hillel’s prozbul mentioned as an example",
+    "There is a personal application (those near you, community, tzedakah)"
+   ],
+   "explanation": "Understanding of tikkun olam is a frequent question in Reform and Conservative beit dins; in Orthodox ones it is connected with the mitzvot and personal holiness.",
+   "source": "Mishnah, Gittin 4:2–3; siddur, “Aleinu”",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-q50",
+   "lessonId": "etika-6",
+   "format": "open",
+   "minLevel": "reform",
+   "prompt": "Tell the story of Dama ben Netina (Kiddushin 31a) and explain what lesson it teaches.",
+   "modelAnswer": "Dama ben Netina, a non-Jew from Ashkelon, traded in precious stones. One day the sages wanted to buy merchandise from him for an enormous sum, but the key to the chest lay under the head of his sleeping father, and Dama would not wake him — even for a deal worth six hundred thousand gold dinars. A year later a red heifer was born in his herd, which the sages sought; Dama sold it for exactly the sum he had lost because of honoring his father (Kiddushin 31a). The lesson of the Talmud: “If one not obligated by the commandment acts this way — all the more so one who is obligated.” Honoring parents is worth more than profit, and its reward is inevitable.",
+   "keyPoints": [
+    "Dama ben Netina was a non-Jew from Ashkelon",
+    "He did not wake his father even for an enormous deal",
+    "The reward — a red heifer",
+    "The lesson: “if one not obligated does this — all the more so one who is obligated”"
+   ],
+   "explanation": "The parable about respect for parents is a classic of the beit din interview about the fifth commandment.",
+   "source": "Talmud, Kiddushin 31a",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-bd1",
+   "lessonId": "etika-1",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "Shimon HaTzaddik says that the world stands on the Torah, on divine service, and on acts of kindness. What will these three pillars look like in your own life?",
+   "modelAnswer": "For me, the Torah means regular study: I want to read the weekly parashah every week and continue my lessons with a teacher after giyur. I understand avodah this way: in the Temple it was the service, and now for me it is prayer — I am learning from the siddur, and I want the morning prayer to become a fixture. Good deeds are caring out of love: I visit an elderly neighbor and help the community prepare for the holidays. These three pillars are needed together: study without prayer is cold, prayer without deeds is empty, and deeds without the Torah are wingless.",
+   "keyPoints": [
+    "The three pillars named: Torah, avodah, gemilut chasadim (Avot 1:2)",
+    "Avodah: service in the Temple, in the later understanding — prayer",
+    "A specific personal example given for each pillar",
+    "An understanding that the pillars are needed together"
+   ],
+   "explanation": "The beit din looks at whether the familiar saying has turned into a plan for your real life, rather than remaining a quotation.",
+   "source": "Pirkei Avot 1:2",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-bd2",
+   "lessonId": "etika-2",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "Imagine that after your giyur someone in the community reproaches you with your past or says you are “not a real Jew.” How will you take this, and what will you answer?",
+   "modelAnswer": "It will hurt, but I will remember that the Torah stands on the side of the ger: it commands to love him and to accept him “as the native among you,” and the Talmud forbids reminding a ger of his past — this is onaat devarim. I will not answer offense with offense: the parashah of Kedoshim forbids taking revenge and bearing a grudge. I will calmly say that I have taken upon myself the Torah and the mitzvot, and from then on I will show it through my life, not through arguments. For my part, I want to remember Hillel and to meet those who are just entering the community with patience and warmth.",
+   "keyPoints": [
+    "The commandment to love the ger and equality with the native (Devarim 10:19; Vayikra 19:34)",
+    "The prohibition on reminding a ger of his past — onaat devarim (Bava Metzia 58b)",
+    "Renouncing revenge and grudge-bearing (Vayikra 19:18)",
+    "Readiness to welcome newcomers yourself, like Hillel"
+   ],
+   "explanation": "The rabbis check whether the candidate is ready for the difficulties of life in the community and able to respond to them maturely, without resentment and without arrogance.",
+   "source": "Talmud, Bava Metzia 58b",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-bd3",
+   "lessonId": "etika-3",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "How will you practically give tzedakah? How much, to whom, and in what way?",
+   "modelAnswer": "I want to make tzedakah regular, not dependent on my mood: as soon as my salary arrives, I set aside a tenth of my income into a separate “tzedakah fund.” I give part of that money through the community fund so that the help stays anonymous, and part to people I know, trying to notice the need before the person brings himself to ask. What I consider most valuable is helping a person stand on his own feet — finding him a job or giving him a loan: for the Rambam this is the highest degree. I will give with a kind face, and besides money there is gemilut chasadim: visiting the sick and inviting a guest for Shabbat.",
+   "keyPoints": [
+    "Tzedakah as a regular obligation, not an impulse (maaser — a tenth)",
+    "The Rambam’s levels: anonymity, “before being asked,” the highest — self-reliance",
+    "To give with a kind face",
+    "Gemilut chasadim — help with time and deeds, not only money"
+   ],
+   "explanation": "The beit din expects a concrete plan, not general words about charity.",
+   "source": "Mishneh Torah, Matanot Ani'im 10:7–14",
+   "differs": [
+    {
+     "level": "reform",
+     "text": "In Reform Judaism, maaser is not retained as an obligatory halachic tithe; progressive communities recommend regular proportional donations according to one’s means, for example a percentage of income."
+    }
+   ],
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-bd4",
+   "lessonId": "etika-4",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "People have started discussing an unpleasant story about one of its members in the community’s group chat. What will you do?",
+   "modelAnswer": "I will not add anything and will not forward the message further: even if the story is true, this is lashon hara, and pressing “share” is the same as retelling it in your own words. The Torah forbids even accepting such a rumor, so I will not read it closely and, if I can, I will gently ask to change the subject: the person is not here and cannot answer. There is one exception — real danger: I will check the facts myself and, only if the harm cannot be prevented otherwise, will tell privately someone who can help, in order to protect, not to condemn. If I myself ever slip, I will apologize and try to repair the harm.",
+   "keyPoints": [
+    "Do not speak or forward: lashon hara even when the facts are true",
+    "The prohibition on accepting gossip (Shemot 23:1)",
+    "The Chafetz Chaim’s exception: real harm, facts verified, no other way, the goal is protection, said privately",
+    "Repentance and repair if you slip"
+   ],
+   "explanation": "The rabbis look at whether the candidate can apply the laws of speech to real life, including digital life.",
+   "source": "Shemot 23:1; Chafetz Chaim, “Shemirat HaLashon”",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-bd5",
+   "lessonId": "etika-5",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "How will accepting Judaism affect your work and money matters? What does kiddush Hashem mean to you at work?",
+   "modelAnswer": "Honesty in business is, for me, a direct commandment of the Torah, not mere politeness: accurate measures, the prohibition of deceiving in price, and timely payment of a worker. If I have a day laborer who lives on what he earns that day, I will give him his wages the same day, before sunset, as the Torah says. I try to keep my word: once we have agreed on a price, I do not back out, and let my “yes” be “yes” and my “no” be “no.” Kiddush Hashem at work is when people, knowing that I am a Jew, see an honest and courteous person and think well of the Jewish people and of G-d; deceit or rudeness on my part would be chillul Hashem.",
+   "keyPoints": [
+    "The commandments named: accurate measures, onaah, payment of a day laborer",
+    "Keeping one’s word: “yes” — “yes,” “no” — “no” (Kitzur Shulchan Aruch 62:16)",
+    "Kiddush Hashem and chillul Hashem at work (Vayikra 22:32)",
+    "An example about one who lives on that day’s earnings, not about any payment"
+   ],
+   "explanation": "The beit din checks whether the candidate understands that Judaism shows itself not only in the synagogue but in every deal.",
+   "source": "Vayikra 22:32; Vayikra 19:13; Vayikra 25:14",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-bd6",
+   "lessonId": "etika-6",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "Your parents are not Jewish. How will you honor them after giyur?",
+   "modelAnswer": "Giyur does not cancel my gratitude to my parents: they gave me life and raised me, and I will continue to respect them and care for them. I will visit them, help them in their old age, speak to them respectfully, and not answer rudely. If we disagree over kashrut at a shared table or over Shabbat, I will explain calmly and find a way out that does not hurt their dignity — for example, I will bring my own food. The story of Dama ben Netina is close to me: he honored his father so much that the Talmud holds him up as an example, and I want the mitzvot to make me more respectful toward my parents, not to distance me from them.",
+   "keyPoints": [
+    "Giyur does not cancel gratitude and respect for parents",
+    "Concrete care: visiting, helping, speaking respectfully",
+    "Tactful resolution of disagreements about Shabbat and kashrut",
+    "The example of Dama ben Netina (Kiddushin 31a) as a personal guide"
+   ],
+   "explanation": "The beit din wants to hear that the candidate is not breaking with his family and knows how to combine the new life with respect for his parents.",
+   "source": "Shemot 20:12; Talmud, Kiddushin 31a",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-n1",
+   "lessonId": "etika-1",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "To whom does the first teaching of Pirkei Avot belong — the one about the three pillars on which the world stands?",
+   "options": [
+    "Shimon HaTzadik",
+    "Hillel",
+    "Rabbi Tarfon",
+    "Ben Zoma"
+   ],
+   "answer": 0,
+   "explanation": "The first teaching of the tractate belongs to Shimon HaTzaddik, the High Priest, “one of the last of the Great Assembly” (Avot 1:2). The tractate itself opens with the chain of transmission (1:1).",
+   "source": "Pirkei Avot 1:2",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-n2",
+   "lessonId": "etika-1",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "According to Pirkei Avot 2:5, what must a person do “in a place where there are no people”?",
+   "options": [
+    "Refrain from judgment and trade",
+    "Strive to be a human being",
+    "Devote all of one’s time only to the Torah",
+    "Keep silent and not answer questions"
+   ],
+   "answer": 1,
+   "explanation": "Hillel ends a series of teachings with the words: “in a place where there are no people — strive to be a human being” (Avot 2:5).",
+   "source": "Pirkei Avot 2:4–5",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-n3",
+   "lessonId": "etika-1",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "Why does Pirkei Avot open with the chain of transmission of the Torah, rather than straightaway with a teaching?",
+   "options": [
+    "In order to list the High Priests of the Second Temple",
+    "In order to distinguish the tractate from the legal sections of Nezikin",
+    "To show that the ethics of Avot is part of the single chain of transmission of the Torah",
+    "To prove that the Mishnah is older than the Torah"
+   ],
+   "answer": 2,
+   "explanation": "The lesson explains the meaning of such a beginning: the ethics of Avot is not the opinions of individual thinkers, but part of the single chain of transmission of the Torah from Moshe to the men of the Great Assembly.",
+   "source": "Pirkei Avot 1:1",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-n4",
+   "lessonId": "etika-1",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "From which verse does Ben Zoma (Avot 4:1) derive that the strong one is not the brave but the patient, who masters himself?",
+   "options": [
+    "Tehillim 119:99",
+    "Tehillim 128:2",
+    "Shmuel I 2:30",
+    "Mishlei 16:32"
+   ],
+   "answer": 3,
+   "explanation": "Ben Zoma supports his answer about strength (“one who conquers his inclination”) with the verse “the patient is better than the brave” — Mishlei 16:32.",
+   "source": "Pirkei Avot 4:1",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-n5",
+   "lessonId": "etika-1",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "Who, according to tradition, headed the Great Assembly — the council with which the chain of transmission of the Torah in Avot 1:1 concludes?",
+   "options": [
+    "The prophet Ezra",
+    "The High Priest Yochanan",
+    "King Shlomo",
+    "The sage Shammai"
+   ],
+   "answer": 0,
+   "explanation": "Avot 1:1 concludes the chain with the men of the Great Assembly — the council which, according to tradition, was headed by the prophet Ezra and which laid the foundations of Judaism in the era of the Second Temple.",
+   "source": "Pirkei Avot 1:1",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-n6",
+   "lessonId": "etika-1",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "According to Pirkei Avot 2:5, the impatient person will not be able to teach another.",
+   "answer": true,
+   "explanation": "“The shy one will not learn, the impatient one will not teach” (Avot 2:5): patience with a student is a condition of teaching.",
+   "source": "Pirkei Avot 2:4–5",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-n7",
+   "lessonId": "etika-1",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "According to Ben Zoma (Avot 4:1), the rich one is the one who has the most property.",
+   "answer": false,
+   "explanation": "Ben Zoma answers: “Who is rich? One who is content with his portion” — ethical qualities are measured by attitude, not by external dimensions.",
+   "source": "Pirkei Avot 4:1",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-n8",
+   "lessonId": "etika-1",
+   "minLevel": "reform",
+   "format": "match",
+   "prompt": "Match the three pillars of the world (Avot 1:2) with their meanings.",
+   "pairs": [
+    [
+     "Torah",
+     "learning and knowledge"
+    ],
+    [
+     "Avodah",
+     "service in the Temple, in the later understanding — prayer"
+    ],
+    [
+     "Gemilut chasadim",
+     "good deeds done with love: visiting the sick, welcoming guests, accompanying the dead"
+    ]
+   ],
+   "explanation": "The commentators emphasize: the three pillars make a person needed by others — through learning, prayer, and care; together they form a triangle.",
+   "source": "Pirkei Avot 1:2",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-n9",
+   "lessonId": "etika-1",
+   "minLevel": "reform",
+   "format": "typed",
+   "prompt": "What is the name of the sixth chapter of Pirkei Avot, added to the tractate later from other sources?",
+   "answer": "Kinyan Torah",
+   "accept": [
+    "kinyan torah",
+    "kinyan-torah",
+    "acquiring the torah"
+   ],
+   "explanation": "Originally the tractate consisted of five chapters; the sixth chapter, “Kinyan Torah” (“Acquiring the Torah”), was added later from other sources.",
+   "source": "Lesson: Pirkei Avot: the wisdom of the generations",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-n10",
+   "lessonId": "etika-1",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "Pirkei Avot 2:5 says that the shy one will not learn and the impatient one will not teach. How will you go through the long path of study after giyur, and what place will patience with yourself and with your teachers take in it?",
+   "modelAnswer": "I understand this saying as permission to learn slowly: I will study regularly, but without heroic sprints that quickly end in disappointment. If I feel awkward asking questions, I will remember that the shy one does not learn — and I will ask, even when it is uncomfortable. I want to treat my teachers and those close to me with patience: to accept that one person explains slowly and another quickly, and not to get irritated. For me patience is not weakness, but a way to stay in study for a long time, in the spirit of Hillel: “in a place where there are no people — strive to be a human being.”",
+   "keyPoints": [
+    "The words of 2:5 about the shy and the impatient are mentioned",
+    "There is a concrete plan of regular study without sprints",
+    "Readiness to ask questions, overcoming shyness",
+    "Patience applied to the attitude toward teachers and loved ones"
+   ],
+   "explanation": "What interests the beit din is not the quotation, but a realistic plan of study and a mature attitude toward difficulties.",
+   "source": "Pirkei Avot 2:4–5",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-n11",
+   "lessonId": "etika-2",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "What broader principle did Ben Azzai, a contemporary of Rabbi Akiva, place alongside the commandment “love your neighbor”?",
+   "options": [
+    "“Love the Almighty with all your heart and all your soul”",
+    "“A human being is the image of G-d” (Bereshit 5:1)",
+    "“Do not do to your fellow what is hateful to you”",
+    "“The whole Torah is justice and mercy”"
+   ],
+   "answer": 1,
+   "explanation": "Ben Azzai proposed an even broader principle: “A human being is the image of G-d” (Bereshit 5:1) — love and respect for every person.",
+   "source": "Bereshit 5:1",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-n12",
+   "lessonId": "etika-2",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "What is the practical wisdom of Hillel’s “negative formulation” — “do not do to your fellow what is hateful to you”?",
+   "options": [
+    "It is shorter and easier to remember",
+    "It frees one from studying the Oral Torah",
+    "It is easier to agree on what must not be done to others than on what each person considers good",
+    "It allows one not to love one’s fellow, only not to harm him"
+   ],
+   "answer": 2,
+   "explanation": "There is realistic wisdom in Hillel’s formulation: it is easier to agree on what must not be done to others than on what each person considers good.",
+   "source": "Talmud, Shabbat 31a",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-n13",
+   "lessonId": "etika-2",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "What everyday example of revenge does Rashi give on the words “do not take revenge” (Vayikra 19:18)?",
+   "options": [
+    "A merchant sold goods to his neighbor at a higher price than usual",
+    "A teacher refused to teach someone else’s son",
+    "A host did not invite his neighbor to a celebration",
+    "Your neighbor refused to lend you a sickle — and the next day you refuse to lend him an axe"
+   ],
+   "answer": 3,
+   "explanation": "Rashi illustrates revenge this way: you asked your neighbor to lend you a sickle — he refused; the next day he asks you for an axe, and you answer: “I won’t give, just as you did not give yesterday.”",
+   "source": "Vayikra 19:18",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-n14",
+   "lessonId": "etika-2",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "According to the Talmud (Bava Metzia 58b), what is it forbidden to say to a person who has repented of his sins?",
+   "options": [
+    "“Remember your former deeds”",
+    "“Return, and you will be forgiven”",
+    "“Forget the past and live on”",
+    "“Bring an offering for past sins”"
+   ],
+   "answer": 0,
+   "explanation": "“If a person has repented — do not say to him: ‘Remember your former deeds’” (Bava Metzia 58b): the Torah creates a protection for human dignity.",
+   "source": "Talmud, Bava Metzia 58b",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-n15",
+   "lessonId": "etika-2",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "According to the lesson, how does the Torah propose to relate to the need of the ger, the widow, and the orphan?",
+   "options": [
+    "Hold one general collection of alms each year",
+    "To recognize oneself in another’s situation, not to pity from above",
+    "To entrust help only to the community elders",
+    "To help only anonymously, without personal contact"
+   ],
+   "answer": 1,
+   "explanation": "The lesson emphasizes: “The Torah does not offer pity from above: it offers recognizing yourself in another’s situation” — the memory of one’s own powerlessness as the foundation of ethics.",
+   "source": "Devarim 10:19",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-n16",
+   "lessonId": "etika-2",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "The Torah requires loving your fellow more than yourself.",
+   "answer": false,
+   "explanation": "The formula is “as yourself”: the Torah does not ask you to love your fellow more than yourself; it places the two loves side by side and teaches you to see in the other the same “self” (Vayikra 19:18).",
+   "source": "Vayikra 19:18",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-n17",
+   "lessonId": "etika-2",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "According to Bava Metzia 58b, it is forbidden to remind a sick person of his illness.",
+   "answer": true,
+   "explanation": "The Torah creates a protection for human dignity: one may not remind a ger of his past, a sick person of his illness, a penitent of his mistakes.",
+   "source": "Talmud, Bava Metzia 58b",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-n18",
+   "lessonId": "etika-2",
+   "minLevel": "reform",
+   "format": "match",
+   "prompt": "Match the verses about the ger with their content.",
+   "pairs": [
+    [
+     "“And you shall love the ger, for you were gerim in the land of Egypt”",
+     "Devarim 10:19"
+    ],
+    [
+     "“As the native-born (ezrach) among you shall the ger be for you”",
+     "Vayikra 19:34"
+    ],
+    [
+     "“And you shall not wrong the ger”",
+     "Shemot 22:20"
+    ]
+   ],
+   "explanation": "The verses repeat the motif “for you were gerim in Egypt”; Vayikra 19:34 adds the equalizing of the ger in rights with the native-born resident.",
+   "source": "Devarim 10:19; Vayikra 19:33–34; Shemot 22:20",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-n19",
+   "lessonId": "etika-2",
+   "minLevel": "reform",
+   "format": "typed",
+   "prompt": "What does the lesson call grudge-bearing — when a person lends, but with the reproach: “I am not like you”?",
+   "answer": "netirah",
+   "accept": [
+    "netirah"
+   ],
+   "explanation": "Rashi distinguishes between revenge and grudge-bearing (netirah): revenge is refusal in response to refusal; netirah is help with the reproach “take it, I am not like you” (Vayikra 19:18).",
+   "source": "Vayikra 19:18",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-n20",
+   "lessonId": "etika-2",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "Vayikra 19:18 forbids taking revenge and bearing a grudge. Tell about a situation in which it was hard for you to let go of a score against a person, and how you understand the commandment to “break the chain of offenses.”",
+   "modelAnswer": "There was a person in my life who once refused to help me, and I remembered it for a long time, waiting for a chance to “repay” him in kind. The commandment “do not take revenge and do not bear a grudge” describes my state exactly: grudge-bearing is a loan with the reproach “I am not like you,” and revenge is refusing the axe to the one who did not give you the sickle yesterday. My understanding is this: the past must not govern today’s attitude toward a person; if a neighbor asks for help now, I answer today’s need, not yesterday’s offense. This does not mean being naive — it means not letting someone else’s wrong define my character. After giyur, I want offenses to end with me, not to pass through me any further.",
+   "keyPoints": [
+    "The prohibitions of revenge and bearing grudges are mentioned (Vayikra 19:18)",
+    "The personal example is specific and honest",
+    "Meaning: the past does not control today's attitude",
+    "Understanding that the mitzvah concerns character, and not only actions"
+   ],
+   "explanation": "The rabbis check whether the candidate can apply the mitzvah to a real offense, and not merely retell it.",
+   "source": "Vayikra 19:18",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-n21",
+   "lessonId": "etika-2",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "The stories of Shabbat 31a teach that “a person's first impression of Judaism comes from Jews.” How will you, having become a Jew, welcome newcomers and gerim in the community?",
+   "modelAnswer": "I want to be for a newcomer what Hillel was, and not Shammai: to meet questions — even naive or insolent ones — with calm and respect. If someone asks me about giyur, I will try not to drive him away with dryness, but to answer and offer to study together. I remember how important it was for me to receive a warm answer when I first came to the community, and I want to pass it on. The place where I was accepted without reproaches about the past became my home — and I want others to know this home through me.",
+   "keyPoints": [
+    "The Hillel/Shammai contrast from Shabbat 31a is mentioned",
+    "Concrete behavior: patience with naive questions, an invitation to study",
+    "Personal experience of being accepted into the community",
+    "Connection with the prohibition of reminding a ger of the past"
+   ],
+   "explanation": "The ability to welcome those who are entering is a practical consequence of the lesson of Shabbat 31a; the beit din expects personal readiness, not a retelling.",
+   "source": "Talmud, Shabbat 31a",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-n22",
+   "lessonId": "etika-3",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "What measure of tzedakah does the Talmud cite (Bava Batra 9a)?",
+   "options": [
+    "“Tzedakah equals only the mitzvot between a person and G-d”",
+    "“Tzedakah is a third of all the mitzvot”",
+    "“Tzedakah equals all the mitzvot taken together”",
+    "“Tzedakah doubles the reward for prayer”"
+   ],
+   "answer": 2,
+   "explanation": "The Talmud expresses the scale in this way: “Tzedakah equals all the mitzvot taken together” (Bava Batra 9a).",
+   "source": "Bava Batra 9a",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-n23",
+   "lessonId": "etika-3",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "According to Mishlei 21:3, what is more pleasing to the Almighty than a sacrifice?",
+   "options": [
+    "Bringing sacrifices at the precisely appointed time",
+    "Praying three times a day",
+    "Fasting on days of communal mourning",
+    "Doing righteousness (tzedakah) and justice"
+   ],
+   "answer": 3,
+   "explanation": "“Doing righteousness (tzedakah) and justice is more pleasing to the Almighty than a sacrifice” (Mishlei 21:3).",
+   "source": "Mishlei 21:3",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-n24",
+   "lessonId": "etika-3",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "How does the arrangement of peah, shikhechah and leket preserve the dignity of the poor?",
+   "options": [
+    "The poor person gathers what is due to him himself — he works, rather than waiting for handouts",
+    "Money is passed to him anonymously through an intermediary",
+    "Only the rabbi distributes the aid",
+    "He is allowed not to work at all"
+   ],
+   "answer": 0,
+   "explanation": "The corners of the field, the forgotten sheaves and the gleanings belong to the poor: the needy person gathers the gift himself — he works, rather than waiting for handouts.",
+   "source": "Vayikra 19:9–10; Devarim 24:19–21",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-n25",
+   "lessonId": "etika-3",
+   "minLevel": "orthodox",
+   "format": "mc",
+   "prompt": "What order of priority in tzedakah does the Kitzur Shulchan Aruch establish (34:6)?",
+   "options": [
+    "Strangers first, in order to broaden the merit",
+    "Relatives and household members come before the poor of your own city, and those come before the poor of other cities",
+    "The poor of other cities come before everyone",
+    "There is no order: one gives to whoever asks first"
+   ],
+   "answer": 1,
+   "explanation": "Halacha establishes an order: relatives and household members come before the poor of the city, the poor of your city come before the poor of other cities; the administrators of a fund must not show favoritism to relatives (KSA 34:6).",
+   "source": "Kitzur Shulchan Aruch 34:6",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-n26",
+   "lessonId": "etika-3",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "According to Kitzur Shulchan Aruch 34:4, one should give no more than a fifth of one's property to tzedakah, so as not to end up in need oneself.",
+   "answer": true,
+   "explanation": "KSA 34:4 warns: “Do not give away more than a fifth of your property, lest you yourself end up in need” — tzedakah is built on reason, not on impulse.",
+   "source": "Kitzur Shulchan Aruch 34:4",
+   "difficulty": "hard",
+   "differs": [
+    {
+     "level": "reform",
+     "text": "In Reform Judaism, maaser is not preserved as an obligatory halachic tithe, and the limit of “no more than a fifth” does not operate as halacha. Communities recommend regular donations according to one's means."
+    }
+   ]
+  },
+  {
+   "id": "etika-n27",
+   "lessonId": "etika-3",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "According to the Talmud (Sotah 14a), compassion is cultivated through imitation of G-d: as He visits the sick and comforts the mourners, so should a person.",
+   "answer": true,
+   "explanation": "“Walk after G-d — as He visits the sick, comforts the mourners, buries the dead, so shall you” (Sotah 14a): the model of care is the Creator Himself.",
+   "source": "Sotah 14a",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-n28",
+   "lessonId": "etika-3",
+   "minLevel": "reform",
+   "format": "match",
+   "prompt": "Match the descriptions with the levels of tzedakah of the Rambam (Matnot Aniim, ch. 10).",
+   "pairs": [
+    [
+     "The sages secretly placed coins at the doors of the poor",
+     "the giver knows to whom he gives, but the receiver does not know"
+    ],
+    [
+     "Coins were placed in a cloth on the shoulder",
+     "the receiver knows from whom he takes, but the giver does not know"
+    ],
+    [
+     "Giving into the hand of the needy person after he asks",
+     "the sixth level (below “before he asks”)"
+    ]
+   ],
+   "explanation": "The Rambam describes these examples in Matnot Aniim 10:9–12: the more complete the anonymity and the earlier the giving, the higher the level.",
+   "source": "Mishneh Torah, Matanot Ani'im 10:7–14",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-n29",
+   "lessonId": "etika-3",
+   "minLevel": "reform",
+   "format": "typed",
+   "prompt": "What is the tithe for the poor of the third year of the seven-year cycle called (Devarim 26:12)?",
+   "answer": "Maaser ani",
+   "accept": [
+    "maaser ani",
+    "maaser aniy"
+   ],
+   "explanation": "The tithe of the harvest and of income for holy and communal needs included aid to the poor; the tithe for the poor in the third year of the seven-year cycle is called “maaser ani” (Devarim 26:12).",
+   "source": "Devarim 26:12",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-n30",
+   "lessonId": "etika-3",
+   "minLevel": "reform",
+   "format": "typed",
+   "prompt": "What is the mitzvah of visiting the sick called?",
+   "answer": "bikur cholim",
+   "accept": [
+    "bikur cholim",
+    "bikur-cholim",
+    "bikkur cholim"
+   ],
+   "explanation": "Bikur cholim is the visiting of the sick. The Talmud teaches it through imitation of G-d, who visited Avraham (Sotah 14a; Bereshit 18:1).",
+   "source": "Sotah 14a",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-n31",
+   "lessonId": "etika-3",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "What is gemilut chasadim, and how does it differ from tzedakah? What kinds of chesed are you ready to do in your community?",
+   "modelAnswer": "Tzedakah is above all money for the needy, while gemilut chasadim is good deeds that cannot be reduced to money: visiting the sick, comforting mourners, welcoming guests, accompanying the dead. The Talmud teaches that the model of care is the Creator Himself: as He visits the sick and comforts the mourners, so must I act toward people (Sotah 14a). In my community I want to visit the sick regularly — to come simply to sit beside them, to help with food and errands. Hospitality for me means inviting to the Shabbat table people who find themselves in the city without family. Money will remain part of my tzedakah, and chesed will add what money cannot replace: presence and time.",
+   "keyPoints": [
+    "The difference: tzedakah is money, chesed is deeds and time (Sotah 14a)",
+    "Examples of chesed from the lesson: bikur cholim, comforting mourners, hospitality",
+    "Imitation of G-d as the basis of the mitzvah",
+    "A concrete personal plan: whom and how to visit, whom to invite"
+   ],
+   "explanation": "The beit din checks whether the candidate understands that Judaism requires care with time and presence, and not only with money.",
+   "source": "Sotah 14a; Pirkei Avot 1:2; 1:5",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-n32",
+   "lessonId": "etika-3",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "Why is giving in Judaism called not charity but tzedakah — “righteousness”? How does this change the giver's attitude?",
+   "modelAnswer": "The word “tzedakah” comes from the root “tzedek” — justice: what I give is not generosity according to mood, but a duty. Property is given into my possession on the condition that I share it, so the needy person receives not mercy, but what is due to him. This changes the attitude: I am not the owner, but a trustee, and refusing to give is injustice. When I set aside a share of my income regularly, and not on impulse, giving ceases to depend on mood. Mishlei 21:3 places righteousness and justice above sacrifice: tzedakah is a constant duty of justice.",
+   "keyPoints": [
+    "The root “tzedek” — justice",
+    "Giving as a duty, and not generosity according to mood",
+    "The needy person is not an object of mercy, but a person with rights",
+    "Connection with the regularity of giving (maaser)"
+   ],
+   "explanation": "Understanding the essence of the word “tzedakah” is a basic question about the motivation for giving.",
+   "source": "Devarim 15:7–8; Mishlei 21:3",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-n33",
+   "lessonId": "etika-4",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "Which verse of the book of Mishlei gives exceptional weight to the human word?",
+   "options": [
+    "“The beginning of wisdom is the fear of the Almighty” (Mishlei 9:10)",
+    "“Better a dry piece of bread, and with it peace” (Mishlei 17:1)",
+    "“Death and life are in the power of the tongue” (Mishlei 18:21)",
+    "“Trust in the Almighty with all your heart” (Mishlei 3:5)"
+   ],
+   "answer": 2,
+   "explanation": "Jewish ethics gives the word exceptional weight: “Death and life are in the power of the tongue” (Mishlei 18:21).",
+   "source": "Mishlei 18:21",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-n34",
+   "lessonId": "etika-4",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "What interpretive device does the Talmud use in Arachin 15b, equating lashon hara with idolatry, forbidden relations and murder?",
+   "options": [
+    "The device of “kal vachomer” — deriving the greater from the lesser",
+    "Comparing the magnitude of reward and punishment",
+    "A reference to the oral tradition of the prophets",
+    "The device of “gezeirah shavah” — interpretation by the common word “great”"
+   ],
+   "answer": 3,
+   "explanation": "For this, the device of “gezeirah shavah” is used, based on the word “great” (Arachin 15b).",
+   "source": "Talmud, Arakhin 15b",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-n35",
+   "lessonId": "etika-4",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "What is NOT among the strict conditions under which, according to the classical sources, it is permitted to speak about a person in order to prevent harm?",
+   "options": [
+    "The consent of the majority of the community to such a conversation",
+    "The facts have been verified personally, and not by hearsay",
+    "There is no other way to prevent the harm",
+    "The words are said privately to someone who can act; the intention is protection, and not condemnation"
+   ],
+   "answer": 0,
+   "explanation": "The classical source (Chafetz Chaim) requires: the facts have been verified personally, there is no other way, the intention is protection, the words are said privately to someone who can act; if even one condition is not met — silence is commanded.",
+   "source": "Chafetz Chaim, “Shmirat ha-Lashon”",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-n36",
+   "lessonId": "etika-4",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "The Torah's prohibition of lying is narrower than the prohibition of lashon hara.",
+   "answer": false,
+   "explanation": "The lesson emphasizes: the prohibition of lying is broader than the prohibition of lashon hara — “Keep far from falsehood” (Shemot 23:7), “you shall not lie to one another” (Vayikra 19:11).",
+   "source": "Shemot 23:7",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-n37",
+   "lessonId": "etika-4",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "According to Kitzur Shulchan Aruch 63:1, deception in price is graver than a verbal offense, because money is lost in it.",
+   "answer": false,
+   "explanation": "KSA 63:1 emphasizes the opposite: to offend with words is graver than to deceive in price — money can be returned, but words cannot.",
+   "source": "Kitzur Shulchan Aruch 63:1",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-n38",
+   "lessonId": "etika-4",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "The Chafetz Chaim also wrote the book “Ahavat Chesed” — about love of goodness and interest-free loans.",
+   "answer": true,
+   "explanation": "He also wrote the book “Ahavat Chesed” — about love of goodness and interest-free loans: for him, the ethics of speech and the ethics of money are one whole.",
+   "source": "Lesson: The Ethics of Speech",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-n39",
+   "lessonId": "etika-4",
+   "minLevel": "reform",
+   "format": "match",
+   "prompt": "Match the formulations with the verses they are taken from.",
+   "pairs": [
+    [
+     "“Death and life are in the power of the tongue”",
+     "Mishlei 18:21"
+    ],
+    [
+     "“Keep far from falsehood”",
+     "Shemot 23:7"
+    ],
+    [
+     "“You shall not lie to one another”",
+     "Vayikra 19:11"
+    ],
+    [
+     "“Who is the man who desires life?”",
+     "Tehillim 34:13"
+    ]
+   ],
+   "explanation": "All four formulations are cited in the lesson; the Chafetz Chaim also took his name from Psalm 34 (“who is the man who desires life”).",
+   "source": "Mishlei 18:21; Shemot 23:7; Vayikra 19:11; Tehillim 34:13–14",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-n40",
+   "lessonId": "etika-4",
+   "minLevel": "reform",
+   "format": "typed",
+   "prompt": "What is the name of the Chafetz Chaim's 1876 book “Guarding the Tongue”?",
+   "answer": "Shmirat HaLashon",
+   "accept": [
+    "shmirat ha-lashon",
+    "shmirat halashon",
+    "shmirat a lashon"
+   ],
+   "explanation": "The books “Chafetz Chaim” (1873) and “Shmirat HaLashon” (“Guarding the Tongue”, 1876) systematize the laws of speech.",
+   "source": "Chafetz Chaim, “Shmirat ha-Lashon”",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-n41",
+   "lessonId": "etika-4",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "Speech about a person slipped out anyway. What, according to the lesson, should one do next?",
+   "modelAnswer": "I understand that tradition does not demand an unattainable perfection of speech: it demands honest work day after day. If the words have already been said, I apologize and repair the harm, as far as it is possible. If I repeated inaccurate words, I tell those who heard them that they were not accurate, and I ask forgiveness of the offended person. I do not justify myself and do not continue the topic. Such daily work on speech is, according to the lesson, the beginning of spiritual work.",
+   "keyPoints": [
+    "Apologize and repair the harm, as far as possible",
+    "If the words were inaccurate — tell this to those who heard and ask forgiveness of the offended person",
+    "Do not justify oneself and do not continue the retelling",
+    "Work on speech is daily work, and not a demand for perfection"
+   ],
+   "explanation": "The lesson says it directly: if speech slipped out, apologize and repair the harm; tell the person to whom you carried the inaccurate words that they were not accurate, and ask forgiveness of the offended person.",
+   "source": "Lesson: The Ethics of Speech",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-n42",
+   "lessonId": "etika-4",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "Before repeating anything about a person, the lesson advises asking yourself four questions. Name them and explain why they also cover digital correspondence.",
+   "modelAnswer": "Four questions: is it true? is it necessary? is it said gently? what will change if I keep silent? The first question cuts off falsehood, the second — chatter that accomplishes nothing, the third — cruelty of form, and the fourth teaches one to see the value of silence: often silence does not diminish the truth, but preserves the person. These questions work in messengers too: pressing “share” is the same as retelling in one's own words, and the responsibility for it is the same as for what is spoken. Words on the internet spread instantly and remain forever, so digital speech requires even greater strictness. I want to make these four questions a habit — both in conversation and before sending a message.",
+   "keyPoints": [
+    "All four questions are named (truth, necessity, gentleness, the value of silence)",
+    "Understanding the meaning of each question",
+    "Forwarding is equivalent to retelling; the responsibility is the same",
+    "Application as a habit in digital speech"
+   ],
+   "explanation": "Contemporary teachers extend the rules of the Chafetz Chaim to digital speech; the beit din may ask about the application of the laws online.",
+   "source": "Lesson: The Ethics of Speech",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-n43",
+   "lessonId": "etika-5",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "How does the Kitzur Shulchan Aruch interpret the word “true” in the mitzvah about measures (62:9)?",
+   "options": [
+    "“True” means calibrated against the Temple standard",
+    "“Take a little of your own and give him” — measure generously, a little beyond the measure",
+    "“True” refers only to the measures of precious metals",
+    "“True” is a synonym of the word “expensive”"
+   ],
+   "answer": 1,
+   "explanation": "The sages interpret the word “true”: “take a little of your own and give him” — measure generously, a little beyond the measure (KSA 62:9).",
+   "source": "Kitzur Shulchan Aruch 62:9",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-n44",
+   "lessonId": "etika-5",
+   "minLevel": "orthodox",
+   "format": "mc",
+   "prompt": "Are short weight and short measure permitted in trade with a non-Jew?",
+   "options": [
+    "Yes, if the amount is small",
+    "Yes, non-Jews are not protected by this mitzvah",
+    "No, they are forbidden even in trade with a non-Jew",
+    "Yes, but only in the form of short measure"
+   ],
+   "answer": 2,
+   "explanation": "Short weight and short measure are forbidden even in trade with a non-Jew (KSA 62:7).",
+   "source": "Kitzur Shulchan Aruch 62:7",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-n45",
+   "lessonId": "etika-5",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "What formula does the rabbinic court pronounce over one who does not keep his word (KSA 62:15)?",
+   "options": [
+    "“May he be placed under the ban until the third generation”",
+    "“Let him pay double the price for the broken agreement”",
+    "“May he be expelled from the community for thirty days”",
+    "“He Who exacted punishment from the generation of the flood, from the generation of the Tower of Bavel, from Sedom and from the Egyptians, will exact punishment from one who does not keep his word”"
+   ],
+   "answer": 3,
+   "explanation": "The rabbinic court will pronounce the curse on the violator of his word in precisely this formula — from the flood to the Egyptians (KSA 62:15).",
+   "source": "Kitzur Shulchan Aruch 62:15",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-n46",
+   "lessonId": "etika-5",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "What happens to a promise of a gift given to a poor person, according to KSA 62:17?",
+   "options": [
+    "It becomes a vow — one can no longer change one's mind",
+    "It is considered fulfilled by the spoken word alone",
+    "It can be canceled within twenty-four hours",
+    "It requires the signature of two witnesses"
+   ],
+   "answer": 0,
+   "explanation": "KSA (62:17) adds: a promise of a gift to a poor person becomes a vow — one can no longer change one's mind.",
+   "source": "Kitzur Shulchan Aruch 62:17",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-n47",
+   "lessonId": "etika-5",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "What, according to the commentators, should the nations say on seeing the honest life of Jews?",
+   "options": [
+    "“Clearly they are the smartest of everyone in the market”",
+    "“Fortunate is the people whose G-d is such”",
+    "“They have the most accurate scales in the city”",
+    "“May their G-d bless our cities as well”"
+   ],
+   "answer": 1,
+   "explanation": "The name of G-d is “sanctified” through people: the nations, say the commentators, should say of the Jews: “fortunate is the people whose G-d is such” (Vayikra 22:32).",
+   "source": "Vayikra 22:32",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-n48",
+   "lessonId": "etika-5",
+   "minLevel": "orthodox",
+   "format": "mc",
+   "prompt": "Is it permitted to mislead a person without monetary loss — for example, to sell non-kosher meat as kosher?",
+   "options": [
+    "Yes, if the buyer himself does not understand kashrut",
+    "Yes, the main thing is to state the price honestly",
+    "No, this is forbidden even without monetary loss",
+    "Yes, if the meat looks fresh"
+   ],
+   "answer": 2,
+   "explanation": "To mislead a person — even a non-Jew, even without monetary loss — is forbidden: one may not sell non-kosher meat, passing it off as kosher (KSA 63:4).",
+   "source": "Kitzur Shulchan Aruch 63:4",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-n49",
+   "lessonId": "etika-5",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "Delaying the wages of a day laborer, who lives on today's earnings, is compared in the tradition to the taking of a life.",
+   "answer": true,
+   "explanation": "For the day laborer, payday is a matter of survival: he waits for this money to live on, and delaying the wage is compared in the tradition to the taking of a life.",
+   "source": "Devarim 24:14–15",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-n50",
+   "lessonId": "etika-5",
+   "minLevel": "orthodox",
+   "format": "tf",
+   "prompt": "According to the Kitzur Shulchan Aruch (ch. 65), only the lender and the borrower violate the prohibition of interest.",
+   "answer": false,
+   "explanation": "It is violated not only by the lender and the borrower, but also by the scribe, the witnesses, and the guarantor of an interest-bearing note (KSA, ch. 65).",
+   "source": "Kitzur Shulchan Aruch 65",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-n51",
+   "lessonId": "etika-5",
+   "minLevel": "reform",
+   "format": "match",
+   "prompt": "Match the concepts of business honesty with their sources.",
+   "pairs": [
+    [
+     "Deception in price (onaah)",
+     "Vayikra 25:14"
+    ],
+    [
+     "The prohibition of interest toward a fellow Jew",
+     "Devarim 23:20–21"
+    ],
+    [
+     "“Yes” shall be “yes”: the interpretation of “a true hin”",
+     "Vayikra 19:36"
+    ],
+    [
+     "“Let all your deeds be for the sake of Heaven”",
+     "Pirkei Avot 2:12"
+    ],
+    [
+     "“You shall not profane My holy Name”",
+     "Vayikra 22:32"
+    ]
+   ],
+   "explanation": "The halacha of business honesty rests on direct verses of the Torah and the saying of Rabbi Yose.",
+   "source": "Vayikra 25:14; Devarim 23:20–21; Vayikra 19:36; Pirkei Avot 2:12; Vayikra 22:32",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-n52",
+   "lessonId": "etika-5",
+   "minLevel": "reform",
+   "format": "typed",
+   "prompt": "What is “profanation of the Name” — deeds that call devotion to G-d into question — called?",
+   "answer": "Chillul HaShem",
+   "accept": [
+    "chilul ha-shem",
+    "chilul hashem",
+    "chilul ha'shem",
+    "chilul ashem"
+   ],
+   "explanation": "Chilul Hashem — “profanation of the Name”; the opposite of kiddush Hashem, the sanctification of the Name through honest deeds.",
+   "source": "Vayikra 22:32",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-n53",
+   "lessonId": "etika-5",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "“A true hin” (Vayikra 19:36) the sages also interpret in this way: let your “yes” be “yes”, and your “no” be “no”. How will the mitzvah of keeping one's word look in your work and at home?",
+   "modelAnswer": "For me, this mitzvah begins with small things: if I said “yes”, I strive to follow through, even when I have changed my mind, and if I said “no” — I do not change my decision under pressure. A G-d-fearing person, says the lesson, strives to fulfill even what he has agreed to only in thought — and I want to learn this inner honesty. At work this means not promising deadlines I do not believe in, and not going back on an agreed price if a buyer offering more has appeared. At home it means being consistent for those close to me: my word should be as exact as a measure. A word that is not kept profanes the Name of G-d in the eyes of people, and a word that is kept sanctifies it.",
+   "keyPoints": [
+    "“Yes” — “yes”, “no” — “no” as the interpretation of “a true hin” (Vayikra 19:36)",
+    "Striving to fulfill even consent given in thought (KSA 62:16)",
+    "Specifics: deadlines, prices, consistency at home",
+    "Connection with kiddush Hashem and chilul Hashem"
+   ],
+   "explanation": "The mitzvah of keeping one's word is one of the most practical topics of the beit din conversation about work and home.",
+   "source": "Vayikra 19:36; Kitzur Shulchan Aruch 62:16–17",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-n54",
+   "lessonId": "etika-6",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "Why did Hillel institute the pruzbul (Gittin 4:3)?",
+   "options": [
+    "In order to cancel the seventh year",
+    "In order to permit taking interest from the poor",
+    "In order to impose an additional tithe on debts",
+    "So that a debt would survive the seventh year and the poor would not stop receiving loans"
+   ],
+   "answer": 3,
+   "explanation": "The seventh year canceled debts, and the poor stopped being given loans; the pruzbul is an agreement that preserves a debt through the seventh year (Gittin 4:3).",
+   "source": "Mishnah, Gittin 4:2–3",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-n55",
+   "lessonId": "etika-6",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "What new understanding of tikkun olam did the Kabbalah of the Arizal's teaching bring (16th century)?",
+   "options": [
+    "Through mitzvot and good deeds, a person restores the world's original harmony",
+    "The world will be repaired only after the coming of Mashiach",
+    "Repairing the world is the task of the prophets alone",
+    "Tikkun olam concerns only the days between Pesach and Shavuot"
+   ],
+   "answer": 0,
+   "explanation": "By the 16th century, the Kabbalah (the teaching of the Arizal) filled the concept with a new meaning: through mitzvot and good deeds, a person “repairs” the world, restoring its original harmony to it.",
+   "source": "Lesson: Tikkun Olam: Repairing the World",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-n56",
+   "lessonId": "etika-6",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "What position does the Orthodox tradition take on tikkun olam?",
+   "options": [
+    "Repairing the world is possible only outside halacha",
+    "The main repair is achieved through mitzvot and personal holiness, from which good deeds grow",
+    "Tikkun olam is exclusively the charitable projects of the community",
+    "Social justice is more important than observing Shabbat"
+   ],
+   "answer": 1,
+   "explanation": "The Orthodox tradition emphasizes that the main repair of the world is achieved through mitzvot and personal holiness, from which good deeds grow.",
+   "source": "Lesson: Tikkun Olam: Repairing the World",
+   "difficulty": "hard",
+   "differs": [
+    {
+     "level": "reform",
+     "text": "In Reform Judaism, tikkun olam is one of the central slogans of identity: repairing the world is placed at the center of Jewish life, alongside Torah and prayer."
+    },
+    {
+     "level": "conservative",
+     "text": "In Conservative (Masorti) Judaism, tikkun olam is a communal obligation within halacha: social justice together with Shabbat, kashrut, and family purity."
+    }
+   ]
+  },
+  {
+   "id": "etika-n57",
+   "lessonId": "etika-6",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "The Torah forbids plowing with an ox and a donkey together, taking into account the different nature of the animals (Devarim 22:10).",
+   "answer": true,
+   "explanation": "“Do not plow with an ox and a donkey together” (Devarim 22:10) is one of the mitzvot that take into account the different nature of animals; it is part of the prohibition of tzaar baalei chayim.",
+   "source": "Devarim 22:10",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-n58",
+   "lessonId": "etika-6",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "The Kitzur Shulchan Aruch (ch. 190) permits destroying food and things without need, if this does not harm one's health.",
+   "answer": false,
+   "explanation": "KSA (ch. 190) connects the prohibition of bal tashchit with care for one's own body: guarding health and guarding the world are two sides of one responsibility; needless destruction is forbidden in itself.",
+   "source": "Kitzur Shulchan Aruch 190",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-n59",
+   "lessonId": "etika-6",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "According to the Talmud, honoring parents ends together with their life.",
+   "answer": false,
+   "explanation": "The mitzvah is addressed to an adult and continues even after the death of the parents: they are spoken of with respect and their will is carried out (Kiddushin 31b).",
+   "source": "Talmud, Kiddushin 31a–b",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-n60",
+   "lessonId": "etika-6",
+   "minLevel": "reform",
+   "format": "match",
+   "prompt": "Match the mitzvot about animals with their verses.",
+   "pairs": [
+    [
+     "Do not muzzle the ox while it chews",
+     "Devarim 25:4"
+    ],
+    [
+     "Help even the donkey of an enemy to rise",
+     "Shemot 23:5"
+    ],
+    [
+     "Do not plow with an ox and a donkey together",
+     "Devarim 22:10"
+    ],
+    [
+     "So that your ox and your donkey may rest",
+     "Shemot 23:12"
+    ]
+   ],
+   "explanation": "From these verses the lesson derives care for animals: do not muzzle the ox, help a stranger's donkey, do not harness different animals together, and give them rest on Shabbat.",
+   "source": "Devarim 25:4; Shemot 23:5; Devarim 22:10; Shemot 23:12",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-n61",
+   "lessonId": "etika-6",
+   "minLevel": "reform",
+   "format": "typed",
+   "prompt": "Which of the Ten Commandments is honoring father and mother?",
+   "answer": "the fifth",
+   "accept": [
+    "the fifth",
+    "5",
+    "the fifth commandment"
+   ],
+   "explanation": "The fifth of the Ten Commandments — the first concerning relations between people and the first with a promised reward: “so that your days may be long” (Shemot 20:12).",
+   "source": "Shemot 20:12",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-n62",
+   "lessonId": "etika-6",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "How do you understand the prohibition of tzaar baalei chayim, and what are you ready to observe in daily life?",
+   "modelAnswer": "I understand tzaar baalei chayim as the prohibition of tormenting animals and the obligation to care for them. The Torah does not allow muzzling the ox while it chews (Devarim 25:4), commands helping even the enemy's donkey to its feet (Shemot 23:5), and forbids plowing with an ox and a donkey together: they have different natures (Devarim 22:10). Shabbat extends rest to them as well: “so that your ox and your donkey may rest” (Shemot 23:12). The parable of Bilaam's she-donkey reminds us that cruelty blinds a person's eyes. In daily life I want to feed animals on time, not leave them under an unbearable load, and not treat their labor as my property.",
+   "keyPoints": [
+    "Definition: the prohibition of causing animals to suffer",
+    "At least two commandments from the lesson: the ox, the enemy's donkey, the ox with the donkey",
+    "Animals' rest on Shabbat (Shemot 23:12) or the parable of Bilaam",
+    "A concrete everyday application"
+   ],
+   "explanation": "The lesson derives the prohibition of tzaar baalei chayim from several verses of the Torah and extends it to feeding, load, and Shabbat.",
+   "source": "Devarim 25:4; Shemot 23:5; Devarim 22:10",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-n63",
+   "lessonId": "etika-6",
+   "minLevel": "reform",
+   "format": "open",
+   "prompt": "The Talmud distinguishes between “fear” (mora) and “honor” (kavod) of parents. Explain the difference and give examples of how you will show both.",
+   "modelAnswer": "“Fear” (mora) — boundaries: not standing in the parent's place, not sitting in his seat, not contradicting them by tone of voice. “Honor” (kavod) — care: feeding, giving drink, clothing the parents, escorting them in and out with deference. For me mora looks like this: I will not stand in the parent's place, will not sit in his seat, and will not contradict them by tone of voice. Kavod is practical: calling regularly, visiting, helping with doctors and affairs, seeing to their comfort in old age. The lesson adds a subtlety: a son fears his father more than his mother, so in the verse “every person shall fear his mother and his father” (Vayikra 19:3) the mother is named first — to emphasize her honor as well. I understand this commandment as a bridge between ethics and commandment: respect for those who gave me life is the beginning of my entire ethics.",
+   "keyPoints": [
+    "The distinction between mora and kavod with examples from Kiddushin 31b–32a",
+    "Personal concrete examples of both",
+    "Mentions the subtlety about the mother being named first (Kiddushin 31a; Vayikra 19:3)",
+    "Understanding the commandment as a bridge between ethics and divine command"
+   ],
+   "explanation": "The distinction between mora and kavod is precise halachic material from Kiddushin 31b–32a that is often checked at the beit din.",
+   "source": "Talmud, Kiddushin 31a–b; Vayikra 19:3",
+   "difficulty": "hard"
+  },
+  {
+   "id": "etika-q51",
+   "lessonId": "etika-6",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "How does Reform Judaism understand tikkun olam?",
+   "options": [
+    "As a religious duty to repair the world: justice, human dignity, peace, and care for creation",
+    "As a purely political slogan unconnected to Torah and prayer",
+    "As permission to observe no mitzvot at all as long as a person “does good”",
+    "As a duty only for rabbis, not for an ordinary member of the congregation"
+   ],
+   "answer": 0,
+   "explanation": "In the progressive movement, tikkun olam is part of religious life, not a replacement for study and observances.",
+   "source": "Lesson “Tikkun Olam”; CCAR materials",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-n64",
+   "lessonId": "etika-6",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "For a Reform candidate, deeds of justice and chesed replace prayer, Shabbat, and Torah study.",
+   "answer": false,
+   "explanation": "Tikkun olam stands alongside prayer and study, not instead of them. The beit din expects both service to the world and a Jewish rhythm of life.",
+   "source": "Lesson on tikkun olam; lesson on Reform giyur",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-z1",
+   "lessonId": "etika-1",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "How does Judaism describe human nature when it speaks of the yetzer?",
+   "options": [
+    "Everyone is born already guilty, so that they cannot return by themselves",
+    "A person has inclinations to good and to evil, and is able to return",
+    "The evil in a person cannot be removed without an intermediary",
+    "The yetzer exists only in non-Jews"
+   ],
+   "answer": 1,
+   "explanation": "The yetzer hatov and the yetzer hara are part of human freedom. Yechezkel 18: each person is responsible for himself.",
+   "source": "Pirkei Avot; Yechezkel 18:20",
+   "difficulty": "medium"
+  },
+  {
+   "id": "etika-z2",
+   "lessonId": "etika-3",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "Tzedakah, teshuvah, and tefillah are paths of return to the Almighty, without an intermediary.",
+   "answer": true,
+   "explanation": "Such is the ethics of the Days of Awe and the everyday mitzvah of tzedakah: a person stands before G-d alone.",
+   "source": "Lessons on ethics and on the Days of Awe; Hoshea 14:3",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-z3",
+   "lessonId": "etika-2",
+   "minLevel": "reform",
+   "format": "mc",
+   "prompt": "How does the Torah command us to treat the ger?",
+   "options": [
+    "To remind him of his former life in every disagreement",
+    "To love him, because we ourselves were gerim in Egypt, and not to wrong him",
+    "To consider him a second-class Jew until the third generation",
+    "To demand that he forget Eretz Israel"
+   ],
+   "answer": 1,
+   "explanation": "Vayikra 19:33–34 and Devarim 10:19: love the ger, do not wrong him. This is also connected with the ger's loyalty to the people and to the Land.",
+   "source": "Vayikra 19:33–34; Devarim 10:19",
+   "difficulty": "easy"
+  },
+  {
+   "id": "etika-z4",
+   "lessonId": "etika-1",
+   "minLevel": "reform",
+   "format": "tf",
+   "prompt": "Judaism teaches that a person can mend his own deeds, returning to the Almighty.",
+   "answer": true,
+   "explanation": "Teshuvah presupposes freedom and responsibility, not an innate guilt that only another can remove.",
+   "source": "Yechezkel 18; Pirkei Avot",
+   "difficulty": "easy"
+  }
+ ]
+}

@@ -6,6 +6,8 @@ pub mod content_store;
 pub mod eretz;
 pub mod exam;
 pub mod game;
+#[macro_use]
+pub mod i18n;
 pub mod install;
 pub mod interview;
 pub mod ladder;

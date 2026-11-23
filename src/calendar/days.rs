@@ -6,6 +6,8 @@
 use chrono::{Datelike, Duration, NaiveDate, Weekday};
 
 use crate::calendar::hebrew::*;
+use crate::i18n::tr;
+use crate::trf;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Kind {
@@ -208,11 +210,6 @@ fn shabbat_before(d: NaiveDate) -> NaiveDate {
     shabbat_on_or_before(d - Duration::days(1))
 }
 
-/// Ordinal Russian for Chanukah candles / days: «3-й день».
-fn nth(n: u32) -> String {
-    format!("{n}-й день")
-}
-
 /// Everything about one date.
 pub fn day_info(date: NaiveDate, diaspora: bool) -> DayInfo {
     let h = HebrewDate::from_gregorian(date);
@@ -220,44 +217,74 @@ pub fn day_info(date: NaiveDate, diaspora: bool) -> DayInfo {
     let leap = is_leap(y);
     let w = wd(date);
     let mut ev: Vec<Event> = Vec::new();
-    let mut push = |id: &'static str, kind: Kind, title: &str| ev.push(Event::new(id, kind, title));
+    let mut push =
+        |id: &'static str, kind: Kind, title: String| ev.push(Event::new(id, kind, title));
 
     // --- Tishrei ---
     if m == TISHREI {
         match d {
-            1 | 2 => push(
-                "rosh-hashana",
-                Kind::YomTov,
-                &format!("Рош а-Шана, {}", nth(d as u32)),
+            1 | 2 => {
+                let n = d as u32;
+                push(
+                    "rosh-hashana",
+                    Kind::YomTov,
+                    trf!("Рош а-Шана, {n}-й день", "Rosh Hashanah, day {n}"),
+                );
+            }
+            10 => push("yom-kippur", Kind::MajorFast, tr("Йом Кипур").to_string()),
+            9 => push(
+                "erev-yom-kippur",
+                Kind::Erev,
+                tr("Канун Йом Кипура").to_string(),
             ),
-            10 => push("yom-kippur", Kind::MajorFast, "Йом Кипур"),
-            9 => push("erev-yom-kippur", Kind::Erev, "Канун Йом Кипура"),
-            14 => push("erev-sukkot", Kind::Erev, "Канун Суккота"),
-            15 => push("sukkot", Kind::YomTov, "Суккот, 1-й день"),
-            16 if diaspora => push("sukkot", Kind::YomTov, "Суккот, 2-й день"),
-            16..=20 => push(
-                "chol-hamoed-sukkot",
-                Kind::CholHamoed,
-                &format!("Холь а-моэд Суккот, {}", nth(d as u32 - 14)),
-            ),
+            14 => push("erev-sukkot", Kind::Erev, tr("Канун Суккота").to_string()),
+            15 => push("sukkot", Kind::YomTov, tr("Суккот, 1-й день").to_string()),
+            16 if diaspora => push("sukkot", Kind::YomTov, tr("Суккот, 2-й день").to_string()),
+            16..=20 => {
+                let n = d as u32 - 14;
+                push(
+                    "chol-hamoed-sukkot",
+                    Kind::CholHamoed,
+                    trf!(
+                        "Холь а-моэд Суккот, {n}-й день",
+                        "Chol HaMoed Sukkot, day {n}"
+                    ),
+                );
+            }
             21 => push(
                 "hoshana-raba",
                 Kind::CholHamoed,
-                "Ошана Раба (7-й день Суккота)",
+                tr("Ошана Раба (7-й день Суккота)").to_string(),
             ),
-            22 if diaspora => push("shmini-atzeret", Kind::YomTov, "Шмини Ацерет"),
-            22 => push("shmini-atzeret", Kind::YomTov, "Шмини Ацерет и Симхат Тора"),
-            23 if diaspora => push("simchat-tora", Kind::YomTov, "Симхат Тора"),
+            22 if diaspora => push(
+                "shmini-atzeret",
+                Kind::YomTov,
+                tr("Шмини Ацерет").to_string(),
+            ),
+            22 => push(
+                "shmini-atzeret",
+                Kind::YomTov,
+                tr("Шмини Ацерет и Симхат Тора").to_string(),
+            ),
+            23 if diaspora => push("simchat-tora", Kind::YomTov, tr("Симхат Тора").to_string()),
             _ => {}
         }
         if date == tzom_gedalia(y) {
-            push("tzom-gedalia", Kind::MinorFast, "Пост Гедальи");
+            push(
+                "tzom-gedalia",
+                Kind::MinorFast,
+                tr("Пост Гедальи").to_string(),
+            );
         }
         if (1..=10).contains(&d) {
+            let n = d as u32;
             push(
                 "aseret-yemei-teshuva",
                 Kind::Period,
-                &format!("Десять дней трепета, {}", nth(d as u32)),
+                trf!(
+                    "Десять дней трепета, {n}-й день",
+                    "Ten Days of Repentance, day {n}"
+                ),
             );
         }
     }
@@ -265,77 +292,112 @@ pub fn day_info(date: NaiveDate, diaspora: bool) -> DayInfo {
     let chanuka_start = hd(if m >= TISHREI { y } else { y - 1 }, KISLEV, 25);
     let since = (date - chanuka_start).num_days();
     if (0..8).contains(&since) {
-        push(
-            "chanuka",
-            Kind::Minor,
-            &if since < 7 {
-                format!(
-                    "Ханука, {}: вечером зажигают {} {}",
-                    nth(since as u32 + 1),
-                    since + 2,
-                    if since + 2 < 5 {
-                        "свечи"
-                    } else {
-                        "свечей"
-                    }
-                )
-            } else {
-                "Ханука, 8-й день".to_string()
-            },
-        );
+        let title = if since < 7 {
+            let day = since as u32 + 1;
+            let candles = since + 2;
+            // Shamash plus the night's candles: 2, 3, 4 → «свечи», 5+ → «свечей».
+            let word = crate::util::plural_l(
+                candles,
+                &["свеча", "свечи", "свечей"],
+                &["candle", "candles"],
+            );
+            trf!(
+                "Ханука, {day}-й день: вечером зажигают {candles} {word}",
+                "Chanukah, day {day}: light {candles} {word} in the evening"
+            )
+        } else {
+            tr("Ханука, 8-й день").to_string()
+        };
+        push("chanuka", Kind::Minor, title);
     }
     if date == chanuka_start - Duration::days(1) {
         push(
             "erev-chanuka",
             Kind::Erev,
-            "Канун Хануки: вечером первая свеча",
+            tr("Канун Хануки: вечером первая свеча").to_string(),
         );
     }
     if m == TEVET && d == 10 {
-        push("asara-betevet", Kind::MinorFast, "Пост 10 тевета");
+        push(
+            "asara-betevet",
+            Kind::MinorFast,
+            tr("Пост 10 тевета").to_string(),
+        );
     }
     if m == SHEVAT && d == 15 {
-        push("tu-bishvat", Kind::Minor, "Ту би-Шват — Новый год деревьев");
+        push(
+            "tu-bishvat",
+            Kind::Minor,
+            tr("Ту би-Шват — Новый год деревьев").to_string(),
+        );
     }
     // --- Adar ---
     let pm = purim_month(y);
     if leap && m == ADAR && d == 14 {
-        push("purim-katan", Kind::Minor, "Пурим Катан");
+        push("purim-katan", Kind::Minor, tr("Пурим Катан").to_string());
     }
     if date == taanit_esther(y) {
-        push("taanit-ester", Kind::MinorFast, "Пост Эстер");
+        push(
+            "taanit-ester",
+            Kind::MinorFast,
+            tr("Пост Эстер").to_string(),
+        );
     }
     if m == pm && d == 14 {
-        push("purim", Kind::Minor, "Пурим");
+        push("purim", Kind::Minor, tr("Пурим").to_string());
     }
     if m == pm && d == 15 {
         push(
             "shushan-purim",
             Kind::Minor,
-            "Шушан Пурим (Пурим в Иерусалиме)",
+            tr("Шушан Пурим (Пурим в Иерусалиме)").to_string(),
         );
     }
     // --- Nisan ---
     if m == NISAN {
         match d {
-            14 => push("erev-pesach", Kind::Erev, "Канун Песаха: вечером седер"),
-            15 => push("pesach", Kind::YomTov, "Песах, 1-й день"),
-            16 if diaspora => push("pesach", Kind::YomTov, "Песах, 2-й день (второй седер)"),
-            21 => push("pesach-7", Kind::YomTov, "Седьмой день Песаха"),
-            22 if diaspora => push("pesach-7", Kind::YomTov, "Последний день Песаха"),
+            14 => push(
+                "erev-pesach",
+                Kind::Erev,
+                tr("Канун Песаха: вечером седер").to_string(),
+            ),
+            15 => push("pesach", Kind::YomTov, tr("Песах, 1-й день").to_string()),
+            16 if diaspora => push(
+                "pesach",
+                Kind::YomTov,
+                tr("Песах, 2-й день (второй седер)").to_string(),
+            ),
+            21 => push(
+                "pesach-7",
+                Kind::YomTov,
+                tr("Седьмой день Песаха").to_string(),
+            ),
+            22 if diaspora => push(
+                "pesach-7",
+                Kind::YomTov,
+                tr("Последний день Песаха").to_string(),
+            ),
             _ => {}
         }
         let chm_start = if diaspora { 17 } else { 16 };
         if (chm_start..=20).contains(&d) {
+            let n = d as u32 - 14;
             push(
                 "chol-hamoed-pesach",
                 Kind::CholHamoed,
-                &format!("Холь а-моэд Песах, {}", nth(d as u32 - 14)),
+                trf!(
+                    "Холь а-моэд Песах, {n}-й день",
+                    "Chol HaMoed Pesach, day {n}"
+                ),
             );
         }
     }
     if date == taanit_bechorot(y) {
-        push("taanit-bechorot", Kind::MinorFast, "Пост первенцев");
+        push(
+            "taanit-bechorot",
+            Kind::MinorFast,
+            tr("Пост первенцев").to_string(),
+        );
     }
     // --- Omer: from the 2nd night of Pesach (16 Nisan) to 5 Sivan ---
     let omer_start = hd(y, NISAN, 16);
@@ -343,48 +405,52 @@ pub fn day_info(date: NaiveDate, diaspora: bool) -> DayInfo {
     let omer = (1..=49).contains(&od).then_some(od as u8);
     if let Some(n) = omer {
         // The count for day n is said at nightfall *before* this date.
-        push("omer", Kind::Period, &format!("Счёт омера: {n}-й день"));
+        push(
+            "omer",
+            Kind::Period,
+            trf!("Счёт омера: {n}-й день", "Omer count: day {n}"),
+        );
     }
     if m == IYAR && d == 14 {
-        push("pesach-sheni", Kind::Minor, "Песах Шени");
+        push("pesach-sheni", Kind::Minor, tr("Песах Шени").to_string());
     }
     if m == IYAR && d == 18 {
-        push("lag-baomer", Kind::Minor, "Лаг ба-Омер");
+        push("lag-baomer", Kind::Minor, tr("Лаг ба-Омер").to_string());
     }
     if Some(date) == yom_hashoah(y) {
         push(
             "yom-hashoah",
             Kind::Modern,
-            "Йом а-Шоа — День памяти Катастрофы",
+            tr("Йом а-Шоа — День памяти Катастрофы").to_string(),
         );
     }
     if Some(date) == yom_hazikaron(y) {
         push(
             "yom-hazikaron",
             Kind::Modern,
-            "Йом а-Зикарон — День памяти павших",
+            tr("Йом а-Зикарон — День памяти павших").to_string(),
         );
     }
     if Some(date) == yom_haatzmaut(y) {
         push(
             "yom-haatzmaut",
             Kind::Modern,
-            "Йом а-Ацмаут — День независимости Израиля",
+            tr("Йом а-Ацмаут — День независимости Израиля").to_string(),
         );
     }
     if Some(date) == yom_yerushalayim(y) {
         push(
             "yom-yerushalayim",
             Kind::Modern,
-            "Йом Иерушалаим — День Иерусалима",
+            tr("Йом Иерушалаим — День Иерусалима").to_string(),
         );
     }
     // --- Sivan ---
     if m == SIVAN {
         match d {
-            5 => push("erev-shavuot", Kind::Erev, "Канун Шавуота"),
-            6 => push("shavuot", Kind::YomTov, "Шавуот, 1-й день"),
-            7 if diaspora => push("shavuot", Kind::YomTov, "Шавуот, 2-й день"),
+            5 => push("erev-shavuot", Kind::Erev, tr("Канун Шавуота").to_string()),
+            6 => push("shavuot", Kind::YomTov, tr("Шавуот, 1-й день").to_string()),
+            7 if diaspora => push("shavuot", Kind::YomTov, tr("Шавуот, 2-й день").to_string()),
             _ => {}
         }
     }
@@ -394,52 +460,78 @@ pub fn day_info(date: NaiveDate, diaspora: bool) -> DayInfo {
     let fast17 = shiva_asar_betammuz(y);
     let fast9 = tisha_beav(y);
     if date == fast17 {
-        push("shiva-asar-betamuz", Kind::MinorFast, "Пост 17 тамуза");
+        push(
+            "shiva-asar-betamuz",
+            Kind::MinorFast,
+            tr("Пост 17 тамуза").to_string(),
+        );
     }
     if date == fast9 {
-        push("tisha-beav", Kind::MajorFast, "Тиша бе-Ав — 9 ава");
+        push(
+            "tisha-beav",
+            Kind::MajorFast,
+            tr("Тиша бе-Ав — 9 ава").to_string(),
+        );
     }
     if date >= t17 && date <= av9 && date != fast9 {
         if m == AV {
+            let n = d as u32;
             push(
                 "nine-days",
                 Kind::Period,
-                &format!("Девять дней (траур по Храму), {}", nth(d as u32)),
+                trf!(
+                    "Девять дней (траур по Храму), {n}-й день",
+                    "The Nine Days (mourning for the Temple), day {n}"
+                ),
             );
         } else {
-            push("three-weeks", Kind::Period, "Три недели (бейн а-мецарим)");
+            push(
+                "three-weeks",
+                Kind::Period,
+                tr("Три недели (бейн а-мецарим)").to_string(),
+            );
         }
     }
     if m == AV && d == 15 {
-        push("tu-beav", Kind::Minor, "Ту бе-Ав");
+        push("tu-beav", Kind::Minor, tr("Ту бе-Ав").to_string());
     }
     if m == ELUL {
-        push("elul", Kind::Period, "Месяц элул: время тшувы");
+        push(
+            "elul",
+            Kind::Period,
+            tr("Месяц элул: время тшувы").to_string(),
+        );
         if d == 29 {
-            push("erev-rosh-hashana", Kind::Erev, "Канун Рош а-Шана");
+            push(
+                "erev-rosh-hashana",
+                Kind::Erev,
+                tr("Канун Рош а-Шана").to_string(),
+            );
         }
     }
     // --- Rosh Chodesh: day 30 of the previous month and/or day 1 ---
     if (d == 1 && m != TISHREI) || d == 30 {
         let (ry, rm) = if d == 30 { next_month(y, m) } else { (y, m) };
+        // `month_name_ru_gen` already returns the name in the interface language.
+        let month = month_name_ru_gen(ry, rm);
         push(
             "rosh-chodesh",
             Kind::RoshChodesh,
-            &format!("Рош Ходеш {}", month_name_ru_gen(ry, rm)),
+            trf!("Рош Ходеш {month}", "Rosh Chodesh {month}"),
         );
     }
     // --- Shabbat and special Shabbatot ---
     if w == Weekday::Sat {
-        push("shabbat", Kind::Shabbat, "Шаббат");
+        push("shabbat", Kind::Shabbat, tr("Шаббат").to_string());
         for (id, title) in special_shabbat(date, y, diaspora) {
-            push(id, Kind::SpecialShabbat, title);
+            push(id, Kind::SpecialShabbat, title.to_string());
         }
     }
     if w == Weekday::Fri {
         push(
             "erev-shabbat",
             Kind::Erev,
-            "Канун Шаббата: вечером зажигают свечи",
+            tr("Канун Шаббата: вечером зажигают свечи").to_string(),
         );
     }
 
@@ -483,36 +575,36 @@ fn special_shabbat(date: NaiveDate, y: i32, diaspora: bool) -> Vec<(&'static str
     let mut v = Vec::new();
     let h = HebrewDate::from_gregorian(date);
     if h.month == TISHREI && (3..=9).contains(&h.day) {
-        v.push(("shabbat-shuva", "Шаббат Шува"));
+        v.push(("shabbat-shuva", tr("Шаббат Шува")));
     }
     let pm = purim_month(y);
     if date == shabbat_on_or_before(hd(y, pm, 1)) {
-        v.push(("shabbat-shekalim", "Шаббат Шкалим"));
+        v.push(("shabbat-shekalim", tr("Шаббат Шкалим")));
     }
     if date == shabbat_before(hd(y, pm, 14)) {
-        v.push(("shabbat-zachor", "Шаббат Захор"));
+        v.push(("shabbat-zachor", tr("Шаббат Захор")));
     }
     let hachodesh = shabbat_on_or_before(hd(y, NISAN, 1));
     if date == hachodesh {
-        v.push(("shabbat-hachodesh", "Шаббат а-Ходеш"));
+        v.push(("shabbat-hachodesh", tr("Шаббат а-Ходеш")));
     }
     if date == hachodesh - Duration::days(7) {
-        v.push(("shabbat-para", "Шаббат Пара"));
+        v.push(("shabbat-para", tr("Шаббат Пара")));
     }
     if date == shabbat_before(hd(y, NISAN, 15)) {
-        v.push(("shabbat-hagadol", "Шаббат а-Гадоль"));
+        v.push(("shabbat-hagadol", tr("Шаббат а-Гадоль")));
     }
     let av9 = hd(y, AV, 9);
     if date == shabbat_on_or_before(av9) {
-        v.push(("shabbat-chazon", "Шаббат Хазон"));
+        v.push(("shabbat-chazon", tr("Шаббат Хазон")));
     }
     if date == shabbat_before(av9) + Duration::days(7) {
-        v.push(("shabbat-nachamu", "Шаббат Нахаму"));
+        v.push(("shabbat-nachamu", tr("Шаббат Нахаму")));
     }
     if let crate::calendar::parasha::Reading::Parasha(15) =
         crate::calendar::parasha::reading_on(date, diaspora)
     {
-        v.push(("shabbat-shira", "Шаббат Шира"));
+        v.push(("shabbat-shira", tr("Шаббат Шира")));
     }
     v
 }

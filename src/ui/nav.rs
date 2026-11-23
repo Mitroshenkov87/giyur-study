@@ -2,6 +2,7 @@
 //! fuller hover description. The single source of the names, so the shell,
 //! tests and command control agree (old labels are kept as aliases).
 
+use crate::i18n::{self, tr};
 use crate::ui::app::{Deck, Route};
 
 /// One sidebar entry.
@@ -129,11 +130,35 @@ pub fn group(r: &Route) -> Option<usize> {
 }
 
 /// Item index for a sidebar label, current or pre-v0.5 (case-insensitive).
+/// English names of the current labels match too; the stored Russian text
+/// stays the lookup key, and pre-v0.5 aliases stay Russian so «Экзамен»
+/// does not steal the `exam` route.
 pub fn find(label: &str) -> Option<usize> {
     let l = label.trim().to_lowercase();
     ITEMS.iter().position(|it| {
-        it.label.to_lowercase() == l || it.old_label.is_some_and(|o| o.to_lowercase() == l)
+        same(&l, it.label)
+            || it.old_label.is_some_and(|o| same(&l, o))
+            || i18n::en(it.label).is_some_and(|e| same(&l, e))
     })
+}
+
+fn same(input_lower: &str, candidate: &str) -> bool {
+    input_lower == candidate.to_lowercase()
+}
+
+/// Sidebar label in the current language. The table itself stays Russian.
+pub fn label(it: &Item) -> &'static str {
+    tr(it.label)
+}
+
+/// Grey subtitle in the current language.
+pub fn subtitle(it: &Item) -> &'static str {
+    tr(it.subtitle)
+}
+
+/// Hover tooltip in the current language.
+pub fn tooltip(it: &Item) -> &'static str {
+    tr(it.tooltip)
 }
 
 #[cfg(test)]

@@ -1,8 +1,8 @@
 # Шорашим (Shorashim)
 
-Основы иудаизма и подготовка к гиюру. Учебное приложение на русском языке.
+Основы иудаизма и подготовка к гиюру. Учебное приложение на русском и английском языках: язык выбирается по Windows при первом запуске и меняется в «Настройках».
 
-Foundations of Judaism and preparation for giyur. A Russian-language study app.
+Foundations of Judaism and preparation for giyur. A study app in Russian and English: the language follows Windows on first launch and can be changed in Settings.
 
 **Скачать / Download:** [Releases](../../releases)
 

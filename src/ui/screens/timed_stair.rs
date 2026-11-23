@@ -14,6 +14,7 @@ use iced::widget::{container, pin, row, space, stack, text, Stack};
 use iced::{Alignment, Color, Element, Length, Point, Rectangle, Renderer, Size, Theme, Vector};
 
 use super::RungState;
+use crate::i18n::tr;
 use crate::ladder;
 use crate::ui::fonts::{HEBREW, SANS, SANS_BOLD};
 use crate::ui::theme::{self, Palette};
@@ -471,7 +472,7 @@ fn labels<'a, M: 'a>(states: &[RungState]) -> Element<'a, M> {
                 .font(SANS_BOLD)
                 .color(ink),
             container(
-                text(r.name)
+                text(tr(r.name))
                     .size(size * 0.95)
                     .font(if bold { SANS_BOLD } else { SANS })
                     .color(ink)

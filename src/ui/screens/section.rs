@@ -9,6 +9,7 @@ use iced::widget::{button, column, container, progress_bar, row, stack, Column};
 use iced::{Alignment, Background, Border, Element, Length};
 
 use crate::content::{self, Library, SectionMeta};
+use crate::i18n::tr;
 use crate::srs;
 use crate::study::{self, NextStep, Readiness, StudyMode};
 use crate::ui::app::{Action, Ctx, Deck, ExamSpec, Route};
@@ -109,13 +110,13 @@ impl Screen {
     pub fn view<'a>(&'a self, ctx: &'a Ctx) -> Element<'a, Msg> {
         let p = theme::current();
         let Some(sec) = ctx.lib.section(&self.id) else {
-            return not_found("Раздел ещё не готов.", false, p);
+            return not_found(tr("Раздел ещё не готов."), false, p);
         };
         if !sec.available {
-            return not_found("Раздел ещё не готов.", false, p);
+            return not_found(tr("Раздел ещё не готов."), false, p);
         }
         if !ctx.lib.is_unlocked(sec, &ctx.state) {
-            return not_found("Этот раздел пока закрыт.", true, p);
+            return not_found(tr("Этот раздел пока закрыт."), true, p);
         }
 
         let user = Library::user_level(&ctx.state);
@@ -124,15 +125,17 @@ impl Screen {
 
         let mut page = Column::new().spacing(18).width(Length::Fill);
 
-        page = page.push(widgets::back_button("Уроки", Msg::Go(Route::Map)));
+        page = page.push(widgets::back_button(tr("Уроки"), Msg::Go(Route::Map)));
         let rd = study::readiness(&ctx.lib, sec, &ctx.state);
         let read_pct = study::read_pct(&rd);
 
         // ---- Header: emblem · back/kicker/h1/sub · two rings ----
         let head_text = column![
-            kicker_owned(format!("Раздел {}", sec.index + 1)),
-            widgets::heading(&sec.title, 1),
-            txt(&sec.subtitle).size(theme::text::BODY).color(p.muted),
+            kicker_owned(crate::trf!("Раздел {}", "Section {}", sec.index + 1)),
+            widgets::heading(tr(&sec.title), 1),
+            txt(tr(&sec.subtitle))
+                .size(theme::text::BODY)
+                .color(p.muted),
         ]
         .spacing(8)
         .width(Length::Fill);
@@ -140,8 +143,8 @@ impl Screen {
             row![
                 emblem(&sec.id, &sec.icon, 96.0, theme::radius::EMBLEM_LG, false),
                 head_text,
-                labeled_ring(read_pct, "Прочитано", p.gold2, p),
-                labeled_ring(rd.pct, "Готовность", p.gold, p),
+                labeled_ring(read_pct, tr("Прочитано"), p.gold2, p),
+                labeled_ring(rd.pct, tr("Готовность"), p.gold, p),
             ]
             .spacing(20)
             .align_y(Alignment::Center),
@@ -211,17 +214,22 @@ impl Screen {
         // ---- Lessons ----
         page = page.push(
             row![
-                widgets::heading("Уроки", 3),
+                widgets::heading(tr("Уроки"), 3),
                 iced::widget::Space::new().width(Length::Fill),
-                txt(format!("Прочитано {} из {}", stats.read, stats.lessons))
-                    .size(theme::text::SMALL)
-                    .color(p.muted),
+                txt(crate::trf!(
+                    "Прочитано {} из {}",
+                    "Read {} of {}",
+                    stats.read,
+                    stats.lessons
+                ))
+                .size(theme::text::SMALL)
+                .color(p.muted),
             ]
             .align_y(Alignment::Center),
         );
         if lessons.is_empty() {
             page = page.push(
-                txt("Для вашего уровня в этом разделе пока нет уроков.")
+                txt(tr("Для вашего уровня в этом разделе пока нет уроков."))
                     .size(theme::text::BODY)
                     .color(p.muted),
             );
@@ -237,9 +245,9 @@ impl Screen {
         let deeper = ctx.lib.deeper(sec, user);
         if !deeper.is_empty() {
             let mut col = Column::new().spacing(12).width(Length::Fill);
-            col = col.push(widgets::heading("Углубиться", 3));
+            col = col.push(widgets::heading(tr("Углубиться"), 3));
             col = col.push(
-                txt("Что почитать после уроков, чтобы понять тему глубже.")
+                txt(tr("Что почитать после уроков, чтобы понять тему глубже."))
                     .size(theme::text::SMALL)
                     .color(p.muted),
             );
@@ -280,8 +288,8 @@ impl Screen {
 
         // ---- Hand-off to the prep mode ----
         page = page.push(cta_row(
-            "Прочитали? Проверьте себя и готовьтесь к бейт-дину.",
-            "Готовиться →",
+            tr("Прочитали? Проверьте себя и готовьтесь к бейт-дину."),
+            tr("Готовиться →"),
             Msg::Mode(StudyMode::Prep),
             p,
         ));
@@ -304,31 +312,45 @@ impl Screen {
         let cards_action = action_card(
             icons::Kind::Cards,
             false,
-            "Карточки раздела",
-            format!("{} из {} выучено", rd.cards_mastered, rd.cards),
+            tr("Карточки раздела"),
+            crate::trf!(
+                "{} из {} выучено",
+                "{} of {} learned",
+                rd.cards_mastered,
+                rd.cards
+            ),
             Some(Msg::Go(Route::Cards(Deck::Section(sec.id.clone())))),
             p,
         );
         let rehearse_action = action_card(
             icons::Kind::StarDavid,
             false,
-            "Репетиция бейт-дина",
+            tr("Репетиция бейт-дина"),
             if rd.interview > 0 {
-                format!("Верно {} из {}", rd.interview_known, rd.interview)
+                crate::trf!(
+                    "Верно {} из {}",
+                    "{} of {} correct",
+                    rd.interview_known,
+                    rd.interview
+                )
             } else {
-                "Для вашего уровня вопросов пока нет".to_string()
+                tr("Для вашего уровня вопросов пока нет").to_string()
             },
             (rd.interview > 0).then_some(Msg::Rehearse),
             p,
         );
         let test_sub = match rd.best {
-            None => "Ещё не сдавали · порог 80%".to_string(),
-            Some(best) => format!("Лучший: {} · пройти ещё раз", fmt_pct(best)),
+            None => tr("Ещё не сдавали · порог 80%").to_string(),
+            Some(best) => crate::trf!(
+                "Лучший: {} · пройти ещё раз",
+                "Best: {} · take again",
+                fmt_pct(best)
+            ),
         };
         let test_action = action_card(
             icons::Kind::Exam,
             true,
-            "Тест раздела",
+            tr("Тест раздела"),
             test_sub,
             Some(Msg::Go(Route::Exam(Some(sec.id.clone())))),
             p,
@@ -340,7 +362,7 @@ impl Screen {
         );
 
         // ---- Per-lesson prep ----
-        page = page.push(widgets::heading("По урокам", 3));
+        page = page.push(widgets::heading(tr("По урокам"), 3));
         let mut list = Column::new().spacing(8).width(Length::Fill);
         for (i, lesson) in lessons.iter().enumerate() {
             list = list.push(prep_row(ctx, sec, lesson, i + 1, p));
@@ -348,8 +370,8 @@ impl Screen {
         page = page.push(list);
 
         page = page.push(cta_row(
-            "Что-то подзабылось? Вернитесь к текстам уроков.",
-            "← Читать",
+            tr("Что-то подзабылось? Вернитесь к текстам уроков."),
+            tr("← Читать"),
             Msg::Mode(StudyMode::Read),
             p,
         ));
@@ -392,7 +414,7 @@ fn mode_switch<'a>(mode: StudyMode, rd: &Readiness, p: theme::Palette) -> Elemen
             row![
                 icons::icon(icon, 22.0, if selected { p.gold } else { p.muted }),
                 column![
-                    txt(m.title())
+                    txt(tr(m.title()))
                         .size(theme::text::BODY + 1.0)
                         .font(fonts::SANS_BOLD)
                         .color(if selected { p.gold2 } else { p.text }),
@@ -432,12 +454,22 @@ fn mode_switch<'a>(mode: StudyMode, rd: &Readiness, p: theme::Palette) -> Elemen
         seg(
             StudyMode::Read,
             icons::Kind::Book,
-            format!("Понять тему · прочитано {} из {}", rd.read, rd.lessons),
+            crate::trf!(
+                "Понять тему · прочитано {} из {}",
+                "Understand the topic · read {} of {}",
+                rd.read,
+                rd.lessons
+            ),
         ),
         seg(
             StudyMode::Prep,
             icons::Kind::Exam,
-            format!("К бейт-дину · {}% · {}", rd.pct, rd.band.title()),
+            crate::trf!(
+                "К бейт-дину · {}% · {}",
+                "For the beit din · {}% · {}",
+                rd.pct,
+                tr(rd.band.title())
+            ),
         ),
     ]
     .spacing(10)
@@ -447,13 +479,13 @@ fn mode_switch<'a>(mode: StudyMode, rd: &Readiness, p: theme::Palette) -> Elemen
 
 fn overview_card<'a>(ov: &'a content::Overview, p: theme::Palette) -> Element<'a, Msg> {
     let mut col = Column::new().spacing(10).width(Length::Fill);
-    col = col.push(widgets::kicker("О чём раздел"));
+    col = col.push(widgets::kicker(tr("О чём раздел")));
     if !ov.why.is_empty() {
         col = col.push(widgets::rich_paragraph(&ov.why));
     }
     if !ov.goals.is_empty() {
         col = col.push(
-            txt("Что вы сможете")
+            txt(tr("Что вы сможете"))
                 .size(theme::text::BODY)
                 .font(fonts::SANS_BOLD),
         );
@@ -471,7 +503,7 @@ fn overview_card<'a>(ov: &'a content::Overview, p: theme::Palette) -> Element<'a
         }
     }
     if !ov.exam_focus.is_empty() {
-        col = col.push(widgets::note_block("На бейт-дине", &ov.exam_focus));
+        col = col.push(widgets::note_block(tr("На бейт-дине"), &ov.exam_focus));
     }
     widgets::card(col)
 }
@@ -504,7 +536,7 @@ pub(crate) fn level_counts_row<'a, M: 'a>(
         r = r.push(
             column![
                 row![
-                    txt(c.title())
+                    txt(tr(c.title()))
                         .size(theme::text::SMALL)
                         .font(fonts::SANS_BOLD),
                     iced::widget::Space::new().width(Length::Fill),
@@ -517,7 +549,7 @@ pub(crate) fn level_counts_row<'a, M: 'a>(
                 progress_bar(0.0..=100.0, (frac(c.known, c.total) * 100.0) as f32)
                     .girth(6.0)
                     .style(move |_| theme::progress_bar(&theme::current())),
-                txt(format!("освоено {}", c.known))
+                txt(crate::trf!("освоено {}", "{} correct", c.known))
                     .size(theme::text::SMALL)
                     .color(p.muted),
             ]
@@ -540,17 +572,22 @@ fn level_counts_card<'a>(
     widgets::card(
         column![
             row![
-                widgets::kicker("Вопросы по уровням"),
+                widgets::kicker(tr("Вопросы по уровням")),
                 iced::widget::Space::new().width(Length::Fill),
-                txt(format!("всего {total} · освоено {known}"))
-                    .size(theme::text::SMALL)
-                    .color(p.muted),
+                txt(crate::trf!(
+                    "всего {total} · освоено {known}",
+                    "{total} total · {known} correct"
+                ))
+                .size(theme::text::SMALL)
+                .color(p.muted),
             ]
             .align_y(Alignment::Center),
             level_counts_row::<Msg>(&counts, p),
-            txt("Освоено — последний ответ на вопрос был верным. Считаются вопросы вашего уровня.")
-                .size(theme::text::SMALL)
-                .color(p.muted),
+            txt(tr(
+                "Освоено — последний ответ на вопрос был верным. Считаются вопросы вашего уровня."
+            ))
+            .size(theme::text::SMALL)
+            .color(p.muted),
         ]
         .spacing(12)
         .width(Length::Fill),
@@ -579,7 +616,7 @@ fn readiness_card<'a>(
                 txt(format!("{}%", rd.pct))
                     .size(24.0)
                     .font(fonts::SANS_BOLD),
-                txt("готовность").size(11.0).color(p.muted),
+                txt(tr("готовность")).size(11.0).color(p.muted),
             ]
             .align_x(Alignment::Center)
         )
@@ -589,17 +626,18 @@ fn readiness_card<'a>(
         .align_y(iced::alignment::Vertical::Center),
     ];
     let test_value = match rd.best {
-        None => "не сдавали".to_string(),
-        Some(b) => format!("{} · порог 80%", fmt_pct(b)),
+        None => tr("не сдавали").to_string(),
+        Some(b) => crate::trf!("{} · порог 80%", "{} · 80% to pass", fmt_pct(b)),
     };
     // A part with nothing at this level counts as done in the score
     // (study::part), so it is not shown as an empty bar either.
     let mut parts = Column::new();
     if rd.cards > 0 {
         parts = parts.push(bar_line(
-            "Карточки",
-            format!(
+            tr("Карточки"),
+            crate::trf!(
                 "{} из {} выучено · прогресс {}%",
+                "{} of {} learned · {}% progress",
                 rd.cards_mastered,
                 rd.cards,
                 (rd.cards_score * 100.0).round() as i64
@@ -610,23 +648,33 @@ fn readiness_card<'a>(
     }
     if rd.checks > 0 {
         parts = parts.push(bar_line(
-            "Самопроверка по урокам",
-            format!("{} из {} верно", rd.checks_known, rd.checks),
+            tr("Самопроверка по урокам"),
+            crate::trf!(
+                "{} из {} верно",
+                "{} of {} correct",
+                rd.checks_known,
+                rd.checks
+            ),
             frac(rd.checks_known, rd.checks),
             p,
         ));
     }
     if rd.interview > 0 {
         parts = parts.push(bar_line(
-            "Ответы для бейт-дина",
-            format!("{} из {} верно", rd.interview_known, rd.interview),
+            tr("Ответы для бейт-дина"),
+            crate::trf!(
+                "{} из {} верно",
+                "{} of {} correct",
+                rd.interview_known,
+                rd.interview
+            ),
             frac(rd.interview_known, rd.interview),
             p,
         ));
     }
     let parts = parts
         .push(bar_line(
-            "Тест раздела",
+            tr("Тест раздела"),
             test_value,
             rd.best.unwrap_or(0.0) / 100.0,
             p,
@@ -638,15 +686,17 @@ fn readiness_card<'a>(
     let mut right = Column::new().spacing(12).width(Length::Fill);
     right = right.push(
         row![
-            widgets::kicker("Готовность к экзамену"),
+            widgets::kicker(tr("Готовность к экзамену")),
             iced::widget::Space::new().width(Length::Fill),
-            widgets::pill(rd.band.title(), widgets::Pill::Chip),
+            widgets::pill(tr(rd.band.title()), widgets::Pill::Chip),
         ]
         .align_y(Alignment::Center),
     );
     right = right.push(parts);
     let mut next_row = row![column![
-        txt("Следующий шаг").size(theme::text::SMALL).color(p.muted),
+        txt(tr("Следующий шаг"))
+            .size(theme::text::SMALL)
+            .color(p.muted),
         txt(next_text)
             .size(theme::text::BODY)
             .font(fonts::SANS_BOLD),
@@ -682,33 +732,33 @@ fn next_step<'a>(
     };
     match next {
         NextStep::Read(id) => (
-            format!("Прочитать урок «{}»", title(id)),
-            "Читать",
+            crate::trf!("Прочитать урок «{}»", "Read the lesson “{}”", title(id)),
+            tr("Читать"),
             Some(Msg::Go(Route::Lesson(id.clone()))),
         ),
         NextStep::SelfCheck(id) => (
-            format!("Самопроверка: «{}»", title(id)),
-            "Начать",
+            crate::trf!("Самопроверка: «{}»", "Self-check: “{}”", title(id)),
+            tr("Начать"),
             Some(Msg::SelfCheck(id.clone())),
         ),
         NextStep::Cards => (
-            "Повторить карточки раздела".to_string(),
-            "Карточки",
+            tr("Повторить карточки раздела").to_string(),
+            tr("Карточки"),
             Some(Msg::Go(Route::Cards(Deck::Section(sec.id.clone())))),
         ),
         NextStep::Rehearse => (
-            "Отрепетировать ответы для бейт-дина".to_string(),
-            "Репетиция",
+            tr("Отрепетировать ответы для бейт-дина").to_string(),
+            tr("Репетиция"),
             Some(Msg::Rehearse),
         ),
         NextStep::Test => (
-            "Сдать тест раздела (порог 80%)".to_string(),
-            "К тесту",
+            tr("Сдать тест раздела (порог 80%)").to_string(),
+            tr("К тесту"),
             Some(Msg::Go(Route::Exam(Some(sec.id.clone())))),
         ),
         NextStep::Done => (
-            "Раздел пройден. Повторяйте карточки по расписанию или пройдите тест ещё раз — лучший результат сохранится.".to_string(),
-            "Пройти ещё раз",
+            tr("Раздел пройден. Повторяйте карточки по расписанию или пройдите тест ещё раз — лучший результат сохранится.").to_string(),
+            tr("Пройти ещё раз"),
             Some(Msg::Go(Route::Exam(Some(sec.id.clone())))),
         ),
     }
@@ -724,15 +774,25 @@ fn prep_row<'a>(
 ) -> Element<'a, Msg> {
     let lp = study::lesson_prep(&ctx.lib, sec, &lesson.id, &ctx.state);
     let mut meta = vec![if lp.read {
-        "✓ прочитан".to_string()
+        tr("✓ прочитан").to_string()
     } else {
-        "не прочитан".to_string()
+        tr("не прочитан").to_string()
     }];
     if lp.checks > 0 {
-        meta.push(format!("самопроверка {}/{}", lp.checks_known, lp.checks));
+        meta.push(crate::trf!(
+            "самопроверка {}/{}",
+            "self-check {}/{}",
+            lp.checks_known,
+            lp.checks
+        ));
     }
     if lp.interview > 0 {
-        meta.push(format!("бейт-дин {}/{}", lp.interview_known, lp.interview));
+        meta.push(crate::trf!(
+            "бейт-дин {}/{}",
+            "beit din {}/{}",
+            lp.interview_known,
+            lp.interview
+        ));
     }
     let text_col = column![
         txt(format!(
@@ -752,16 +812,16 @@ fn prep_row<'a>(
     .width(Length::Fill);
     let read_btn = widgets::btn(
         if lp.read {
-            "Повторить"
+            tr("Повторить")
         } else {
-            "Читать"
+            tr("Читать")
         },
         widgets::Btn::Ghost,
         widgets::BtnSize::Sm,
         Some(Msg::Go(Route::Lesson(lesson.id.clone()))),
     );
     let check_btn = widgets::btn(
-        "Самопроверка",
+        tr("Самопроверка"),
         widgets::Btn::Secondary,
         widgets::BtnSize::Sm,
         (lp.checks > 0).then(|| Msg::SelfCheck(lesson.id.clone())),
@@ -923,12 +983,22 @@ fn lesson_row<'a>(
             icons::icon(icons::Kind::Clock, 12.0, p.muted),
             txt({
                 let bd = ctx.lib.lesson_interview(sec, &lesson.id, user).len();
-                let mut m = format!("{minutes} мин · карточки {mastered}/{total}");
+                let mut m = crate::trf!(
+                    "{minutes} мин · карточки {mastered}/{total}",
+                    "{minutes} min · cards {mastered}/{total}"
+                );
                 if !lesson.key_ideas.is_empty() {
-                    m.push_str(&format!(" · главное: {}", lesson.key_ideas.len()));
+                    m.push_str(&crate::trf!(
+                        " · главное: {}",
+                        " · main points: {}",
+                        lesson.key_ideas.len()
+                    ));
                 }
                 if bd > 0 {
-                    m.push_str(&format!(" · вопросы бейт-дина: {bd}"));
+                    m.push_str(&crate::trf!(
+                        " · вопросы бейт-дина: {bd}",
+                        " · beit din questions: {bd}"
+                    ));
                 }
                 m
             })
@@ -949,7 +1019,7 @@ fn lesson_row<'a>(
         .align_y(Alignment::Center);
     if let Some(min_level) = lesson.min_level {
         if min_level != crate::storage::Level::Reform {
-            content = content.push(widgets::tag(content::level_info(min_level).short));
+            content = content.push(widgets::tag(tr(content::level_info(min_level).short)));
         }
     }
 
@@ -981,12 +1051,12 @@ fn lesson_row<'a>(
 /// «Не найдено» / «Раздел закрыт» view (§0.3, §4).
 fn not_found<'a>(message: &'a str, locked: bool, p: theme::Palette) -> Element<'a, Msg> {
     column![
-        widgets::back_button("Уроки", Msg::Go(Route::Map)),
+        widgets::back_button(tr("Уроки"), Msg::Go(Route::Map)),
         widgets::heading(
             if locked {
-                "Раздел закрыт"
+                tr("Раздел закрыт")
             } else {
-                "Не найдено"
+                tr("Не найдено")
             },
             1
         ),
@@ -995,7 +1065,7 @@ fn not_found<'a>(message: &'a str, locked: bool, p: theme::Palette) -> Element<'
                 icons::icon(icons::Kind::StarDavid, 56.0, p.gold),
                 txt(message).size(theme::text::BODY).color(p.text),
                 widgets::btn(
-                    "К урокам",
+                    tr("К урокам"),
                     widgets::Btn::Primary,
                     widgets::BtnSize::Lg,
                     Some(Msg::Go(Route::Map)),

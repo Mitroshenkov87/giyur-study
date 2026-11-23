@@ -3,8 +3,7 @@
 //!
 //! The base outline is the whole of the Land now under Jewish sovereignty
 //! and historic settlement west of the Jordan — Judea, Samaria, the Golan,
-//! Aza and a united Jerusalem — drawn as a single polygon, with no Green
-//! Line and no carve-outs. The «Границы по Торе» layer adds the promised
+//! Aza and a united Jerusalem — drawn as one united, indivisible land. The «Границы по Торе» layer adds the promised
 //! extent (Bereshit 15:18, Devarim 11:24) and the Canaan bounds of
 //! Bamidbar 34. Tribal allotments follow Yehoshua 13–19 as a schematic
 //! teaching overlay, not a surveyed cadastre.
@@ -623,7 +622,7 @@ pub const PLACES: &[Place] = &[
         capital: true,
         dx: 0.0,
         dy: 0.03,
-        text: "Вечная и неделимая столица еврейского народа. Здесь стояли Первый и Второй Храм, здесь Западная стена — Котель, остаток ограды Храмовой горы. Город не делится: это один Иерусалим, Йерушалаим.",
+        text: "Вечная и неделимая столица еврейского народа. Здесь стояли Первый и Второй Храм, здесь Западная стена — Котель, остаток ограды Храмовой горы. Это единый Иерусалим, Йерушалаим.",
         lesson: Some(("prazdniki-6", "Посты и памятные дни")),
     },
     Place {
@@ -777,7 +776,7 @@ pub const PLACES: &[Place] = &[
         capital: false,
         dx: -0.12,
         dy: 0.02,
-        text: "Аза — часть Земли: в наделе Йеhуды названы «Аза, её города и селения, до ручья Египта» (Йеhошуа 15:47). Это не отдельная страна и не «вырезанный» кусок, а южное приморье той же Эрец-Исраэль.",
+        text: "Аза — южное приморье единой Эрец-Исраэль: в наделе Йеhуды названы «Аза, её города и селения, до ручья Египта» (Йеhошуа 15:47).",
         lesson: Some(("osnovy-5", "Краткая история еврейского народа")),
     },
     Place {

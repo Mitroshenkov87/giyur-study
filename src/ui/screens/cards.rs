@@ -13,6 +13,7 @@ use iced::{
 
 use crate::content::{self, Differs};
 use crate::game;
+use crate::i18n::tr;
 use crate::srs;
 use crate::ui::app::{Action, Ctx, Deck, Route};
 use crate::ui::fonts::{SANS, SANS_BOLD, SERIF_BOLD};
@@ -108,11 +109,11 @@ impl Screen {
             title: String::new(),
             kicker: String::new(),
             back: Route::Map,
-            back_label: "Уроки".into(),
+            back_label: tr("Уроки").into(),
             word: "уроке",
-            done_label: "Готово".into(),
-            done_text: "Колода пройдена!".into(),
-            empty_text: "Карточек нет.".into(),
+            done_label: tr("Готово").into(),
+            done_text: tr("Колода пройдена!").into(),
+            empty_text: tr("Карточек нет.").into(),
             guard: None,
             queue: Vec::new(),
             total: 0,
@@ -134,12 +135,12 @@ impl Screen {
         match deck {
             Deck::Lesson(id) => match ctx.lib.lesson(&id) {
                 Some((lesson, sec)) if ctx.lib.is_unlocked(sec, &ctx.state) => {
-                    s.title = "Карточки урока".into();
+                    s.title = tr("Карточки урока").into();
                     s.kicker = lesson.title.clone().unwrap_or_default();
                     s.back = Route::Section(sec.id.clone());
                     s.back_label = sec.title.clone();
                     s.word = "уроке";
-                    s.done_label = "К разделу".into();
+                    s.done_label = tr("К разделу").into();
                     s.queue = ctx
                         .lib
                         .lesson_cards(lesson, user)
@@ -154,12 +155,12 @@ impl Screen {
             },
             Deck::Section(id) => match ctx.lib.section(&id) {
                 Some(sec) if sec.available && ctx.lib.is_unlocked(sec, &ctx.state) => {
-                    s.title = "Карточки раздела".into();
+                    s.title = tr("Карточки раздела").into();
                     s.kicker = sec.title.clone();
                     s.back = Route::Section(sec.id.clone());
                     s.back_label = sec.title.clone();
                     s.word = "разделе";
-                    s.done_label = "К разделу".into();
+                    s.done_label = tr("К разделу").into();
                     let all = ctx.lib.section_cards(sec, user);
                     let today = ctx.today();
                     // Due (shuffled) → new → rest (shuffled), js/ui/cards.js.
@@ -193,16 +194,15 @@ impl Screen {
                 _ => s.guard = Some(Guard::SectionLocked),
             },
             Deck::Review => {
-                s.title = "Карточки на сегодня".into();
+                s.title = tr("Карточки на сегодня").into();
                 s.kicker = util::fmt_date(ctx.today());
                 s.back = Route::Map;
-                s.back_label = "Уроки".into();
+                s.back_label = tr("Уроки").into();
                 s.word = "повторении";
-                s.done_label = "К урокам".into();
-                s.done_text = "Повторение на сегодня завершено!".into();
-                s.empty_text = "На сегодня повторять нечего. Изучайте новые карточки \
-                                в разделах — они появятся здесь в нужный день."
-                    .into();
+                s.done_label = tr("К урокам").into();
+                s.done_text = tr("Повторение на сегодня завершено!").into();
+                s.empty_text = tr("На сегодня повторять нечего. Изучайте новые карточки в разделах — они появятся здесь в нужный день.")
+                .into();
                 let due: Vec<String> = ctx
                     .lib
                     .due_cards(&ctx.state, ctx.today())
@@ -254,9 +254,9 @@ impl Screen {
                 } else {
                     self.note = Some((
                         if knew {
-                            "Принято".to_string()
+                            tr("Принято").to_string()
                         } else {
-                            "Завтра покажем снова".to_string()
+                            tr("Завтра покажем снова").to_string()
                         },
                         knew,
                     ));
@@ -307,12 +307,15 @@ impl Screen {
             0.0
         };
         self.sum_pct = format!("{}%", (pct * 100.0).round() as i64);
-        self.sum_counts = format!(
+        self.sum_counts = crate::trf!(
             "Вспомнил: **{}** · Не вспомнил: **{}**",
-            self.knew, self.missed
+            "Recalled: **{}** · Missed: **{}**",
+            self.knew,
+            self.missed
         );
-        self.sum_xp = format!(
+        self.sum_xp = crate::trf!(
             "+{} XP за колоду · сегодня {} / {} XP",
+            "+{} XP for the deck · today {} / {} XP",
             self.gained,
             game::today_xp(&ctx.state, ctx.today()),
             game::goal(&ctx.state)
@@ -366,13 +369,13 @@ impl Screen {
                 .into()
         };
         let marker: Element<Msg> = if entry.repeat {
-            widgets::tag("повтор")
+            widgets::tag(tr("повтор"))
         } else {
             let level = ctx.state.cards.get(&entry.id).map(|c| c.l).unwrap_or(0);
             level_dots(level)
         };
         let help = button(
-            txt("Как это работает?")
+            txt(tr("Как это работает?"))
                 .size(theme::text::SMALL - 1.5)
                 .color(p.muted),
         )
@@ -394,7 +397,7 @@ impl Screen {
         // Flip card: front until clicked, back with differs notes after.
         let face: Element<Msg> = if self.flipped {
             let mut back = Column::new().spacing(10).width(Length::Fill);
-            back = back.push(widgets::kicker("Ответ"));
+            back = back.push(widgets::kicker(tr("Ответ")));
             back = back.push(
                 txt(&card.back)
                     .size(theme::text::BODY * 1.12)
@@ -407,7 +410,7 @@ impl Screen {
             }
             flip_container(back.into(), true)
         } else {
-            let hint = txt("Вспомните ответ и нажмите, чтобы перевернуть")
+            let hint = txt(tr("Вспомните ответ и нажмите, чтобы перевернуть"))
                 .size(theme::text::SMALL)
                 .color(p.muted)
                 .align_x(iced::alignment::Horizontal::Center)
@@ -441,14 +444,14 @@ impl Screen {
         // Grade buttons, disabled until the card is flipped.
         let knew = widgets::btn_icon(
             grade_key("1"),
-            "Вспомнил",
+            tr("Вспомнил"),
             widgets::Btn::Primary,
             widgets::BtnSize::Lg,
             self.flipped.then_some(Msg::Grade(true)),
         );
         let miss = widgets::btn_icon(
             grade_key("2"),
-            "Не вспомнил",
+            tr("Не вспомнил"),
             widgets::Btn::Secondary,
             widgets::BtnSize::Lg,
             self.flipped.then_some(Msg::Grade(false)),
@@ -478,13 +481,21 @@ impl Screen {
             0.0
         };
 
-        let explain_text = format!(
-            "Карточки, которые вы не вспомнили, покажем ещё раз в этом {}, а завтра \
+        let word = self.word;
+        let word_en = match word {
+            "уроке" => "lesson",
+            "разделе" => "section",
+            "повторении" => "review",
+            _ => "session",
+        };
+        let explain_text = crate::trf!(
+            "Карточки, которые вы не вспомнили, покажем ещё раз в этом {word}, а завтра \
              они снова в работе. Остальные — через 1, 3, 7, 14 и 30 дней.",
-            self.word
+            "Cards you didn't recall will be shown again in this {word_en}, and tomorrow \
+             they're back in the queue. The rest return in 1, 3, 7, 14, and 30 days."
         );
 
-        let ring = done_ring(pct, &self.sum_pct, "Вспомнил");
+        let ring = done_ring(pct, &self.sum_pct, tr("Вспомнил"));
         let counts = widgets::rich_paragraph(&self.sum_counts);
         let xp_line = txt(&self.sum_xp)
             .size(theme::text::BODY)
@@ -505,7 +516,7 @@ impl Screen {
                 Some(Msg::Go(self.back.clone())),
             ),
             widgets::btn(
-                "К урокам",
+                tr("К урокам"),
                 widgets::Btn::Ghost,
                 widgets::BtnSize::Lg,
                 Some(Msg::Go(Route::Map)),
@@ -692,7 +703,7 @@ fn help_view<'a>() -> Element<'a, Msg> {
                     .size(theme::text::BODY)
                     .font(SANS_BOLD)
                     .color(p.gold),
-                widgets::rich_paragraph(item),
+                widgets::rich_paragraph(tr(item)),
             ]
             .spacing(10)
             .align_y(Alignment::Start),
@@ -700,12 +711,12 @@ fn help_view<'a>() -> Element<'a, Msg> {
     }
     widgets::card(
         column![
-            widgets::heading("Как это работает?", 3),
+            widgets::heading(tr("Как это работает?"), 3),
             list,
             row![
                 Space::new().width(Length::Fill),
                 widgets::btn(
-                    "Понятно, начнём",
+                    tr("Понятно, начнём"),
                     widgets::Btn::Primary,
                     widgets::BtnSize::Lg,
                     Some(Msg::HelpOk),
@@ -733,7 +744,7 @@ fn empty_view<'a>(empty_text: &'a str) -> Element<'a, Msg> {
                 .align_x(iced::alignment::Horizontal::Center)
                 .width(Length::Fill),
             widgets::btn(
-                "К урокам",
+                tr("К урокам"),
                 widgets::Btn::Primary,
                 widgets::BtnSize::Lg,
                 Some(Msg::Go(Route::Map)),
@@ -749,11 +760,11 @@ fn empty_view<'a>(empty_text: &'a str) -> Element<'a, Msg> {
 fn not_found_view(guard: &Guard) -> Element<'static, Msg> {
     let p = palette();
     let (title, message) = match guard {
-        Guard::LessonNotFound => ("Не найдено", "Урок не найден."),
-        Guard::SectionLocked => ("Раздел закрыт", "Раздел закрыт или не найден."),
+        Guard::LessonNotFound => (tr("Не найдено"), tr("Урок не найден.")),
+        Guard::SectionLocked => (tr("Раздел закрыт"), tr("Раздел закрыт или не найден.")),
     };
     column![
-        widgets::back_button("Уроки", Msg::Go(Route::Map)),
+        widgets::back_button(tr("Уроки"), Msg::Go(Route::Map)),
         widgets::heading(title, 1),
         widgets::card(
             column![
@@ -767,7 +778,7 @@ fn not_found_view(guard: &Guard) -> Element<'static, Msg> {
                     .align_x(iced::alignment::Horizontal::Center)
                     .width(Length::Fill),
                 widgets::btn(
-                    "К урокам",
+                    tr("К урокам"),
                     widgets::Btn::Primary,
                     widgets::BtnSize::Lg,
                     Some(Msg::Go(Route::Map)),
@@ -801,7 +812,7 @@ fn differs_view<'a>(
     let mut col = Column::new().spacing(8).width(Length::Fill);
     for d in &mine {
         col = col.push(widgets::differs_note(
-            content::level_info(d.level).differs_label,
+            tr(content::level_info(d.level).differs_label),
             &d.text,
         ));
     }
@@ -810,7 +821,7 @@ fn differs_view<'a>(
         *group += 1;
         let expanded = open.contains(&id);
         let summary = button(
-            txt("Как в других течениях")
+            txt(tr("Как в других течениях"))
                 .size(theme::text::SMALL)
                 .font(SANS_BOLD)
                 .color(p.muted),
@@ -822,7 +833,7 @@ fn differs_view<'a>(
         if expanded {
             for d in &other {
                 col = col.push(widgets::differs_note(
-                    content::level_info(d.level).differs_label,
+                    tr(content::level_info(d.level).differs_label),
                     &d.text,
                 ));
             }

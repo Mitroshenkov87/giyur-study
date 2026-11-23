@@ -1,0 +1,968 @@
+{
+ "days": [
+  {
+   "id": "shabbat",
+   "name_he": "שבת",
+   "meaning": "Shabbat is the seventh day of the week, a day of rest and holiness. The Torah connects it with two events: G-d completed the creation of the world and rested on the seventh day, and the people of Israel went out from slavery in Egypt to freedom. Shabbat begins on Friday before sunset and ends on Saturday when the stars appear. It is a time for prayer, family, Torah and rest from everyday concerns.",
+   "customs": [
+    "Shabbat candles are lit on Friday before sunset.",
+    "In the evening and during the day, kiddush is made over wine and festive meals are held with two challot.",
+    "One refrains from the 39 categories of forbidden work (melachot).",
+    "People pray in the synagogue and read the weekly Torah portion.",
+    "Shabbat is concluded with havdalah, a blessing over wine, spices and a candle."
+   ],
+   "idea": "The Torah says both “Remember the Sabbath day” and “Keep the Sabbath day”; the Sages teach that both words were spoken as one (Shevuot 20b). To remember means to fill the day with meaning; to keep means to guard it from the weekday.",
+   "movements": {
+    "reform": "The Reform movement places the spirit of Shabbat at the center: rest, family, prayer, and setting aside weekday work and shopping. The 39 melachot are studied as a language of the tradition but are not accepted as a binding code; driving to services and using electric light are usually permitted. The Friday evening service is often the main service of the week.",
+    "conservative": "The Conservative movement considers Shabbat observance obligatory, but many of its communities permit, for example, driving to the synagogue.",
+    "orthodox": "Orthodox Judaism observes all the prohibitions of Shabbat according to halacha, including all 39 categories of work."
+   },
+   "lessons": [
+    "shabbat-1",
+    "shabbat-4"
+   ]
+  },
+  {
+   "id": "erev-shabbat",
+   "name_he": "ערב שבת",
+   "meaning": "Erev Shabbat is Friday, the day of preparation for the holy day. Everything that may not be done on Shabbat must be finished before it begins: cooking the food, tidying the house, bathing and putting on festive clothes. The preparation is also part of the mitzvah of honoring Shabbat.",
+   "customs": [
+    "Shabbat food is cooked in advance, and hot dishes are left on the flame or hotplate according to the rules of halacha.",
+    "Challot are baked or bought; many have the custom of separating challah from the dough.",
+    "People give tzedakah before Shabbat begins.",
+    "Candles are lit before sunset (in many communities, about 18 minutes before).",
+    "In the evening, Shabbat is welcomed with the Kabbalat Shabbat prayers."
+   ],
+   "idea": "The Sages say: “One who toiled on Erev Shabbat will eat on Shabbat” (Avodah Zarah 3a). Holy time requires preparation, both for Shabbat and in life.",
+   "lessons": [
+    "shabbat-2",
+    "shabbat-3"
+   ]
+  },
+  {
+   "id": "rosh-hashana",
+   "name_he": "ראש השנה",
+   "meaning": "Rosh Hashanah is the Jewish New Year, on 1 and 2 Tishrei. According to tradition, the first human being was created on this day, and on this day G-d judges the whole world. It is the day when we once again acknowledge the Almighty as King and reflect on what our year will be like. Rosh Hashanah is celebrated for two days both in Israel and outside it.",
+   "customs": [
+    "People hear the sounds of the shofar in the synagogue (except on a day that falls on Shabbat).",
+    "On the festive evening, people eat an apple with honey and other symbolic foods for a sweet and good year.",
+    "In the Musaf prayer, the sections on G-d's kingship, remembrance and the shofar are recited.",
+    "Many go to a body of water for tashlich, a prayer that our sins be “cast into the depths of the sea.”",
+    "No work is done, as on Shabbat, but cooking food on the festival is permitted."
+   ],
+   "idea": "The Rambam writes that the sound of the shofar seems to say: “Awake, you sleepers, from your sleep!” (Laws of Teshuvah 3:4). Rosh Hashanah is not only a festival but also an awakening.",
+   "movements": {
+    "reform": "Many Reform communities in the Diaspora celebrate Rosh Hashanah for one day, following the Israeli calendar, with a full festival service and the shofar. The meaning of the day — judgment, remembrance and the beginning of the Ten Days of Repentance — is preserved; the second Diaspora day is usually not added. Check the custom of your synagogue.",
+    "conservative": "Conservative communities celebrate two days with the full festival liturgy.",
+    "orthodox": "Orthodox communities celebrate two days and strictly observe the laws of the festival."
+   },
+   "lessons": [
+    "prazdniki-2"
+   ]
+  },
+  {
+   "id": "erev-rosh-hashana",
+   "name_he": "ערב ראש השנה",
+   "meaning": "Erev Rosh Hashanah is the last day of the outgoing year. It is a time to take stock, ask forgiveness from those close to you and prepare for the Day of Judgment. The festival begins in the evening, at sunset.",
+   "customs": [
+    "In the morning, selichot — penitential prayers — are recited.",
+    "People perform hatarat nedarim, the annulment of vows before three men.",
+    "The shofar is not blown on this day, to separate the month of Elul from the festival.",
+    "Many visit the graves of loved ones and of the righteous, and some men immerse in a mikveh.",
+    "In the evening, festival candles are lit and the shehecheyanu blessing is recited."
+   ],
+   "idea": "The end of the year is an opportunity to close it in peace. The Sages asked: “Let the year end with its curses, and let the year begin with its blessings” (Megillah 31b).",
+   "lessons": [
+    "prazdniki-2"
+   ]
+  },
+  {
+   "id": "aseret-yemei-teshuva",
+   "name_he": "עשרת ימי תשובה",
+   "meaning": "The Ten Days of Repentance are the period from Rosh Hashanah to Yom Kippur. According to tradition, a person's judgment begins on Rosh Hashanah and is sealed on Yom Kippur. In these days it is especially easy to return to G-d, to correct mistakes and to make peace with people.",
+   "customs": [
+    "Special words are added to the Amidah: “Remember us for life” and “the holy King.”",
+    "The prayer “Avinu Malkeinu” — “Our Father, our King” — is recited.",
+    "Many rise early for selichot.",
+    "People ask forgiveness from those they have hurt.",
+    "People try to be stricter with themselves in deeds and words and to give more tzedakah."
+   ],
+   "idea": "The prophet Yeshayahu says: “Seek G-d while He may be found” (55:6); the Sages explain that this was said precisely about these ten days (Rosh Hashanah 18a).",
+   "lessons": [
+    "prazdniki-2",
+    "etika-4"
+   ]
+  },
+  {
+   "id": "shabbat-shuva",
+   "name_he": "שבת שובה",
+   "meaning": "Shabbat Shuvah is the Shabbat between Rosh Hashanah and Yom Kippur. It takes its name from the first words of the haftarah from the book of the prophet Hoshea: “Return, O Israel, to your G-d” (14:2). It is a Shabbat of return and hope.",
+   "customs": [
+    "A special haftarah about repentance is read.",
+    "By tradition, the community's rabbi gives a sermon about teshuvah.",
+    "People keep the serious and attentive mood of the Ten Days of Repentance without losing the joy of Shabbat."
+   ],
+   "idea": "Teshuvah is a return to your true self. The prophet promises: the way back is always open, and G-d waits for each person.",
+   "lessons": [
+    "prazdniki-2"
+   ]
+  },
+  {
+   "id": "tzom-gedalia",
+   "name_he": "צום גדליה",
+   "meaning": "The Fast of Gedaliah falls on 3 Tishrei, the day after Rosh Hashanah. It commemorates the murder of Gedaliah ben Achikam, the governor of Judea after the destruction of the First Temple. After his death the last Jews left Eretz Israel, and the hope of restoring life there faded for a time.",
+   "customs": [
+    "People fast from dawn until the stars come out.",
+    "Selichot and special passages for the fast are recited in the prayers.",
+    "The Torah reading is the passage about forgiveness after the golden calf."
+   ],
+   "idea": "The prophet Zechariah calls this day “the fast of the seventh month” (8:19). Discord within the people can destroy more than an external enemy.",
+   "fast_note": "Minor fast: adults fast (girls from age 12, boys from age 13) from dawn until the stars come out. Eating and drinking are forbidden. Pregnant and nursing women and the sick are usually exempt — be sure to consult a rabbi. If 3 Tishrei falls on Shabbat, the fast is moved to Sunday. The exact times when the fast begins and ends depend on the community and the location.",
+   "movements": {
+    "reform": "In most Reform communities, the minor Fast of Gedaliah is not part of the obligatory calendar. The day may be mentioned in study as a memorial to the killing of the governor of Judea and to the collapse that followed the destruction of the First Temple. A personal fast remains the individual's choice rather than a communal norm.",
+    "conservative": "The Conservative movement recognizes this fast, although many of its members do not always fast.",
+    "orthodox": "In Orthodox communities the fast is obligatory."
+   },
+   "lessons": [
+    "prazdniki-6"
+   ]
+  },
+  {
+   "id": "erev-yom-kippur",
+   "name_he": "ערב יום כיפור",
+   "meaning": "Erev Yom Kippur is 9 Tishrei. On this day there is a special mitzvah to eat and drink in order to gather strength before the fast. It is also the last chance to ask people for forgiveness: Yom Kippur atones for sins before G-d, but sins against another person are forgiven only if that person has forgiven.",
+   "customs": [
+    "People eat festive meals, and before sunset the final meal before the fast.",
+    "People ask forgiveness from family, friends and colleagues.",
+    "People give tzedakah; some communities have the custom of kaparot.",
+    "Many men immerse in a mikveh.",
+    "Candles are lit before sunset, and in the evening “Kol Nidrei” is heard in the synagogue."
+   ],
+   "idea": "The Mishnah teaches: “For sins between a person and their fellow, Yom Kippur does not atone until the person has appeased their fellow” (Yoma 8:9).",
+   "lessons": [
+    "prazdniki-2",
+    "etika-2"
+   ]
+  },
+  {
+   "id": "yom-kippur",
+   "name_he": "יום כיפור",
+   "meaning": "Yom Kippur, the Day of Atonement, falls on 10 Tishrei and is the holiest day of the year. It is a day of fasting, prayer and teshuvah, when G-d forgives those who sincerely repent. In ancient times, on this day the High Priest entered the Holy of Holies of the Temple. Today every Jew spends this day in prayer, as if standing before the Almighty.",
+   "customs": [
+    "People fast for about 25 hours and do no work at all, as on Shabbat.",
+    "Many wear white clothing.",
+    "Five services are prayed, from “Kol Nidrei” in the evening to Ne'ilah at sunset.",
+    "Vidui, the confession of sins, is recited several times.",
+    "At the end of the day the shofar is blown."
+   ],
+   "idea": "The Torah says: “For on this day He will atone for you, to purify you from all your sins; before G-d you shall be purified” (Vayikra 16:30).",
+   "fast_note": "Major fast: adults fast (girls from age 12, boys from age 13) from sunset the evening before until the stars come out the next day. It is forbidden to eat, drink, wash, anoint the body, wear leather shoes or have marital relations; all work is also forbidden, as on Shabbat. The sick and pregnant or nursing women should consult a rabbi and a doctor in advance: when life is in danger, breaking the fast is not only permitted but required. Children under this age are not obligated to fast. The exact times depend on the community and the location.",
+   "movements": {
+    "reform": "In Reform communities, Yom Kippur is the central day of the year: a long service, repentance, remembrance. Many keep a full fast, but the formal obligation to fast is understood as a personal commitment rather than a legal sanction. The liturgy may be shorter than the traditional machzor; in North America Mishkan HaNefesh is often used.",
+    "conservative": "The Conservative movement requires a full fast and observance of all the laws of the day, preserving the complete liturgy.",
+    "orthodox": "Orthodox Judaism strictly observes all five prohibitions of the day and all the prohibitions of work."
+   },
+   "lessons": [
+    "prazdniki-2"
+   ]
+  },
+  {
+   "id": "erev-sukkot",
+   "name_he": "ערב סוכות",
+   "meaning": "Erev Sukkot is 14 Tishrei. It is a day of final preparations: the sukkah must be built and decorated, and the four species must be bought and checked. The festival begins in the evening.",
+   "customs": [
+    "People finish building and decorating the sukkah; many start building it right after Yom Kippur.",
+    "The etrog, lulav, myrtle and willow are checked.",
+    "Festive food is prepared and candles are lit before sunset.",
+    "Outside Israel, if the festival falls on Thursday and Friday, an eruv tavshilin is made."
+   ],
+   "idea": "Right after the days of judgment comes the mitzvah of joy. Whoever builds a sukkah moves from repentance to action.",
+   "lessons": [
+    "prazdniki-3"
+   ]
+  },
+  {
+   "id": "sukkot",
+   "name_he": "סוכות",
+   "meaning": "Sukkot, the Festival of Booths, begins on 15 Tishrei and lasts seven days. We live in the sukkah in memory of how G-d protected the people of Israel in the wilderness after the Exodus from Egypt. It is also a harvest festival and “the season of our rejoicing.” The first day is Yom Tov (outside Israel, the first two days).",
+   "customs": [
+    "People eat in the sukkah and, where possible, live in it.",
+    "Every day (except Shabbat) people take the four species — lulav, etrog, myrtle and willow — and recite a blessing over them.",
+    "Hallel is recited, and people circle the synagogue with the Hoshanot prayers.",
+    "People invite into the sukkah the ushpizin, the righteous guests, as well as real guests.",
+    "No work is done on Yom Tov, but cooking food is allowed."
+   ],
+   "idea": "“You shall dwell in booths seven days… so that your generations may know that I made the children of Israel dwell in booths when I brought them out of the land of Egypt” (Vayikra 23:42–43). The fragile booth reminds us: true protection comes from G-d.",
+   "lessons": [
+    "prazdniki-3"
+   ]
+  },
+  {
+   "id": "chol-hamoed-sukkot",
+   "name_he": "חול המועד סוכות",
+   "meaning": "Chol HaMoed Sukkot are the intermediate days of the festival, between the first day (or days) and Shemini Atzeret. They are at once weekdays and festival. Work is limited, and the mitzvot of Sukkot continue.",
+   "customs": [
+    "People continue to eat in the sukkah.",
+    "Every day except Shabbat, people take the four species.",
+    "Hallel and Musaf are recited in the prayers.",
+    "People avoid work that can be postponed and wear festive clothing.",
+    "Many families go on outings and visit friends."
+   ],
+   "idea": "Chol HaMoed teaches us to join the holy and the everyday: even an ordinary day can be filled with festival.",
+   "lessons": [
+    "prazdniki-3"
+   ]
+  },
+  {
+   "id": "hoshana-raba",
+   "name_he": "הושענא רבה",
+   "meaning": "Hoshana Rabbah is the seventh day of Sukkot, 21 Tishrei. According to tradition, on this day the verdict pronounced during the Days of Awe is finally sealed. That is why this day combines the joy of Sukkot with the seriousness of Yom Kippur.",
+   "customs": [
+    "Seven circuits are made around the bimah with the four species.",
+    "A bundle of willow branches (aravot) is beaten on the ground.",
+    "Many stay awake the night before this day and read the book of Devarim and Tehillim.",
+    "People offer the wish “Pitka tava” — “a good note.”"
+   ],
+   "idea": "The willow branch, without taste or fragrance, is a symbol of the simple person. On this day even the simplest service has power.",
+   "lessons": [
+    "prazdniki-3"
+   ]
+  },
+  {
+   "id": "shmini-atzeret",
+   "name_he": "שמיני עצרת",
+   "meaning": "Shemini Atzeret, on 22 Tishrei, is a separate festival immediately after Sukkot. On this day G-d, as it were, asks the people to stay with Him for one more day. In Israel, Shemini Atzeret and Simchat Torah are celebrated on the same day, while outside Israel they are celebrated on two consecutive days.",
+   "customs": [
+    "In the Musaf prayer, people begin to pray for rain.",
+    "The memorial prayer Yizkor is recited.",
+    "Outside Israel, many still eat in the sukkah, but now without the blessing.",
+    "No work is done, as on Yom Tov."
+   ],
+   "idea": "Rashi explains: a king invited his children to a feast and said to them at the end, “It is hard for me to part from you — stay one more day” (Rashi on Bamidbar 29:35).",
+   "lessons": [
+    "prazdniki-3"
+   ]
+  },
+  {
+   "id": "simchat-tora",
+   "name_he": "שמחת תורה",
+   "meaning": "Simchat Torah is the Rejoicing of the Torah. On this day the yearly Torah reading is completed and immediately begun again with the book of Bereshit. It is a celebration of love for the Torah, which never ends. In Israel it coincides with Shemini Atzeret; outside Israel it falls on 23 Tishrei.",
+   "customs": [
+    "People dance with the Torah scrolls during hakafot — seven circuits around the bimah.",
+    "Everyone, even the children, is called up to the Torah.",
+    "Special honors are given: “Chatan Torah” and “Chatan Bereshit.”",
+    "The end of the book of Devarim and the beginning of the book of Bereshit are read."
+   ],
+   "idea": "The Torah is a circle without end: as we complete it, we immediately begin again, because the study of Torah never ends.",
+   "movements": {
+    "reform": "Reform communities usually celebrate Simchat Torah on the same day as Shemini Atzeret, following the Israeli calendar. Women and men dance with the scrolls and are called up to the Torah equally; children beginning their studies are often honored separately. The joy of completing the reading cycle and beginning it anew is shared by all.",
+    "conservative": "In many Conservative communities, women take part in the hakafot and receive aliyot to the Torah.",
+    "orthodox": "In Orthodox communities, men dance with the scrolls and women celebrate in the women's section; outside Israel the festival is separate, on the second day."
+   },
+   "lessons": [
+    "prazdniki-3",
+    "osnovy-2"
+   ]
+  },
+  {
+   "id": "rosh-chodesh",
+   "name_he": "ראש חודש",
+   "meaning": "Rosh Chodesh is the beginning of a new Jewish month, set by the appearance of the new moon. It lasts one or two days. It is a minor festival that reminds us that time can be renewed and sanctified.",
+   "customs": [
+    "“Ya'aleh v'yavo” is added to the prayers, and half Hallel and Musaf are recited.",
+    "A Torah passage about the offerings of Rosh Chodesh is read.",
+    "Tachanun is not recited.",
+    "There is a custom, especially among women, to limit work on this day, and also to hold a festive meal.",
+    "On the Shabbat before the new month, its arrival is announced in the synagogue."
+   ],
+   "idea": "The first commandment given to the people of Israel as a whole: “This month shall be for you the beginning of months” (Shemot 12:2). The moon wanes and grows again — so too can the people and each person be renewed.",
+   "lessons": [
+    "prazdniki-1"
+   ]
+  },
+  {
+   "id": "erev-chanuka",
+   "name_he": "ערב חנוכה",
+   "meaning": "Erev Chanukah is 24 Kislev. In the evening, as 25 Kislev begins, the first Chanukah candle is lit. It is the beginning of eight days of light.",
+   "customs": [
+    "In the evening, the first candle of the chanukiah is lit, along with the shamash, the helper candle.",
+    "On the first evening, three blessings are recited, including shehecheyanu.",
+    "The chanukiah is placed by a window or by the door so that the miracle can be seen from outside.",
+    "If Erev Chanukah falls on a Friday, the Chanukah candles are lit before the Shabbat candles."
+   ],
+   "idea": "Even a small flame drives away darkness. The first Chanukah candle is the start of a path on which the light grows each day.",
+   "lessons": [
+    "prazdniki-5"
+   ]
+  },
+  {
+   "id": "chanuka",
+   "name_he": "חנוכה",
+   "meaning": "Chanukah, the festival of light, begins on 25 Kislev and lasts eight days. It commemorates the victory of the Hasmoneans (Maccabees) over the Seleucid Greeks, who wanted to forbid Jews from living by the Torah. The Hasmoneans purified the Temple, and according to tradition a small jar of pure oil burned for eight days. Working on Chanukah is permitted.",
+   "customs": [
+    "Each evening candles are lit, adding one more each time: one on the first evening, eight on the last.",
+    "“Al HaNissim” is added to the prayers, and the full Hallel is recited.",
+    "People eat foods fried in oil: latkes and sufganiyot doughnuts.",
+    "Children play with a spinning top — the sevivon (dreidel).",
+    "Many do not work while the candles are burning."
+   ],
+   "idea": "The School of Hillel teaches to add a candle each evening, because “we ascend in holiness and do not descend” (Shabbat 21b). The light of Torah grows when we add to it every day.",
+   "lessons": [
+    "prazdniki-5"
+   ]
+  },
+  {
+   "id": "asara-betevet",
+   "name_he": "עשרה בטבת",
+   "meaning": "The Tenth of Tevet is a fast commemorating the start of the siege of Jerusalem by the Babylonian king Nebuchadnezzar. This siege led to the destruction of the First Temple. In Israel this day has also been declared the day of the general kaddish — remembering those who perished whose date of death is unknown, including victims of the Shoah.",
+   "customs": [
+    "People fast from dawn until the stars come out.",
+    "Selichot and special passages for the fast are recited.",
+    "Many recite kaddish for those who perished in the Shoah."
+   ],
+   "idea": "The destruction began not with fire but with a siege. The Sages teach us to pay attention to the beginning of a calamity — and to the beginning of repair.",
+   "fast_note": "Minor fast: adults fast (girls from age 12, boys from age 13) from dawn until the stars come out. Eating and drinking are forbidden. Pregnant and nursing women and the sick are usually exempt — consult a rabbi. This is the only minor fast that can fall on a Friday; in that case people fast until the stars come out, when Shabbat has already begun. The exact times depend on the community and the location.",
+   "movements": {
+    "reform": "In most Reform communities, the Tenth of Tevet is not observed as a communal fast. The day may be remembered in study as the beginning of the siege of Jerusalem; some communities connect Tevet with the memory of the Shoah differently from the way some Haredi communities mark 10 Tevet. A personal fast is the individual's choice.",
+    "conservative": "The Conservative movement recognizes the fast, although its observance depends largely on the community.",
+    "orthodox": "Orthodox communities observe the fast, and in many Haredi communities this day is the main day of remembrance for the victims of the Shoah."
+   },
+   "lessons": [
+    "prazdniki-6"
+   ]
+  },
+  {
+   "id": "tu-bishvat",
+   "name_he": "ט״ו בשבט",
+   "meaning": "Tu BiShvat, 15 Shevat, is the New Year for Trees. The Mishnah calls this day the beginning of the year for trees: from it the age of trees is counted for the laws concerning fruit (Rosh Hashanah 1:1). In Eretz Israel, nature awakens at this time.",
+   "customs": [
+    "People eat fruit, especially the seven species for which Eretz Israel is praised.",
+    "Many hold a Tu BiShvat seder, a custom going back to the Kabbalists of Tzfat.",
+    "People plant trees, especially in Israel.",
+    "Tachanun is not recited."
+   ],
+   "idea": "The Torah says: “For man is a tree of the field” (Devarim 20:19). Like a tree, a person grows, puts down roots and bears fruit.",
+   "lessons": [
+    "prazdniki-1"
+   ]
+  },
+  {
+   "id": "shabbat-shekalim",
+   "name_he": "שבת שקלים",
+   "meaning": "Shabbat Shekalim is the first of the four special Shabbatot before Pesach. It falls before Rosh Chodesh Adar or on Rosh Chodesh itself. On this Shabbat the passage about the half-shekel that every Jew gave for the needs of the Temple is read (Shemot 30:11–16).",
+   "customs": [
+    "An additional Torah passage about the half-shekel is read.",
+    "A special haftarah about collecting funds for the Temple is read.",
+    "Before Purim, many give machatzit hashekel — a symbolic half-coin for tzedakah."
+   ],
+   "idea": "Everyone gave exactly half a shekel, rich and poor alike. Every Jew matters, and only together are we whole.",
+   "lessons": [
+    "etika-3"
+   ]
+  },
+  {
+   "id": "shabbat-zachor",
+   "name_he": "שבת זכור",
+   "meaning": "Shabbat Zachor is the Shabbat before Purim. On this day the commandment to remember what Amalek did is read — Amalek, who attacked the people of Israel in the wilderness (Devarim 25:17–19). By tradition, Haman of the Purim story was a descendant of Amalek.",
+   "customs": [
+    "An additional portion, Zachor (“Remember”), is read.",
+    "Many consider hearing this reading an obligation; women, too, often come to synagogue.",
+    "The haftarah tells of King Shaul and Agag, king of Amalek."
+   ],
+   "idea": "To remember evil does not mean to live in hatred. It means not forgetting what cruelty toward the weak leads to.",
+   "lessons": [
+    "prazdniki-5"
+   ]
+  },
+  {
+   "id": "taanit-ester",
+   "name_he": "תענית אסתר",
+   "meaning": "The Fast of Esther — 13 Adar, the eve of Purim. It recalls the fast of Esther and of the entire people before she went to the king to plead for the rescue of the Jews. It is also connected with the fast on the day of the battle against the enemies.",
+   "customs": [
+    "People fast from dawn until the stars come out.",
+    "Selichot and special passages for the fast are recited.",
+    "Before Purim, people give machatzit ha-shekel (the half-shekel) as tzedakah."
+   ],
+   "idea": "Esther said: “Go, gather all the Jews… and fast for me” (Esther 4:16). Before a great undertaking, the people unite in prayer.",
+   "fast_note": "Minor fast: adults fast (girls from age 12, boys from age 13) from dawn until the stars come out. Eating and drinking are forbidden. Pregnant and nursing women and the sick are exempt; this fast is considered a lighter one, and there are leniencies for those who find it hard — consult a rabbi. If Purim falls on Sunday, the fast is moved to the preceding Thursday. The exact times depend on the community and the locality.",
+   "movements": {
+    "reform": "In most Reform communities the Fast of Esther is not kept as a communal norm, though the story of Esther and the meaning of preparing for Purim are studied and celebrated. Those who wish to fast on this day do so as a personal practice.",
+    "conservative": "The Conservative movement recognizes the fast, but its observance largely depends on the community.",
+    "orthodox": "In Orthodox communities the fast is obligatory."
+   },
+   "lessons": [
+    "prazdniki-5",
+    "prazdniki-6"
+   ]
+  },
+  {
+   "id": "purim-katan",
+   "name_he": "פורים קטן",
+   "meaning": "Purim Katan — “minor Purim,” 14 Adar I in a leap year. The real Purim in such a year is celebrated in Adar II. But even in Adar I, Purim day is marked with a little joy.",
+   "customs": [
+    "Tachanun is not recited, and eulogies are not delivered.",
+    "The Megillah is not read, and the other mitzvot of Purim are not performed.",
+    "Many hold a small festive meal."
+   ],
+   "idea": "The joy of Adar is not limited to a single day. Even without special mitzvot, one can find a reason to thank G-d.",
+   "lessons": [
+    "prazdniki-5"
+   ]
+  },
+  {
+   "id": "purim",
+   "name_he": "פורים",
+   "meaning": "Purim — 14 Adar (in a leap year, 14 Adar II). It recalls the rescue of the Jews of the Persian Empire from the destruction planned by Haman. The miracle came about through Esther and Mordechai — outwardly, it seems, by natural means. This is the merriest day of the Jewish year.",
+   "customs": [
+    "The reading of Megillat Esther is heard in the evening and in the morning.",
+    "People send friends mishloach manot — at least two kinds of food to one person.",
+    "They give matanot la-evyonim — gifts to at least two poor people.",
+    "A festive meal is held during the day.",
+    "There is a custom to dress up in costumes and make noise at the name of Haman."
+   ],
+   "idea": "The name of G-d is never mentioned in Megillat Esther. Purim teaches us to see the hand of the Almighty even where it is hidden.",
+   "lessons": [
+    "prazdniki-5",
+    "etika-3"
+   ]
+  },
+  {
+   "id": "shushan-purim",
+   "name_he": "שושן פורים",
+   "meaning": "Shushan Purim — 15 Adar. In Shushan the Jews fought one day longer and celebrated the victory on the following day. Therefore in cities that were surrounded by a wall since the time of Yehoshua bin Nun, such as Jerusalem, Purim is celebrated on 15 Adar.",
+   "customs": [
+    "In Jerusalem all the mitzvot of Purim are performed on this day.",
+    "Elsewhere Tachanun is not recited, and a little festive joy is added.",
+    "Many continue the Purim merriment."
+   ],
+   "idea": "One story, two days of celebration: different communities each remember the same miracle in their own way, and together they remain one people.",
+   "lessons": [
+    "prazdniki-5"
+   ]
+  },
+  {
+   "id": "shabbat-para",
+   "name_he": "שבת פרה",
+   "meaning": "Shabbat Parah — the third of the four special Shabbatot before Pesach. The portion about the red heifer (Bamidbar 19) is read; its ashes purified from ritual impurity. In the time of the Temple one had to be purified in order to bring the Passover offering.",
+   "customs": [
+    "An additional portion about the red heifer is read.",
+    "The haftarah from the book of Yechezkel is read: “I will sprinkle pure water upon you, and you shall be clean” (36:25)."
+   ],
+   "idea": "The law of the red heifer is a chok, a commandment whose meaning is beyond human understanding. Sometimes we fulfill a mitzvah not because we have understood it, but because we trust the One who gave it.",
+   "lessons": [
+    "osnovy-6"
+   ]
+  },
+  {
+   "id": "shabbat-hachodesh",
+   "name_he": "שבת החודש",
+   "meaning": "Shabbat HaChodesh — the last of the four special Shabbatot before Pesach. It falls before Rosh Chodesh Nisan or on Rosh Chodesh itself. The portion is read about the first commandment given to the people of Israel — the sanctification of the new month — and the laws of Pesach (Shemot 12:1–20).",
+   "customs": [
+    "An additional portion is read: “This month is for you.”",
+    "The haftarah from the book of Yechezkel is read, about the festivals in the future Temple.",
+    "People begin actively preparing for Pesach."
+   ],
+   "idea": "The first commandment given to the people while still in Egypt was to sanctify time. Freedom begins when a person takes charge of his own time.",
+   "lessons": [
+    "prazdniki-1",
+    "prazdniki-4"
+   ]
+  },
+  {
+   "id": "shabbat-hagadol",
+   "name_he": "שבת הגדול",
+   "meaning": "Shabbat HaGadol — the “Great Shabbat,” the Shabbat before Pesach. According to tradition, on 10 Nisan, a Shabbat, the Jews in Egypt took lambs for the Passover offering, and a miracle happened to them: the Egyptians did not stop them. The haftarah from the book of Malachi speaks of “the great and awesome day of G-d.”",
+   "customs": [
+    "The community rabbi delivers a sermon on the laws of Pesach.",
+    "A special haftarah from the book of Malachi is read.",
+    "Many read part of the Haggadah during the day, beginning with the words “We were slaves.”"
+   ],
+   "idea": "To take a lamb before the eyes of the Egyptians was the first bold step toward freedom. Liberation begins with resolve.",
+   "lessons": [
+    "prazdniki-4"
+   ]
+  },
+  {
+   "id": "taanit-bechorot",
+   "name_he": "תענית בכורות",
+   "meaning": "The Fast of the Firstborn — 14 Nisan, the eve of Pesach. It expresses gratitude for the deliverance of the Jewish firstborn during the slaying of the firstborn in Egypt. Today most firstborns are released from the fast by taking part in a siyum — the festive completion of the study of a tractate.",
+   "customs": [
+    "In the morning a siyum is held in synagogue — the completion of the study of a tractate of the Talmud.",
+    "The participants in the siyum eat a festive meal, after which they are released from the fast.",
+    "If 14 Nisan falls on Shabbat, the fast (and the siyum) is moved to Thursday."
+   ],
+   "idea": "We are grateful not only for what happened, but also for what we were spared. The siyum turns the fast into the joy of Torah.",
+   "fast_note": "A minor fast for male firstborn; by custom, the father fasts for a firstborn who is a minor. The fast runs from dawn until the stars come out; eating and drinking are forbidden, but in practice most are released by taking part in a siyum. The sick and the weak are exempt — consult a rabbi. The exact times depend on the community and the locality.",
+   "movements": {
+    "reform": "The Fast of the Firstborn on the eve of Pesach is usually not observed in Reform communities. The meaning of the firstborn and the memory of the Exodus are conveyed through the seder and the telling of the Haggadah, not through this fast.",
+    "conservative": "Conservative communities usually hold a siyum for the firstborn.",
+    "orthodox": "In Orthodox communities the firstborn take part in a siyum or fast."
+   },
+   "lessons": [
+    "prazdniki-4"
+   ]
+  },
+  {
+   "id": "erev-pesach",
+   "name_he": "ערב פסח",
+   "meaning": "The eve of Pesach — 14 Nisan. On this day chametz — leavened food: bread and everything made from grain that has fermented — is disposed of for good. In the evening, with the onset of 15 Nisan, the festival begins and the seder is held.",
+   "customs": [
+    "On the preceding evening, with the start of 14 Nisan, bedikat chametz is performed — an inspection of the home by candlelight, with a blessing.",
+    "In the morning the remaining chametz is burned, and all chametz that was not found is declared ownerless.",
+    "Chametz may be eaten only until a certain hour in the morning; many sell their chametz through a rabbi.",
+    "Matzah is not eaten during the day, so that it can be eaten with appetite at the seder.",
+    "A dish for the seder and the festive table are prepared."
+   ],
+   "idea": "Chametz rises and puffs up — the sages saw in it a symbol of arrogance. Before the festival of freedom we clean not only the home, but also the heart.",
+   "lessons": [
+    "prazdniki-4",
+    "kashrut-1"
+   ]
+  },
+  {
+   "id": "pesach",
+   "name_he": "פסח",
+   "meaning": "Pesach — the festival of freedom — begins on 15 Nisan and lasts seven days in Israel and eight outside it. It recalls the exodus of the people of Israel from Egyptian slavery. The first day (outside Israel, the first two days) is Yom Tov. All week long chametz is neither eaten nor kept in the home.",
+   "customs": [
+    "On the first evening (outside Israel — on the first two evenings) the seder is held.",
+    "At the seder the Haggadah is read, four cups of wine are drunk, and matzah and maror are eaten.",
+    "The story of the Exodus from Egypt is told to the children.",
+    "Chametz is not eaten throughout the festival.",
+    "In Musaf of the first day they begin praying for dew."
+   ],
+   "idea": "The Mishnah teaches: “In every generation a person must see himself as if he himself had gone out of Egypt” (Pesachim 10:5). Pesach is not only memory, but a personal experience of freedom.",
+   "movements": {
+    "reform": "Many Reform communities in the Diaspora celebrate seven days and hold one seder, following the Israeli calendar. Each person takes on the laws of chametz consciously: some remove all leavened food entirely, others keep a more lenient household order. The seder remains the heart of the festival — the story of the Exodus, matzah, the four cups, the questions of the children.",
+    "conservative": "Conservative communities outside Israel hold two seders, and in 2015 their Committee on Jewish Law and Standards permitted Ashkenazim to eat kitniyot (legumes and rice).",
+    "orthodox": "Orthodox communities strictly observe the laws of chametz, celebrate eight days outside Israel, and Ashkenazim do not eat kitniyot."
+   },
+   "lessons": [
+    "prazdniki-4"
+   ]
+  },
+  {
+   "id": "chol-hamoed-pesach",
+   "name_he": "חול המועד פסח",
+   "meaning": "Chol HaMoed of Pesach — the intermediate days of the festival. Chametz is still forbidden, and work is restricted. This is a time of festive rest with the family.",
+   "customs": [
+    "People continue to eat matzah and not to eat chametz.",
+    "Half of Hallel and Musaf are read in the prayers.",
+    "The Omer is counted every evening.",
+    "On Shabbat of Chol HaMoed, the Song of Songs (Shir HaShirim) is read.",
+    "People avoid work that can be postponed and wear festive clothing."
+   ],
+   "idea": "Freedom is not a single seder evening but a way of life. The festive weekdays keep teaching us freedom.",
+   "lessons": [
+    "prazdniki-4"
+   ]
+  },
+  {
+   "id": "pesach-7",
+   "name_he": "שביעי של פסח",
+   "meaning": "The seventh day of Pesach — 21 Nisan, Yom Tov. According to tradition, it was on this day that the sea split and the people of Israel crossed on dry land. Outside Israel the festival continues for one more, eighth, day.",
+   "customs": [
+    "The Song at the Sea (Shirat HaYam) is read from the Torah.",
+    "Many stay up through the night studying Torah.",
+    "In some Hasidic communities a symbolic crossing of water is performed.",
+    "Yizkor is recited — in Israel on the seventh day, outside Israel on the eighth."
+   ],
+   "idea": "The Talmud tells that Nachshon ben Aminadav entered the water first, and only then did the sea split (Sotah 37a). Sometimes a miracle waits for our first step.",
+   "lessons": [
+    "prazdniki-4"
+   ]
+  },
+  {
+   "id": "omer",
+   "name_he": "ספירת העומר",
+   "meaning": "The Counting of the Omer — 49 days from the second evening of Pesach to Shavuot. The Torah commands counting these days, linking the festival of freedom with the day the Torah was given. This is a time of spiritual preparation and work on one's character. According to tradition, during these days the students of Rabbi Akiva died, so part of this period is a time of mourning.",
+   "customs": [
+    "Every evening, after the stars come out, the next day of the Omer is counted, with a blessing.",
+    "If one forgot in the evening, the count is made during the day without a blessing, and on the following evenings it is again made with a blessing.",
+    "If a full day was missed, the count continues without a blessing.",
+    "During part of the period weddings are not held, hair is not cut, and music is not listened to — the exact period depends on the community's custom."
+   ],
+   "idea": "Freedom without a purpose is not complete. Counting the Omer day by day, we move from the Exodus from Egypt to Sinai — from freedom to Torah.",
+   "movements": {
+    "reform": "Reform communities often count the Omer as a link between Pesach and Shavuot, sometimes without the blessing and usually without the mourning restrictions on haircuts, weddings, and music. The meaning of the count — the path from freedom to the giving of the Torah — is preserved; Lag BaOmer and Yom HaShoah in this period are marked according to the community's calendar.",
+    "conservative": "Conservative communities count the Omer with a blessing, and the mourning customs are often softened.",
+    "orthodox": "Orthodox communities count the Omer with a blessing and observe the mourning customs according to the community's tradition."
+   },
+   "lessons": [
+    "prazdniki-4"
+   ]
+  },
+  {
+   "id": "yom-hashoah",
+   "name_he": "יום השואה",
+   "meaning": "Yom HaShoah — Holocaust and Heroism Remembrance Day, 27 Nisan. It was established by the Knesset of Israel in memory of the six million Jews murdered by the Nazis and of the heroes of the resistance, including those who rose up in the Warsaw Ghetto. If the date falls next to Shabbat, it is moved.",
+   "customs": [
+    "In Israel a siren sounds in the morning, and the whole country stops in silence.",
+    "Memorial ceremonies are held and memorial candles are lit.",
+    "The names of the victims are read, along with Kaddish and the prayer El Maleh Rachamim.",
+    "Survivors' testimonies are heard."
+   ],
+   "idea": "The Torah commands: “Remember” (Devarim 25:17). The memory of the fallen is a duty of the living toward them and toward future generations.",
+   "movements": {
+    "reform": "Reform communities widely observe Yom HaShoah: ceremonies, special prayers, names, the study of testimonies. For many progressive communities it is one of the central days of twentieth-century remembrance — not instead of Tisha B'Av, but alongside it, in its own language of mourning.",
+    "conservative": "Conservative communities observe this day with special prayers and the reading of memorial texts.",
+    "orthodox": "Religious Zionists observe Yom HaShoah. In part of the haredi communities the memory of the victims of the Holocaust is also linked to 10 Tevet and 9 Av, because in Nisan new days of mourning are usually not introduced. The memory of the six million is obligatory for the entire people."
+   },
+   "lessons": [
+    "prazdniki-6",
+    "osnovy-5"
+   ]
+  },
+  {
+   "id": "yom-hazikaron",
+   "name_he": "יום הזיכרון",
+   "meaning": "Yom HaZikaron — 4 Iyar, the day of remembrance of those who fell in Israel's wars and of the victims of terror. It precedes Independence Day, a reminder of the price at which independence was won and defended. If the date falls next to Shabbat, it is moved.",
+   "customs": [
+    "In Israel sirens sound in the evening and during the day, and the whole country stands in silence.",
+    "Military cemeteries are visited, as are the families of the fallen.",
+    "Tehillim, Kaddish, and El Maleh Rachamim are recited.",
+    "In the evening this day passes into Independence Day."
+   ],
+   "idea": "The closeness of the day of mourning and the day of joy teaches: freedom and life in the Land of Israel are not given for nothing. The memory of the fallen is a duty of the entire people.",
+   "movements": {
+    "reform": "Reform communities in Israel and the Diaspora observe Yom HaZikaron with prayers and ceremonies of remembrance for fallen soldiers and victims of terror. The day is linked to responsibility for the people and to the approaching Yom HaAtzmaut, without diminishing the grief.",
+    "conservative": "Conservative communities observe this day with special prayers for the fallen.",
+    "orthodox": "In many Orthodox communities Tehillim and memorial prayers are recited on this day. The memory of those who fell for the Land and the people is part of the Jewish gratitude that this course shares."
+   },
+   "lessons": [
+    "prazdniki-6",
+    "osnovy-10"
+   ]
+  },
+  {
+   "id": "yom-haatzmaut",
+   "name_he": "יום העצמאות",
+   "meaning": "Yom HaAtzmaut — Israel Independence Day, 5 Iyar. On this day in 1948 the State of Israel was proclaimed: the Jewish people returned to sovereignty in its Land for the first time in nearly two thousand years. It is a day of thanksgiving for the people's return to Eretz Israel. If the date falls next to Shabbat, it is moved so that the celebration does not violate the Shabbat.",
+   "customs": [
+    "Many communities hold a festive evening prayer and recite Hallel.",
+    "Tachanun is not recited.",
+    "It is celebrated with flags, concerts, and family picnics.",
+    "In Israel state prizes are awarded and festive ceremonies are held."
+   ],
+   "idea": "The prophet Yechezkel heard the promise: “I will bring you into the land of Israel” (37:12). Yom HaAtzmaut is a day of joy that the people lives in its Land; it is not an “optional” day of the calendar, but part of Jewish gratitude.",
+   "movements": {
+    "reform": "Reform communities observe Israel Independence Day with festive prayers, often including Hallel, and community celebrations — in Israel and beyond. It is joy for the restored homeland of the Jewish people.",
+    "conservative": "Conservative communities observe this day with a festive prayer, often including Hallel, as a day of thanksgiving for the people's return to its Land.",
+    "orthodox": "In many Orthodox communities, especially those connected with Religious Zionism, a festive prayer and Hallel are recited. Where the liturgy is not changed, love for the Land of Israel and gratitude for the people's return remain part of Jewish life all the same. This course teaches marking Yom HaAtzmaut as a day of joy for the State of Israel."
+   },
+   "lessons": [
+    "osnovy-5",
+    "osnovy-10",
+    "prazdniki-6"
+   ]
+  },
+  {
+   "id": "pesach-sheni",
+   "name_he": "פסח שני",
+   "meaning": "Pesach Sheini — the “second Pesach,” 14 Iyar. The Torah tells that people who were ritually impure could not bring the Passover offering in time. They asked: “Why should we be deprived?” — and G-d gave a second chance a month later, both to them and to those who were far away on a journey (Bamidbar 9).",
+   "customs": [
+    "Many eat matzah on this day.",
+    "Tachanun is not recited."
+   ],
+   "idea": "Pesach Sheini teaches: it is never too late. If a person sincerely wants to draw close to G-d, a second chance opens for him.",
+   "lessons": [
+    "prazdniki-4"
+   ]
+  },
+  {
+   "id": "lag-baomer",
+   "name_he": "ל״ג בעומר",
+   "meaning": "Lag BaOmer — the 33rd day of the Omer count, 18 Iyar. According to tradition, on this day the epidemic that was killing the students of Rabbi Akiva ceased. It is also the day of remembrance of Rabbi Shimon bar Yochai, to whom tradition ascribes the Zohar. On this day the mourning of the Omer is interrupted.",
+   "customs": [
+    "Bonfires are lit and people gather together.",
+    "Many travel to the grave of Rabbi Shimon bar Yochai in Meron.",
+    "Many give boys their first haircut at age three.",
+    "Weddings are held, and people get haircuts.",
+    "Children play with bows and arrows."
+   ],
+   "idea": "The Talmud says that the students of Rabbi Akiva died because they did not respect one another (Yevamot 62b). And Rabbi Akiva himself taught: “Love your fellow as yourself” — a great principle of the Torah.",
+   "lessons": [
+    "prazdniki-4",
+    "etika-2"
+   ]
+  },
+  {
+   "id": "yom-yerushalayim",
+   "name_he": "יום ירושלים",
+   "meaning": "Yom Yerushalayim — Jerusalem Day, 28 Iyar. In 1967, during the Six-Day War, Jerusalem was reunified, and Jews could again pray at the Western Wall (Kotel). Jerusalem is the eternal and undivided capital of the Jewish people, the center of prayer and hope — a city whose status is not open to question.",
+   "customs": [
+    "Many communities hold a festive prayer with Hallel.",
+    "Many come to pray at the Kotel.",
+    "Parades and festive events take place in Jerusalem.",
+    "Tachanun is not recited."
+   ],
+   "idea": "“If I forget you, Jerusalem, may my right hand forget its skill” (Tehillim 137:5). For a Jew, Jerusalem is the eternal capital, which is not divided.",
+   "movements": {
+    "reform": "Reform communities observe Jerusalem Day with a festive prayer and a conversation about the city as the eternal capital and spiritual center of the Jewish people. The joy of the city's reunification is shared.",
+    "conservative": "Conservative communities observe this day with a festive prayer, as the day of return to reunified Jerusalem.",
+    "orthodox": "In many Orthodox communities a festive prayer and Hallel are recited. Jerusalem remains the eternal and undivided capital, toward which a Jew turns in prayer."
+   },
+   "lessons": [
+    "osnovy-5",
+    "osnovy-10",
+    "prazdniki-6"
+   ]
+  },
+  {
+   "id": "erev-shavuot",
+   "name_he": "ערב שבועות",
+   "meaning": "The eve of Shavuot — 5 Sivan, the last, 49th day of the Omer count. The people of Israel prepared to receive the Torah at Mount Sinai, and we prepare for the festival. In the evening Shavuot begins.",
+   "customs": [
+    "The home and synagogue are decorated with greenery and flowers.",
+    "Dairy dishes are prepared.",
+    "Before sunset the festive candles are lit.",
+    "If Shavuot falls on Friday, an eruv tavshilin is made."
+   ],
+   "idea": "Rashi writes that at Mount Sinai the people stood “as one person with one heart” (Rashi on Shemot 19:2). Unity is the best preparation for the Torah.",
+   "lessons": [
+    "prazdniki-4"
+   ]
+  },
+  {
+   "id": "shavuot",
+   "name_he": "שבועות",
+   "meaning": "Shavuot — 6 Sivan (outside Israel — 6 and 7 Sivan). It is the day on which G-d gave the Torah to the people of Israel at Mount Sinai. It is also the festival of the wheat harvest and of the first fruits — bikkurim — which were brought to the Temple. Shavuot concludes the 49 days of the Omer count.",
+   "customs": [
+    "Many stay up the whole night studying Torah — Tikkun Leil Shavuot.",
+    "The reading of the Ten Commandments is heard in synagogue.",
+    "The Scroll of Ruth is read.",
+    "Dairy dishes are eaten and the home is decorated with greenery.",
+    "Yizkor is recited — in Israel on the festival day itself, outside Israel on the second day."
+   ],
+   "idea": "Ruth, who became part of the Jewish people, said: “Your people shall be my people, and your G-d my G-d” (Rut 1:16). On the festival of the Torah we remember that everyone who accepts the Torah becomes part of Sinai.",
+   "lessons": [
+    "prazdniki-4",
+    "osnovy-1"
+   ]
+  },
+  {
+   "id": "shiva-asar-betamuz",
+   "name_he": "שבעה עשר בתמוז",
+   "meaning": "The Seventeenth of Tammuz — a fast in memory of the breach of the walls of Jerusalem by the Romans on this day before the destruction of the Second Temple. The Mishnah lists other calamities of this day: Moshe broke the tablets, and the daily offerings in the Temple ceased (Taanit 4:6). This fast opens the period of the “Three Weeks.”",
+   "customs": [
+    "People fast from dawn until the stars come out.",
+    "Selichot and special passages for the fast are recited.",
+    "The mourning customs of the Three Weeks begin."
+   ],
+   "idea": "The destruction did not happen in one day: it all began with a breach in the wall. So too in a person's life it is important to notice the first cracks.",
+   "fast_note": "Minor fast: adults fast (girls from age 12, boys from age 13) from dawn until the stars come out. Eating and drinking are forbidden. Pregnant and nursing women and the sick are usually exempt — consult a rabbi. If the 17th of Tammuz falls on Shabbat, the fast is moved to Sunday. The exact times depend on the community and the locality.",
+   "movements": {
+    "reform": "In most Reform communities the Seventeenth of Tammuz is not observed as a communal fast. The day may be studied as the beginning of the Three Weeks of remembrance of the destruction of Jerusalem; personal fasting remains an individual choice, while communal grief is more often focused on Tisha B'Av.",
+    "conservative": "The Conservative movement recognizes the fast, although its observance depends largely on the community.",
+    "orthodox": "In Orthodox communities the fast is obligatory."
+   },
+   "lessons": [
+    "prazdniki-6"
+   ]
+  },
+  {
+   "id": "three-weeks",
+   "name_he": "בין המצרים",
+   "meaning": "The Three Weeks — the period from 17 Tammuz to 9 Av, a time of mourning over the destruction of the Temples. It is called Bein HaMetzarim — “between the straits,” after the words in the book of Eicha (1:3). During these weeks the mourning customs gradually intensify.",
+   "customs": [
+    "Weddings are not held.",
+    "Many do not listen to music.",
+    "Ashkenazim do not get haircuts for all three weeks, while among Sephardim this custom applies in the week of 9 Av.",
+    "The blessing Shehecheyanu is avoided over new fruits and clothes.",
+    "Three haftarot with prophetic warnings are read in synagogue."
+   ],
+   "idea": "The Sages teach: one who mourns for Jerusalem will merit to see its joy (Taanit 30b). Mourning is also a form of hope.",
+   "movements": {
+    "reform": "In Reform communities the Three Weeks are more often marked by study and reflection on the destruction, the exile, and responsibility than by prohibitions on haircuts, meat, and weddings. Those who take on some of the mourning customs do so as a personal practice.",
+    "conservative": "Conservative communities observe some of the mourning customs, depending on the community.",
+    "orthodox": "Orthodox communities observe the mourning customs according to the tradition of the community."
+   },
+   "lessons": [
+    "prazdniki-6"
+   ]
+  },
+  {
+   "id": "nine-days",
+   "name_he": "תשעת הימים",
+   "meaning": "The Nine Days — from Rosh Chodesh Av to 9 Av — are the hardest part of the Three Weeks. The Mishnah says: “When Av begins, joy is diminished” (Taanit 4:6). The mourning customs become stricter.",
+   "customs": [
+    "By Ashkenazi custom one does not eat meat or drink wine, except on Shabbat and at a meal for a mitzvah, for example a siyum.",
+    "One does not launder, does not put on new or freshly laundered clothes, and does not wash for pleasure.",
+    "Repairs and purchases made for pleasure are postponed.",
+    "Among Sephardim, some of the restrictions apply only during the week of 9 Av."
+   ],
+   "idea": "The closer 9 Av draws, the deeper the grief — but the Sages teach that on this day the redeemer will be born. Even in the deepest darkness there is a seed of consolation.",
+   "lessons": [
+    "prazdniki-6"
+   ]
+  },
+  {
+   "id": "shabbat-chazon",
+   "name_he": "שבת חזון",
+   "meaning": "Shabbat Chazon is the Shabbat before 9 Av. It takes its name from the first word of the haftarah: “Chazon Yeshayahu” — “The Vision of Yeshayahu” (Yeshayahu 1). The prophet rebukes the people, but also calls them to correction.",
+   "customs": [
+    "The haftarah “Chazon” is read to the mournful melody of the book of Eicha.",
+    "On Shabbat one does not display outward mourning."
+   ],
+   "idea": "Rabbi Levi Yitzchak of Berdichev taught that on this Shabbat every Jew is shown, from afar, a vision of the future Temple. Even in the prophet’s rebuke, hope is heard.",
+   "lessons": [
+    "prazdniki-6"
+   ]
+  },
+  {
+   "id": "tisha-beav",
+   "name_he": "תשעה באב",
+   "meaning": "Tisha B'Av — 9 Av, the saddest day of the Jewish year. On this day the First and Second Temples were destroyed, and the people were exiled from their Land. According to tradition, other calamities also occurred on this day: the sin of the spies, the fall of Beitar, and the expulsion of the Jews from Spain. It is a day of fasting and of mourning for the destruction and the exile — and a day of hope for a complete return, including the rebuilt Temple. That in our days the people once again live in Eretz Israel is a consolation, but mourning for the Temple remains until the complete redemption comes.",
+   "customs": [
+    "People sit on the floor or on low benches until noon.",
+    "In the evening the book of Eicha is read in the synagogue, and in the morning — kinot, elegies of mourning.",
+    "In the morning one does not put on tallit and tefillin; they are put on during the day, at Minchah.",
+    "One does not study Torah, except for mournful subjects, and people do not greet one another.",
+    "If 9 Av falls on Shabbat, the fast is postponed to Sunday."
+   ],
+   "idea": "The Sages teach that the Second Temple was destroyed because of baseless hatred (Yoma 9b). The correction is in baseless love.",
+   "fast_note": "Major fast: adults fast (girls from age 12, boys from age 13) from sunset on the eve until the stars come out. It is forbidden to eat, drink, wash, anoint the body, wear leather shoes, and engage in marital relations; until noon it is customary not to work. The sick are exempt; pregnant and nursing women fast in many cases, but if there is any doubt about health one should turn to a rabbi and a doctor. The exact time depends on the community and the locality.",
+   "movements": {
+    "reform": "Classical Reform of the 19th century often did not mourn the Temple and did not pray for the sacrifices, and so Tisha B'Av went unobserved for a long time. Today many Reform communities have restored this day: the reading of Eicha, remembrance of the destructions and of the later catastrophes of the people, and reflection. The full fast remains a personal choice, and not a universal legal norm.",
+    "conservative": "The Conservative movement observes the fast, and some of its communities have changed parts of the prayers in light of the restored Jerusalem.",
+    "orthodox": "Orthodox communities observe the full fast and all the mourning customs."
+   },
+   "lessons": [
+    "prazdniki-6",
+    "osnovy-5",
+    "osnovy-10"
+   ]
+  },
+  {
+   "id": "shabbat-nachamu",
+   "name_he": "שבת נחמו",
+   "meaning": "Shabbat Nachamu is the first Shabbat after 9 Av. It takes its name from the first words of the haftarah: “Comfort, comfort My people” (Yeshayahu 40:1). It is the first of the seven haftarot of consolation, which are read until Rosh Hashanah. On this Shabbat the parashah Va'etchanan is also read, which contains the Shema and the Ten Commandments.",
+   "customs": [
+    "The haftarah of consolation from the book of Yeshayahu is read.",
+    "Many hold joyful gatherings and festive meals."
+   ],
+   "idea": "The consolation is doubled, as the grief was: G-d does not abandon the people. After destruction, the promise of restoration always comes.",
+   "lessons": [
+    "ivrit-3"
+   ]
+  },
+  {
+   "id": "tu-beav",
+   "name_he": "ט״ו באב",
+   "meaning": "Tu B'Av — 15 Av. The Mishnah says that there were no days more joyful for Israel than Tu B'Av and Yom Kippur: on these days the young women of Jerusalem, in borrowed white clothes, danced in the vineyards (Taanit 4:8). Tradition links this day with the reconciliation of the tribes of Israel and with other joyful events.",
+   "customs": [
+    "Tachanun is not recited.",
+    "It is a popular day for weddings and engagements.",
+    "From this day the nights grow longer, and the Sages advise studying more Torah."
+   ],
+   "idea": "The young women borrowed clothes from one another, so that no one would be ashamed of her poverty. True joy is the joy in which no one feels left out.",
+   "lessons": [
+    "semya-3"
+   ]
+  },
+  {
+   "id": "elul",
+   "name_he": "אלול",
+   "meaning": "Elul is the last month of the year, a time of preparation for Rosh Hashanah and Yom Kippur. According to tradition, on 1 Elul Moshe went up Mount Sinai for the second Tablets and came down with them on Yom Kippur. It is a month of mercy and teshuvah.",
+   "customs": [
+    "Among Ashkenazim the shofar is sounded every morning except on Shabbat.",
+    "Every day Tehillim 27 is recited: “G-d is my light and my salvation.”",
+    "Sephardim recite Selichot the whole month; Ashkenazim begin at the close of the Shabbat before Rosh Hashanah, and if fewer than four days remain until the festival, then a week before that.",
+    "People wish one another “Ketivah va-chatimah tovah” — “A good inscription and a good sealing.”",
+    "Many check their mezuzot and tefillin."
+   ],
+   "idea": "The first letters of the words “Ani le-dodi ve-dodi li” — “I am for my beloved, and my beloved is for me” (Shir HaShirim 6:3) — spell the word “Elul.” It is the month when G-d is especially close.",
+   "lessons": [
+    "prazdniki-2"
+   ]
+  },
+  {
+   "id": "shabbat-shira",
+   "name_he": "שבת שירה",
+   "meaning": "Shabbat Shirah is the Shabbat on which the parashah Beshalach is read, with the Song at the Sea that Moshe and the people sang after crossing the sea. In the haftarah the song of the prophetess Devorah is read (Shoftim 4–5). It is a Shabbat of gratitude and song.",
+   "customs": [
+    "The Song at the Sea is read in the Torah, standing.",
+    "Many sing special songs and zmirot.",
+    "There is a custom to feed the birds which, according to tradition, sang together with the people; it is kept on the eve of Shabbat, since on Shabbat itself this is generally not done."
+   ],
+   "idea": "Miriam and the women sang with tambourines (Shemot 15:20) — they had taken them from Egypt, trusting that there would be a reason to sing. Faith prepares us for joy in advance.",
+   "lessons": [
+    "shabbat-3"
+   ]
+  },
+  {
+   "id": "weekday",
+   "name_he": "יום חול",
+   "meaning": "An ordinary weekday, too, is holy in its own way. In Judaism every day has its own avodah — service: prayer, Torah study, and the fulfillment of the mitzvot. Weekdays are the time when we bring holiness into work, family, and relationships with people.",
+   "customs": [
+    "In the morning one says “Modeh Ani” — gratitude for a new day.",
+    "One prays three times a day: Shacharit, Minchah, and Maariv.",
+    "Men put on tefillin on weekdays.",
+    "Blessings are recited over food and in various situations.",
+    "Time is given to Torah study, tzedakah, and honesty in one’s dealings."
+   ],
+   "idea": "Pirkei Avot teaches: “The world stands on three things: on the Torah, on service, and on good deeds” (1:2). Every ordinary day gives an opportunity for all three.",
+   "lessons": [
+    "ivrit-4",
+    "etika-1"
+   ]
+  }
+ ],
+ "months": [
+  {
+   "key": "tishrei",
+   "idea": "Tishrei is the month of the Days of Awe and the festivals: from judgment and teshuvah at Rosh Hashanah and Yom Kippur to the joy of Sukkot and Simchat Torah. It is the month that sets the tone for the whole year."
+  },
+  {
+   "key": "cheshvan",
+   "idea": "Marcheshvan is a month without festivals, when ordinary life begins after Tishrei and in Israel people pray for rain. It is a time to carry the inspiration of the festivals into the weekdays."
+  },
+  {
+   "key": "kislev",
+   "idea": "Kislev is the month of Chanukah, when light is kindled in the darkest days of the year. It teaches that even a small flame can drive away a great darkness."
+  },
+  {
+   "key": "tevet",
+   "idea": "In Tevet, Chanukah comes to an end and the fast of 10 Tevet arrives, recalling the beginning of the destruction of Jerusalem. It is a month that joins the memory of light and the memory of loss."
+  },
+  {
+   "key": "shevat",
+   "idea": "Shevat is the month of Tu BiShvat, when the trees awaken in the Land of Israel. According to the Torah, on 1 Shevat Moshe began to explain the Torah to the people (Devarim 1:3) — it is a month of growth and renewal."
+  },
+  {
+   "key": "adar",
+   "idea": "Adar is the month of Purim and of joy. The Sages say: “When Adar arrives, joy is increased” (Taanit 29a)."
+  },
+  {
+   "key": "adar-1",
+   "idea": "Adar I is the additional month of a leap year, added so that Pesach always falls in the spring. The joy of Adar continues through it, and on 14 Adar I the minor Purim is observed."
+  },
+  {
+   "key": "adar-2",
+   "idea": "Adar II is the month of Purim in a leap year. Purim is celebrated in it, so as to bring one redemption close to another — to Pesach in Nisan (Megillah 6b)."
+  },
+  {
+   "key": "nisan",
+   "idea": "Nisan is the first month of the year, the month of freedom and of Pesach. The Sages say: “In Nisan they were redeemed, and in Nisan they will be redeemed” (Rosh Hashanah 11a)."
+  },
+  {
+   "key": "iyar",
+   "idea": "Iyar is the month of the counting of the Omer, a time of work on one’s character on the way to Sinai. The first letters of the words “I am G-d, who heals you” (Shemot 15:26) spell the word “Iyar,” and it is called the month of healing."
+  },
+  {
+   "key": "sivan",
+   "idea": "Sivan is the month of Shavuot and of the giving of the Torah at Mount Sinai. It is a time to renew one’s bond with the Torah."
+  },
+  {
+   "key": "tammuz",
+   "idea": "In Tammuz the period of the Three Weeks begins — a time of mourning for the destruction of Jerusalem. It is the month when we learn to see our mistakes and to correct them."
+  },
+  {
+   "key": "av",
+   "idea": "Av is the month of 9 Av, the saddest day of the year, but it is called “Menachem Av” — “comforting Av.” After the grief come Tu B'Av and the seven weeks of consolation."
+  },
+  {
+   "key": "elul",
+   "idea": "Elul is the month of teshuvah and mercy before Rosh Hashanah. Hasidic tradition says that in Elul the King goes out into the field, and anyone may approach Him."
+  }
+ ]
+}

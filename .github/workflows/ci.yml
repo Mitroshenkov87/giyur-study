@@ -41,6 +41,8 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit 1 }
       - name: Course content is valid (content/<lang>/, read at run time)
         run: target/release/shorashim-ctl.exe validate-content content
+      - name: Language content parity (content/en vs content/ru)
+        run: target/release/shorashim-ctl.exe validate-parity content
       - name: Package Shorashim-Setup.exe (stub + app + content/ + music)
         shell: pwsh
         run: |
@@ -59,6 +61,7 @@ jobs:
           $dir = Join-Path $env:LOCALAPPDATA 'Programs\Shorashim'
           Get-ChildItem $dir | Format-Table Name, Length
           if (-not (Test-Path (Join-Path $dir 'content\ru\manifest.json'))) { Write-Error "no content in $dir"; exit 1 }
+          if (-not (Test-Path (Join-Path $dir 'content\en\manifest.json'))) { Write-Error "no English content in $dir"; exit 1 }
           # With no folder given the installed copy must pick content\ beside itself.
           $out = & (Join-Path $dir 'shorashim-ctl.exe') validate-content
           if ($LASTEXITCODE -ne 0) { exit 1 }
@@ -91,5 +94,7 @@ jobs:
         run: cargo build --release
       - name: Course content is valid (content/<lang>/, read at run time)
         run: target/release/shorashim-ctl validate-content content
+      - name: Language content parity (content/en vs content/ru)
+        run: target/release/shorashim-ctl validate-parity content
       - name: Automation smoke (release binary, headless script)
         run: target/release/shorashim --headless --script tests/scripts/01-navigate.jsonl --today 2026-11-22

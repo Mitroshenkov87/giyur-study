@@ -118,6 +118,20 @@ pub fn plural<'a>(n: i64, forms: &[&'a str; 3]) -> &'a str {
     forms[2]
 }
 
+/// Plural in the interface language: Russian forms (one, few, many) and
+/// English forms (one, other): `plural_l(5, &["день", "дня", "дней"], &["day", "days"])`.
+pub fn plural_l<'a>(n: i64, ru: &[&'a str; 3], en: &[&'a str; 2]) -> &'a str {
+    if crate::i18n::is_en() {
+        if n.unsigned_abs() == 1 {
+            en[0]
+        } else {
+            en[1]
+        }
+    } else {
+        plural(n, ru)
+    }
+}
+
 /// Round a fraction to a whole percentage (JS `U.pct`).
 pub fn pct(x: f64) -> i64 {
     (x * 100.0).round() as i64

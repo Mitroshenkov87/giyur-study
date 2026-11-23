@@ -58,18 +58,34 @@ pub fn is_mastered(state: &State, id: &str) -> bool {
 }
 
 /// Feedback message shown right after grading (js/ui/cards.js).
-/// `word` is the session word: "уроке" / "повторении".
+/// `word` is the session word: "уроке" / "разделе" / "повторении" — the
+/// English is picked by the same match, not translated word by word.
 pub fn grade_message(c: &CardState, knew: bool, word: &str, today: NaiveDate) -> String {
     if knew {
         let d = util::diff_days(&util::day_key(today), &c.due);
-        let days = util::plural(d, &["день", "дня", "дней"]);
+        let days = util::plural_l(d, &["день", "дня", "дней"], &["day", "days"]);
         if c.m {
-            format!("Карточка выучена! Следующий контроль через {d} {days}")
+            crate::trf!(
+                "Карточка выучена! Следующий контроль через {d} {days}",
+                "Card learned! Next check in {d} {days}"
+            )
         } else {
-            format!("Следующий показ: через {d} {days}")
+            crate::trf!(
+                "Следующий показ: через {d} {days}",
+                "Next review in {d} {days}"
+            )
         }
     } else {
-        format!("Покажем ещё раз в этом {word}, а затем завтра")
+        let word_en = match word {
+            "уроке" => "lesson",
+            "разделе" => "section",
+            "повторении" => "review",
+            _ => "session",
+        };
+        crate::trf!(
+            "Покажем ещё раз в этом {word}, а затем завтра",
+            "We'll show it again in this {word_en}, then again tomorrow"
+        )
     }
 }
 

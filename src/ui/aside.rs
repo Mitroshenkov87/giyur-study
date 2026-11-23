@@ -2,11 +2,13 @@
 //! card (Gregorian + Hebrew date, fast, weekly portion) that opens the
 //! calendar. See [`crate::ui::layout`] for when it is shown.
 
+use chrono::Datelike;
 use iced::widget::text::Shaping;
 use iced::widget::{button, column, container, text, Column};
 use iced::{Element, Length};
 
 use crate::calendar::{days, hebrew, parasha, prefs};
+use crate::i18n::tr;
 use crate::quotes;
 use crate::ui::app::Ctx;
 use crate::ui::fonts::{HEBREW, SANS_BOLD, SERIF_BOLD};
@@ -45,8 +47,8 @@ pub fn panel<'a, M: Clone + 'a>(ctx: &Ctx, open_calendar: M) -> Element<'a, M> {
         col = col.push(
             container(
                 column![
-                    widgets::kicker("Цитата дня"),
-                    text(format!("«{}»", q.text))
+                    widgets::kicker(tr("Цитата дня")),
+                    text(crate::trf!("«{}»", "“{}”", q.text))
                         .shaping(Shaping::Advanced)
                         .font(SERIF_BOLD)
                         .size(theme::text::BODY + 1.0)
@@ -70,21 +72,17 @@ pub fn panel<'a, M: Clone + 'a>(ctx: &Ctx, open_calendar: M) -> Element<'a, M> {
     let diaspora = prefs::CalendarPrefs::load(&ctx.state.settings).diaspora;
     let info = days::day_info(today, diaspora);
     let mut day = Column::new().spacing(6).width(Length::Fill);
-    day = day.push(widgets::kicker("Сегодня"));
+    day = day.push(widgets::kicker(tr("Сегодня")));
     day = day.push(
-        text(format!(
-            "{}, {}",
-            hebrew::weekday_ru(today),
-            hebrew::format_gregorian_ru(today)
-        ))
-        .shaping(Shaping::Advanced)
-        .font(SANS_BOLD)
-        .size(theme::text::BODY)
-        .color(p.text)
-        .width(Length::Fill),
+        text(gregorian_line(today))
+            .shaping(Shaping::Advanced)
+            .font(SANS_BOLD)
+            .size(theme::text::BODY)
+            .color(p.text)
+            .width(Length::Fill),
     );
     day = day.push(
-        text(info.hebrew.format_ru())
+        text(hebrew_line(info.hebrew))
             .shaping(Shaping::Advanced)
             .size(theme::text::SMALL + 0.5)
             .color(p.gold2)
@@ -98,11 +96,11 @@ pub fn panel<'a, M: Clone + 'a>(ctx: &Ctx, open_calendar: M) -> Element<'a, M> {
             .color(p.hebrew)
             .width(Length::Fill),
     );
-    let notable: Vec<&str> = info
+    let notable: Vec<String> = info
         .events
         .iter()
         .filter(|e| e.is_notable() || e.kind == days::Kind::RoshChodesh)
-        .map(|e| e.title.as_str())
+        .map(|e| tr(e.title.as_str()).to_string())
         .collect();
     if !notable.is_empty() {
         day = day.push(
@@ -114,11 +112,11 @@ pub fn panel<'a, M: Clone + 'a>(ctx: &Ctx, open_calendar: M) -> Element<'a, M> {
         );
     }
     day = day.push(
-        text(if info.fast().is_some() {
+        text(tr(if info.fast().is_some() {
             "Сегодня пост"
         } else {
             "Сегодня поста нет"
-        })
+        }))
         .shaping(Shaping::Advanced)
         .size(theme::text::SMALL)
         .color(if info.fast().is_some() {
@@ -128,11 +126,7 @@ pub fn panel<'a, M: Clone + 'a>(ctx: &Ctx, open_calendar: M) -> Element<'a, M> {
         }),
     );
     let (_, reading, next) = parasha::weekly(today, diaspora);
-    let portion = if reading == parasha::Reading::Festival {
-        next.map(|(_, r)| format!("Недельная глава: праздничное чтение, затем {}", r.name_ru()))
-    } else {
-        Some(format!("Недельная глава: {}", reading.name_ru()))
-    };
+    let portion = portion_line(reading, next);
     if let Some(s) = portion {
         day = day.push(
             text(s)
@@ -154,4 +148,81 @@ pub fn panel<'a, M: Clone + 'a>(ctx: &Ctx, open_calendar: M) -> Element<'a, M> {
         .width(layout::ASIDE)
         .padding([28.0, 24.0])
         .into()
+}
+
+/// «воскресенье, 22 ноября 2026» / "Sunday, November 22, 2026".
+fn gregorian_line(today: chrono::NaiveDate) -> String {
+    let weekday = tr(hebrew::weekday_ru(today));
+    if crate::i18n::is_en() {
+        const MONTHS: [&str; 12] = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+        ];
+        format!(
+            "{weekday}, {} {}, {}",
+            MONTHS[today.month0() as usize],
+            today.day(),
+            today.year()
+        )
+    } else {
+        format!("{weekday}, {}", hebrew::format_gregorian_ru(today))
+    }
+}
+
+/// «12 кислева 5787» / "12 Kislev 5787" (nominative month; English has no case).
+fn hebrew_line(h: hebrew::HebrewDate) -> String {
+    if crate::i18n::is_en() {
+        format!(
+            "{} {} {}",
+            h.day,
+            tr(hebrew::month_name_ru(h.year, h.month)),
+            h.year
+        )
+    } else {
+        h.format_ru()
+    }
+}
+
+fn portion_line(
+    reading: parasha::Reading,
+    next: Option<(chrono::NaiveDate, parasha::Reading)>,
+) -> Option<String> {
+    if reading == parasha::Reading::Festival {
+        next.map(|(_, r)| {
+            crate::trf!(
+                "Недельная глава: праздничное чтение, затем {}",
+                "Weekly portion: festival reading, then {}",
+                reading_name(r)
+            )
+        })
+    } else {
+        Some(crate::trf!(
+            "Недельная глава: {}",
+            "Weekly portion: {}",
+            reading_name(reading)
+        ))
+    }
+}
+
+fn reading_name(r: parasha::Reading) -> String {
+    match r {
+        parasha::Reading::Parasha(n) => tr(parasha::PARASHOT[n as usize].1).to_string(),
+        parasha::Reading::Double(a, b) => crate::trf!(
+            "{} — {}",
+            "{} – {}",
+            tr(parasha::PARASHOT[a as usize].1),
+            tr(parasha::PARASHOT[b as usize].1)
+        ),
+        parasha::Reading::Festival => tr("Праздничное чтение").to_string(),
+    }
 }

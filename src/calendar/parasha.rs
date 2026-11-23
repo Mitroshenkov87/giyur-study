@@ -12,6 +12,7 @@
 use chrono::{Datelike, Duration, NaiveDate, Weekday};
 
 use crate::calendar::hebrew::{new_year, HebrewDate, TISHREI};
+use crate::i18n::tr;
 
 include!("parasha_tables.rs");
 
@@ -88,11 +89,14 @@ impl Reading {
     /// «Ваякгель — Пкудей».
     pub fn name_ru(self) -> String {
         match self {
-            Reading::Parasha(n) => PARASHOT[n as usize].1.to_string(),
-            Reading::Double(a, b) => {
-                format!("{} — {}", PARASHOT[a as usize].1, PARASHOT[b as usize].1)
-            }
-            Reading::Festival => "Праздничное чтение".to_string(),
+            Reading::Parasha(n) => tr(PARASHOT[n as usize].1).to_string(),
+            Reading::Double(a, b) => crate::trf!(
+                "{} — {}",
+                "{}-{}",
+                tr(PARASHOT[a as usize].1),
+                tr(PARASHOT[b as usize].1)
+            ),
+            Reading::Festival => tr("Праздничное чтение").to_string(),
         }
     }
 

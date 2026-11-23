@@ -19,6 +19,7 @@ use iced::{
     Shadow, Theme, Vector,
 };
 
+use crate::i18n::tr;
 use crate::ui::fonts::{HEBREW, SANS, SANS_BOLD, SERIF_BOLD};
 use crate::ui::screens::map::icons;
 use crate::ui::theme::{self, Movement, Palette};
@@ -46,7 +47,7 @@ fn plain_container(background: Option<Color>) -> iced::widget::container::Style 
 /// Kicker line: uppercase, letter-spaced gold2 label (§0.5).
 pub fn kicker<'a, Message: 'a>(content: &'a str) -> Element<'a, Message> {
     let p = palette();
-    txt(content.to_uppercase())
+    txt(tr(content).to_uppercase())
         .size(theme::text::KICKER)
         .font(SANS_BOLD)
         .color(p.gold2)
@@ -62,7 +63,7 @@ pub fn heading<'a, Message: 'a>(content: &'a str, level: u8) -> Element<'a, Mess
         3 => theme::text::H3,
         _ => theme::text::BODY,
     };
-    txt(content)
+    txt(tr(content))
         .size(size)
         .font(SERIF_BOLD)
         .color(p.text)
@@ -361,7 +362,7 @@ pub fn note_block<'a, Message: 'a>(label: &str, body: &'a str) -> Element<'a, Me
     let p = palette();
 
     let inner = column![
-        txt(label.to_uppercase())
+        txt(tr(label).to_uppercase())
             .size(theme::text::KICKER)
             .font(SANS_BOLD)
             .color(p.info),
@@ -388,7 +389,7 @@ pub fn differs_note<'a, Message: 'a>(label: &'a str, body: &'a str) -> Element<'
         accent_bar::<Message>(accent),
         container(
             column![
-                txt(label)
+                txt(tr(label))
                     .size(theme::text::BODY)
                     .font(SANS_BOLD)
                     .color(accent),
@@ -409,11 +410,14 @@ pub fn differs_note<'a, Message: 'a>(label: &'a str, body: &'a str) -> Element<'
 }
 
 fn movement_for_label(label: &str) -> Movement {
-    if label.contains("реформист") {
+    // Match the Russian source (and its English) before the label is shown.
+    let l = label.to_lowercase();
+    if l.contains("реформист") || l.contains("reform") {
         Movement::Reform
-    } else if label.contains("консервативн") {
+    } else if l.contains("консервативн") || l.contains("conservative") || l.contains("masorti")
+    {
         Movement::Conservative
-    } else if label.contains("ортодокс") {
+    } else if l.contains("ортодокс") || l.contains("orthodox") {
         Movement::Orthodox
     } else {
         Movement::Other
@@ -627,7 +631,7 @@ pub fn back_button<'a, M: Clone + 'a>(label: &'a str, msg: M) -> Element<'a, M> 
         container(
             row![
                 icons::icon(icons::Kind::ChevronLeft, 14.0, p.muted),
-                txt(label).size(15.0),
+                txt(tr(label)).size(15.0),
             ]
             .spacing(6)
             .align_y(Alignment::Center),
@@ -646,9 +650,12 @@ pub fn exit_button<'a, M: Clone + 'a>(label: &'a str, msg: M) -> Element<'a, M> 
     let p = palette();
     button(
         container(
-            row![txt("×").size(16.0).color(p.muted), txt(label).size(15.0),]
-                .spacing(6)
-                .align_y(Alignment::Center),
+            row![
+                txt("×").size(16.0).color(p.muted),
+                txt(tr(label)).size(15.0),
+            ]
+            .spacing(6)
+            .align_y(Alignment::Center),
         )
         .center_y(Length::Fill),
     )
@@ -777,12 +784,12 @@ pub fn centered<'a, M: 'a>(el: impl Into<Element<'a, M>>) -> Element<'a, M> {
 
 /// Selected chip pill («Требует проверки раввином», gold-soft, gold border).
 pub fn chip<'a, Message: 'a>(content: &'a str) -> Element<'a, Message> {
-    pill(content, Pill::Chip)
+    pill(tr(content), Pill::Chip)
 }
 
 /// Tag pill (surface3 bg, muted text).
 pub fn tag<'a, Message: 'a>(content: &'a str) -> Element<'a, Message> {
-    pill(content, Pill::Tag)
+    pill(tr(content), Pill::Tag)
 }
 
 /// Card container: surface bg, border, radius 18, padding.
@@ -807,7 +814,7 @@ pub fn card<'a, Message: 'a>(content: impl Into<Element<'a, Message>>) -> Elemen
 
 /// Toast pill (visual only; positioning is done by overlays).
 pub fn toast<'a, Message: 'a>(content: &'a str) -> Element<'a, Message> {
-    container(txt(content).size(theme::text::SMALL + 0.5))
+    container(txt(tr(content)).size(theme::text::SMALL + 0.5))
         .padding([12.0, 18.0])
         .style(move |_| theme::toast(&palette()))
         .into()
@@ -820,7 +827,7 @@ pub fn page_header<'a, Message: Clone + 'a>(
 ) -> Element<'a, Message> {
     let mut header = Column::new().spacing(10).width(Length::Fill);
     if let Some(message) = back {
-        header = header.push(back_button("Назад", message));
+        header = header.push(back_button(tr("Назад"), message));
     }
     header = header.push(heading(title, 1));
     header.into()
@@ -1092,8 +1099,13 @@ pub fn confirm_modal<'a, M: Clone + 'a>(
                 .width(Length::Fill),
             row![
                 iced::widget::space::horizontal(),
-                btn(go_label, Btn::Ghost, BtnSize::Md, Some(on_go)),
-                btn(stay_label, Btn::Primary, BtnSize::Md, Some(on_stay.clone())),
+                btn(tr(go_label), Btn::Ghost, BtnSize::Md, Some(on_go)),
+                btn(
+                    tr(stay_label),
+                    Btn::Primary,
+                    BtnSize::Md,
+                    Some(on_stay.clone())
+                ),
             ]
             .spacing(10)
             .align_y(iced::Alignment::Center)
@@ -1174,7 +1186,7 @@ pub fn reviewer_jumps<'a, M: Clone + 'a>(
         .align_y(Alignment::Center)
         .width(Length::Fill)
         .push(
-            txt(format!("◆ {}", crate::reviewer::TITLE).to_uppercase())
+            txt(format!("◆ {}", tr(crate::reviewer::TITLE)).to_uppercase())
                 .font(SANS_BOLD)
                 .size(theme::text::KICKER)
                 .color(p.gold),
