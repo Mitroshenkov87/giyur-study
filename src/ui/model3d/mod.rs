@@ -74,6 +74,9 @@ pub enum Model {
     Tefillin,
     Kotel,
     Chuppah,
+    Ketubah,
+    KosherDishes,
+    WeddingGlass,
 }
 
 /// Card texts and view limits of one model.
@@ -93,7 +96,7 @@ pub struct Info {
 }
 
 /// Bit per model for the per-model GPU-ready flags.
-pub(crate) const ALL: [Model; 18] = [
+pub(crate) const ALL: [Model; 21] = [
     Model::KiddushCup,
     Model::ShabbatCandles,
     Model::Menorah,
@@ -112,6 +115,9 @@ pub(crate) const ALL: [Model; 18] = [
     Model::Tefillin,
     Model::Kotel,
     Model::Chuppah,
+    Model::Ketubah,
+    Model::KosherDishes,
+    Model::WeddingGlass,
 ];
 
 enum Load {
@@ -128,7 +134,7 @@ fn slots() -> &'static std::sync::Mutex<HashMap<Model, Load>> {
 
 impl Model {
     /// Objects that rotate as «Предмет дня» on «Уроки», one per day.
-    pub const OF_THE_DAY: [Model; 18] = [
+    pub const OF_THE_DAY: [Model; 21] = [
         Model::KiddushCup,
         Model::Menorah,
         Model::ShabbatCandles,
@@ -147,6 +153,9 @@ impl Model {
         Model::Tefillin,
         Model::Kotel,
         Model::Chuppah,
+        Model::Ketubah,
+        Model::KosherDishes,
+        Model::WeddingGlass,
     ];
 
     pub fn of_the_day(day: chrono::NaiveDate) -> Model {
@@ -179,7 +188,8 @@ impl Model {
                 Model::Temple,
                 Model::Kotel,
             ],
-            "semya" => &[Model::Chuppah],
+            "kashrut" => &[Model::KosherDishes],
+            "semya" => &[Model::Chuppah, Model::Ketubah, Model::WeddingGlass],
             _ => &[],
         }
     }
@@ -208,6 +218,9 @@ impl Model {
             Model::Tefillin => asset!("tefillin.glb"),
             Model::Kotel => asset!("kotel.glb"),
             Model::Chuppah => asset!("chuppah.glb"),
+            Model::Ketubah => asset!("ketubah.glb"),
+            Model::KosherDishes => asset!("kosher-dishes.glb"),
+            Model::WeddingGlass => asset!("wedding-glass.glb"),
         }
     }
 
@@ -231,6 +244,9 @@ impl Model {
             Model::Tefillin => asset!("tefillin.webp"),
             Model::Kotel => asset!("kotel.webp"),
             Model::Chuppah => asset!("chuppah.webp"),
+            Model::Ketubah => asset!("ketubah.webp"),
+            Model::KosherDishes => asset!("kosher-dishes.webp"),
+            Model::WeddingGlass => asset!("wedding-glass.webp"),
         }
     }
 
@@ -398,6 +414,33 @@ impl Model {
                 section_title: "Жизненный цикл и семья",
                 zoom_max: 2.0,
             },
+            Model::Ketubah => Info {
+                kicker: "Жизненный цикл и семья",
+                title: "Ктуба",
+                lead: "Ктуба — брачный договор, который читают и передают невесте под хупой.",
+                caption: "Ктуба закрепляет обязательства мужа перед женой: содержание, одежда и супружеские права, а также сумму, которая полагается жене в случае развода или смерти мужа. Её пишут до хупы, подписывают свидетели, читают под хупой и отдают невесте. Текст и украшения на этой модели условные: буквы не составляют настоящую ктубу, это не действительный документ.",
+                section: "semya",
+                section_title: "Жизненный цикл и семья",
+                zoom_max: 1.15,
+            },
+            Model::KosherDishes => Info {
+                kicker: "Кашрут",
+                title: "Мясная и молочная посуда",
+                lead: "В кашруте мясное (басар) и молочное (халав) не смешивают, и для них держат отдельную посуду.",
+                caption: "Тора запрещает варить козлёнка в молоке его матери; отсюда закон не есть мясное с молочным и не готовить их вместе. Поэтому в кухне обычно две посуды: одна для мяса, другая для молока. Цвета на этой модели — условный учебный знак: красный набор (тарелка, пиала, вилка) обозначает мясное, синий (тарелка, пиала, ложка) — молочное. Так иногда помечают посуду для наглядности, но сам цвет не является законом. Наборы поставлены на одну доску только для показа; в доме их хранят отдельно.",
+                section: "kashrut",
+                section_title: "Кашрут",
+                zoom_max: 2.0,
+            },
+            Model::WeddingGlass => Info {
+                kicker: "Жизненный цикл и семья",
+                title: "Свадебный бокал",
+                lead: "Под хупой жених разбивает бокал в память о разрушенном Храме.",
+                caption: "Даже в самый радостный день помнят о разрушении Храма в Иерусалиме. Жених наступает на бокал — обычно его заворачивают в салфетку или кладут в ткань — и разбивает его; гости отвечают «мазаль тов». На этой модели — бокал на деревянном подносе рядом со сложенной салфеткой. Стекло передано условно: блестящий бледно-голубой оттенок, без настоящей прозрачности.",
+                section: "semya",
+                section_title: "Жизненный цикл и семья",
+                zoom_max: 2.0,
+            },
         }
     }
 
@@ -431,6 +474,10 @@ impl Model {
             Model::Siddur => (YAW0, 0.40),
             // The table and the hanging cloth are visible from a slightly higher view.
             Model::Chuppah => (YAW0, 0.40),
+            // The bowls sit on a board: a higher view shows the insides and the utensils.
+            Model::KosherDishes => (YAW0, 0.55),
+            // Tray, napkin and glass are all visible from a slightly higher view.
+            Model::WeddingGlass => (YAW0, 0.35),
             _ => (YAW0, PITCH0),
         }
     }
@@ -1114,7 +1161,7 @@ impl shader::Pipeline for Pipeline {
         let live = std::mem::take(&mut self.live);
         self.targets.retain(|m, _| live.contains(m));
         // Uploaded models stay cached for the whole run (the target PCs
-        // have 16 GB+ RAM; eighteen models, and up to eight on «Праздники»,
+        // have 16 GB+ RAM; twenty-one models, and up to eight on «Праздники»,
         // still fit in a few hundred MB on a real GPU).
     }
 }

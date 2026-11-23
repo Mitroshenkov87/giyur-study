@@ -69,6 +69,28 @@ pitch 0.40 so the table under the cloth is visible (the app start view
 matches).
 
 
+`ketubah` and `kosher-dishes` were added the same way (`199999 2048 2048`).
+The ketubah is a framed decorative contract on a small easel; the letters
+are not a real ketubah text, so zoom is capped at 1.15× like the scrolls.
+The kosher dishes are a teaching set on one board: a red plate, bowl and
+fork for meat (басар) and a blue plate, bowl and spoon for dairy (халав).
+The still of the dishes uses pitch 0.55 so the bowls and utensils are
+visible (the app start view matches). The colours are a conventional aid,
+not a halakhic rule; the caption says the sets would be stored separately
+in a home kitchen.
+
+`wedding-glass` was added the same way (`199999 2048 2048`). The glass
+arrived from Tripo as opaque matte white, with a blue ring on the tray
+under the foot and a tan smudge on the stem. The app shader has no alpha
+and uses only the first material, so the glass was retinted in Blender
+to a glossy pale grey-blue (low roughness, a slight metallic boost) and
+the ring and smudge were cleaned on the 2K maps. It is a convincing tint,
+not real transparency. The still uses pitch 0.35 so the tray and napkin
+are visible (the app start view matches). The object belongs in «Жизненный
+цикл и семья» (breaking the glass in memory of the Temple) and in
+«Предмет дня».
+
+
 Runtime: `src/ui/model3d` (GLB reader, wgpu shader widget). Debug hooks: `SHORASHIM_3D_STATS=1` (fps and 3D-pass
 time to stderr), `SHORASHIM_3D_YAW=<rad>` (fixed angle, no idle spin), `SHORASHIM_3D_MSAA=1` (no MSAA),
 `SHORASHIM_3D_SIZE=<px>` (fixed model size on all cards; by default 190–280 px, scaled with the reading column).
