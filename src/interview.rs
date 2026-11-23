@@ -385,7 +385,7 @@ mod tests {
     fn bank_is_complete() {
         let b = bank();
         assert!(
-            (40..=60).contains(&b.questions.len()),
+            (40..=80).contains(&b.questions.len()),
             "{} questions",
             b.questions.len()
         );

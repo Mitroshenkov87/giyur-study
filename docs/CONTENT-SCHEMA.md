@@ -10,6 +10,8 @@ Every lesson, block, card and question has `minLevel`. A user at level L sees it
 - orthodox = только ортодоксальная галахическая детализация.
 Where Reform (or Conservative) differs IN KIND (not just "less"), add `"differs": [{"level":"reform","text":"..."}]` — shown as a coloured note «В реформистском иудаизме иначе: …».
 
+Equal depth (owner's rule, 2026-11-23): Reform Judaism must be written as fully and respectfully as Orthodox. Do not treat `minLevel: reform` as a residual “common core” and leave Reform practice to short footnotes. Where Reform has its own process, theology or custom (гиюр, бейт-дин, Shabbat, kashrut, prayer, siddurim such as Mishkan T'filah, interview questions), give it its own substantial blocks, lessons, sources and questions. Neutral shared text stays neutral; Orthodox-only detail stays behind `minLevel: orthodox`. Never describe Reform as “softer Orthodox” or “optional leftovers”.
+
 ## Section file `content/sections/NN-id.json`
 ```json
 {
