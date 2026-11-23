@@ -167,7 +167,24 @@ pub fn persist_detected(saved: Option<Lang>) -> bool {
 /// The language for a first launch: Russian only when Windows speaks
 /// Russian, English for every other interface language.
 pub fn detect_system() -> Lang {
+    #[cfg(target_os = "macos")]
+    {
+        // Apps started from Finder get no LANG; ask the system (CFLocale).
+        if let Some(tag) = sys_locale::get_locale() {
+            return lang_for_locale_tag(&tag);
+        }
+    }
     lang_for_ui_language(system_ui_language())
+}
+
+/// A BCP 47 locale tag (`ru-RU`, `en-US`) → our language: Russian only for
+/// a Russian tag, English for every other one.
+pub fn lang_for_locale_tag(tag: &str) -> Lang {
+    if tag.to_ascii_lowercase().starts_with("ru") {
+        Lang::Ru
+    } else {
+        Lang::En
+    }
 }
 
 /// Windows LANGID → our language. Russian is primary language 0x19.
@@ -181,11 +198,7 @@ pub fn lang_for_ui_language(langid: Option<u16>) -> Lang {
                 .iter()
                 .find_map(|k| std::env::var(k).ok().filter(|v| !v.is_empty()))
                 .unwrap_or_default();
-            if v.to_ascii_lowercase().starts_with("ru") {
-                Lang::Ru
-            } else {
-                Lang::En
-            }
+            lang_for_locale_tag(&v)
         }
     }
 }
@@ -271,6 +284,16 @@ macro_rules! trf {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn russian_locale_tag_gives_russian_everything_else_english() {
+        assert_eq!(lang_for_locale_tag("ru-RU"), Lang::Ru); // macOS CFLocale
+        assert_eq!(lang_for_locale_tag("ru"), Lang::Ru);
+        assert_eq!(lang_for_locale_tag("ru_RU.UTF-8"), Lang::Ru); // LANG
+        assert_eq!(lang_for_locale_tag("en-US"), Lang::En);
+        assert_eq!(lang_for_locale_tag("he-IL"), Lang::En);
+        assert_eq!(lang_for_locale_tag(""), Lang::En);
+    }
 
     #[test]
     fn russian_windows_gives_russian_everything_else_english() {

@@ -1,10 +1,12 @@
 # Shorashim
 
-Shorashim means “roots.” It is an offline Windows app for studying the foundations of Judaism and for calm, step-by-step preparation for **giyur** and the **beit din** interview.
+Shorashim means “roots.” It is an offline app for Windows and macOS for studying the foundations of Judaism and for calm, step-by-step preparation for **giyur** and the **beit din** interview.
 
 The course is written in the language of Torah and Tanakh — the Written and Oral Torah. It is consistently pro-Israel: Eretz Israel is the heritage the Torah gives the Jewish people, Jerusalem is the eternal undivided capital, and the State of Israel is the Jewish people’s return home.
 
 **[Download Shorashim-Setup.exe](https://github.com/Mitroshenkov87/shorashim/releases/latest)** — Windows 10 or 11, for the current user, no administrator rights needed.
+
+**[Download Shorashim-macOS.dmg](https://github.com/Mitroshenkov87/shorashim/releases/latest/download/Shorashim-macOS.dmg)** — macOS 11 or later, Apple Silicon and Intel.
 
 **[User guide](docs/Shorashim-User-Guide.pdf)** — a short PDF on installing the app and using each part of it.
 
@@ -53,6 +55,14 @@ A **reviewer mode** lets a rabbi or a tester open any part of the app without ch
 3. Run the installer. It unpacks the program, the `content` folder (lessons, cards, questions, prayers and the calendar) and the music, creates shortcuts, and starts Shorashim.
 
 Progress is stored separately, in `%APPDATA%\Shorashim`, and is left as it is if you install the app again. Everything works offline.
+
+### macOS
+
+1. Download **`Shorashim-macOS.dmg`** from the **[latest release](https://github.com/Mitroshenkov87/shorashim/releases/latest)**.
+2. Open it and drag **Shorashim** onto **Applications**.
+3. The app is not signed with an Apple developer ID yet, so the first time macOS will not open it with a double click. Right-click (or Control-click) **Shorashim** in Applications and choose **Open**, then **Open** again. On macOS 15 or later, if there is no Open button, go to **System Settings → Privacy & Security** and click **Open Anyway**. After that it opens normally.
+
+Progress is stored in `~/Library/Application Support/Shorashim`.
 
 ## Course content
 

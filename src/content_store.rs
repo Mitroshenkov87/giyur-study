@@ -157,9 +157,24 @@ pub fn candidate_roots() -> Vec<PathBuf> {
         .and_then(|e| e.parent().map(Path::to_path_buf))
     {
         out.push(dir.join(DIR_NAME));
+        // macOS app bundle: Shorashim.app/Contents/MacOS/shorashim keeps
+        // its course files in Contents/Resources/content.
+        if let Some(res) = bundle_resources(&dir) {
+            out.push(res.join(DIR_NAME));
+        }
     }
     out.push(Path::new(env!("CARGO_MANIFEST_DIR")).join(DIR_NAME));
     out
+}
+
+/// `Contents/Resources` of a macOS app bundle, given the folder of its
+/// binary (`Contents/MacOS`); `None` outside a bundle.
+pub fn bundle_resources(exe_dir: &Path) -> Option<PathBuf> {
+    if exe_dir.file_name()? != "MacOS" {
+        return None;
+    }
+    let res = exe_dir.parent()?.join("Resources");
+    res.is_dir().then_some(res)
 }
 
 /// The language folder inside a root: `<root>/<lang>/`, or the root itself
@@ -888,6 +903,19 @@ fn collect_ids_into(v: &serde_json::Value, out: &mut std::collections::BTreeSet<
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn macos_bundle_resources_are_found_beside_contents_macos() {
+        let tmp = std::env::temp_dir().join(format!("shorashim-bundle-{}", std::process::id()));
+        let macos = tmp.join("Shorashim.app/Contents/MacOS");
+        std::fs::create_dir_all(&macos).unwrap();
+        assert_eq!(bundle_resources(&macos), None, "no Resources yet");
+        let res = tmp.join("Shorashim.app/Contents/Resources");
+        std::fs::create_dir_all(&res).unwrap();
+        assert_eq!(bundle_resources(&macos), Some(res));
+        assert_eq!(bundle_resources(&tmp), None, "not a bundle");
+        let _ = std::fs::remove_dir_all(&tmp);
+    }
+
     use super::*;
     use std::time::{SystemTime, UNIX_EPOCH};
 

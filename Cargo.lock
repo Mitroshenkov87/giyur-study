@@ -3742,6 +3742,7 @@ dependencies = [
  "rodio",
  "serde",
  "serde_json",
+ "sys-locale",
  "windows 0.62.2",
  "winresource",
 ]
