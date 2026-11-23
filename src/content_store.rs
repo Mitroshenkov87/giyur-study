@@ -542,7 +542,8 @@ mod tests {
         let f = root.join("ru/sections/03-shabbat.json");
         let raw = std::fs::read_to_string(&f).unwrap();
         // Drop the first comma after the second line: invalid JSON.
-        let at = raw.find(",\n").unwrap();
+        // (Windows checkouts may have CRLF line ends.)
+        let at = raw.find(",\r\n").or_else(|| raw.find(",\n")).unwrap();
         std::fs::write(&f, format!("{}{}", &raw[..at], &raw[at + 1..])).unwrap();
         let err = load_dir(&root.join("ru"), "ru").unwrap_err();
         assert_eq!(err.file, f);
