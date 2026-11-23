@@ -95,6 +95,18 @@ are visible (the app start view matches). The object belongs in «Жизненн
 цикл и семья» (breaking the glass in memory of the Temple) and in
 «Предмет дня».
 
+`kosher-fish` was added the same way (`199999 2048 2048`). It is a carp
+on a rustic two-plank board, with loose silvery scales beside the belly:
+the teaching point is that kosher fish have fins and scales that come off
+without damaging the skin (Ваикра 11:9; Mishna Nida 6:9; Shulchan Aruch
+Yoreh Deah 83). A first Blender pass that flattened a suspected “icy
+clump” along the lower edge also flattened part of the belly and tail, so
+that export was discarded; the shipped file is a plain optimize of the
+raw Tripo mesh. Some loose scales along the lower edge are slightly
+thick or fused, but they remain recognizable as scales that came off.
+The still uses pitch 0.55 (the app start view matches). The object
+belongs in «Кашрут» (signs of kosher fish) and in «Предмет дня».
+
 
 Runtime: `src/ui/model3d` (GLB reader, wgpu shader widget). Debug hooks: `SHORASHIM_3D_STATS=1` (fps and 3D-pass
 time to stderr), `SHORASHIM_3D_YAW=<rad>` (fixed angle, no idle spin), `SHORASHIM_3D_MSAA=1` (no MSAA),

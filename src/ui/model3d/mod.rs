@@ -77,6 +77,7 @@ pub enum Model {
     Ketubah,
     KosherDishes,
     WeddingGlass,
+    KosherFish,
 }
 
 /// Card texts and view limits of one model.
@@ -96,7 +97,7 @@ pub struct Info {
 }
 
 /// Bit per model for the per-model GPU-ready flags.
-pub(crate) const ALL: [Model; 21] = [
+pub(crate) const ALL: [Model; 22] = [
     Model::KiddushCup,
     Model::ShabbatCandles,
     Model::Menorah,
@@ -118,6 +119,7 @@ pub(crate) const ALL: [Model; 21] = [
     Model::Ketubah,
     Model::KosherDishes,
     Model::WeddingGlass,
+    Model::KosherFish,
 ];
 
 enum Load {
@@ -134,7 +136,7 @@ fn slots() -> &'static std::sync::Mutex<HashMap<Model, Load>> {
 
 impl Model {
     /// Objects that rotate as «Предмет дня» on «Уроки», one per day.
-    pub const OF_THE_DAY: [Model; 21] = [
+    pub const OF_THE_DAY: [Model; 22] = [
         Model::KiddushCup,
         Model::Menorah,
         Model::ShabbatCandles,
@@ -156,6 +158,7 @@ impl Model {
         Model::Ketubah,
         Model::KosherDishes,
         Model::WeddingGlass,
+        Model::KosherFish,
     ];
 
     pub fn of_the_day(day: chrono::NaiveDate) -> Model {
@@ -188,7 +191,7 @@ impl Model {
                 Model::Temple,
                 Model::Kotel,
             ],
-            "kashrut" => &[Model::KosherDishes],
+            "kashrut" => &[Model::KosherDishes, Model::KosherFish],
             "semya" => &[Model::Chuppah, Model::Ketubah, Model::WeddingGlass],
             _ => &[],
         }
@@ -221,6 +224,7 @@ impl Model {
             Model::Ketubah => asset!("ketubah.glb"),
             Model::KosherDishes => asset!("kosher-dishes.glb"),
             Model::WeddingGlass => asset!("wedding-glass.glb"),
+            Model::KosherFish => asset!("kosher-fish.glb"),
         }
     }
 
@@ -247,6 +251,7 @@ impl Model {
             Model::Ketubah => asset!("ketubah.webp"),
             Model::KosherDishes => asset!("kosher-dishes.webp"),
             Model::WeddingGlass => asset!("wedding-glass.webp"),
+            Model::KosherFish => asset!("kosher-fish.webp"),
         }
     }
 
@@ -441,6 +446,15 @@ impl Model {
                 section_title: "Жизненный цикл и семья",
                 zoom_max: 2.0,
             },
+            Model::KosherFish => Info {
+                kicker: "Кашрут",
+                title: "Кошерная рыба",
+                lead: "Рыба кошерна, если у неё есть плавники и чешуя, которую можно снять, не повредив кожу.",
+                caption: "Признак кошерной рыбы дан в Торе: у неё должны быть плавники и чешуя (Ваикра 11:9). На практике проверяют чешую: если она снимается, не повреждая кожу, рыба кошерна; Мишна (Нида 6:9) учит, что у всякой рыбы с чешуёй есть и плавники. Подробности — в Шульхан Арухе, Йоре Деа 83. Карп — обычный пример такой рыбы. Рыбе не нужна шхита, и она пареве: её едят и с мясным, и с молочным. На этой модели — карп на доске; снятая чешуя рядом показывает, что чешуя сходит. Некоторые чешуйки у нижнего края слегка толстые или слипшиеся — это условность модели, а не точный вид свежей чешуи.",
+                section: "kashrut",
+                section_title: "Кашрут",
+                zoom_max: 2.0,
+            },
         }
     }
 
@@ -476,6 +490,8 @@ impl Model {
             Model::Chuppah => (YAW0, 0.40),
             // The bowls sit on a board: a higher view shows the insides and the utensils.
             Model::KosherDishes => (YAW0, 0.55),
+            // The fish lies on a board: a higher view shows the loose scales beside the belly.
+            Model::KosherFish => (YAW0, 0.55),
             // Tray, napkin and glass are all visible from a slightly higher view.
             Model::WeddingGlass => (YAW0, 0.35),
             // Slightly higher so the titura, maabarta and the strap loop are visible; the 3/4 view shows the three-headed shin.
@@ -1163,7 +1179,7 @@ impl shader::Pipeline for Pipeline {
         let live = std::mem::take(&mut self.live);
         self.targets.retain(|m, _| live.contains(m));
         // Uploaded models stay cached for the whole run (the target PCs
-        // have 16 GB+ RAM; twenty-one models, and up to eight on «Праздники»,
+        // have 16 GB+ RAM; twenty-two models, and up to eight on «Праздники»,
         // still fit in a few hundred MB on a real GPU).
     }
 }
