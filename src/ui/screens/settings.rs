@@ -65,6 +65,8 @@ pub enum Msg {
     SetTheme(&'static str),
     SetFont(i64),
     ToggleUnlockAll,
+    /// «Открытый режим рецензента» (src/reviewer.rs).
+    ToggleReviewer,
     ToggleTranslit,
     SetSeconds(i64),
     SetGoal(i64),
@@ -118,6 +120,24 @@ impl Screen {
                 ctx.toast("Сохранено", "", "");
                 Action::None
             }
+            Msg::ToggleReviewer => {
+                let on = !ctx.reviewer();
+                ctx.set_reviewer(on, true);
+                if on {
+                    ctx.toast(
+                        "Открытый режим рецензента включён",
+                        "Открыто всё. Ваш прогресс отложен и не изменится.",
+                        "",
+                    );
+                } else {
+                    ctx.toast(
+                        "Открытый режим рецензента выключен",
+                        "Ваш прогресс — в точности как до включения.",
+                        "",
+                    );
+                }
+                Action::SettingsChanged
+            }
             Msg::ToggleTranslit => {
                 ctx.state.settings.translit = !ctx.state.settings.translit;
                 ctx.save();
@@ -143,11 +163,28 @@ impl Screen {
                     .set_file_name(&name)
                     .save_file();
                 if let Some(path) = picked {
-                    match std::fs::write(&path, ctx.state.export_json()) {
+                    // The real progress, also in the «Открытый режим рецензента».
+                    match std::fs::write(&path, ctx.real_state().export_json()) {
                         Ok(()) => ctx.toast("Файл прогресса сохранён", "", ""),
                         Err(_) => ctx.toast("Не удалось сохранить файл", "", ""),
                     }
                 }
+                Action::None
+            }
+            Msg::ImportPick if ctx.reviewer() => {
+                ctx.toast(
+                    "Недоступно в открытом режиме рецензента",
+                    "Выключите режим, чтобы импортировать прогресс.",
+                    "",
+                );
+                Action::None
+            }
+            Msg::AskReset if ctx.reviewer() => {
+                ctx.toast(
+                    "Недоступно в открытом режиме рецензента",
+                    "Выключите режим, чтобы сбросить прогресс.",
+                    "",
+                );
                 Action::None
             }
             Msg::ImportPick => {
@@ -402,6 +439,12 @@ impl Screen {
                 ]
                 .spacing(4)
                 .into(),
+            ),
+            divider(p),
+            set_row(
+                crate::reviewer::TITLE,
+                crate::reviewer::CAPTION.to_string(),
+                switch(ctx.reviewer(), Msg::ToggleReviewer, p),
             ),
             divider(p),
             set_row(

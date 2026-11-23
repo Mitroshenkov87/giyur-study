@@ -18,8 +18,10 @@ Shorashim automation (docs/AUTOMATION.md)
   shorashim ctl -                     JSON lines from stdin, one reply per line
   shorashim ctl launch                start the app with --control and wait for it
   shorashim mcp [--headless]          MCP server on stdio (attach to the app, or headless)
-  shorashim --headless [--script FILE] [--data FILE] [--today YYYY-MM-DD] [--keep-going]
+  shorashim --headless [--script FILE] [--data FILE] [--today YYYY-MM-DD] [--reviewer] [--keep-going]
                                       run JSON-line commands without a window
+  shorashim --reviewer                start in the «Открытый режим рецензента» for this run
+                                      (also SHORASHIM_REVIEWER=1; ctl launch --reviewer)
 Options for ctl/mcp: --file PATH (control.json location)
 ";
 
@@ -99,7 +101,12 @@ pub fn session_options(args: &mut Vec<String>) -> Result<Options, String> {
         ),
         None => None,
     };
-    Ok(Options { data, today })
+    let reviewer = take_flag(args, "--reviewer");
+    Ok(Options {
+        data,
+        today,
+        reviewer,
+    })
 }
 
 fn headless(args: &[String]) -> i32 {

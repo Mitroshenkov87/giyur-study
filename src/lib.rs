@@ -10,6 +10,7 @@ pub mod ladder;
 pub mod music;
 pub mod prayers;
 pub mod quotes;
+pub mod reviewer;
 pub mod srs;
 pub mod storage;
 pub mod study;

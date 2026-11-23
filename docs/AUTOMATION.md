@@ -72,7 +72,8 @@ failure, `error`. Action commands reply with a short summary (`screen`,
 | `answer` | `choice` \| `tf` \| `text` \| `knew` \| `self_grade` \| `auto`, `next` | answer the current question |
 | `type` | `text`, `input` (index), `append`, `submit` | type into a field (replaces its text unless `append`) |
 | `select` | `choice` (index) or `target` (shown text), `option`, `nth` | pick from a drop-down |
-| `set` | `key`, `value` | `theme` (`dark` / `leather` = «Кожа»; `parchment`, its old name, is stored as `leather`), `font_step` (0–3), `translit`, `unlock_all`, `timed_sound`, `timed_auto`, `timed_seconds`, `daily_goal` |
+| `set` | `key`, `value` | `theme` (`dark` / `leather` = «Кожа»; `parchment`, its old name, is stored as `leather`), `font_step` (0–3), `translit`, `unlock_all`, `reviewer_mode`, `timed_sound`, `timed_auto`, `timed_seconds`, `daily_goal` |
+| `reviewer` | `on`, `persist` (default true) | «Открытый режим рецензента»: `on=true/false` switches it like the settings switch (`persist=false`: this run only); the reply has `reviewer` and `progress` = the real progress, which the mode never changes |
 | `wait` | `ms` (≤ 60000) | let time pass; timers run (the timed quiz reveals options after a pause) |
 | `screenshot` | `path`, `full_page`, `width`, `height` | save a WebP (the extension is forced to `.webp`) |
 | `scroll` | `to` = top / bottom / 0..1 | windowed app only |
@@ -160,6 +161,24 @@ shorashim --headless < commands.jsonl          # stdin, keeps going on errors
   `SHORASHIM_LADDER_CLIMB=<steps>` (e.g. `6.5`) freezes the lamp of the 3D
   «Маалот» stair mid-climb. Live 3D needs the wgpu renderer (a real window);
   the software renderer shows the stills.
+
+**«Открытый режим рецензента».** For a rabbi or a beta tester: every
+gate is open (sections and lessons at any level, any «Маалот» step via the
+`Timed(Jump(n))` chips, any exam question via `Exam(Jump(n))` and
+`Exam(Peek)` «Показать ответ», every collection object and badge, any
+«Предмет дня» via `Map(ShiftDay(±1))`). Progress is not counted: the real
+progress is kept aside and the screens work on a copy that is never saved;
+XP, badges and collection objects are not awarded. Switching the mode off
+restores the progress exactly (settings changed meanwhile are kept). Start
+in it with `shorashim --reviewer`, `SHORASHIM_REVIEWER=1`,
+`shorashim-ctl launch --reviewer` or `--headless --reviewer` (this run
+only), or use the `reviewer` command. A thin banner on top of the window
+has «Выключить». No «Прервать экзамен?» question is asked in the mode.
+
+**Leaving a run.** A sidebar click during an exam, a test or a «Маалот»
+climb asks first («Прервать экзамен? Прогресс этой попытки не сохранится.»
+— «Остаться» / «Прервать»; for «Маалот» the text says the climbed steps
+are kept). The `navigate` command does not ask.
 
 **Start-up splash.** The windowed app opens with a 5-second splash (the
 menorah picture and «Шорашим», a click or any key skips it). It is never

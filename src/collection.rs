@@ -111,7 +111,8 @@ pub fn unlocked_on<'a>(state: &'a State, key: &str) -> Option<&'a str> {
 }
 
 pub fn is_unlocked(state: &State, key: &str) -> bool {
-    unlocked_on(state, key).is_some()
+    // «Открытый режим рецензента»: every object can be opened.
+    crate::reviewer::active(state) || unlocked_on(state, key).is_some()
 }
 
 /// Objects in the collection (only known keys count).
@@ -122,6 +123,9 @@ pub fn count(state: &State) -> usize {
 /// Record every object whose rule is met now; returns the newly added keys
 /// in list order. The caller saves the state.
 pub fn sync(state: &mut State, today: &str) -> Vec<&'static str> {
+    if crate::reviewer::active(state) {
+        return Vec::new();
+    }
     let new: Vec<&'static str> = ITEMS
         .iter()
         .filter(|i| !is_unlocked(state, i.key) && met(state, i.unlock))

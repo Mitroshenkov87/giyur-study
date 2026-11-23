@@ -76,6 +76,11 @@ pub struct Settings {
     /// The first-run toast about music has already been shown.
     #[serde(default)]
     pub music_hint_seen: bool,
+    /// «Открытый режим рецензента» (src/reviewer.rs): every progression
+    /// gate is lifted and progress is not counted. Kept across restarts
+    /// until it is switched off.
+    #[serde(default)]
+    pub reviewer_mode: bool,
     /// Unknown keys kept so a PWA file → native → PWA round-trip loses nothing
     /// (js/storage.js fill keeps them).
     #[serde(flatten)]
@@ -139,6 +144,7 @@ impl Default for Settings {
             music_enabled: false,
             music_volume: default_music_volume(),
             music_hint_seen: false,
+            reviewer_mode: false,
             extra: serde_json::Map::new(),
         }
     }
@@ -377,6 +383,7 @@ const SETTINGS_KINDS: &[(&str, Kind)] = &[
     ("musicEnabled", Kind::Bool),
     ("musicVolume", Kind::Int),
     ("musicHintSeen", Kind::Bool),
+    ("reviewerMode", Kind::Bool),
 ];
 
 /// Sanitise an imported JSON value like js/storage.js importJSON, then

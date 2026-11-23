@@ -1065,3 +1065,134 @@ impl<Message> Widget<Message, Theme, Renderer> for MinHeight<'_, Message> {
             .overlay(tree, child, renderer, viewport, translation)
     }
 }
+
+/// A confirm dialog for a shell layer above the whole window: dimmed
+/// backdrop (a click on it = `on_stay`), a modal card with a serif title,
+/// body text and two buttons, «stay» (ghost) and «go» (primary).
+pub fn confirm_modal<'a, M: Clone + 'a>(
+    title: impl IntoFragment<'a>,
+    body: impl IntoFragment<'a>,
+    stay_label: &'a str,
+    go_label: &'a str,
+    on_stay: M,
+    on_go: M,
+) -> Element<'a, M> {
+    let p = palette();
+    let dialog = container(
+        column![
+            txt(title)
+                .font(SERIF_BOLD)
+                .size(theme::text::H2)
+                .color(p.text),
+            txt(body).size(theme::text::BODY).color(p.text),
+            row![
+                iced::widget::space::horizontal(),
+                btn(stay_label, Btn::Ghost, BtnSize::Md, Some(on_stay.clone())),
+                btn(go_label, Btn::Primary, BtnSize::Md, Some(on_go)),
+            ]
+            .spacing(10)
+            .width(Length::Fill),
+        ]
+        .spacing(14)
+        .width(Length::Fill),
+    )
+    .padding(24)
+    .max_width(460)
+    .style(move |_| container::Style {
+        background: Some(Background::Color(p.surface)),
+        border: Border {
+            color: p.line2,
+            width: 1.0,
+            radius: theme::radius::MODAL.into(),
+        },
+        shadow: Shadow {
+            color: Color::from_rgba8(0, 0, 0, 0.5),
+            offset: iced::Vector::new(0.0, 12.0),
+            blur_radius: 34.0,
+        },
+        ..container::Style::default()
+    });
+    let back = Color::from_rgba8(3, 5, 12, 0.66);
+    let backdrop = button(
+        container(iced::widget::space()).style(move |_| container::Style {
+            background: Some(Background::Color(back)),
+            ..container::Style::default()
+        }),
+    )
+    .width(Length::Fill)
+    .height(Length::Fill)
+    .on_press(on_stay);
+    iced::widget::stack![
+        backdrop,
+        iced::widget::center(modal_fit(dialog)).padding(16)
+    ]
+    .width(Length::Fill)
+    .height(Length::Fill)
+    .into()
+}
+
+/// «Открытый режим рецензента» panel over a run: a gold kicker, a hint and
+/// numbered chips `1..=count` to jump straight to any step or question
+/// (`current` is 1-based), plus optional extra buttons on the right.
+pub fn reviewer_jumps<'a, M: Clone + 'a>(
+    hint: &'a str,
+    count: usize,
+    current: usize,
+    on_jump: impl Fn(usize) -> M,
+    extra: Vec<Element<'a, M>>,
+) -> Element<'a, M> {
+    let p = palette();
+    let mut chips = Row::new().spacing(6);
+    for n in 1..=count {
+        chips = chips.push(
+            button(
+                container(txt(n.to_string()).size(13.0).font(if n == current {
+                    SANS_BOLD
+                } else {
+                    SANS
+                }))
+                .center(Length::Fill),
+            )
+            .width(34.0)
+            .height(30.0)
+            .padding(0)
+            .style(move |_, status| theme::choice(&palette(), n == current, true, status))
+            .on_press(on_jump(n)),
+        );
+    }
+    let mut head = Row::new()
+        .spacing(10)
+        .align_y(Alignment::Center)
+        .width(Length::Fill)
+        .push(
+            txt(format!("◆ {}", crate::reviewer::TITLE).to_uppercase())
+                .font(SANS_BOLD)
+                .size(theme::text::KICKER)
+                .color(p.gold),
+        )
+        .push(space::horizontal());
+    for e in extra {
+        head = head.push(e);
+    }
+    container(
+        column![
+            head,
+            txt(hint).size(theme::text::SMALL).color(p.muted),
+            chips.wrap().vertical_spacing(6),
+        ]
+        .spacing(8)
+        .width(Length::Fill),
+    )
+    .padding([12.0, 14.0])
+    .width(Length::Fill)
+    .style(move |_| container::Style {
+        background: Some(Background::Color(Color { a: 0.10, ..p.gold })),
+        border: Border {
+            color: Color { a: 0.5, ..p.gold },
+            width: 1.0,
+            radius: theme::radius::SMALL.into(),
+        },
+        ..container::Style::default()
+    })
+    .into()
+}

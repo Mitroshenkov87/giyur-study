@@ -138,6 +138,19 @@ pub struct Ctx {
     pub music_available: bool,
     pub music_error: Option<String>,
     pub music_track_count: usize,
+    /// «Открытый режим рецензента» (src/reviewer.rs): the real progress,
+    /// kept aside while the screens work on a sandbox copy in `state`.
+    pub sandbox: Option<Sandbox>,
+}
+
+/// The real progress while the «Открытый режим рецензента» is on.
+pub struct Sandbox {
+    /// Exactly what was there when the mode was switched on; only its
+    /// settings follow the ones changed in the mode.
+    pub real: State,
+    /// Whether the mode is stored in the progress file (switched on in
+    /// «Настройки») or only for this run (`--reviewer`).
+    pub persist: bool,
 }
 
 impl Ctx {
@@ -158,6 +171,7 @@ impl Ctx {
             music_available: false,
             music_error: None,
             music_track_count: 0,
+            sandbox: None,
         };
         let cat = crate::music::catalog();
         ctx.music_available = !cat.tracks.is_empty();
@@ -177,7 +191,61 @@ impl Ctx {
         // Objects earned before the collection existed join it quietly.
         crate::collection::sync(&mut ctx.state, &crate::util::day_key(today));
         ctx.save();
+        ctx.start_reviewer_if_asked();
         ctx
+    }
+
+    /// Enter the «Открытый режим рецензента» at start-up when the progress
+    /// file has it on, or `--reviewer` / `SHORASHIM_REVIEWER=1` asks for it.
+    pub fn start_reviewer_if_asked(&mut self) {
+        if crate::reviewer::active(&self.state) {
+            self.set_reviewer(true, true);
+        } else if crate::reviewer::requested_at_start() {
+            self.set_reviewer(true, false);
+        }
+    }
+
+    /// Whether the «Открытый режим рецензента» is on.
+    pub fn reviewer(&self) -> bool {
+        self.sandbox.is_some()
+    }
+
+    /// The real progress (the one kept aside while the mode is on).
+    pub fn real_state(&self) -> &State {
+        self.sandbox.as_ref().map_or(&self.state, |s| &s.real)
+    }
+
+    /// Switch the «Открытый режим рецензента». On: the real progress is put
+    /// aside and the screens get a copy that is never saved. Off: the real
+    /// progress comes back exactly as it was (with the current settings).
+    /// `persist`: keep the mode on across restarts (the settings switch).
+    pub fn set_reviewer(&mut self, on: bool, persist: bool) {
+        match (on, self.sandbox.is_some()) {
+            (true, false) => {
+                let real = self.state.clone();
+                self.state.settings.reviewer_mode = true;
+                self.sandbox = Some(Sandbox { real, persist });
+                self.save();
+            }
+            (true, true) => {
+                if let Some(sb) = &mut self.sandbox {
+                    sb.persist |= persist;
+                }
+                self.save();
+            }
+            (false, true) => {
+                let sb = self.sandbox.take().expect("checked");
+                let mut real = sb.real;
+                real.settings = self.state.settings.clone();
+                real.settings.reviewer_mode = false;
+                self.state = real;
+                self.save();
+            }
+            (false, false) => {
+                self.state.settings.reviewer_mode = false;
+                self.save();
+            }
+        }
     }
 
     pub fn today(&self) -> NaiveDate {
@@ -190,11 +258,21 @@ impl Ctx {
     }
 
     /// Persist progress (atomic write). Errors are reported as a toast.
+    /// While the «Открытый режим рецензента» is on only the settings reach
+    /// the file: the real progress is written back unchanged.
     pub fn save(&mut self) {
         if !self.writable {
             return;
         }
-        if let Err(e) = storage::save(&self.path, &self.state) {
+        let res = match &mut self.sandbox {
+            Some(sb) => {
+                sb.real.settings = self.state.settings.clone();
+                sb.real.settings.reviewer_mode = sb.persist;
+                storage::save(&self.path, &sb.real)
+            }
+            None => storage::save(&self.path, &self.state),
+        };
+        if let Err(e) = res {
             self.toast("Не удалось сохранить прогресс", &e.to_string(), "⚠");
         }
     }
@@ -246,6 +324,9 @@ impl Ctx {
     }
 
     pub fn celebrate(&mut self, c: Celebration) {
+        if self.reviewer() {
+            return;
+        }
         self.toasts.push(Toast {
             title: c.title,
             text: c.text,
