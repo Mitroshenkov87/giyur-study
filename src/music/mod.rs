@@ -129,6 +129,10 @@ pub fn find_music_dir() -> Option<PathBuf> {
         if let Some(p) = exe.parent() {
             cands.push(p.join("music"));
             cands.push(p.join("assets").join("music"));
+            // macOS app bundle: Contents/Resources/music.
+            if let Some(res) = crate::content_store::bundle_resources(p) {
+                cands.push(res.join("music"));
+            }
         }
     }
     if let Ok(cwd) = std::env::current_dir() {
