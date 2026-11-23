@@ -178,3 +178,46 @@ fn mcp_server_lists_and_calls_tools() {
         .expect("text");
     assert!(text.contains("\"screen\": \"level\""), "{text}");
 }
+
+#[test]
+fn prayers() {
+    run_script("09-prayers.jsonl");
+}
+
+/// The «Показывать» toggle really hides the other forms, and the choice is
+/// saved in the progress file (`extra.prayers`), not lost on navigation.
+#[test]
+fn prayers_display_toggle_hides_and_persists() {
+    let mut s = session();
+    s.run(&json!({"cmd": "press", "label": "Начать"}));
+    s.run(&json!({"cmd": "press", "contains": "Ортодоксальный"}));
+    let texts = |s: &mut Session| -> String {
+        let r = s.run(&json!({"cmd": "state"}));
+        r["texts"].to_string()
+    };
+    s.run(&json!({"cmd": "navigate", "to": "prayers:modeh-ani"}));
+    let all = texts(&mut s);
+    assert!(all.contains("מוֹדֶה אֲנִי"), "{all}");
+    assert!(all.contains("Модэ ани лефанеха"));
+    assert!(all.contains("Благодарю Тебя"));
+    s.run(&json!({"cmd": "press", "label": "Русский"}));
+    let ru = texts(&mut s);
+    assert!(ru.contains("Благодарю Тебя"));
+    assert!(
+        !ru.contains("Модэ ани лефанеха"),
+        "translit shown in ru mode"
+    );
+    assert!(!ru.contains("שֶׁהֶחֱזַרְתָּ"), "Hebrew shown in ru mode");
+    // Another screen and back: still Russian only.
+    s.run(&json!({"cmd": "navigate", "to": "map"}));
+    s.run(&json!({"cmd": "navigate", "to": "prayers:modeh-ani"}));
+    let again = texts(&mut s);
+    assert!(!again.contains("שֶׁהֶחֱזַרְתָּ"));
+    s.run(&json!({"cmd": "press", "label": "Иврит"}));
+    let he = texts(&mut s);
+    assert!(he.contains("שֶׁהֶחֱזַרְתָּ"));
+    assert!(!he.contains("Благодарю Тебя"));
+    // An unknown prayer id is refused, not silently opened.
+    let bad = s.run(&json!({"cmd": "navigate", "to": "prayers:nope"}));
+    assert_eq!(bad["ok"], false, "{bad}");
+}

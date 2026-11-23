@@ -24,3 +24,5 @@
 | mcpj | Московский центр прогрессивного иудаизма (РООПИ, WUPJ) | реф. | https://mcpj.ru/about_us/ |
 | wupj-fsu | World Union for Progressive Judaism — СНГ | реф. | https://wupj.org/fsu/ |
 | orth-conv | Ортодоксальный и консервативный гиюр: разница | обзор | https://www.orthodox-conversion.com/ru/post/ortodoksalnyy-i-konservativnyy-giyur |
+| metsudah-siddur | The Metsudah Siddur (1981), ивритский текст, нусах Ашкеназ — для раздела «Молитвы» (CC-BY, через Sefaria) | орт. | https://www.sefaria.org/Siddur_Ashkenaz |
+| daat-siddur | Сидур Даат — «Хавинену», Тфилат а-дерех (общественное достояние, через Sefaria) | орт. | http://www.daat.ac.il/daat/sidurim/tohen3.htm |

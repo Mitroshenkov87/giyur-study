@@ -1,0 +1,27 @@
+# «Молитвы»: the sidebar item, the list with its filters, one prayer, the
+# display toggle, text size, favourites and the prev / next walk.
+{"cmd":"press","label":"Начать"}
+{"cmd":"press","contains":"Ортодоксальный","expect":{"screen":"map"}}
+{"cmd":"navigate","to":"Молитвы","expect":{"screen":"prayers","route":"prayers","text":"Молитвы на каждый день"}}
+{"cmd":"state","expect":{"text":"Можно молиться на понятном языке","control":"Prayers(Open(\"modeh-ani\"))"}}
+{"cmd":"state","expect":{"text":"Уточните у раввина"}}
+{"cmd":"press","id":"Prayers(Filter(Group(\"food\")))","expect":{"screen":"prayers","control":"Prayers(Open(\"hamotzi\"))","text":"а-Моци"}}
+{"cmd":"press","contains":"Избранное","expect":{"text":"Пока пусто"}}
+{"cmd":"press","id":"Prayers(Filter(All))","expect":{"control":"Prayers(Open(\"tefilat-haderech\"))"}}
+{"cmd":"press","id":"Prayers(ToggleFavorite(\"shma\"))","expect":{"text":"Избранное (1)"}}
+{"cmd":"press","id":"Prayers(Open(\"shma\"))","expect":{"screen":"prayers","route":"prayers:shma","text":"Слушай, Израиль"}}
+{"cmd":"state","expect":{"text":"Шма Исраэль, Адонай Элоэйну, Адонай эхад","control":"В избранном"}}
+{"cmd":"state","expect":{"text":"שְׁמַע יִשְׂרָאֵל"}}
+{"cmd":"state","expect":{"text":"До гиюра"}}
+{"cmd":"press","label":"Русский","expect":{"text":"Слушай, Израиль"}}
+{"cmd":"press","label":"Транслитерация","expect":{"text":"Барух шем квод малхуто"}}
+{"cmd":"press","label":"Иврит","expect":{"text":"בָּרוּךְ שֵׁם כְּבוֹד"}}
+{"cmd":"press","label":"Всё вместе"}
+{"cmd":"press","label":"A+","expect":{"text":"120%"}}
+{"cmd":"press","label":"A−","expect":{"text":"100%"}}
+{"cmd":"press","contains":"→","expect":{"route":"prayers:asher-yatzar"}}
+{"cmd":"back","expect":{"route":"prayers:shma"}}
+{"cmd":"press","label":"Все молитвы","expect":{"route":"prayers","text":"Избранное (1)"}}
+{"cmd":"navigate","to":"prayers:amida-short","expect":{"text":"Хавинену"}}
+{"cmd":"navigate","to":"prayers:shabbat-candles","expect":{"text":"леадлик нер шель Шаббат"}}
+{"cmd":"navigate","to":"prayers:birkat-hamazon","expect":{"text":"Брих Рахамана"}}

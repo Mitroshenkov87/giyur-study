@@ -224,6 +224,22 @@ const ART: &[(&str, &[u8])] = &[
         include_bytes!("../../assets/img/icons/calendar-leather-hover-128.webp"),
     ),
     (
+        "icon-prayers-wood",
+        include_bytes!("../../assets/img/icons/prayers-wood-128.webp"),
+    ),
+    (
+        "icon-prayers-wood-hover",
+        include_bytes!("../../assets/img/icons/prayers-wood-hover-128.webp"),
+    ),
+    (
+        "icon-prayers-leather",
+        include_bytes!("../../assets/img/icons/prayers-leather-128.webp"),
+    ),
+    (
+        "icon-prayers-leather-hover",
+        include_bytes!("../../assets/img/icons/prayers-leather-hover-128.webp"),
+    ),
+    (
         "icon-cards-wood",
         include_bytes!("../../assets/img/icons/cards-wood-128.webp"),
     ),

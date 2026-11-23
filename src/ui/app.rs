@@ -50,6 +50,8 @@ pub enum Route {
     Progress,
     Settings,
     Sources,
+    /// «Молитвы»: the list, or one prayer by id (src/prayers.rs).
+    Prayers(Option<String>),
 }
 
 /// Which flashcards to study.

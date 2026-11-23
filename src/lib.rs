@@ -7,6 +7,7 @@ pub mod game;
 pub mod install;
 pub mod ladder;
 pub mod music;
+pub mod prayers;
 pub mod quotes;
 pub mod srs;
 pub mod storage;
