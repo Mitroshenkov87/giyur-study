@@ -1,8 +1,8 @@
 //! Optional approximate location (with consent) and the offline city list.
 //!
-//! The UI asks before calling [`request_approximate`]. This module only
-//! performs the request. Coordinates are rounded to 0.1° before they are
-//! returned and are never logged.
+//! [`request_approximate`] starts Windows' own location permission flow.
+//! Coordinates are rounded to 0.1° before they are returned and are never
+//! logged.
 //!
 //! Windows uses the WinRT geolocator. Other platforms return
 //! [`GeoError::Unsupported`]; the user picks a city or types coordinates.
@@ -32,46 +32,77 @@ pub enum GeoError {
     Unavailable(String),
 }
 
-/// Ask the OS for an approximate (city-level) position. Blocking: call it
-/// off the UI thread. Returns coordinates already rounded to 0.1°.
-pub fn request_approximate() -> Result<(f64, f64), GeoError> {
+/// Result of a geolocation request.
+pub type GeoResult = Result<(f64, f64), GeoError>;
+
+/// Ask the OS for an approximate (city-level) position.
+///
+/// Call this from the foreground UI thread. On Windows it initiates
+/// `Geolocator::RequestAccessAsync` immediately, so Windows can show its own
+/// permission prompt, then waits for access and the fix on a worker thread.
+/// `done` receives coordinates already rounded to 0.1°.
+pub fn request_approximate<F>(done: F)
+where
+    F: FnOnce(GeoResult) + Send + 'static,
+{
     #[cfg(windows)]
     {
-        windows_approximate()
+        // Initiated here (UI thread); only the wait moves to the worker.
+        match windows::Devices::Geolocation::Geolocator::RequestAccessAsync() {
+            Ok(access) => {
+                std::thread::spawn(move || done(windows_approximate(move || access.join())));
+            }
+            Err(err) => done(Err(windows_error(&err))),
+        }
     }
     #[cfg(not(windows))]
     {
-        Err(GeoError::Unsupported)
+        done(Err(GeoError::Unsupported));
     }
 }
 
-/// WinRT geolocator. `join` is the blocking wait (windows 0.62; older
-/// windows-rs called this `get`).
 #[cfg(windows)]
-fn windows_approximate() -> Result<(f64, f64), GeoError> {
+fn windows_error(err: &windows::core::Error) -> GeoError {
+    let code = err.code().0 as u32;
+    GeoError::Unavailable(format!("код Windows 0x{code:08X}"))
+}
+
+/// Waits for Windows' permission decision, then reads a city-level fix.
+/// `join` is the blocking wait in windows 0.62.
+#[cfg(windows)]
+fn windows_approximate(
+    wait_access: impl FnOnce() -> windows::core::Result<
+        windows::Devices::Geolocation::GeolocationAccessStatus,
+    >,
+) -> GeoResult {
     use windows::core::Interface;
     use windows::Devices::Geolocation::{GeolocationAccessStatus, Geolocator, PositionAccuracy};
     use windows::Foundation::{IReference, PropertyValue, TimeSpan};
+    use windows::Win32::System::Com::{CoInitializeEx, CoUninitialize, COINIT_MULTITHREADED};
 
     use crate::calendar::prefs::round_coord;
 
-    fn fail(err: &windows::core::Error) -> GeoError {
-        let code = err.code().0 as u32;
-        GeoError::Unavailable(format!("location unavailable (0x{code:08X})"))
+    struct Apartment(bool);
+    impl Drop for Apartment {
+        fn drop(&mut self) {
+            if self.0 {
+                // SAFETY: balances a successful CoInitializeEx on this thread.
+                unsafe { CoUninitialize() };
+            }
+        }
     }
+    // SAFETY: initializes COM for this worker thread; Drop balances success.
+    let _apartment = Apartment(unsafe { CoInitializeEx(None, COINIT_MULTITHREADED) }.is_ok());
 
-    let status = Geolocator::RequestAccessAsync()
-        .map_err(|err| fail(&err))?
-        .join()
-        .map_err(|err| fail(&err))?;
+    let status = wait_access().map_err(|err| windows_error(&err))?;
     if status != GeolocationAccessStatus::Allowed {
         return Err(GeoError::Denied);
     }
 
-    let locator = Geolocator::new().map_err(|err| fail(&err))?;
+    let locator = Geolocator::new().map_err(|err| windows_error(&err))?;
     locator
         .SetDesiredAccuracy(PositionAccuracy::Default)
-        .map_err(|err| fail(&err))?;
+        .map_err(|err| windows_error(&err))?;
     // About 3 km: city level. A refusal leaves the Default accuracy set above.
     if let Ok(boxed) = PropertyValue::CreateUInt32(3_000) {
         if let Ok(meters) = boxed.cast::<IReference<u32>>() {
@@ -90,17 +121,17 @@ fn windows_approximate() -> Result<(f64, f64), GeoError> {
                 Duration: 15 * TICKS_PER_SEC,
             },
         )
-        .map_err(|err| fail(&err))?
+        .map_err(|err| windows_error(&err))?
         .join()
-        .map_err(|err| fail(&err))?;
+        .map_err(|err| windows_error(&err))?;
 
     let basic = position
         .Coordinate()
-        .map_err(|err| fail(&err))?
+        .map_err(|err| windows_error(&err))?
         .Point()
-        .map_err(|err| fail(&err))?
+        .map_err(|err| windows_error(&err))?
         .Position()
-        .map_err(|err| fail(&err))?;
+        .map_err(|err| windows_error(&err))?;
     Ok((round_coord(basic.Latitude), round_coord(basic.Longitude)))
 }
 
@@ -230,7 +261,9 @@ mod tests {
     #[test]
     fn system_location_unsupported_off_windows() {
         if cfg!(not(windows)) {
-            assert_eq!(request_approximate(), Err(GeoError::Unsupported));
+            let (tx, rx) = std::sync::mpsc::channel();
+            request_approximate(move |res| tx.send(res).unwrap());
+            assert_eq!(rx.recv().unwrap(), Err(GeoError::Unsupported));
         }
     }
 }

@@ -99,6 +99,20 @@ impl CalendarPrefs {
         }
     }
 
+    /// After a new place is chosen: Israel/diaspora festival order and the
+    /// common candle-lighting custom follow the place (Jerusalem 40 min,
+    /// elsewhere 18 min). The user can still switch Israel/diaspora.
+    pub fn apply_place_customs(&mut self) {
+        let Some(place) = &self.place else { return };
+        let in_israel = place.tz == "il"
+            || ((29.4..=33.4).contains(&place.lat) && (34.2..=35.9).contains(&place.lon));
+        let jerusalem = place.name.starts_with("Иерусалим")
+            || ((place.lat - 31.78).abs() <= 0.15 && (place.lon - 35.22).abs() <= 0.15);
+        self.diaspora = !in_israel;
+        self.candle_minutes = if jerusalem { 40 } else { 18 };
+        self.havdalah_minutes = 0;
+    }
+
     /// The place to compute zmanim for, if location is on.
     pub fn active_place(&self) -> Option<&Place> {
         match self.location_mode {
@@ -135,5 +149,29 @@ mod tests {
         let pl = back.active_place().unwrap();
         assert_eq!(pl.lat, 31.8);
         assert_eq!(pl.lon, 35.2);
+    }
+
+    #[test]
+    fn place_customs_follow_the_selected_place() {
+        let mut p = CalendarPrefs {
+            candle_minutes: 22,
+            havdalah_minutes: 72,
+            ..CalendarPrefs::default()
+        };
+        p.place = Some(Place {
+            name: "Примерное местоположение".into(),
+            lat: 31.8,
+            lon: 35.2,
+            tz: "local".into(),
+            utc_offset_min: 0,
+        });
+        p.apply_place_customs();
+        assert!(!p.diaspora);
+        assert_eq!((p.candle_minutes, p.havdalah_minutes), (40, 0));
+        p.place.as_mut().unwrap().lat = 55.8;
+        p.place.as_mut().unwrap().lon = 37.6;
+        p.apply_place_customs();
+        assert!(p.diaspora);
+        assert_eq!(p.candle_minutes, 18);
     }
 }
